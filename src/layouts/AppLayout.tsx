@@ -3,16 +3,13 @@
 import { Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import Cookies from 'js-cookie'
 
 // ** Hook Import
 import HomeOutline from 'mdi-material-ui/HomeOutline'
 import { useRouter } from 'next/router'
-import React, { ReactNode, useEffect } from 'react'
+import React, { ReactNode } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSettings } from 'src/@core/hooks/useSettings'
-import { loginUser } from 'src/@core/store/actions/userActions'
-import apiRequest from 'src/@core/utils/axios-config'
 import navigation from 'src/navigation'
 
 // ** Navigation Imports
@@ -30,25 +27,25 @@ const AppLayout = ({ children }: Props) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    const token = Cookies.get('accessToken')
+  // useEffect(() => {
+  //   const token = Cookies.get('accessToken')
 
-    if (!token) {
-      // If token is not present, redirect to the login page
-      router.push('/auth/login')
-    } else {
-      //console.log(token)
-      apiRequest
-        .get('/users/me')
-        .then(res => {
-          dispatch(loginUser(res.data))
-        })
-        .catch(() => {
-          Cookies.remove('accessToken')
-          router.push('/auth/login')
-        })
-    }
-  }, [])
+  //   if (!token) {
+  //     // If token is not present, redirect to the login page
+  //     router.push('/auth/login')
+  //   } else {
+  //     //console.log(token)
+  //     apiRequest
+  //       .get('/users/me')
+  //       .then(res => {
+  //         dispatch(loginUser(res.data))
+  //       })
+  //       .catch(() => {
+  //         Cookies.remove('accessToken')
+  //         router.push('/auth/login')
+  //       })
+  //   }
+  // }, [])
 
   return (
     <>
@@ -95,15 +92,18 @@ const AppLayout = ({ children }: Props) => {
                     className='absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
                     aria-hidden='true'
                   ></Box>
-                  <a
-                    className='inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100'
+                  <Box
+                    component={'a'}
+                    className={`inline-flex items-center w-full text-sm font-semibold  transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100 ${
+                      router.pathname == nav.path ? 'text-gray-800' : ''
+                    }`}
                     href={nav.path}
                   >
                     {React.createElement(nav.icon ? nav.icon : HomeOutline)} {/* Render the icon component */}
                     <Box component={'span'} className='ml-4'>
                       {nav.title}
                     </Box>
-                  </a>
+                  </Box>
                 </Box>
               ))}
             </Box>
@@ -602,7 +602,9 @@ const AppLayout = ({ children }: Props) => {
               </Box>
             </Box>
           </Box>
-          <Box component={'main'} className='h-full pb-16 overflow-y-auto'></Box>
+          <Box component={'main'} className='h-full pb-16 overflow-y-auto'>
+            {children}
+          </Box>
         </Box>
       </Box>
     </>
