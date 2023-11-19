@@ -92,15 +92,18 @@ const AppLayout = ({ children }: Props) => {
                     className='absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
                     aria-hidden='true'
                   ></Box>
-                  <a
-                    className='inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100'
+                  <Box
+                    component={'a'}
+                    className={`inline-flex items-center w-full text-sm font-semibold  transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100 ${
+                      router.pathname == nav.path ? 'text-gray-800' : ''
+                    }`}
                     href={nav.path}
                   >
                     {React.createElement(nav.icon ? nav.icon : HomeOutline)} {/* Render the icon component */}
                     <Box component={'span'} className='ml-4'>
                       {nav.title}
                     </Box>
-                  </a>
+                  </Box>
                 </Box>
               ))}
             </Box>
@@ -599,7 +602,9 @@ const AppLayout = ({ children }: Props) => {
               </Box>
             </Box>
           </Box>
-          <Box component={'main'} className='h-full pb-16 overflow-y-auto'></Box>
+          <Box component={'main'} className='h-full pb-16 overflow-y-auto'>
+            {children}
+          </Box>
         </Box>
       </Box>
     </>
