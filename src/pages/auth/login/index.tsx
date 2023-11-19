@@ -44,18 +44,22 @@ const LoginPage = () => {
   const handleSubmit = async (e: React.FormEvent<any>) => {
     e.preventDefault()
 
-    try {
-      const response = await axios.post(`${process.env['API_BASE_URL']}/auth/admin/signin`, formData)
-      const { token } = response.data
+    await axios
+      .post(`${process.env['API_BASE_URL']}/login`, formData)
+      .then(response => {
+        console.log(response)
 
-      // Set the token in a cookie
-      Cookies.set('accessToken', token)
+        const { token } = response.data
 
-      // Redirect to the desired page (e.g., /dashboard)
-      window.location.href = '/'
-    } catch (error) {
-      console.error('Login failed:', error)
-    }
+        // Set the token in a cookie
+        Cookies.set('accessToken', token)
+
+        // Redirect to the desired page (e.g., /dashboard)
+        window.location.href = '/'
+      })
+      .catch(error => {
+        console.error('Login failed:', error)
+      })
   }
 
   const handleClickShowPassword = () => {
@@ -103,6 +107,7 @@ const LoginPage = () => {
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Jane Doe'
+                  onChange={e => handleChange(e)}
                 />
               </label>
               <label className='block mt-4 text-sm'>
@@ -111,30 +116,37 @@ const LoginPage = () => {
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='***************'
                   type='password'
+                  onChange={e => handleChange(e)}
                 />
               </label>
 
-              <button className='block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'>
+              <button
+                type='submit'
+                onClick={handleSubmit}
+                className='block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+              >
                 Log in
               </button>
 
               <hr className='my-8' />
 
               <p className='mt-4'>
-                <a
+                <Box
+                  component={'a'}
                   className='text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline'
                   href='/auth/forgot-password'
                 >
                   Forgot your password?
-                </a>
+                </Box>
               </p>
               <p className='mt-1'>
-                <a
+                <Box
+                  component={'a'}
                   className='text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline'
                   href='/auth/create-account'
                 >
                   Create account
-                </a>
+                </Box>
               </p>
             </Box>
           </Box>

@@ -3,13 +3,16 @@
 import { Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
+import Cookies from 'js-cookie'
 
 // ** Hook Import
 import HomeOutline from 'mdi-material-ui/HomeOutline'
 import { useRouter } from 'next/router'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSettings } from 'src/@core/hooks/useSettings'
+import { loginUser } from 'src/@core/store/actions/userActions'
+import apiRequest from 'src/@core/utils/axios-config'
 import navigation from 'src/navigation'
 
 // ** Navigation Imports
@@ -27,25 +30,25 @@ const AppLayout = ({ children }: Props) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  // useEffect(() => {
-  //   const token = Cookies.get('accessToken')
+  useEffect(() => {
+    const token = Cookies.get('accessToken')
 
-  //   if (!token) {
-  //     // If token is not present, redirect to the login page
-  //     router.push('/auth/login')
-  //   } else {
-  //     //console.log(token)
-  //     apiRequest
-  //       .get('/users/me')
-  //       .then(res => {
-  //         dispatch(loginUser(res.data))
-  //       })
-  //       .catch(() => {
-  //         Cookies.remove('accessToken')
-  //         router.push('/auth/login')
-  //       })
-  //   }
-  // }, [])
+    if (!token) {
+      // If token is not present, redirect to the login page
+      router.push('/auth/login')
+    } else {
+      //console.log(token)
+      apiRequest
+        .get('/users/me')
+        .then(res => {
+          dispatch(loginUser(res.data))
+        })
+        .catch(() => {
+          Cookies.remove('accessToken')
+          router.push('/auth/login')
+        })
+    }
+  }, [])
 
   return (
     <>
