@@ -1,9 +1,9 @@
 // ** Icon imports
-import InventoryIcon from '@mui/icons-material/Inventory'
-import WebIcon from '@mui/icons-material/Web'
+import CategoryIcon from '@mui/icons-material/Category'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
-import HomeOutline from 'mdi-material-ui/HomeOutline'
 
 type TNavigation = {
   title: string
@@ -20,17 +20,17 @@ const navigation: TNavigation[] = [
 
   {
     title: 'Website Component Categories',
-    icon: InventoryIcon,
+    icon: CategoryIcon,
     path: '/website-component-categories'
   },
   {
     title: 'Website Component',
-    icon: WebIcon,
+    icon: DashboardIcon,
     path: '/website-component'
   },
   {
     title: 'Project Components',
-    icon: HomeOutline,
+    icon: DashboardCustomizeIcon,
     path: '/projects-components'
   }
 ]

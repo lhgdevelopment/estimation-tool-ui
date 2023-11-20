@@ -1,3 +1,4 @@
+import AccountTreeIcon from '@mui/icons-material/AccountTree'
 import { Box } from '@mui/material'
 import HomeOutline from 'mdi-material-ui/HomeOutline'
 import Link from 'next/link'
@@ -70,12 +71,13 @@ export default function AppNavbarComponent() {
               </Box>
             ))}
           </Box>
-          <Box className='px-6 my-6'>
+          <Box className='px-4 my-2'>
             <Link href={'/projects'} passHref>
               <Box
                 component={'a'}
-                className='flex items-center justify-between w-full px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+                className='flex items-center justify-between w-full px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
               >
+                <AccountTreeIcon />
                 Create Project
                 <Box component={'span'} className='ml-2' aria-hidden='true'>
                   +
