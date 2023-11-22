@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/lhg-estimation-tool.iml" filepath="$PROJECT_DIR$/.idea/lhg-estimation-tool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/lhg-sales-proposal-tools.iml" filepath="$PROJECT_DIR$/.idea/lhg-sales-proposal-tools.iml" />
     </modules>
   </component>
 </project>

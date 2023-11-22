@@ -7,7 +7,8 @@ export default function AppHeaderComponent() {
       <Box component={'header'} className='z-10 py-4 bg-white shadow-md dark:bg-gray-800'>
         <Box className='container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300'>
           {/* <!-- Mobile hamburger --> */}
-          <button
+          <Box
+            component={'button'}
             className='p-1 -ml-1 mr-5 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple'
             aria-label='Menu'
           >
@@ -18,13 +19,14 @@ export default function AppHeaderComponent() {
                 clipRule='evenodd'
               ></path>
             </svg>
-          </button>
+          </Box>
           {/* <!-- Search input --> */}
           <Box className='flex justify-center flex-1 lg:mr-32'></Box>
           <Box component={'ul'} className='flex items-center flex-shrink-0 space-x-6'>
             {/* <!-- Theme toggler --> */}
             <Box component={'li'} className='flex'>
-              <button
+              <Box
+                component={'button'}
                 className='rounded-md focus:outline-none focus:shadow-outline-purple'
                 aria-label='Toggle color mode'
               >
@@ -42,11 +44,12 @@ export default function AppHeaderComponent() {
                     ></path>
                   </svg>
                 </template>
-              </button>
+              </Box>
             </Box>
             {/* <!-- Notifications menu --> */}
             <Box component={'li'} className='relative'>
-              <button
+              <Box
+                component={'button'}
                 className='relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple'
                 aria-label='Notifications'
                 aria-haspopup='true'
@@ -60,7 +63,7 @@ export default function AppHeaderComponent() {
                   aria-hidden='true'
                   className='absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800'
                 ></Box>
-              </button>
+              </Box>
               <template>
                 <Box
                   component={'ul'}
@@ -111,7 +114,8 @@ export default function AppHeaderComponent() {
             </Box>
             {/* <!-- Profile menu --> */}
             <Box component={'li'} className='relative'>
-              <button
+              <Box
+                component={'button'}
                 className='align-middle rounded-full focus:shadow-outline-purple focus:outline-none'
                 aria-label='Account'
                 aria-haspopup='true'
@@ -122,7 +126,7 @@ export default function AppHeaderComponent() {
                   alt=''
                   aria-hidden='true'
                 />
-              </button>
+              </Box>
               <template>
                 <Box
                   component={'ul'}

@@ -30,8 +30,7 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
-    showPassword: false
+    password: ''
   })
 
   const handleChange = (e: React.ChangeEvent<any>) => {
@@ -39,6 +38,7 @@ const LoginPage = () => {
       ...formData,
       [e.target.name]: e.target.value
     })
+    console.log(formData)
   }
 
   const handleSubmit = async (e: React.FormEvent<any>) => {
@@ -60,13 +60,6 @@ const LoginPage = () => {
       .catch(error => {
         console.error('Login failed:', error)
       })
-  }
-
-  const handleClickShowPassword = () => {
-    setFormData(prevFormData => ({
-      ...prevFormData,
-      showPassword: !prevFormData.showPassword
-    }))
   }
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
@@ -107,6 +100,8 @@ const LoginPage = () => {
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Jane Doe'
+                  type='text'
+                  name='email'
                   onChange={e => handleChange(e)}
                 />
               </label>
@@ -116,6 +111,7 @@ const LoginPage = () => {
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='***************'
                   type='password'
+                  name='password'
                   onChange={e => handleChange(e)}
                 />
               </label>
