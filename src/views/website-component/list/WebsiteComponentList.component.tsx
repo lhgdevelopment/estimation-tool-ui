@@ -2,20 +2,20 @@ import { Box } from '@mui/material'
 import { Fragment, useEffect } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TWebsiteComponentCategoriesComponent } from '../WebsiteComponentCategories.decorator'
+import { TWebsiteComponentComponent } from '../WebsiteComponent.decorator'
 
-export default function WebsiteComponentCategoriesListComponent(props: TWebsiteComponentCategoriesComponent) {
+export default function WebsiteComponentListComponent(props: TWebsiteComponentComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
 
   const getList = () => {
-    apiRequest.get('/categories').then(res => {
+    apiRequest.get('/components').then(res => {
       setListData(res.data)
     })
   }
   const onEdit = (i: string) => {
     setEditDataId(i)
 
-    const editData = listData.length ? listData?.filter((data: any) => data['category_id'] == i)[0] : {}
+    const editData = listData.length ? listData?.filter((data: any) => data['component_id'] == i)[0] : {}
     setEditData(editData)
   }
 
@@ -29,7 +29,7 @@ export default function WebsiteComponentCategoriesListComponent(props: TWebsiteC
       cancelButtonText: 'No'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/categories/${i}`).then(res => {
+        apiRequest.delete(`/components/${i}`).then(res => {
           Swal.fire({
             title: 'Data Deleted Successfully!',
             icon: 'success',
@@ -55,20 +55,26 @@ export default function WebsiteComponentCategoriesListComponent(props: TWebsiteC
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <th className='px-4 py-3'>Name</th>
+                <th className='px-4 py-3'>Category</th>
+                <th className='px-4 py-3'>Cost</th>
+                <th className='px-4 py-3'>Description</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
             <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
               {listData?.map((data: any, index: number) => {
                 return (
-                  <tr key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.category_name}</td>
+                  <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
+                    <td className='px-4 py-3 text-sm'>{data?.component_name}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.category?.category_name}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.component_cost}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.component_description}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
                         <button
                           onClick={() => {
-                            onEdit(data['category_id'])
+                            onEdit(data['component_id'])
                           }}
                           className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
                           aria-label='Edit'
@@ -79,7 +85,7 @@ export default function WebsiteComponentCategoriesListComponent(props: TWebsiteC
                         </button>
                         <button
                           onClick={() => {
-                            onDelete(data['category_id'])
+                            onDelete(data['component_id'])
                           }}
                           className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
                           aria-label='Delete'
@@ -94,7 +100,7 @@ export default function WebsiteComponentCategoriesListComponent(props: TWebsiteC
                         </button>
                       </Box>
                     </td>
-                  </tr>
+                  </Box>
                 )
               })}
             </tbody>

@@ -15,9 +15,12 @@ export default function AppNavbarComponent() {
         component={'aside'}
         className='z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0'
       >
-        <Box className='py-4 text-gray-500 dark:text-gray-400'>
-          <Box component={'a'} className='ml-6 text-lg font-bold text-gray-800 dark:text-gray-200' href='#'>
-            LHG Estimation Tool
+        <Box className='py-4 text-gray-500 dark:text-gray-400 '>
+          <Box className={'text-center'}>
+            <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 leading-3' href='#'>
+              LHG <br />
+              Sales/Proposal Tools
+            </Box>
           </Box>
           <Box component={'ul'} className='mt-6'>
             <Box component={'li'} className='relative px-6 py-3'>
@@ -95,8 +98,8 @@ export default function AppNavbarComponent() {
         className='fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-white dark:bg-gray-800 md:hidden'
       >
         <Box className='py-4 text-gray-500 dark:text-gray-400'>
-          <Box component={'a'} className='ml-6 text-lg font-bold text-gray-800 dark:text-gray-200' href='#'>
-            LHG Estimation Tool
+          <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 display-block' href='#'>
+            LHG Sales/Proposal Tools
           </Box>
           <Box component={'ul'} className='mt-6'>
             <Box component={'li'} className='relative px-6 py-3'>
