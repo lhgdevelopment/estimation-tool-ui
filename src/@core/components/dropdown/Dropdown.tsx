@@ -16,7 +16,17 @@ interface ISelectProps extends SelectProps {
 }
 
 export function Dropdown(props: ISelectProps) {
-  const { label, url, isEnumField = false, enumList, optionConfig = { title: 'name', id: '_id' } } = props
+  const {
+    label,
+    url,
+    isEnumField = false,
+    enumList,
+    optionConfig = { title: 'name', id: '_id' },
+    multiple = false,
+    value,
+    onChange,
+    ...otherProps
+  } = props
 
   const [menuItems, setMenuItems] = useState<{ title: string; id: string }[]>([])
 
@@ -24,15 +34,17 @@ export function Dropdown(props: ISelectProps) {
     if (!isEnumField) {
       apiRequest.get(`/${url}`).then(res => {
         setMenuItems(
-          res.data?.map((item: any) => {
-            return { title: item?.[optionConfig?.title], id: item?.[optionConfig?.id] }
-          })
+          res.data?.map((item: any) => ({
+            title: item?.[optionConfig?.title],
+            id: item?.[optionConfig?.id]
+          })) || []
         )
       })
-    } else {
-      setMenuItems([...(enumList as any)])
+    } else if (enumList) {
+      setMenuItems([...enumList])
     }
   }
+
   useEffect(() => {
     getList()
   }, [])
@@ -40,7 +52,13 @@ export function Dropdown(props: ISelectProps) {
   return (
     <FormControl fullWidth>
       {!!label && <InputLabel id='demo-simple-select-label'>{label}</InputLabel>}
-      <Select {...props} sx={{ mt: 1, height: 38 }}>
+      <Select
+        {...otherProps}
+        value={multiple ? value || [] : value || ''}
+        onChange={onChange}
+        multiple={multiple}
+        sx={{ mt: 1, height: 38 }}
+      >
         {menuItems?.map((menuItem: any, index: number) => (
           <MenuItem value={menuItem.id} key={index}>
             {menuItem.title}
