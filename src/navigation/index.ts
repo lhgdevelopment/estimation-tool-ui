@@ -14,7 +14,7 @@ const navigation: TNavigation[] = [
   // {
   //   title: 'Projects',
   //   icon: ShoppingCartIcon,
-  //   path: '/projects',
+  //   path: '/Project',
   //   component: 'button'
   // },
 
@@ -31,7 +31,7 @@ const navigation: TNavigation[] = [
   {
     title: 'Project Components',
     icon: DashboardCustomizeIcon,
-    path: '/projects-components'
+    path: '/Project-components'
   }
 ]
 

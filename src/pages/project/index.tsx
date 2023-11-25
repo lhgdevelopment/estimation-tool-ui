@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import ProjectsComponentsComponent from 'src/views/projects-components/ProjectsComponents.component'
+import ProjectComponent from 'src/views/project/Project.component'
 
 const ProjectsPage = () => {
-  return <ProjectsComponentsComponent></ProjectsComponentsComponent>
+  return <ProjectComponent></ProjectComponent>
 }
 ProjectsPage.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
 export default ProjectsPage

@@ -8,7 +8,7 @@ export default function ProjectListComponent(props: TProjectComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
 
   const getList = () => {
-    apiRequest.get('/categories').then(res => {
+    apiRequest.get('/projects').then(res => {
       setListData(res.data)
     })
   }
@@ -29,7 +29,7 @@ export default function ProjectListComponent(props: TProjectComponent) {
       cancelButtonText: 'No'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/categories/${i}`).then(res => {
+        apiRequest.delete(`/projects/${i}`).then(res => {
           Swal.fire({
             title: 'Data Deleted Successfully!',
             icon: 'success',
@@ -54,7 +54,9 @@ export default function ProjectListComponent(props: TProjectComponent) {
           <table className='w-full whitespace-no-wrap'>
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                <th className='px-4 py-3'>Name</th>
+                <th className='px-4 py-3'>Project Name</th>
+                <th className='px-4 py-3'>Project Description</th>
+                <th className='px-4 py-3'>Total Cost</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
@@ -62,13 +64,15 @@ export default function ProjectListComponent(props: TProjectComponent) {
               {listData?.map((data: any, index: number) => {
                 return (
                   <tr key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.category_name}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.project_name}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.project_description}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.total_cost}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
                         <button
                           onClick={() => {
-                            onEdit(data['category_id'])
+                            onEdit(data['project_id'])
                           }}
                           className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
                           aria-label='Edit'
@@ -79,7 +83,7 @@ export default function ProjectListComponent(props: TProjectComponent) {
                         </button>
                         <button
                           onClick={() => {
-                            onDelete(data['category_id'])
+                            onDelete(data['project_id'])
                           }}
                           className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
                           aria-label='Delete'
