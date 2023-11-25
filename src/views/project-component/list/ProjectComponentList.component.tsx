@@ -8,7 +8,7 @@ export default function ProjectComponentListComponent(props: TProjectComponentCo
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
 
   const getList = () => {
-    apiRequest.get('/components').then(res => {
+    apiRequest.get('/project-components').then(res => {
       setListData(res.data)
     })
   }
@@ -29,7 +29,7 @@ export default function ProjectComponentListComponent(props: TProjectComponentCo
       cancelButtonText: 'No'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/components/${i}`).then(res => {
+        apiRequest.delete(`/project-components/${i}`).then(res => {
           Swal.fire({
             title: 'Data Deleted Successfully!',
             icon: 'success',
@@ -54,10 +54,8 @@ export default function ProjectComponentListComponent(props: TProjectComponentCo
           <table className='w-full whitespace-no-wrap'>
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                <th className='px-4 py-3'>Name</th>
-                <th className='px-4 py-3'>Category</th>
-                <th className='px-4 py-3'>Cost</th>
-                <th className='px-4 py-3'>Description</th>
+                <th className='px-4 py-3'>Project</th>
+                <th className='px-4 py-3'>Quantity</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
@@ -65,10 +63,8 @@ export default function ProjectComponentListComponent(props: TProjectComponentCo
               {listData?.map((data: any, index: number) => {
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.component_name}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.category?.category_name}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.component_cost}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.component_description}</td>
+                    <td className='px-4 py-3 text-sm'></td>
+                    <td className='px-4 py-3 text-sm'>{data?.quantity}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>

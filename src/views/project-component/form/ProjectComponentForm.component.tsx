@@ -13,10 +13,8 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
-    component_name: '',
-    category_id: '',
-    component_description: '',
-    component_cost: ''
+    project_id: '',
+    components: ['']
   }
 
   const [formData, setFormData] = useState(defaultData)
@@ -38,7 +36,7 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
     if (editDataId) {
-      apiRequest.put(`/components/${editDataId}`, formData).then(res => {
+      apiRequest.put(`/project-components/${editDataId}`, formData).then(res => {
         setListData((prevState: []) => {
           const updatedList: any = [...prevState]
           const editedServiceIndex = updatedList.findIndex(
@@ -60,7 +58,7 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
         onClear()
       })
     } else {
-      apiRequest.post('/components', formData).then(res => {
+      apiRequest.post('/project-components', formData).then(res => {
         setListData((prevState: []) => [...prevState, res.data])
         Swal.fire({
           title: 'Data Created Successfully!',
@@ -76,10 +74,8 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
 
   useEffect(() => {
     setFormData({
-      component_name: editData?.['component_name'],
-      category_id: editData?.['category_id'],
-      component_description: editData?.['component_description'],
-      component_cost: editData?.['component_cost']
+      project_id: editData?.['project_id'],
+      components: editData?.['components']
     })
   }, [editDataId, editData])
 
@@ -96,50 +92,24 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                <span className='text-gray-700 dark:text-gray-400'>Project</span>
+                <Dropdown
+                  url={'projects'}
+                  name='project_id'
+                  value={formData.project_id}
+                  onChange={handleSelectChange}
+                  optionConfig={{ id: 'project_id', title: 'project_name' }}
+                />
+              </label>
+            </Box>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Components</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Examples: Logo'
-                  name='component_name'
-                  value={formData.component_name}
-                  onChange={handleChange}
-                />
-              </label>
-            </Box>
-            <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Category</span>
-                <Dropdown
-                  url={'categories'}
-                  name='category_id'
-                  value={formData.category_id}
-                  onChange={handleSelectChange}
-                  optionConfig={{ id: 'category_id', title: 'category_name' }}
-                />
-              </label>
-            </Box>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 5 }}>
-            <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Cost</span>
-                <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Examples: 50.00'
-                  name='component_cost'
-                  value={formData.component_cost}
-                  onChange={handleChange}
-                />
-              </label>
-            </Box>
-            <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Description</span>
-                <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Examples: Company logo for header'
-                  name='component_description'
-                  value={formData.component_description}
+                  name='components'
+                  value={formData.components}
                   onChange={handleChange}
                 />
               </label>
