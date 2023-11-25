@@ -17,8 +17,6 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
     components: ['']
   }
 
-  const [formData, setFormData] = useState(defaultData)
-
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
@@ -26,10 +24,15 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
     })
   }
 
-  const handleSelectChange = (e: any) => {
+  const [formData, setFormData] = useState(defaultData)
+
+  const handleMultipleSelectChange = (e: any) => {
+    const selectedValue = e?.target?.value
+    const selectedArray = Array.isArray(selectedValue) ? selectedValue : [selectedValue]
+
     setFormData({
       ...formData,
-      [e?.target?.name]: e?.target?.value
+      [e?.target?.name]: selectedArray
     })
   }
 
@@ -97,7 +100,7 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
                   url={'projects'}
                   name='project_id'
                   value={formData.project_id}
-                  onChange={handleSelectChange}
+                  onChange={handleChange}
                   optionConfig={{ id: 'project_id', title: 'project_name' }}
                 />
               </label>
@@ -105,12 +108,13 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Components</span>
-                <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Examples: Logo'
+                <Dropdown
+                  url={'components'}
                   name='components'
                   value={formData.components}
-                  onChange={handleChange}
+                  onChange={handleMultipleSelectChange}
+                  optionConfig={{ id: 'component_id', title: 'component_name' }}
+                  multiple
                 />
               </label>
             </Box>
