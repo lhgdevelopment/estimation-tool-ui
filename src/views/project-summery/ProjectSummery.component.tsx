@@ -1,9 +1,9 @@
 import { Box } from '@mui/material'
 import { useState } from 'react'
-import ProblemsAndGoalsFormComponent from './form/ProblemsAndGoalsForm.component'
-import ProblemsAndGoalsListComponent from './list/ProblemsAndGoalsList.component'
+import ProjectSummeryFormComponent from './form/ProjectSummeryForm.component'
+import ProjectSummeryListComponent from './list/ProjectSummeryList.component'
 
-export default function ProblemsAndGoalsComponent() {
+export default function ProjectSummeryComponent() {
   const [editDataId, setEditDataId] = useState<null | string>(null)
   const [listData, setListData] = useState<any>([])
   const [editData, setEditData] = useState<any>({})
@@ -14,7 +14,7 @@ export default function ProblemsAndGoalsComponent() {
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
           Project Component
         </Box>
-        <ProblemsAndGoalsFormComponent
+        <ProjectSummeryFormComponent
           setEditDataId={setEditDataId}
           editDataId={editDataId}
           listData={listData}
@@ -22,7 +22,7 @@ export default function ProblemsAndGoalsComponent() {
           editData={editData}
           setEditData={setEditData}
         />
-        <ProblemsAndGoalsListComponent
+        <ProjectSummeryListComponent
           setEditDataId={setEditDataId}
           editDataId={editDataId}
           listData={listData}

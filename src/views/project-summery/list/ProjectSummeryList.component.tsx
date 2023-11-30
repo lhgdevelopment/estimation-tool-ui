@@ -2,13 +2,13 @@ import { Box } from '@mui/material'
 import { Fragment, useEffect } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TProblemsAndGoalsComponent } from '../ProblemsAndGoals.decorator'
+import { TProjectSummeryComponent } from '../ProjectSummery.decorator'
 
-export default function ProblemsAndGoalsListComponent(props: TProblemsAndGoalsComponent) {
+export default function ProjectSummeryListComponent(props: TProjectSummeryComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
 
   const getList = () => {
-    apiRequest.get('/project-components').then(res => {
+    apiRequest.get('/project-summery').then(res => {
       setListData(res.data)
     })
   }
@@ -29,7 +29,7 @@ export default function ProblemsAndGoalsListComponent(props: TProblemsAndGoalsCo
       cancelButtonText: 'No'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/project-components/${i}`).then(res => {
+        apiRequest.delete(`/project-summery/${i}`).then(res => {
           Swal.fire({
             title: 'Data Deleted Successfully!',
             icon: 'success',
@@ -55,7 +55,7 @@ export default function ProblemsAndGoalsListComponent(props: TProblemsAndGoalsCo
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <th className='px-4 py-3'>Project</th>
-                <th className='px-4 py-3'>Quantity</th>
+                <th className='px-4 py-3'>Summary Text</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
@@ -63,12 +63,12 @@ export default function ProblemsAndGoalsListComponent(props: TProblemsAndGoalsCo
               {listData?.map((data: any, index: number) => {
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'></td>
-                    <td className='px-4 py-3 text-sm'>{data?.quantity}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.meeting_transcript?.projectName}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.summaryText.substring(0, 100)}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
-                        <button
+                        {/* <button
                           onClick={() => {
                             onEdit(data['component_id'])
                           }}
@@ -78,22 +78,7 @@ export default function ProblemsAndGoalsListComponent(props: TProblemsAndGoalsCo
                           <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
                             <path d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'></path>
                           </svg>
-                        </button>
-                        <button
-                          onClick={() => {
-                            onDelete(data['component_id'])
-                          }}
-                          className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                          aria-label='Delete'
-                        >
-                          <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
-                            <path
-                              fillRule='evenodd'
-                              d='M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z'
-                              clipRule='evenodd'
-                            ></path>
-                          </svg>
-                        </button>
+                        </button> */}
                       </Box>
                     </td>
                   </Box>
