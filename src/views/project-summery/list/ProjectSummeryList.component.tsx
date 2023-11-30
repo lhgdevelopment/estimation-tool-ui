@@ -1,5 +1,8 @@
-import { Box } from '@mui/material'
-import { Fragment, useEffect } from 'react'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import { Box, Modal, Typography } from '@mui/material'
+import { Fragment, useEffect, useState } from 'react'
+import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TProjectSummeryComponent } from '../ProjectSummery.decorator'
@@ -18,6 +21,11 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryCompon
     const editData = listData.length ? listData?.filter((data: any) => data['component_id'] == i)[0] : {}
     setEditData(editData)
   }
+
+  const [open, setOpen] = useState(false)
+  const [projectSummery, setProjectSummery] = useState<any>({})
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   const onDelete = (i: string) => {
     Swal.fire({
@@ -47,6 +55,29 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryCompon
     getList()
   }, [editDataId])
 
+  const style = {
+    position: 'absolute' as const,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '80%',
+    height: '90vh',
+    overflowY: 'auto',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4
+  }
+
+  const openModal = (id: any) => {
+    apiRequest.get(`/project-summery/${id}`).then(res => {
+      handleOpen()
+      setProjectSummery(res.data)
+
+      console.log(projectSummery)
+    })
+  }
+
   return (
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
@@ -68,17 +99,15 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryCompon
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
-                        {/* <button
+                        <button
                           onClick={() => {
-                            onEdit(data['component_id'])
+                            openModal(data?.id)
                           }}
                           className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
                           aria-label='Edit'
                         >
-                          <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
-                            <path d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'></path>
-                          </svg>
-                        </button> */}
+                          <VisibilityIcon />
+                        </button>
                       </Box>
                     </td>
                   </Box>
@@ -162,6 +191,23 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryCompon
           </span>
         </Box>
       </Box>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
+      >
+        <Box sx={style}>
+          <Box>
+            <Typography id='modal-modal-title' variant='h6' component='h2'>
+              Project Summery:
+            </Typography>
+            <Typography id='modal-modal-description' sx={{ mt: 2 }}>
+              <Markdown remarkPlugins={[remarkGfm]}>{projectSummery?.['summaryText']}</Markdown>
+            </Typography>
+          </Box>
+        </Box>
+      </Modal>
     </Fragment>
   )
 }

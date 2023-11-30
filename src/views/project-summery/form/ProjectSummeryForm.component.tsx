@@ -1,7 +1,8 @@
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import { Box, CircularProgress, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import JoditEditor from 'jodit-react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TProjectSummeryComponent } from '../ProjectSummery.decorator'
@@ -9,6 +10,7 @@ import { TProjectSummeryComponent } from '../ProjectSummery.decorator'
 const steps = ['Meeting Summery', 'Problems and Goals', 'Project Overview', 'SOW']
 
 export default function ProjectSummeryFormComponent(props: TProjectSummeryComponent) {
+  const editor = useRef(null)
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
   const [activeStep, setActiveStep] = useState(0)
   const [completed, setCompleted] = useState<{
@@ -337,13 +339,13 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Problem Goal Text</span>
-                      <textarea
-                        className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                        placeholder='Enter Problem Goal Text'
-                        name='problemGoalText'
+
+                      <JoditEditor
+                        ref={editor}
                         value={problemGoalText}
-                        onChange={e => {
-                          setProblemGoalText(e.target.value)
+                        onBlur={newContent => setProblemGoalText(newContent)} // preferred to use only this option to update the content for performance reasons
+                        onChange={newContent => {
+                          setProblemGoalText(newContent)
                         }}
                       />
                     </label>
@@ -357,13 +359,12 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Overview Text</span>
-                      <textarea
-                        className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                        placeholder='Enter Overview Text'
-                        name='overviewText'
+                      <JoditEditor
+                        ref={editor}
                         value={overviewText}
-                        onChange={e => {
-                          setOverviewText(e.target.value)
+                        onBlur={newContent => setOverviewText(newContent)}
+                        onChange={newContent => {
+                          setOverviewText(newContent)
                         }}
                       />
                     </label>
@@ -377,13 +378,12 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Scope of Work</span>
-                      <textarea
-                        className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                        placeholder='Enter Scope of Work'
-                        name='scopeText'
+                      <JoditEditor
+                        ref={editor}
                         value={scopeText}
-                        onChange={e => {
-                          setScopeText(e.target.value)
+                        onBlur={newContent => setScopeText(newContent)}
+                        onChange={newContent => {
+                          setScopeText(newContent)
                         }}
                       />
                     </label>
