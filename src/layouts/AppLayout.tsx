@@ -42,7 +42,6 @@ const AppLayout = ({ children }: Props) => {
         .get('/user')
         .then(res => {
           console.log(res)
-
           dispatch(loginUser(res))
         })
         .catch(() => {

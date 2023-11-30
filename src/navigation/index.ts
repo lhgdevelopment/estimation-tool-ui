@@ -32,6 +32,11 @@ const navigation: TNavigation[] = [
     title: 'Project Components',
     icon: DashboardCustomizeIcon,
     path: '/project-component'
+  },
+  {
+    title: 'Project Summery',
+    icon: DashboardCustomizeIcon,
+    path: '/project-summery'
   }
 ]
 
