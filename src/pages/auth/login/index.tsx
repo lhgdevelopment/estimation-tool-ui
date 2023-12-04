@@ -33,6 +33,8 @@ const LoginPage = () => {
     password: ''
   })
 
+  const [errorMessage, setErrorMessage] = useState('')
+
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
@@ -42,8 +44,7 @@ const LoginPage = () => {
   }
 
   const handleSubmit = async (e: React.FormEvent<any>) => {
-    e.preventDefault()
-
+    setErrorMessage('')
     await axios
       .post(`${process.env['API_BASE_URL']}/login`, formData)
       .then(response => {
@@ -59,6 +60,7 @@ const LoginPage = () => {
       })
       .catch(error => {
         console.error('Login failed:', error)
+        setErrorMessage(error?.response?.data?.message)
       })
   }
 
@@ -98,7 +100,9 @@ const LoginPage = () => {
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Email</span>
                 <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage ? 'border-red-600' : 'dark:border-gray-600 '
+                  }`}
                   placeholder='Jane Doe'
                   type='text'
                   name='email'
@@ -108,13 +112,17 @@ const LoginPage = () => {
               <label className='block mt-4 text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Password</span>
                 <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage ? 'border-red-600' : 'dark:border-gray-600 '
+                  }`}
                   placeholder='***************'
                   type='password'
                   name='password'
                   onChange={e => handleChange(e)}
                 />
               </label>
+
+              {!!errorMessage && <p className='text-sm text-red-600 dark:text-red-400 mt-5'>{errorMessage}</p>}
 
               <button
                 type='submit'
@@ -124,9 +132,9 @@ const LoginPage = () => {
                 Log in
               </button>
 
-              <hr className='my-8' />
+              {/* <hr className='my-8' /> */}
 
-              <p className='mt-4'>
+              {/* <p className='mt-4'>
                 <Box
                   component={'a'}
                   className='text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline'
@@ -143,7 +151,7 @@ const LoginPage = () => {
                 >
                   Create account
                 </Box>
-              </p>
+              </p> */}
             </Box>
           </Box>
         </Box>

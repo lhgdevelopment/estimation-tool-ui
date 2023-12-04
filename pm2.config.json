@@ -1,0 +1,10 @@
+{
+  "apps": [
+    {
+      "name": "lhg-sales-proposal-tools-ui",
+      "script": "npm",
+      "args": "start",
+      "interpreter": "none"
+    }
+  ]
+}
