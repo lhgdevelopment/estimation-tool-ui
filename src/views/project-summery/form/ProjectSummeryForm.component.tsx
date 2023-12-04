@@ -208,7 +208,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
           })
           setActiveStep(0)
           setPreload(false)
-          setListDataRefresh(res.data)
+          setListDataRefresh(res)
         })
         .catch(error => {
           setPreload(false)
