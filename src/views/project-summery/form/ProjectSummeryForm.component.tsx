@@ -8,7 +8,7 @@ import Swal from 'sweetalert2'
 
 const steps = ['Meeting Summery', 'Problems and Goals', 'Project Overview', 'SOW']
 
-export default function ProjectSummeryFormComponent() {
+export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
   const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
   const editor = useRef(null)
 
@@ -208,6 +208,7 @@ export default function ProjectSummeryFormComponent() {
           })
           setActiveStep(0)
           setPreload(false)
+          setListDataRefresh(res.data)
         })
         .catch(error => {
           setPreload(false)
@@ -263,15 +264,15 @@ export default function ProjectSummeryFormComponent() {
                       <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
                       <textarea
                         className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          errorMessage?.['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
                         }`}
                         placeholder='Enter Transcript Text'
                         name='transcriptText'
                         value={meetingSummaryFormData.transcriptText}
                         onChange={handleTranscriptTextChange}
                       />
-                      {!!errorMessage['transcriptText'] &&
-                        errorMessage['transcriptText']?.map((message: any, index: number) => {
+                      {!!errorMessage?.['transcriptText'] &&
+                        errorMessage?.['transcriptText']?.map((message: any, index: number) => {
                           return (
                             <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
@@ -288,15 +289,15 @@ export default function ProjectSummeryFormComponent() {
                       <span className='text-gray-700 dark:text-gray-400'>Project Name</span>
                       <input
                         className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
                         }`}
                         placeholder='Enter Project Name'
                         name='projectName'
                         value={meetingSummaryFormData.projectName}
                         onChange={handleMeetingSummaryChange}
                       />
-                      {!!errorMessage['projectName'] &&
-                        errorMessage['projectName']?.map((message: any, index: number) => {
+                      {!!errorMessage?.['projectName'] &&
+                        errorMessage?.['projectName']?.map((message: any, index: number) => {
                           return (
                             <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
@@ -310,15 +311,15 @@ export default function ProjectSummeryFormComponent() {
                       <span className='text-gray-700 dark:text-gray-400'>Client Phone</span>
                       <input
                         className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
                         }`}
                         placeholder='Enter Client Phone Number'
                         name='clientPhone'
                         value={meetingSummaryFormData.clientPhone}
                         onChange={handleMeetingSummaryChange}
                       />
-                      {!!errorMessage['clientPhone'] &&
-                        errorMessage['clientPhone']?.map((message: any, index: number) => {
+                      {!!errorMessage?.['clientPhone'] &&
+                        errorMessage?.['clientPhone']?.map((message: any, index: number) => {
                           return (
                             <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
@@ -334,15 +335,15 @@ export default function ProjectSummeryFormComponent() {
                       <span className='text-gray-700 dark:text-gray-400'>Client Email</span>
                       <input
                         className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage['clientEmail'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          errorMessage?.['clientEmail'] ? 'border-red-600' : 'dark:border-gray-600 '
                         }`}
                         placeholder='Enter Client Email'
                         name='clientEmail'
                         value={meetingSummaryFormData.clientEmail}
                         onChange={handleMeetingSummaryChange}
                       />
-                      {!!errorMessage['clientEmail'] &&
-                        errorMessage['clientEmail']?.map((message: any, index: number) => {
+                      {!!errorMessage?.['clientEmail'] &&
+                        errorMessage?.['clientEmail']?.map((message: any, index: number) => {
                           return (
                             <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
@@ -356,15 +357,15 @@ export default function ProjectSummeryFormComponent() {
                       <span className='text-gray-700 dark:text-gray-400'>Client Website</span>
                       <input
                         className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
                         }`}
                         placeholder='Enter Client Website'
                         name='clientWebsite'
                         value={meetingSummaryFormData.clientWebsite}
                         onChange={handleMeetingSummaryChange}
                       />
-                      {!!errorMessage['clientWebsite'] &&
-                        errorMessage['clientWebsite']?.map((message: any, index: number) => {
+                      {!!errorMessage?.['clientWebsite'] &&
+                        errorMessage?.['clientWebsite']?.map((message: any, index: number) => {
                           return (
                             <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
@@ -391,8 +392,8 @@ export default function ProjectSummeryFormComponent() {
                           setProblemGoalText(newContent)
                         }}
                       />
-                      {!!errorMessage['problemGoalText'] &&
-                        errorMessage['problemGoalText']?.map((message: any, index: number) => {
+                      {!!errorMessage?.['problemGoalText'] &&
+                        errorMessage?.['problemGoalText']?.map((message: any, index: number) => {
                           return (
                             <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
@@ -418,8 +419,8 @@ export default function ProjectSummeryFormComponent() {
                           setOverviewText(newContent)
                         }}
                       />
-                      {!!errorMessage['overviewText'] &&
-                        errorMessage['overviewText']?.map((message: any, index: number) => {
+                      {!!errorMessage?.['overviewText'] &&
+                        errorMessage?.['overviewText']?.map((message: any, index: number) => {
                           return (
                             <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
@@ -445,8 +446,8 @@ export default function ProjectSummeryFormComponent() {
                           setScopeText(newContent)
                         }}
                       />
-                      {!!errorMessage['scopeText'] &&
-                        errorMessage['scopeText']?.map((message: any, index: number) => {
+                      {!!errorMessage?.['scopeText'] &&
+                        errorMessage?.['scopeText']?.map((message: any, index: number) => {
                           return (
                             <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
