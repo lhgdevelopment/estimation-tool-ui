@@ -1,59 +1,24 @@
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { Box, Modal, Typography } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import Markdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
-import { TProjectSummeryComponent } from '../ProjectSummery.decorator'
 
-export default function ProjectSummeryListComponent(props: TProjectSummeryComponent) {
-  const { setEditDataId, listData, setListData, setEditData, editDataId } = props
+export default function ProjectSummeryListComponent() {
+  const [listData, setListData] = useState<any>([])
+  const [open, setOpen] = useState(false)
+  const [projectSummery, setProjectSummery] = useState<any>({})
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
 
   const getList = () => {
     apiRequest.get('/project-summery').then(res => {
       setListData(res.data)
     })
   }
-  const onEdit = (i: string) => {
-    setEditDataId(i)
-
-    const editData = listData.length ? listData?.filter((data: any) => data['component_id'] == i)[0] : {}
-    setEditData(editData)
-  }
-
-  const [open, setOpen] = useState(false)
-  const [projectSummery, setProjectSummery] = useState<any>({})
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
-
-  const onDelete = (i: string) => {
-    Swal.fire({
-      title: 'Are You sure?',
-      icon: 'error',
-      showConfirmButton: true,
-      confirmButtonText: 'Yes',
-      showCancelButton: true,
-      cancelButtonText: 'No'
-    }).then(res => {
-      if (res.isConfirmed) {
-        apiRequest.delete(`/project-summery/${i}`).then(res => {
-          Swal.fire({
-            title: 'Data Deleted Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
-          getList()
-        })
-      }
-    })
-  }
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   const style = {
     position: 'absolute' as const,
@@ -73,8 +38,6 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryCompon
     apiRequest.get(`/project-summery/${id}`).then(res => {
       handleOpen()
       setProjectSummery(res.data)
-
-      console.log(projectSummery)
     })
   }
 
@@ -129,10 +92,10 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryCompon
           )}
         </Box>
         <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
-          <span className='flex items-center col-span-3'>Showing 21-30 of 100</span>
+          <span className='flex items-center col-span-3'>Showing 1-10 of 10</span>
           <span className='col-span-2'></span>
           {/* <!-- Pagination --> */}
-          <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
+          {/* <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
             <nav aria-label='Table navigation'>
               <ul className='inline-flex items-center'>
                 <li>
@@ -188,7 +151,7 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryCompon
                 </li>
               </ul>
             </nav>
-          </span>
+          </span> */}
         </Box>
       </Box>
       <Modal
@@ -202,9 +165,11 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryCompon
             <Typography id='modal-modal-title' variant='h6' component='h2'>
               Project Summery:
             </Typography>
-            <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-              <Markdown remarkPlugins={[remarkGfm]}>{projectSummery?.['summaryText']}</Markdown>
-            </Typography>
+            <Typography
+              id='modal-modal-description'
+              sx={{ mt: 2 }}
+              dangerouslySetInnerHTML={{ __html: projectSummery?.['summaryText'] }}
+            ></Typography>
           </Box>
         </Box>
       </Modal>

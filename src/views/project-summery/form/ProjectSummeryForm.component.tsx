@@ -1,17 +1,17 @@
-import EditNoteIcon from '@mui/icons-material/EditNote'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import { Box, CircularProgress, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
-import JoditEditor from 'jodit-react'
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+
+import dynamic from 'next/dynamic'
+import React, { ChangeEvent, useRef, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TProjectSummeryComponent } from '../ProjectSummery.decorator'
 
 const steps = ['Meeting Summery', 'Problems and Goals', 'Project Overview', 'SOW']
 
-export default function ProjectSummeryFormComponent(props: TProjectSummeryComponent) {
+export default function ProjectSummeryFormComponent() {
+  const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
   const editor = useRef(null)
-  const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
+
   const [activeStep, setActiveStep] = useState(0)
   const [completed, setCompleted] = useState<{
     [k: number]: boolean
@@ -35,6 +35,8 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
   const [overviewText, setOverviewText] = useState<any>(null)
   const [scopeTextID, setScopeTextID] = useState<any>(null)
   const [scopeText, setScopeText] = useState<any>(null)
+
+  const [errorMessage, setSrrorMessage] = useState<any>({})
 
   const handleMeetingSummaryChange = (e: SelectChangeEvent<any>) => {
     setMeetingSummaryFormData({
@@ -88,20 +90,8 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
   //   }
   // }
 
-  useEffect(() => {
-    setMeetingSummaryFormData({
-      transcriptText: editData?.['transcriptText'],
-      projectName: editData?.['projectName'],
-      clientPhone: editData?.['clientPhone'],
-      clientEmail: editData?.['clientEmail'],
-      clientWebsite: editData?.['clientWebsite']
-    })
-  }, [editDataId, editData])
-
   const onClear = () => {
     setMeetingSummaryFormData(prevState => ({ ...meetingSummaryDefaultData }))
-    setEditDataId(null)
-    setEditData({})
   }
 
   const totalSteps = () => {
@@ -121,7 +111,6 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
   }
 
   const handleNext = () => {
-    console.log(activeStep)
     setPreload(true)
     const newActiveStep =
       isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1
@@ -147,8 +136,9 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
             })
           }
         })
-        .catch(() => {
+        .catch(error => {
           setPreload(false)
+          setSrrorMessage(error?.response?.data?.errors)
         })
     }
     if (activeStep === 1) {
@@ -172,8 +162,9 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
             })
           }
         })
-        .catch(() => {
+        .catch(error => {
           setPreload(false)
+          setSrrorMessage(error?.response?.data?.errors)
         })
     }
     if (activeStep === 2) {
@@ -197,8 +188,9 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
             })
           }
         })
-        .catch(() => {
+        .catch(error => {
           setPreload(false)
+          setSrrorMessage(error?.response?.data?.errors)
         })
     }
 
@@ -217,8 +209,9 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
           setActiveStep(0)
           setPreload(false)
         })
-        .catch(() => {
+        .catch(error => {
           setPreload(false)
+          setSrrorMessage(error?.response?.data?.errors)
         })
     }
   }
@@ -269,12 +262,22 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
                       <textarea
-                        className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                          errorMessage['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
+                        }`}
                         placeholder='Enter Transcript Text'
                         name='transcriptText'
                         value={meetingSummaryFormData.transcriptText}
                         onChange={handleTranscriptTextChange}
                       />
+                      {!!errorMessage['transcriptText'] &&
+                        errorMessage['transcriptText']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                 </Box>
@@ -284,24 +287,44 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Project Name</span>
                       <input
-                        className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                          errorMessage['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                        }`}
                         placeholder='Enter Project Name'
                         name='projectName'
                         value={meetingSummaryFormData.projectName}
                         onChange={handleMeetingSummaryChange}
                       />
+                      {!!errorMessage['projectName'] &&
+                        errorMessage['projectName']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                   <Box sx={{ width: '50%' }}>
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Client Phone</span>
                       <input
-                        className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                          errorMessage['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
+                        }`}
                         placeholder='Enter Client Phone Number'
                         name='clientPhone'
                         value={meetingSummaryFormData.clientPhone}
                         onChange={handleMeetingSummaryChange}
                       />
+                      {!!errorMessage['clientPhone'] &&
+                        errorMessage['clientPhone']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                 </Box>
@@ -310,24 +333,44 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Client Email</span>
                       <input
-                        className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                          errorMessage['clientEmail'] ? 'border-red-600' : 'dark:border-gray-600 '
+                        }`}
                         placeholder='Enter Client Email'
                         name='clientEmail'
                         value={meetingSummaryFormData.clientEmail}
                         onChange={handleMeetingSummaryChange}
                       />
+                      {!!errorMessage['clientEmail'] &&
+                        errorMessage['clientEmail']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                   <Box sx={{ width: '50%' }}>
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Client Website</span>
                       <input
-                        className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                          errorMessage['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
+                        }`}
                         placeholder='Enter Client Website'
                         name='clientWebsite'
                         value={meetingSummaryFormData.clientWebsite}
                         onChange={handleMeetingSummaryChange}
                       />
+                      {!!errorMessage['clientWebsite'] &&
+                        errorMessage['clientWebsite']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                 </Box>
@@ -348,6 +391,14 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
                           setProblemGoalText(newContent)
                         }}
                       />
+                      {!!errorMessage['problemGoalText'] &&
+                        errorMessage['problemGoalText']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                 </Box>
@@ -367,6 +418,14 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
                           setOverviewText(newContent)
                         }}
                       />
+                      {!!errorMessage['overviewText'] &&
+                        errorMessage['overviewText']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                 </Box>
@@ -386,6 +445,14 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
                           setScopeText(newContent)
                         }}
                       />
+                      {!!errorMessage['scopeText'] &&
+                        errorMessage['scopeText']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                 </Box>
@@ -393,26 +460,13 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryCompon
             )}
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            {/* <Button color='inherit' disabled={activeStep === 0} onClick={handleBack} sx={{ mr: 1 }}>
-                Back
-              </Button> */}
             <Box sx={{ flex: '1 1 auto' }} />
             <Box className='my-4 text-right'>
-              {/* <button
-                onClick={onClear}
-                type='button'
-                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-              >
-                {editDataId ? 'Cancel ' : 'Clear '}
-                {editDataId ? <PlaylistRemoveIcon /> : <ClearIcon />}
-              </button> */}
               <button
                 onClick={handleNext}
                 className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
               >
-                {editDataId ? 'Update ' : 'Save & Next'}
-
-                {editDataId ? <EditNoteIcon /> : <NavigateNextIcon />}
+                Save & Next <NavigateNextIcon />
               </button>
             </Box>
             {/* {activeStep !== steps.length &&
