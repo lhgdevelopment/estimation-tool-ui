@@ -30,12 +30,12 @@ export default function AppHeaderComponent() {
                 className='rounded-md focus:outline-none focus:shadow-outline-purple'
                 aria-label='Toggle color mode'
               >
-                <template>
-                  <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
+                <div>
+                  <svg className='w-5 h-5 hidden' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
                     <path d='M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z'></path>
                   </svg>
-                </template>
-                <template>
+                </div>
+                <div>
                   <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
                     <path
                       fillRule='evenodd'
@@ -43,7 +43,7 @@ export default function AppHeaderComponent() {
                       clipRule='evenodd'
                     ></path>
                   </svg>
-                </template>
+                </div>
               </Box>
             </Box>
             {/* <!-- Notifications menu --> */}
@@ -64,10 +64,10 @@ export default function AppHeaderComponent() {
                   className='absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800'
                 ></Box>
               </Box>
-              <template>
+              <div>
                 <Box
                   component={'ul'}
-                  className='absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:text-gray-300 dark:border-gray-700 dark:bg-gray-700'
+                  className='absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:text-gray-300 dark:border-gray-700 dark:bg-gray-700 hidden'
                   aria-label='submenu'
                 >
                   <Box component={'li'} className='flex'>
@@ -110,7 +110,7 @@ export default function AppHeaderComponent() {
                     </Box>
                   </Box>
                 </Box>
-              </template>
+              </div>
             </Box>
             {/* <!-- Profile menu --> */}
             <Box component={'li'} className='relative'>
@@ -127,10 +127,10 @@ export default function AppHeaderComponent() {
                   aria-hidden='true'
                 />
               </Box>
-              <template>
+              <div>
                 <Box
                   component={'ul'}
-                  className='absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:border-gray-700 dark:text-gray-300 dark:bg-gray-700'
+                  className='absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:border-gray-700 dark:text-gray-300 dark:bg-gray-700 hidden'
                   aria-label='submenu'
                 >
                   <Box component={'li'} className='flex'>
@@ -198,7 +198,7 @@ export default function AppHeaderComponent() {
                     </Box>
                   </Box>
                 </Box>
-              </template>
+              </div>
             </Box>
           </Box>
         </Box>
