@@ -83,41 +83,43 @@ export default function ProjectFormComponent(props: TProjectComponent) {
     <Fragment>
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
-          <Box>
-            <label className='block text-sm'>
-              <span className='text-gray-700 dark:text-gray-400'>Project Name</span>
-              <input
-                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                placeholder='Examples: Header, Footer, etc'
-                name='project_name'
-                value={formData.project_name}
-                onChange={handleChange}
-              />
-            </label>
-          </Box>
-          <Box>
-            <label className='block text-sm'>
-              <span className='text-gray-700 dark:text-gray-400'>Project Description</span>
-              <input
-                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                placeholder='Examples: Header, Footer, etc'
-                name='project_description'
-                value={formData.project_description}
-                onChange={handleChange}
-              />
-            </label>
-          </Box>
-          <Box>
-            <label className='block text-sm'>
-              <span className='text-gray-700 dark:text-gray-400'>Total Cost</span>
-              <input
-                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                placeholder='Examples: Header, Footer, etc'
-                name='total_cost'
-                value={formData.total_cost}
-                onChange={handleChange}
-              />
-            </label>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '100%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Project Name</span>
+                <input
+                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  placeholder='Examples: Header, Footer, etc'
+                  name='project_name'
+                  value={formData.project_name}
+                  onChange={handleChange}
+                />
+              </label>
+            </Box>
+            <Box sx={{ width: '100%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Project Description</span>
+                <input
+                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  placeholder='Examples: Header, Footer, etc'
+                  name='project_description'
+                  value={formData.project_description}
+                  onChange={handleChange}
+                />
+              </label>
+            </Box>
+            <Box sx={{ width: '100%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Total Cost</span>
+                <input
+                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  placeholder='Examples: Header, Footer, etc'
+                  name='total_cost'
+                  value={formData.total_cost}
+                  onChange={handleChange}
+                />
+              </label>
+            </Box>
           </Box>
           <Box className='my-4 text-right'>
             <button

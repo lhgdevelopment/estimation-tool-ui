@@ -119,25 +119,11 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
       apiRequest
         .post('/project-summery', meetingSummaryFormData)
         .then(res => {
-          if (res?.data?.meetingTranscript) {
-            apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meetingTranscript?.id }).then(res2 => {
-              Swal.fire({
-                title: 'Data Created Successfully!',
-                icon: 'success',
-                timer: 1000,
-                timerProgressBar: true,
-                showConfirmButton: false
-              })
-              setProjectSummeryID(res?.data?.id)
-              setSummaryText(res?.data?.summaryText)
-
-              setProblemGoalID(res2?.data?.id)
-              setProblemGoalText(res2?.data?.problemGoalText)
-              onClear()
-              setActiveStep(newActiveStep)
-              setPreload(false)
-            })
-          }
+          setProjectSummeryID(res?.data?.id)
+          setSummaryText(res?.data?.summaryText)
+          onClear()
+          setActiveStep(newActiveStep)
+          setPreload(false)
         })
         .catch(error => {
           setPreload(false)
@@ -151,18 +137,20 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
           setActiveStep(newActiveStep)
           setPreload(false)
 
-          // if (res?.data?.meetingTranscript) {
-          //   apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meetingTranscript?.id }).then(res2 => {
-          //     Swal.fire({
-          //       title: 'Data Created Successfully!',
-          //       icon: 'success',
-          //       timer: 1000,
-          //       timerProgressBar: true,
-          //       showConfirmButton: false
-          //     })
+          if (res?.data?.meetingTranscript) {
+            apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meetingTranscript?.id }).then(res2 => {
+              Swal.fire({
+                title: 'Data Created Successfully!',
+                icon: 'success',
+                timer: 1000,
+                timerProgressBar: true,
+                showConfirmButton: false
+              })
 
-          //   })
-          // }
+              setProblemGoalID(res2?.data?.id)
+              setProblemGoalText(res2?.data?.problemGoalText)
+            })
+          }
         })
         .catch(error => {
           setPreload(false)
