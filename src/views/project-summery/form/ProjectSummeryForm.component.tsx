@@ -134,9 +134,6 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
       apiRequest
         .put(`/project-summery/${projectSummeryID}`, { summaryText })
         .then(res => {
-          setActiveStep(newActiveStep)
-          setPreload(false)
-
           if (res?.data?.meeting_transcript) {
             apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id }).then(res2 => {
               Swal.fire({
@@ -146,9 +143,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                 timerProgressBar: true,
                 showConfirmButton: false
               })
-
               setProblemGoalID(res2?.data?.id)
               setProblemGoalText(res2?.data?.problemGoalText)
+              setActiveStep(newActiveStep)
+              setPreload(false)
             })
           }
         })
