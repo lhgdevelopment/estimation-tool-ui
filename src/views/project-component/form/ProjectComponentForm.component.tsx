@@ -2,7 +2,7 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box } from '@mui/material'
+import { Box, SelectChangeEvent } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -17,7 +17,7 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
     components: ['']
   }
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleChange = (e: SelectChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value

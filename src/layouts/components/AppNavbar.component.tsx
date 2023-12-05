@@ -75,7 +75,7 @@ export default function AppNavbarComponent() {
             ))}
           </Box>
           <Box className='px-4 my-2'>
-            <Link href={'/Project'} passHref>
+            <Link href={'/project'} passHref>
               <Box
                 component={'a'}
                 className='flex items-center justify-between w-full px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
@@ -301,10 +301,10 @@ export default function AppNavbarComponent() {
                   ></path>
                 </svg>
               </button>
-              <template>
+              <div>
                 <Box
                   component={'ul'}
-                  className='p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900'
+                  className='p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900 hidden'
                   aria-label='submenu'
                 >
                   <Box
@@ -348,7 +348,7 @@ export default function AppNavbarComponent() {
                     </Box>
                   </Box>
                 </Box>
-              </template>
+              </div>
             </Box>
           </Box>
           <Box className='px-6 my-6'>

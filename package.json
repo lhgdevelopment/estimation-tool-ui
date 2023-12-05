@@ -46,6 +46,7 @@
     "@mui/material": "^5.4.3",
     "@mui/x-date-pickers": "^6.16.2",
     "@popperjs/core": "^2.11.2",
+    "@uiw/react-markdown-editor": "^6.0.0",
     "apexcharts-clevision": "3.28.5",
     "axios": "^1.5.1",
     "chart.js": "^4.4.0",

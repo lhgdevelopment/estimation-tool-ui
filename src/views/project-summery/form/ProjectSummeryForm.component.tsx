@@ -6,7 +6,7 @@ import React, { ChangeEvent, useRef, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 
-const steps = ['Meeting Summery', 'Problems and Goals', 'Project Overview', 'SOW']
+const steps = ['Meeting Transcript', 'Meeting Summery', 'Problems and Goals', 'Project Overview', 'SOW']
 
 export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
   const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
@@ -28,7 +28,8 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
   const [meetingSummaryFormData, setMeetingSummaryFormData] = useState(meetingSummaryDefaultData)
 
   const [preload, setPreload] = useState<boolean>(false)
-  const [transcriptId, setTranscriptId] = useState<any>(null)
+  const [projectSummeryID, setProjectSummeryID] = useState<any>(null)
+  const [summaryText, setSummaryText] = useState<any>(null)
   const [problemGoalID, setProblemGoalID] = useState<any>(null)
   const [problemGoalText, setProblemGoalText] = useState<any>(null)
   const [overviewTextID, setOverviewTextID] = useState<any>(null)
@@ -119,7 +120,6 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
         .post('/project-summery', meetingSummaryFormData)
         .then(res => {
           if (res?.data?.meetingTranscript) {
-            setTranscriptId(res?.data?.meetingTranscript?.id)
             apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meetingTranscript?.id }).then(res2 => {
               Swal.fire({
                 title: 'Data Created Successfully!',
@@ -128,6 +128,9 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                 timerProgressBar: true,
                 showConfirmButton: false
               })
+              setProjectSummeryID(res?.data?.id)
+              setSummaryText(res?.data?.summaryText)
+
               setProblemGoalID(res2?.data?.id)
               setProblemGoalText(res2?.data?.problemGoalText)
               onClear()
@@ -142,6 +145,31 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
         })
     }
     if (activeStep === 1) {
+      apiRequest
+        .put(`/project-summery/${projectSummeryID}`, { summaryText })
+        .then(res => {
+          setActiveStep(newActiveStep)
+          setPreload(false)
+
+          // if (res?.data?.meetingTranscript) {
+          //   apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meetingTranscript?.id }).then(res2 => {
+          //     Swal.fire({
+          //       title: 'Data Created Successfully!',
+          //       icon: 'success',
+          //       timer: 1000,
+          //       timerProgressBar: true,
+          //       showConfirmButton: false
+          //     })
+
+          //   })
+          // }
+        })
+        .catch(error => {
+          setPreload(false)
+          setSrrorMessage(error?.response?.data?.errors)
+        })
+    }
+    if (activeStep === 2) {
       apiRequest
         .post(`/problems-and-goals/${problemGoalID}`, { problemGoalText })
         .then(res => {
@@ -167,7 +195,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
           setSrrorMessage(error?.response?.data?.errors)
         })
     }
-    if (activeStep === 2) {
+    if (activeStep === 3) {
       apiRequest
         .post(`/project-overview/${overviewTextID}`, { overviewText })
         .then(res => {
@@ -194,7 +222,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
         })
     }
 
-    if (activeStep === 3) {
+    if (activeStep === 4) {
       apiRequest
         .post(`/scope-of-work/${scopeTextID}`, { scopeText })
         .then(res => {
@@ -382,12 +410,40 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
+                      <span className='text-gray-700 dark:text-gray-400'>Summary Text</span>
+
+                      <JoditEditor
+                        ref={editor}
+                        value={summaryText}
+                        onBlur={newContent => setSummaryText(newContent)}
+                        onChange={newContent => {
+                          setSummaryText(newContent)
+                        }}
+                      />
+                      {!!errorMessage?.['summaryText'] &&
+                        errorMessage?.['summaryText']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
+                    </label>
+                  </Box>
+                </Box>
+              </Box>
+            )}
+            {activeStep == 2 && (
+              <Box>
+                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                  <Box sx={{ width: '100%' }}>
+                    <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Problem Goal Text</span>
 
                       <JoditEditor
                         ref={editor}
                         value={problemGoalText}
-                        onBlur={newContent => setProblemGoalText(newContent)} // preferred to use only this option to update the content for performance reasons
+                        onBlur={newContent => setProblemGoalText(newContent)}
                         onChange={newContent => {
                           setProblemGoalText(newContent)
                         }}
@@ -405,7 +461,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                 </Box>
               </Box>
             )}
-            {activeStep == 2 && (
+            {activeStep == 3 && (
               <Box>
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '100%' }}>
@@ -432,7 +488,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                 </Box>
               </Box>
             )}
-            {activeStep == 3 && (
+            {activeStep == 4 && (
               <Box>
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '100%' }}>
