@@ -137,8 +137,8 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
           setActiveStep(newActiveStep)
           setPreload(false)
 
-          if (res?.data?.meetingTranscript) {
-            apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meetingTranscript?.id }).then(res2 => {
+          if (res?.data?.meeting_transcript) {
+            apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id }).then(res2 => {
               Swal.fire({
                 title: 'Data Created Successfully!',
                 icon: 'success',
