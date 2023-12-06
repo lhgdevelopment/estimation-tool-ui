@@ -1,6 +1,7 @@
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import { Box, CircularProgress, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
 
+import { useMask } from '@react-input/mask'
 import dynamic from 'next/dynamic'
 import React, { ChangeEvent, useRef, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -10,8 +11,18 @@ const steps = ['Meeting Transcript', 'Meeting Summery', 'Problems and Goals', 'P
 
 export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
   const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
-  const editor = useRef(null)
 
+  const summaryTextEditorRef = useRef(null)
+  const problemGoalTextEditorRef = useRef(null)
+  const overviewTextEditorRef = useRef(null)
+  const scopeTextEditorRef = useRef(null)
+
+  const phoneInputRef = useMask({
+    mask: '+0 (___) ___-__-__',
+    replacement: { _: /\d/ },
+    showMask: true,
+    separate: true
+  })
   const [activeStep, setActiveStep] = useState(0)
   const [completed, setCompleted] = useState<{
     [k: number]: boolean
@@ -122,8 +133,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
           setProjectSummeryID(res?.data?.id)
           setSummaryText(res?.data?.summaryText)
           onClear()
-          setActiveStep(newActiveStep)
-          setPreload(false)
+          setTimeout(() => {
+            setActiveStep(newActiveStep)
+            setPreload(false)
+          }, 1000)
         })
         .catch(error => {
           setPreload(false)
@@ -145,8 +158,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
               })
               setProblemGoalID(res2?.data?.id)
               setProblemGoalText(res2?.data?.problemGoalText)
-              setActiveStep(newActiveStep)
-              setPreload(false)
+              setTimeout(() => {
+                setActiveStep(newActiveStep)
+                setPreload(false)
+              }, 1000)
             })
           }
         })
@@ -171,8 +186,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
               })
               setOverviewTextID(res2?.data?.id)
               setOverviewText(res2?.data?.overviewText)
-              setActiveStep(newActiveStep)
-              setPreload(false)
+              setTimeout(() => {
+                setActiveStep(newActiveStep)
+                setPreload(false)
+              }, 1000)
             })
           }
         })
@@ -197,8 +214,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
               })
               setScopeTextID(res2?.data?.id)
               setScopeText(res2?.data?.scopeText)
-              setActiveStep(newActiveStep)
-              setPreload(false)
+              setTimeout(() => {
+                setActiveStep(newActiveStep)
+                setPreload(false)
+              }, 1000)
             })
           }
         })
@@ -220,9 +239,12 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
             timerProgressBar: true,
             showConfirmButton: false
           })
-          setActiveStep(0)
-          setPreload(false)
-          setListDataRefresh(res)
+
+          setTimeout(() => {
+            setActiveStep(0)
+            setPreload(false)
+            setListDataRefresh(res)
+          }, 1000)
         })
         .catch(error => {
           setPreload(false)
@@ -324,6 +346,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Client Phone</span>
                       <input
+                        ref={phoneInputRef}
                         className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                           errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
                         }`}
@@ -399,12 +422,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                       <span className='text-gray-700 dark:text-gray-400'>Summary Text</span>
 
                       <JoditEditor
-                        ref={editor}
+                        ref={summaryTextEditorRef}
+                        config={{ enter: 'br' }}
                         value={summaryText}
                         onBlur={newContent => setSummaryText(newContent)}
-                        onChange={newContent => {
-                          setSummaryText(newContent)
-                        }}
                       />
                       {!!errorMessage?.['summaryText'] &&
                         errorMessage?.['summaryText']?.map((message: any, index: number) => {
@@ -427,12 +448,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                       <span className='text-gray-700 dark:text-gray-400'>Problem Goal Text</span>
 
                       <JoditEditor
-                        ref={editor}
+                        ref={problemGoalTextEditorRef}
+                        config={{ enter: 'br' }}
                         value={problemGoalText}
                         onBlur={newContent => setProblemGoalText(newContent)}
-                        onChange={newContent => {
-                          setProblemGoalText(newContent)
-                        }}
                       />
                       {!!errorMessage?.['problemGoalText'] &&
                         errorMessage?.['problemGoalText']?.map((message: any, index: number) => {
@@ -454,12 +473,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Overview Text</span>
                       <JoditEditor
-                        ref={editor}
+                        ref={overviewTextEditorRef}
+                        config={{ enter: 'br' }}
                         value={overviewText}
                         onBlur={newContent => setOverviewText(newContent)}
-                        onChange={newContent => {
-                          setOverviewText(newContent)
-                        }}
                       />
                       {!!errorMessage?.['overviewText'] &&
                         errorMessage?.['overviewText']?.map((message: any, index: number) => {
@@ -481,12 +498,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Scope of Work</span>
                       <JoditEditor
-                        ref={editor}
+                        ref={scopeTextEditorRef}
+                        config={{ enter: 'br' }}
                         value={scopeText}
                         onBlur={newContent => setScopeText(newContent)}
-                        onChange={newContent => {
-                          setScopeText(newContent)
-                        }}
                       />
                       {!!errorMessage?.['scopeText'] &&
                         errorMessage?.['scopeText']?.map((message: any, index: number) => {
