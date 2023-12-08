@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { useState } from 'react'
-import WebsiteComponentFormComponent from './form/WebsiteComponentForm.component'
-import WebsiteComponentListComponent from './list/WebsiteComponentList.component'
+import WebsiteComponentFormComponent from './form/WebsiteComponent.form.component'
+import WebsiteComponentListComponent from './list/WebsiteComponent.list.component'
 
 export default function WebsiteComponentComponent() {
   const [editDataId, setEditDataId] = useState<null | string>(null)

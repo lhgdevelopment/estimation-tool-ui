@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { useState } from 'react'
-import ProjectFormComponent from './form/ProjectForm.component'
-import ProjectListComponent from './list/ProjectList.component'
+import ProjectFormComponent from './form/Project.form.component'
+import ProjectListComponent from './list/Project.list.component'
 
 export default function ProjectComponent() {
   const [editDataId, setEditDataId] = useState<null | string>(null)

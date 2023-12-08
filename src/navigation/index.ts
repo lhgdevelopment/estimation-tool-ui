@@ -2,6 +2,7 @@
 import CategoryIcon from '@mui/icons-material/Category'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize'
+import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
 
@@ -37,6 +38,11 @@ const navigation: TNavigation[] = [
     title: 'Project Summery',
     icon: DashboardCustomizeIcon,
     path: '/project-summery'
+  },
+  {
+    title: 'Prompts',
+    icon: SettingsEthernetIcon,
+    path: '/prompts'
   }
 ]
 
