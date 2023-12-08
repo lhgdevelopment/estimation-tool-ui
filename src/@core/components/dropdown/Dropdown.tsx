@@ -28,7 +28,7 @@ export function Dropdown(props: ISelectProps) {
     ...otherProps
   } = props
 
-  const [menuItems, setMenuItems] = useState<{ title: string; id: string }[]>([])
+  const [menuItems, setMenuItems] = useState<{ title: string; id: string | number }[]>([])
 
   const getList = () => {
     if (!isEnumField) {
