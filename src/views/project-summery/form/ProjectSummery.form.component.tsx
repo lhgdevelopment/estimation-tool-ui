@@ -39,6 +39,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
   const [meetingSummaryFormData, setMeetingSummaryFormData] = useState(meetingSummaryDefaultData)
 
   const [preload, setPreload] = useState<boolean>(false)
+  const [transcriptTextRows, setTranscriptTextRows] = useState<number>(5)
   const [projectSummeryID, setProjectSummeryID] = useState<any>(null)
   const [summaryText, setSummaryText] = useState<any>(null)
   const [problemGoalID, setProblemGoalID] = useState<any>(null)
@@ -62,6 +63,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
       ...meetingSummaryFormData,
       transcriptText: e.target.value
     })
+  }
+  function calculateNumberOfRows(text: string) {
+    const numberOfLines = text.split('\n').length
+    setTranscriptTextRows(Math.max(5, numberOfLines))
   }
 
   // const onSubmitProjectSummery = () => {
@@ -259,7 +264,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stepper nonLinear activeStep={activeStep}>
+      <Stepper alternativeLabel activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
             <StepButton color='inherit' disabled>
@@ -306,6 +311,10 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                         name='transcriptText'
                         value={meetingSummaryFormData.transcriptText}
                         onChange={handleTranscriptTextChange}
+                        onKeyUp={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+                          calculateNumberOfRows((event.target as HTMLTextAreaElement)?.value)
+                        }}
+                        rows={transcriptTextRows}
                       />
                       {!!errorMessage?.['transcriptText'] &&
                         errorMessage?.['transcriptText']?.map((message: any, index: number) => {

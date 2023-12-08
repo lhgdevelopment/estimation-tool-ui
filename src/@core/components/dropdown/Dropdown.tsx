@@ -12,7 +12,7 @@ interface ISelectProps extends SelectProps {
   url?: string
   isEnumField?: boolean
   optionConfig?: TOptionConfig
-  enumList?: { title: string; id: string }[]
+  enumList?: { title: string; id: string | number }[]
 }
 
 export function Dropdown(props: ISelectProps) {
