@@ -9,7 +9,7 @@ import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TProjectSummeryFormComponent } from '../ProjectSummery.decorator'
 
-const steps = ['Meeting Transcript', 'Meeting Summery', 'Problems and Goals', 'Project Overview', 'SOW']
+const steps = ['Meeting Transcript', 'Meeting Summery', 'Problems and Goals', 'Project Overview', 'SOW', 'Deliverable']
 
 export default function ProjectSummeryFormComponent(props: TProjectSummeryFormComponent) {
   const { setListDataRefresh } = props
@@ -36,6 +36,7 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
   const problemGoalTextEditorRef = useRef<ExposeParam>()
   const overviewTextEditorRef = useRef<ExposeParam>()
   const scopeTextEditorRef = useRef<ExposeParam>()
+  const deliverablesTextEditorRef = useRef<ExposeParam>()
 
   const [meetingSummaryFormData, setMeetingSummaryFormData] = useState(meetingSummaryDefaultData)
 
@@ -49,6 +50,8 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
   const [overviewText, setOverviewText] = useState<any>('')
   const [scopeTextID, setScopeTextID] = useState<any>(null)
   const [scopeText, setScopeText] = useState<any>('')
+  const [deliverablesTextID, setDeliverablesTextID] = useState<any>(null)
+  const [deliverablesText, setDeliverablesText] = useState<any>('')
 
   const [errorMessage, setSrrorMessage] = useState<any>({})
 
@@ -69,44 +72,6 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
     const numberOfLines = text.split('\n').length
     setTranscriptTextRows(Math.max(5, numberOfLines))
   }
-
-  // const onSubmitProjectSummery = () => {
-  //   if (editDataId) {
-  //     apiRequest.put(`/project-summery/${editDataId}`, meetingSummaryFormData).then(res => {
-  //       setListData((prevState: []) => {
-  //         const updatedList: any = [...prevState]
-  //         const editedServiceIndex = updatedList.findIndex(
-  //           (item: any) => item['_id'] === editDataId // Replace 'id' with the actual identifier of your item
-  //         )
-  //         if (editedServiceIndex !== -1) {
-  //           updatedList[editedServiceIndex] = res.data
-  //         }
-  //         Swal.fire({
-  //           title: 'Data Updated Successfully!',
-  //           icon: 'success',
-  //           timer: 1000,
-  //           timerProgressBar: true,
-  //           showConfirmButton: false
-  //         })
-
-  //         return updatedList
-  //       })
-  //       onClear()
-  //     })
-  //   } else {
-  //     apiRequest.post('/project-summery', meetingSummaryFormData).then(res => {
-  //       setListData((prevState: []) => [...prevState, res.data])
-  //       Swal.fire({
-  //         title: 'Data Created Successfully!',
-  //         icon: 'success',
-  //         timer: 1000,
-  //         timerProgressBar: true,
-  //         showConfirmButton: false
-  //       })
-  //       onClear()
-  //     })
-  //   }
-  // }
 
   const onClear = () => {
     setMeetingSummaryFormData(prevState => ({ ...meetingSummaryDefaultData }))
@@ -208,7 +173,6 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
       apiRequest
         .post(`/project-overview/${overviewTextID}`, { overviewText })
         .then(res => {
-          console.log(res)
           if (res?.data) {
             apiRequest.post('/scope-of-work', { problemGoalID }).then(res2 => {
               Swal.fire({
@@ -236,6 +200,34 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
     if (activeStep === 4) {
       apiRequest
         .post(`/scope-of-work/${scopeTextID}`, { scopeText })
+        .then(res => {
+          console.log(res)
+          if (res?.data) {
+            apiRequest.post('/deliverables', { scopeOfWorkId: scopeTextID }).then(res2 => {
+              Swal.fire({
+                title: 'Data Created Successfully!',
+                icon: 'success',
+                timer: 1000,
+                timerProgressBar: true,
+                showConfirmButton: false
+              })
+              deliverablesTextID(res2?.data?.id)
+              deliverablesText(res2?.data?.deliverablesText)
+              setTimeout(() => {
+                setActiveStep(newActiveStep)
+                setPreload(false)
+              }, 1000)
+            })
+          }
+        })
+        .catch(error => {
+          setPreload(false)
+          setSrrorMessage(error?.response?.data?.errors)
+        })
+    }
+    if (activeStep === 5) {
+      apiRequest
+        .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
         .then(res => {
           console.log(res)
           Swal.fire({
@@ -500,6 +492,30 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
                       <MdEditor ref={scopeTextEditorRef} modelValue={scopeText} onChange={setScopeText} />
                       {!!errorMessage?.['scopeText'] &&
                         errorMessage?.['scopeText']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
+                    </label>
+                  </Box>
+                </Box>
+              </Box>
+            )}
+            {activeStep == 5 && (
+              <Box>
+                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                  <Box sx={{ width: '100%' }}>
+                    <label className='block text-sm' htmlFor={'#deliverablesText'}>
+                      <span className='text-gray-700 dark:text-gray-400'>Deliverable</span>
+                      <MdEditor
+                        ref={deliverablesTextEditorRef}
+                        modelValue={deliverablesText}
+                        onChange={setDeliverablesText}
+                      />
+                      {!!errorMessage?.['deliverablesText'] &&
+                        errorMessage?.['deliverablesText']?.map((message: any, index: number) => {
                           return (
                             <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
