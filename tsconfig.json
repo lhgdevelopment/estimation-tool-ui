@@ -17,10 +17,9 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "apexcharts": ["./node_modules/apexcharts-clevision"],
-      "apexcharts/*": ["./node_modules/apexcharts-clevision/*"]
+
     }
   },
-  "include": ["src", "next-env.d.ts", ".env"],
+  "include": ["src", "next-env.d.ts", ".env", ],
   "exclude": ["node_modules"]
 }

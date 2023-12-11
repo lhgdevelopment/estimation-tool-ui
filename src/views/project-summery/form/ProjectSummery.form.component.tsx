@@ -1,22 +1,18 @@
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import { Box, CircularProgress, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
-
 import { useMask } from '@react-input/mask'
-import dynamic from 'next/dynamic'
-import React, { ChangeEvent, useRef, useState } from 'react'
+import '@uiw/react-md-editor/markdown-editor.css'
+import { MdEditor } from 'md-editor-rt'
+import 'md-editor-rt/lib/style.css'
+import React, { ChangeEvent, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
+import { TProjectSummeryFormComponent } from '../ProjectSummery.decorator'
 
 const steps = ['Meeting Transcript', 'Meeting Summery', 'Problems and Goals', 'Project Overview', 'SOW']
 
-export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
-  const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
-
-  const summaryTextEditorRef = useRef(null)
-  const problemGoalTextEditorRef = useRef(null)
-  const overviewTextEditorRef = useRef(null)
-  const scopeTextEditorRef = useRef(null)
-
+export default function ProjectSummeryFormComponent(props: TProjectSummeryFormComponent) {
+  const { setListDataRefresh } = props
   const phoneInputRef = useMask({
     mask: '+0 (___) ___-__-__',
     replacement: { _: /\d/ },
@@ -41,13 +37,13 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
   const [preload, setPreload] = useState<boolean>(false)
   const [transcriptTextRows, setTranscriptTextRows] = useState<number>(5)
   const [projectSummeryID, setProjectSummeryID] = useState<any>(null)
-  const [summaryText, setSummaryText] = useState<any>(null)
+  const [summaryText, setSummaryText] = useState<any>('')
   const [problemGoalID, setProblemGoalID] = useState<any>(null)
-  const [problemGoalText, setProblemGoalText] = useState<any>(null)
+  const [problemGoalText, setProblemGoalText] = useState<any>('')
   const [overviewTextID, setOverviewTextID] = useState<any>(null)
-  const [overviewText, setOverviewText] = useState<any>(null)
+  const [overviewText, setOverviewText] = useState<any>('')
   const [scopeTextID, setScopeTextID] = useState<any>(null)
-  const [scopeText, setScopeText] = useState<any>(null)
+  const [scopeText, setScopeText] = useState<any>('')
 
   const [errorMessage, setSrrorMessage] = useState<any>({})
 
@@ -429,13 +425,8 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Summary Text</span>
+                      <MdEditor modelValue={summaryText} onChange={setSummaryText} />
 
-                      <JoditEditor
-                        ref={summaryTextEditorRef}
-                        config={{ enter: 'br' }}
-                        value={summaryText}
-                        onBlur={newContent => setSummaryText(newContent)}
-                      />
                       {!!errorMessage?.['summaryText'] &&
                         errorMessage?.['summaryText']?.map((message: any, index: number) => {
                           return (
@@ -456,12 +447,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Problem Goal Text</span>
 
-                      <JoditEditor
-                        ref={problemGoalTextEditorRef}
-                        config={{ enter: 'br' }}
-                        value={problemGoalText}
-                        onBlur={newContent => setProblemGoalText(newContent)}
-                      />
+                      <MdEditor modelValue={problemGoalText} onChange={setProblemGoalText} />
                       {!!errorMessage?.['problemGoalText'] &&
                         errorMessage?.['problemGoalText']?.map((message: any, index: number) => {
                           return (
@@ -481,12 +467,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Overview Text</span>
-                      <JoditEditor
-                        ref={overviewTextEditorRef}
-                        config={{ enter: 'br' }}
-                        value={overviewText}
-                        onBlur={newContent => setOverviewText(newContent)}
-                      />
+                      <MdEditor modelValue={overviewText} onChange={setOverviewText} />
                       {!!errorMessage?.['overviewText'] &&
                         errorMessage?.['overviewText']?.map((message: any, index: number) => {
                           return (
@@ -506,12 +487,7 @@ export default function ProjectSummeryFormComponent(setListDataRefresh: any) {
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Scope of Work</span>
-                      <JoditEditor
-                        ref={scopeTextEditorRef}
-                        config={{ enter: 'br' }}
-                        value={scopeText}
-                        onBlur={newContent => setScopeText(newContent)}
-                      />
+                      <MdEditor modelValue={scopeText} onChange={setScopeText} />
                       {!!errorMessage?.['scopeText'] &&
                         errorMessage?.['scopeText']?.map((message: any, index: number) => {
                           return (

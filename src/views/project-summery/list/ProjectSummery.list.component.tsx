@@ -3,8 +3,10 @@ import { Box, Modal, Typography } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import apiRequest from 'src/@core/utils/axios-config'
+import { TProjectSummeryListComponent } from '../ProjectSummery.decorator'
 
-export default function ProjectSummeryListComponent(listDataRefresh: any) {
+export default function ProjectSummeryListComponent(props: TProjectSummeryListComponent) {
+  const { listDataRefresh } = props
   const [listData, setListData] = useState<any>([])
   const [open, setOpen] = useState(false)
   const [projectSummery, setProjectSummery] = useState<any>({})
@@ -93,8 +95,8 @@ export default function ProjectSummeryListComponent(listDataRefresh: any) {
           )}
         </Box>
         <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
-          <span className='flex items-center col-span-3'>Showing 1-10 of 10</span>
-          <span className='col-span-2'></span>
+          {/* <span className='flex items-center col-span-3'>Showing 1-10 of 10</span>
+          <span className='col-span-2'></span> */}
           {/* <!-- Pagination --> */}
           {/* <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
             <nav aria-label='Table navigation'>
