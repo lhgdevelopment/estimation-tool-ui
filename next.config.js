@@ -1,9 +1,10 @@
 const path = require('path');
 const dotenv = require('dotenv');
+const removeImports = require("next-remove-imports")();
 
 dotenv.config();
 
-module.exports = {
+module.exports = removeImports({
   trailingSlash: true,
   reactStrictMode: false,
   experimental: {
@@ -21,4 +22,4 @@ module.exports = {
   env: {
     API_BASE_URL: process.env.API_BASE_URL || 'localhost:3001',
   },
-};
+});

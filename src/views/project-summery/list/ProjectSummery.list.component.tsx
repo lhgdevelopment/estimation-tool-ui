@@ -3,8 +3,10 @@ import { Box, Modal, Typography } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import apiRequest from 'src/@core/utils/axios-config'
+import { TProjectSummeryListComponent } from '../ProjectSummery.decorator'
 
-export default function ProjectSummeryListComponent(listDataRefresh: any) {
+export default function ProjectSummeryListComponent(props: TProjectSummeryListComponent) {
+  const { listDataRefresh } = props
   const [listData, setListData] = useState<any>([])
   const [open, setOpen] = useState(false)
   const [projectSummery, setProjectSummery] = useState<any>({})
