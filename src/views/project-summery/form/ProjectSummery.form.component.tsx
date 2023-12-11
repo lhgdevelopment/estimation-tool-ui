@@ -2,9 +2,9 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import { Box, CircularProgress, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
 import { useMask } from '@react-input/mask'
 import '@uiw/react-md-editor/markdown-editor.css'
-import { MdEditor } from 'md-editor-rt'
+import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useRef, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TProjectSummeryFormComponent } from '../ProjectSummery.decorator'
@@ -31,6 +31,11 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
     clientEmail: '',
     clientWebsite: ''
   }
+
+  const summaryTextEditorRef = useRef<ExposeParam>()
+  const problemGoalTextEditorRef = useRef<ExposeParam>()
+  const overviewTextEditorRef = useRef<ExposeParam>()
+  const scopeTextEditorRef = useRef<ExposeParam>()
 
   const [meetingSummaryFormData, setMeetingSummaryFormData] = useState(meetingSummaryDefaultData)
 
@@ -257,6 +262,7 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
   const handleStep = (step: number) => () => {
     setActiveStep(step)
   }
+  const editorRef = useRef<ExposeParam>()
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -423,9 +429,9 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
               <Box>
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '100%' }}>
-                    <label className='block text-sm'>
+                    <label className='block text-sm' htmlFor={'#summaryText'}>
                       <span className='text-gray-700 dark:text-gray-400'>Summary Text</span>
-                      <MdEditor modelValue={summaryText} onChange={setSummaryText} />
+                      <MdEditor ref={summaryTextEditorRef} modelValue={summaryText} onChange={setSummaryText} />
 
                       {!!errorMessage?.['summaryText'] &&
                         errorMessage?.['summaryText']?.map((message: any, index: number) => {
@@ -444,10 +450,14 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
               <Box>
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '100%' }}>
-                    <label className='block text-sm'>
+                    <label className='block text-sm' htmlFor={'#problemGoalText'}>
                       <span className='text-gray-700 dark:text-gray-400'>Problem Goal Text</span>
 
-                      <MdEditor modelValue={problemGoalText} onChange={setProblemGoalText} />
+                      <MdEditor
+                        ref={problemGoalTextEditorRef}
+                        modelValue={problemGoalText}
+                        onChange={setProblemGoalText}
+                      />
                       {!!errorMessage?.['problemGoalText'] &&
                         errorMessage?.['problemGoalText']?.map((message: any, index: number) => {
                           return (
@@ -465,9 +475,9 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
               <Box>
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '100%' }}>
-                    <label className='block text-sm'>
+                    <label className='block text-sm' htmlFor={'#problemGoalText'}>
                       <span className='text-gray-700 dark:text-gray-400'>Overview Text</span>
-                      <MdEditor modelValue={overviewText} onChange={setOverviewText} />
+                      <MdEditor ref={overviewTextEditorRef} modelValue={overviewText} onChange={setOverviewText} />
                       {!!errorMessage?.['overviewText'] &&
                         errorMessage?.['overviewText']?.map((message: any, index: number) => {
                           return (
@@ -485,9 +495,9 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
               <Box>
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '100%' }}>
-                    <label className='block text-sm'>
+                    <label className='block text-sm' htmlFor={'#problemGoalText'}>
                       <span className='text-gray-700 dark:text-gray-400'>Scope of Work</span>
-                      <MdEditor modelValue={scopeText} onChange={setScopeText} />
+                      <MdEditor ref={scopeTextEditorRef} modelValue={scopeText} onChange={setScopeText} />
                       {!!errorMessage?.['scopeText'] &&
                         errorMessage?.['scopeText']?.map((message: any, index: number) => {
                           return (
