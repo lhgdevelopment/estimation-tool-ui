@@ -205,6 +205,14 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
                 {projectSummery?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']}
               </ReactMarkdown>
             </Typography>
+            <Typography variant='h6' component={'h2'}>
+              Deliverables:
+            </Typography>
+            <Typography sx={{ ml: 5, mb: 10 }}>
+              <ReactMarkdown>
+                {projectSummery?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['deliverablesText']}
+              </ReactMarkdown>
+            </Typography>
           </Box>
         </Box>
       </Modal>
