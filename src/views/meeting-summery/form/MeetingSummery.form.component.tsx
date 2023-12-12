@@ -7,15 +7,15 @@ import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { MeetingSummeryTypeList, TMeetingSummeryComponent } from '../MeetingSummery.decorator'
+import { MeetingTypeList, TMeetingSummeryComponent } from '../MeetingSummery.decorator'
 
 export default function MeetingSummeryFormComponent(props: TMeetingSummeryComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
-    name: '',
-    type: null,
-    prompt: ''
+    meetingName: '',
+    meetingType: null,
+    transcriptText: ''
   }
 
   const [formData, setFormData] = useState(defaultData)
@@ -86,9 +86,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
   useEffect(() => {
     setFormData({
-      name: editData?.['name'],
-      type: editData?.['type'],
-      prompt: editData?.['prompt']
+      meetingName: editData?.['meetingName'],
+      meetingType: editData?.['meetingType'],
+      transcriptText: editData?.['transcriptText']
     })
   }, [editDataId, editData])
 
@@ -105,16 +105,16 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                <span className='text-gray-700 dark:text-gray-400'>Meeting Name</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter prompt name'
-                  name='name'
-                  value={formData.name}
+                  placeholder='Enter meeting name'
+                  name='meetingName'
+                  value={formData.meetingName}
                   onChange={handleChange}
                 />
-                {!!errorMessage?.['name'] &&
-                  errorMessage?.['name']?.map((message: any, index: number) => {
+                {!!errorMessage?.['meetingName'] &&
+                  errorMessage?.['meetingName']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
@@ -125,16 +125,16 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Type</span>
+                <span className='text-gray-700 dark:text-gray-400'>Meeting Type</span>
                 <Dropdown
                   isEnumField
-                  enumList={MeetingSummeryTypeList}
-                  name='type'
-                  value={formData.type}
+                  enumList={MeetingTypeList}
+                  name='meetingType'
+                  value={formData.meetingType}
                   onChange={handleSelectChange}
                 />
-                {!!errorMessage?.['type'] &&
-                  errorMessage?.['type']?.map((message: any, index: number) => {
+                {!!errorMessage?.['meetingType'] &&
+                  errorMessage?.['meetingType']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
@@ -147,16 +147,16 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           <Box sx={{ display: 'flex', gap: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Prompt</span>
+                <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
                 <textarea
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Examples: Prompt content'
-                  name='prompt'
-                  value={formData.prompt}
+                  placeholder='Examples: Transcript Text'
+                  name='transcriptText'
+                  value={formData.transcriptText}
                   onChange={handleChange}
                 />
-                {!!errorMessage?.['prompt'] &&
-                  errorMessage?.['prompt']?.map((message: any, index: number) => {
+                {!!errorMessage?.['transcriptText'] &&
+                  errorMessage?.['transcriptText']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}

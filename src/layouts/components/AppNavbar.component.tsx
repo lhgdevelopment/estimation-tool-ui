@@ -11,10 +11,7 @@ export default function AppNavbarComponent() {
 
   return (
     <Fragment>
-      <Box
-        component={'aside'}
-        className='z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0'
-      >
+      <Box className='z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0'>
         <Box className='py-4 text-gray-500 dark:text-gray-400 '>
           <Box className={'text-center'}>
             <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 leading-3' href='#'>
@@ -93,10 +90,7 @@ export default function AppNavbarComponent() {
       {/* <!-- Mobile sidebar --> */}
       {/* <!-- Backdrop --> */}
       {/* <Box className='fixed inset-0 z-10 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center'></Box> */}
-      <Box
-        component={'aside'}
-        className='fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-white dark:bg-gray-800 md:hidden'
-      >
+      <Box className='fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-white dark:bg-gray-800 md:hidden'>
         <Box className='py-4 text-gray-500 dark:text-gray-400'>
           <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 display-block' href='#'>
             LHG Sales/Proposal Tools
@@ -301,7 +295,7 @@ export default function AppNavbarComponent() {
                   ></path>
                 </svg>
               </button>
-              <div>
+              <Box>
                 <Box
                   component={'ul'}
                   className='p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900 hidden'
@@ -348,7 +342,7 @@ export default function AppNavbarComponent() {
                     </Box>
                   </Box>
                 </Box>
-              </div>
+              </Box>
             </Box>
           </Box>
           <Box className='px-6 my-6'>

@@ -1,6 +1,6 @@
 // ** React Imports
 // ** MUI Imports
-import { Box } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
@@ -29,10 +29,9 @@ const AppLayout = ({ children }: Props) => {
 
   const router = useRouter()
   const dispatch = useDispatch()
+  const token = Cookies.get('accessToken')
 
   useEffect(() => {
-    const token = Cookies.get('accessToken')
-
     if (!token) {
       // If token is not present, redirect to the login page
       router.push('/auth/login')
@@ -50,6 +49,14 @@ const AppLayout = ({ children }: Props) => {
         })
     }
   }, [])
+
+  if (!token) {
+    return (
+      <Box sx={{ display: 'flex' }}>
+        <CircularProgress />
+      </Box>
+    )
+  }
 
   return (
     <>

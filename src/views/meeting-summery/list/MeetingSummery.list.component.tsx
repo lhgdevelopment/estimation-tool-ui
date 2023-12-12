@@ -2,14 +2,16 @@ import { Box } from '@mui/material'
 import { Fragment, useEffect } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { MeetingSummeryTypeList, TMeetingSummeryComponent } from '../MeetingSummery.decorator'
+import { MeetingTypeList, TMeetingSummeryComponent } from '../MeetingSummery.decorator'
 
 export default function MeetingSummeryListComponent(props: TMeetingSummeryComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
 
   const getList = () => {
     apiRequest.get('/meeting-summery').then(res => {
-      setListData(res.data)
+      console.log(res.data)
+
+      setListData(res.data?.data)
     })
   }
   const onEdit = (i: string) => {
@@ -54,9 +56,9 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
           <table className='w-full whitespace-no-wrap'>
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                <th className='px-4 py-3'>Name</th>
-                <th className='px-4 py-3'>Type</th>
-                <th className='px-4 py-3'>Prompt</th>
+                <th className='px-4 py-3'>Meeting Name</th>
+                <th className='px-4 py-3'>Meeting Type</th>
+                <th className='px-4 py-3'>Transcript Text</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
@@ -64,9 +66,9 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
               {listData?.map((data: any, index: number) => {
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{MeetingSummeryTypeList?.[data?.type]?.title}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.prompt}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.meetingName}</td>
+                    <td className='px-4 py-3 text-sm'>{MeetingTypeList?.[data?.meetingType]?.title}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.transcriptText}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>

@@ -12,16 +12,24 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
   const [projectSummery, setProjectSummery] = useState<any>({})
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
-  const getList = () => {
-    apiRequest.get('/project-summery').then(res => {
-      setListData(res.data)
+  const getList = (page = 1) => {
+    apiRequest.get(`/project-summery?page=${page}`).then(res => {
+      setListData(res.data.data)
+      setCurrentPage(res.data.current_page)
+      setTotalPages(res.data.total)
     })
   }
 
   useEffect(() => {
     getList()
   }, [listDataRefresh])
+
+  const handlePageChange = (newPage: number) => {
+    getList(newPage)
+  }
 
   const style = {
     position: 'absolute' as const,
@@ -95,10 +103,10 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
           )}
         </Box>
         <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
-          {/* <span className='flex items-center col-span-3'>Showing 1-10 of 10</span>
-          <span className='col-span-2'></span> */}
+          <span className='flex items-center col-span-3'>Showing 1-10 of 10</span>
+          <span className='col-span-2'></span>
           {/* <!-- Pagination --> */}
-          {/* <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
+          <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
             <nav aria-label='Table navigation'>
               <ul className='inline-flex items-center'>
                 <li>
@@ -154,7 +162,7 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
                 </li>
               </ul>
             </nav>
-          </span> */}
+          </span>
         </Box>
       </Box>
       <Modal
