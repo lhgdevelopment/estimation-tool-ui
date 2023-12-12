@@ -17,9 +17,11 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
 
   const getList = (page = 1) => {
     apiRequest.get(`/project-summery?page=${page}`).then(res => {
-      setListData(res.data.data)
-      setCurrentPage(res.data.current_page)
-      setTotalPages(res.data.total)
+      const paginationData: any = res
+
+      setListData(res.data)
+      setCurrentPage(paginationData?.['current_page'])
+      setTotalPages(Math.round(paginationData?.['total'] / 10))
     })
   }
 
@@ -103,7 +105,10 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
           )}
         </Box>
         <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
-          <span className='flex items-center col-span-3'>Showing 1-10 of 10</span>
+          <span className='flex items-center col-span-3'>
+            Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
+            {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}
+          </span>
           <span className='col-span-2'></span>
           {/* <!-- Pagination --> */}
           <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
@@ -111,8 +116,12 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
               <ul className='inline-flex items-center'>
                 <li>
                   <button
-                    className='px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple'
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    className={`px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple ${
+                      currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                     aria-label='Previous'
+                    disabled={currentPage === 1}
                   >
                     <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
                       <path
@@ -123,33 +132,26 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
                     </svg>
                   </button>
                 </li>
-                <li>
-                  <button className='px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple'>1</button>
-                </li>
-                <li>
-                  <button className='px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple'>2</button>
-                </li>
-                <li>
-                  <button className='px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple'>
-                    3
-                  </button>
-                </li>
-                <li>
-                  <button className='px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple'>4</button>
-                </li>
-                <li>
-                  <span className='px-3 py-1'>...</span>
-                </li>
-                <li>
-                  <button className='px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple'>8</button>
-                </li>
-                <li>
-                  <button className='px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple'>9</button>
-                </li>
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <li key={index}>
+                    <button
+                      onClick={() => handlePageChange(index + 1)}
+                      className={`px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple ${
+                        currentPage === index + 1 ? 'bg-purple-600 text-white' : ''
+                      }`}
+                    >
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
                 <li>
                   <button
-                    className='px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple'
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    className={`px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple ${
+                      currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                     aria-label='Next'
+                    disabled={currentPage === totalPages}
                   >
                     <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
                       <path
