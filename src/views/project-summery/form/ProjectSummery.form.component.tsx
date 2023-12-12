@@ -9,7 +9,7 @@ import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TProjectSummeryFormComponent } from '../ProjectSummery.decorator'
 
-const steps = ['Meeting Transcript', 'Meeting Summery', 'Problems and Goals', 'Project Overview', 'SOW', 'Deliverable']
+const steps = ['Meeting Transcript', 'Meeting Summery', 'Problems & Goals', 'Project Overview', 'SOW', 'Deliverables']
 
 export default function ProjectSummeryFormComponent(props: TProjectSummeryFormComponent) {
   const { setListDataRefresh } = props
