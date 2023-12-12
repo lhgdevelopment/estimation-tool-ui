@@ -43,6 +43,11 @@ const navigation: TNavigation[] = [
     title: 'Prompts',
     icon: SettingsEthernetIcon,
     path: '/prompts'
+  },
+  {
+    title: 'Meeting Summery',
+    icon: SettingsEthernetIcon,
+    path: '/meeting-summery'
   }
 ]
 

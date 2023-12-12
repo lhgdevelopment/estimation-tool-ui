@@ -211,8 +211,8 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
                 timerProgressBar: true,
                 showConfirmButton: false
               })
-              deliverablesTextID(res2?.data?.id)
-              deliverablesText(res2?.data?.deliverablesText)
+              setDeliverablesTextID(res2?.data?.id)
+              setDeliverablesText(res2?.data?.deliverablesText)
               setTimeout(() => {
                 setActiveStep(newActiveStep)
                 setPreload(false)
