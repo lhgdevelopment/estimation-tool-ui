@@ -17,3 +17,11 @@ export const handleURLQueries = (router: NextRouter, path: string | undefined): 
 
   return false
 }
+
+export function formatDateToCustomFormat(date: Date): string {
+  date = new Date(date)
+  const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' }
+  const formattedDate = date.toLocaleDateString('en-GB', options)
+
+  return formattedDate.replace(/\//g, '-')
+}

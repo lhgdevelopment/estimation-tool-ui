@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import ProjectSummeryComponent from 'src/views/project-summery/ProjectSummery.component'
+import ProjectSOWComponent from 'src/views/project-sow/ProjectSOW.component'
 
-const ProjectSummeryPage = () => {
-  return <ProjectSummeryComponent></ProjectSummeryComponent>
+const ProjectSOWPage = () => {
+  return <ProjectSOWComponent></ProjectSOWComponent>
 }
-ProjectSummeryPage.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
-export default ProjectSummeryPage
+ProjectSOWPage.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
+export default ProjectSOWPage

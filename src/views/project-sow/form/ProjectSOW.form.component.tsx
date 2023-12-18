@@ -1,17 +1,20 @@
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import SaveIcon from '@mui/icons-material/Save'
 import { Box, CircularProgress, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
 import { useMask } from '@react-input/mask'
 import '@uiw/react-md-editor/markdown-editor.css'
 import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import React, { ChangeEvent, useRef, useState } from 'react'
+import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TProjectSummeryFormComponent } from '../ProjectSummery.decorator'
+import { TProjectSOWFormComponent, projectTypeList } from '../ProjectSOW.decorator'
 
 const steps = ['Meeting Transcript', 'Meeting Summery', 'Problems & Goals', 'Project Overview', 'SOW', 'Deliverables']
 
-export default function ProjectSummeryFormComponent(props: TProjectSummeryFormComponent) {
+export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
   const { setListDataRefresh } = props
   const phoneInputRef = useMask({
     mask: '+0 (___) ___-__-__',
@@ -24,9 +27,11 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
     [k: number]: boolean
   }>({})
 
-  const meetingSummaryDefaultData = {
+  const projectSOWDefaultData = {
     transcriptText: '',
+    projectType: '',
     projectName: '',
+    company: '',
     clientPhone: '',
     clientEmail: '',
     clientWebsite: ''
@@ -38,11 +43,11 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
   const scopeTextEditorRef = useRef<ExposeParam>()
   const deliverablesTextEditorRef = useRef<ExposeParam>()
 
-  const [meetingSummaryFormData, setMeetingSummaryFormData] = useState(meetingSummaryDefaultData)
+  const [projectSOWFormData, setProjectSOWFormData] = useState(projectSOWDefaultData)
 
   const [preload, setPreload] = useState<boolean>(false)
-  const [transcriptTextRows, setTranscriptTextRows] = useState<number>(5)
-  const [projectSummeryID, setProjectSummeryID] = useState<any>(null)
+  const [transcriptTextRows, setTranscriptTextRows] = useState<number>(10)
+  const [projectSOWID, setProjectSOWID] = useState<any>(null)
   const [summaryText, setSummaryText] = useState<any>('')
   const [problemGoalID, setProblemGoalID] = useState<any>(null)
   const [problemGoalText, setProblemGoalText] = useState<any>('')
@@ -55,16 +60,22 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
 
   const [errorMessage, setSrrorMessage] = useState<any>({})
 
-  const handleMeetingSummaryChange = (e: SelectChangeEvent<any>) => {
-    setMeetingSummaryFormData({
-      ...meetingSummaryFormData,
+  const handleProjectSOWChange = (e: SelectChangeEvent<any>) => {
+    setProjectSOWFormData({
+      ...projectSOWFormData,
       [e.target.name]: e.target.value
     })
   }
 
+  const handleSelectChange = (e: any) => {
+    setProjectSOWFormData({
+      ...projectSOWFormData,
+      [e?.target?.name]: e?.target?.value
+    })
+  }
   const handleTranscriptTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setMeetingSummaryFormData({
-      ...meetingSummaryFormData,
+    setProjectSOWFormData({
+      ...projectSOWFormData,
       transcriptText: e.target.value
     })
   }
@@ -74,7 +85,7 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
   }
 
   const onClear = () => {
-    setMeetingSummaryFormData(prevState => ({ ...meetingSummaryDefaultData }))
+    setProjectSOWFormData(prevState => ({ ...projectSOWDefaultData }))
   }
 
   const totalSteps = () => {
@@ -93,19 +104,24 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
     return completedSteps() === totalSteps()
   }
 
-  const handleNext = () => {
+  const handleNext = (type: 'SAVE' | 'NEXT' = 'NEXT') => {
     setPreload(true)
+    setSrrorMessage({})
     const newActiveStep =
       isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1
     if (activeStep === 0) {
       apiRequest
-        .post('/project-summery', meetingSummaryFormData)
+        .post('/project-summery', projectSOWFormData)
         .then(res => {
-          setProjectSummeryID(res?.data?.id)
+          setProjectSOWID(res?.data?.id)
           setSummaryText(res?.data?.summaryText)
-          onClear()
+
+          // onClear()
           setTimeout(() => {
-            setActiveStep(newActiveStep)
+            if (type == 'NEXT') {
+              setActiveStep(newActiveStep)
+            }
+
             setPreload(false)
           }, 1000)
         })
@@ -116,9 +132,9 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
     }
     if (activeStep === 1) {
       apiRequest
-        .put(`/project-summery/${projectSummeryID}`, { summaryText })
+        .put(`/project-summery/${projectSOWID}`, { summaryText })
         .then(res => {
-          if (res?.data?.meeting_transcript) {
+          if (res?.data?.meeting_transcript && type == 'NEXT') {
             apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id }).then(res2 => {
               Swal.fire({
                 title: 'Data Created Successfully!',
@@ -134,6 +150,8 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
                 setPreload(false)
               }, 1000)
             })
+          } else {
+            setPreload(false)
           }
         })
         .catch(error => {
@@ -146,7 +164,7 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
         .post(`/problems-and-goals/${problemGoalID}`, { problemGoalText })
         .then(res => {
           console.log(res)
-          if (res?.data) {
+          if (res?.data && type == 'NEXT') {
             apiRequest.post('/project-overview', { problemGoalID }).then(res2 => {
               Swal.fire({
                 title: 'Data Created Successfully!',
@@ -158,10 +176,14 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
               setOverviewTextID(res2?.data?.id)
               setOverviewText(res2?.data?.overviewText)
               setTimeout(() => {
-                setActiveStep(newActiveStep)
+                if (type == 'NEXT') {
+                  setActiveStep(newActiveStep)
+                }
                 setPreload(false)
               }, 1000)
             })
+          } else {
+            setPreload(false)
           }
         })
         .catch(error => {
@@ -173,7 +195,7 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
       apiRequest
         .post(`/project-overview/${overviewTextID}`, { overviewText })
         .then(res => {
-          if (res?.data) {
+          if (res?.data && type == 'NEXT') {
             apiRequest.post('/scope-of-work', { problemGoalID }).then(res2 => {
               Swal.fire({
                 title: 'Data Created Successfully!',
@@ -185,10 +207,14 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
               setScopeTextID(res2?.data?.id)
               setScopeText(res2?.data?.scopeText)
               setTimeout(() => {
-                setActiveStep(newActiveStep)
+                if (type == 'NEXT') {
+                  setActiveStep(newActiveStep)
+                }
                 setPreload(false)
               }, 1000)
             })
+          } else {
+            setPreload(false)
           }
         })
         .catch(error => {
@@ -202,7 +228,7 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
         .post(`/scope-of-work/${scopeTextID}`, { scopeText })
         .then(res => {
           console.log(res)
-          if (res?.data) {
+          if (res?.data && type == 'NEXT') {
             apiRequest.post('/deliverables', { scopeOfWorkId: scopeTextID }).then(res2 => {
               Swal.fire({
                 title: 'Data Created Successfully!',
@@ -214,10 +240,14 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
               setDeliverablesTextID(res2?.data?.id)
               setDeliverablesText(res2?.data?.deliverablesText)
               setTimeout(() => {
-                setActiveStep(newActiveStep)
+                if (type == 'NEXT') {
+                  setActiveStep(newActiveStep)
+                }
                 setPreload(false)
               }, 1000)
             })
+          } else {
+            setPreload(false)
           }
         })
         .catch(error => {
@@ -261,7 +291,7 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
       <Stepper alternativeLabel activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
-            <StepButton color='inherit' disabled>
+            <StepButton color='inherit' onClick={handleStep(index)}>
               {label}
             </StepButton>
           </Step>
@@ -303,7 +333,7 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
                         }`}
                         placeholder='Enter Transcript Text'
                         name='transcriptText'
-                        value={meetingSummaryFormData.transcriptText}
+                        value={projectSOWFormData.transcriptText}
                         onChange={handleTranscriptTextChange}
                         onKeyUp={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
                           calculateNumberOfRows((event.target as HTMLTextAreaElement)?.value)
@@ -325,6 +355,27 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '50%' }}>
                     <label className='block text-sm'>
+                      <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
+                      <Dropdown
+                        isEnumField
+                        enumList={projectTypeList}
+                        name='projectType'
+                        value={projectSOWFormData.projectType}
+                        onChange={handleSelectChange}
+                      />
+                      {!!errorMessage?.['projectType'] &&
+                        errorMessage?.['projectType']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
+                    </label>
+                  </Box>
+
+                  <Box sx={{ width: '50%' }}>
+                    <label className='block text-sm'>
                       <span className='text-gray-700 dark:text-gray-400'>Project Name</span>
                       <input
                         className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
@@ -332,8 +383,8 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
                         }`}
                         placeholder='Enter Project Name'
                         name='projectName'
-                        value={meetingSummaryFormData.projectName}
-                        onChange={handleMeetingSummaryChange}
+                        value={projectSOWFormData.projectName}
+                        onChange={handleProjectSOWChange}
                       />
                       {!!errorMessage?.['projectName'] &&
                         errorMessage?.['projectName']?.map((message: any, index: number) => {
@@ -345,18 +396,42 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
                         })}
                     </label>
                   </Box>
+                </Box>
+                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '50%' }}>
                     <label className='block text-sm'>
-                      <span className='text-gray-700 dark:text-gray-400'>Client Phone</span>
+                      <span className='text-gray-700 dark:text-gray-400'>Company</span>
+                      <input
+                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                          errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                        }`}
+                        placeholder='Enter Company'
+                        name='company'
+                        value={projectSOWFormData.company}
+                        onChange={handleProjectSOWChange}
+                      />
+                      {!!errorMessage?.['company'] &&
+                        errorMessage?.['company']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
+                    </label>
+                  </Box>
+                  <Box sx={{ width: '50%' }}>
+                    <label className='block text-sm'>
+                      <span className='text-gray-700 dark:text-gray-400'>Phone</span>
                       <input
                         ref={phoneInputRef}
                         className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                           errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
                         }`}
-                        placeholder='Enter Client Phone Number'
+                        placeholder='Enter Phone Number'
                         name='clientPhone'
-                        value={meetingSummaryFormData.clientPhone}
-                        onChange={handleMeetingSummaryChange}
+                        value={projectSOWFormData.clientPhone}
+                        onChange={handleProjectSOWChange}
                       />
                       {!!errorMessage?.['clientPhone'] &&
                         errorMessage?.['clientPhone']?.map((message: any, index: number) => {
@@ -372,15 +447,15 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '50%' }}>
                     <label className='block text-sm'>
-                      <span className='text-gray-700 dark:text-gray-400'>Client Email</span>
+                      <span className='text-gray-700 dark:text-gray-400'>Email</span>
                       <input
                         className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                           errorMessage?.['clientEmail'] ? 'border-red-600' : 'dark:border-gray-600 '
                         }`}
-                        placeholder='Enter Client Email'
+                        placeholder='Enter Email'
                         name='clientEmail'
-                        value={meetingSummaryFormData.clientEmail}
-                        onChange={handleMeetingSummaryChange}
+                        value={projectSOWFormData.clientEmail}
+                        onChange={handleProjectSOWChange}
                       />
                       {!!errorMessage?.['clientEmail'] &&
                         errorMessage?.['clientEmail']?.map((message: any, index: number) => {
@@ -394,15 +469,15 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
                   </Box>
                   <Box sx={{ width: '50%' }}>
                     <label className='block text-sm'>
-                      <span className='text-gray-700 dark:text-gray-400'>Client Website</span>
+                      <span className='text-gray-700 dark:text-gray-400'>Website</span>
                       <input
                         className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                           errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
                         }`}
-                        placeholder='Enter Client Website'
+                        placeholder='Enter Website'
                         name='clientWebsite'
-                        value={meetingSummaryFormData.clientWebsite}
-                        onChange={handleMeetingSummaryChange}
+                        value={projectSOWFormData.clientWebsite}
+                        onChange={handleProjectSOWChange}
                       />
                       {!!errorMessage?.['clientWebsite'] &&
                         errorMessage?.['clientWebsite']?.map((message: any, index: number) => {
@@ -532,11 +607,32 @@ export default function ProjectSummeryFormComponent(props: TProjectSummeryFormCo
             <Box sx={{ flex: '1 1 auto' }} />
             <Box className='my-4 text-right'>
               <button
-                onClick={handleNext}
-                className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                onClick={() => {
+                  handleNext('SAVE')
+                }}
+                className='mr-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
               >
-                Save & Next <NavigateNextIcon />
+                {activeStep != totalSteps() && (
+                  <>
+                    Save <SaveIcon />
+                  </>
+                )}
+                {activeStep == totalSteps() && (
+                  <>
+                    Finish <CheckCircleIcon />
+                  </>
+                )}
               </button>
+              {activeStep != totalSteps() && (
+                <button
+                  onClick={() => {
+                    handleNext()
+                  }}
+                  className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                >
+                  Next <NavigateNextIcon />
+                </button>
+              )}
             </Box>
             {/* {activeStep !== steps.length &&
                 (completed[activeStep] ? (
