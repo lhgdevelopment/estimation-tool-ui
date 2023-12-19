@@ -103,6 +103,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
             <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
               {listData?.map((data: any, index: number) => {
                 const meetingType = MeetingTypeList.find(type => type.id === data?.meetingType);
+
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.meetingName.substring(0, 30)}...</td>
