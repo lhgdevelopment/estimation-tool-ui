@@ -3,13 +3,14 @@ import { Box, Modal, Typography } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import apiRequest from 'src/@core/utils/axios-config'
-import { TProjectSummeryListComponent } from '../ProjectSummery.decorator'
+import { formatDateToCustomFormat } from 'src/@core/utils/utils'
+import { TProjectSOWListComponent } from '../ProjectSOW.decorator'
 
-export default function ProjectSummeryListComponent(props: TProjectSummeryListComponent) {
+export default function ProjectSOWListComponent(props: TProjectSOWListComponent) {
   const { listDataRefresh } = props
   const [listData, setListData] = useState<any>([])
   const [open, setOpen] = useState(false)
-  const [projectSummery, setProjectSummery] = useState<any>({})
+  const [projectSOW, setProjectSOW] = useState<any>({})
   const handleOpen = () => setOpen(true)
   const handleClose = () => setOpen(false)
   const [currentPage, setCurrentPage] = useState(1)
@@ -50,7 +51,7 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
   const openModal = (id: any) => {
     apiRequest.get(`/project-summery/${id}`).then(res => {
       handleOpen()
-      setProjectSummery(res.data)
+      setProjectSOW(res.data)
     })
   }
 
@@ -63,6 +64,7 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <th className='px-4 py-3'>Project</th>
                 <th className='px-4 py-3'>Summary Text</th>
+                <th className='px-4 py-3'>Created At</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
@@ -72,6 +74,7 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.meeting_transcript?.projectName}</td>
                     <td className='px-4 py-3 text-sm'>{data?.summaryText.substring(0, 100)}</td>
+                    <td className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.created_at)}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
@@ -179,14 +182,14 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
               Project Summery:
             </Typography>
             <Typography sx={{ ml: 5, mb: 10 }}>
-              <ReactMarkdown>{projectSummery?.['summaryText']}</ReactMarkdown>
+              <ReactMarkdown>{projectSOW?.['summaryText']}</ReactMarkdown>
             </Typography>
             <Typography variant='h6' component={'h2'}>
               Problems and Goals:
             </Typography>
             <Typography sx={{ ml: 5, mb: 10 }}>
               <ReactMarkdown>
-                {projectSummery?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
+                {projectSOW?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
               </ReactMarkdown>
             </Typography>
             <Typography variant='h6' component={'h2'}>
@@ -194,7 +197,7 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
             </Typography>
             <Typography sx={{ ml: 5, mb: 10 }}>
               <ReactMarkdown>
-                {projectSummery?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']}
+                {projectSOW?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']}
               </ReactMarkdown>
             </Typography>
             <Typography variant='h6' component={'h2'}>
@@ -202,7 +205,7 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
             </Typography>
             <Typography sx={{ ml: 5, mb: 10 }}>
               <ReactMarkdown>
-                {projectSummery?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']}
+                {projectSOW?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']}
               </ReactMarkdown>
             </Typography>
             <Typography variant='h6' component={'h2'}>
@@ -210,7 +213,11 @@ export default function ProjectSummeryListComponent(props: TProjectSummeryListCo
             </Typography>
             <Typography sx={{ ml: 5, mb: 10 }}>
               <ReactMarkdown>
-                {projectSummery?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['deliverablesText']}
+                {
+                  projectSOW?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
+                    'deliverablesText'
+                  ]
+                }
               </ReactMarkdown>
             </Typography>
           </Box>

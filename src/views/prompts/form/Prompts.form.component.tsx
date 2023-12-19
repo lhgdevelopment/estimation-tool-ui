@@ -18,19 +18,19 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     prompt: ''
   }
 
-  const [formData, setFormData] = useState(defaultData)
+  const [promptsPromptsFormData, setPromptsFormData] = useState(defaultData)
   const [errorMessage, setSrrorMessage] = useState<any>({})
 
   const handleChange = (e: React.ChangeEvent<any>) => {
-    setFormData({
-      ...formData,
+    setPromptsFormData({
+      ...promptsPromptsFormData,
       [e.target.name]: e.target.value
     })
   }
 
   const handleSelectChange = (e: any) => {
-    setFormData({
-      ...formData,
+    setPromptsFormData({
+      ...promptsPromptsFormData,
       [e?.target?.name]: e?.target?.value
     })
   }
@@ -39,7 +39,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     e.preventDefault()
     if (editDataId) {
       apiRequest
-        .put(`/prompts/${editDataId}`, formData)
+        .put(`/prompts/${editDataId}`, promptsPromptsFormData)
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
@@ -66,7 +66,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
         })
     } else {
       apiRequest
-        .post('/prompts', formData)
+        .post('/prompts', promptsPromptsFormData)
         .then(res => {
           setListData((prevState: []) => [...prevState, res.data])
           Swal.fire({
@@ -85,7 +85,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
   }
 
   useEffect(() => {
-    setFormData({
+    setPromptsFormData({
       name: editData?.['name'],
       type: editData?.['type'],
       prompt: editData?.['prompt']
@@ -93,7 +93,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
   }, [editDataId, editData])
 
   const onClear = () => {
-    setFormData(prevState => ({ ...defaultData }))
+    setPromptsFormData(prevState => ({ ...defaultData }))
     setEditDataId(null)
     setEditData({})
   }
@@ -110,7 +110,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Enter prompt name'
                   name='name'
-                  value={formData.name}
+                  value={promptsPromptsFormData.name}
                   onChange={handleChange}
                 />
                 {!!errorMessage?.['name'] &&
@@ -130,7 +130,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                   isEnumField
                   enumList={promptsTypeList}
                   name='type'
-                  value={formData.type}
+                  value={promptsPromptsFormData.type}
                   onChange={handleSelectChange}
                 />
                 {!!errorMessage?.['type'] &&
@@ -152,7 +152,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Examples: Prompt content'
                   name='prompt'
-                  value={formData.prompt}
+                  value={promptsPromptsFormData.prompt}
                   onChange={handleChange}
                 />
                 {!!errorMessage?.['prompt'] &&

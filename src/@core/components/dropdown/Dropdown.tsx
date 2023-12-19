@@ -1,5 +1,4 @@
 import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
 import { useEffect, useState } from 'react'
@@ -17,7 +16,7 @@ interface ISelectProps extends SelectProps {
 
 export function Dropdown(props: ISelectProps) {
   const {
-    label,
+    placeholder = 'Please Select',
     url,
     isEnumField = false,
     enumList,
@@ -25,6 +24,7 @@ export function Dropdown(props: ISelectProps) {
     multiple = false,
     value,
     onChange,
+    id = 'demo-simple-select-label',
     ...otherProps
   } = props
 
@@ -51,14 +51,19 @@ export function Dropdown(props: ISelectProps) {
 
   return (
     <FormControl fullWidth>
-      {!!label && <InputLabel id='demo-simple-select-label'>{label}</InputLabel>}
       <Select
         {...otherProps}
         value={multiple ? value || [] : value || ''}
         onChange={onChange}
         multiple={multiple}
         sx={{ mt: 1, height: 38 }}
+        displayEmpty
       >
+        {placeholder && (
+          <MenuItem value='' disabled>
+            {placeholder}
+          </MenuItem>
+        )}
         {menuItems?.map((menuItem: any, index: number) => (
           <MenuItem value={menuItem.id} key={index}>
             {menuItem.title}
