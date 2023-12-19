@@ -233,6 +233,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                     ref={summaryTextEditorRef}
                     modelValue={meetingSummeryText}
                     onChange={setMeetingSummeryText}
+                    language='en-US'
                   />
                   {!!errorMessage?.['summaryText'] &&
                     errorMessage?.['summaryText']?.map((message: any, index: number) => {

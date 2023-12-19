@@ -62,10 +62,11 @@ export default function PromptsListComponent(props: TPromptsComponent) {
             </thead>
             <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
               {listData?.map((data: any, index: number) => {
+                const promptsType = promptsTypeList.find(type => type.id === data?.type);
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{promptsTypeList?.[data?.type]?.title}</td>
+                    <td className='px-4 py-3 text-sm'>{promptsType?.title}</td>
                     <td className='px-4 py-3 text-sm'>{data?.prompt.substring(0, 50)}</td>
 
                     <td className='px-4 py-3'>
