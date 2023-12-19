@@ -19,7 +19,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     meetingName: '',
     meetingType: null,
     transcriptText: '',
-    summaryText: ''
+    summaryText: '',
+    clickupLink: '',
+    tldvLink: ''
   }
 
   const summaryTextEditorRef = useRef<ExposeParam>()
@@ -96,7 +98,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
       meetingName: editData?.['meetingName'],
       meetingType: editData?.['meetingType'],
       transcriptText: editData?.['transcriptText'],
-      summaryText: editData?.['meetingSummeryText']
+      summaryText: editData?.['meetingSummeryText'],
+      clickupLink: editData?.['clickupLink'],
+      tldvLink: editData?.['tldvLink'],
     })
     setMeetingSummeryText(editData?.['meetingSummeryText'])
   }, [editDataId, editData])
@@ -153,6 +157,49 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               </label>
             </Box>
           </Box>
+
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Clickup Link</span>
+                <input
+                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  placeholder='Enter clickup task link'
+                  name='clickupLink'
+                  value={formData.clickupLink}
+                  onChange={handleChange}
+                />
+                {!!errorMessage?.['clickupLink'] &&
+                  errorMessage?.['clickupLink']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
+              </label>
+            </Box>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>TLDV Link</span>
+                <input
+                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  placeholder='Enter tldv link'
+                  name='tldvLink'
+                  value={formData.tldvLink}
+                  onChange={handleChange}
+                />
+                {!!errorMessage?.['tldvLink'] &&
+                  errorMessage?.['tldvLink']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
+              </label>
+            </Box>
+          </Box>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
@@ -161,6 +208,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Examples: Transcript Text'
                   name='transcriptText'
+                  rows='10'
                   value={formData.transcriptText}
                   onChange={handleChange}
                 />

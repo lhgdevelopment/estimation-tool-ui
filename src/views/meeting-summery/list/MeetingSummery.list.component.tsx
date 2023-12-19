@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { MeetingTypeList, TMeetingSummeryComponent } from '../MeetingSummery.decorator'
+import { formatDateToCustomFormat } from 'src/@core/utils/utils'
 
 export default function MeetingSummeryListComponent(props: TMeetingSummeryComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
@@ -94,7 +95,8 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <th className='px-4 py-3'>Meeting Name</th>
                 <th className='px-4 py-3'>Meeting Type</th>
-                <th className='px-4 py-3'>Transcript Text</th>
+                <th className='px-4 py-3'>Created At</th>
+                <th className='px-4 py-3'>Summery</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
@@ -104,7 +106,8 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.meetingName}</td>
                     <td className='px-4 py-3 text-sm'>{MeetingTypeList?.[data?.meetingType]?.title}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.transcriptText.substring(0, 100)}</td>
+                    <td className='px-4 py-3 text-sm'>{ formatDateToCustomFormat(data?.created_at)}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.meetingSummeryText.substring(0, 80)}...</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
