@@ -1,7 +1,9 @@
 // ** Icon imports
+import BiotechIcon from '@mui/icons-material/Biotech'
 import CategoryIcon from '@mui/icons-material/Category'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize'
+import GroupsIcon from '@mui/icons-material/Groups'
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
@@ -36,7 +38,7 @@ const navigation: TNavigation[] = [
   },
   {
     title: 'Project SOW',
-    icon: DashboardCustomizeIcon,
+    icon: BiotechIcon,
     path: '/project-summery'
   },
   {
@@ -46,7 +48,7 @@ const navigation: TNavigation[] = [
   },
   {
     title: 'Meeting Summery',
-    icon: SettingsEthernetIcon,
+    icon: GroupsIcon,
     path: '/meeting-summery'
   }
 ]

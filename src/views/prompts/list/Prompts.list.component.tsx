@@ -66,7 +66,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.name}</td>
                     <td className='px-4 py-3 text-sm'>{promptsTypeList?.[data?.type]?.title}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.prompt.substring(0, 100)}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.prompt.substring(0, 50)}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>

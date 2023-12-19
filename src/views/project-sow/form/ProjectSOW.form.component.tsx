@@ -12,7 +12,7 @@ import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TProjectSOWFormComponent, projectTypeList } from '../ProjectSOW.decorator'
 
-const steps = ['Meeting Transcript', 'Meeting Summery', 'Problems & Goals', 'Project Overview', 'SOW', 'Deliverables']
+const steps = ['Transcript', 'Summery', 'Problems & Goals', 'Project Overview', 'SOW', 'Deliverables']
 
 export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
   const { setListDataRefresh } = props
@@ -28,6 +28,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }>({})
 
   const projectSOWDefaultData = {
+    transcriptId: '',
     transcriptText: '',
     projectType: '',
     projectName: '',
@@ -113,6 +114,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       apiRequest
         .post('/project-summery', projectSOWFormData)
         .then(res => {
+          setProjectSOWFormData({
+            ...projectSOWFormData,
+            ['transcriptId']: res?.data?.transcriptId
+          })
           setProjectSOWID(res?.data?.id)
           setSummaryText(res?.data?.summaryText)
 
@@ -288,7 +293,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Stepper alternativeLabel activeStep={activeStep}>
+      <Stepper nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
             <StepButton color='inherit' onClick={handleStep(index)}>
@@ -606,23 +611,25 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Box className='my-4 text-right'>
-              <button
-                onClick={() => {
-                  handleNext('SAVE')
-                }}
-                className='mr-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-              >
-                {activeStep != totalSteps() && (
-                  <>
-                    Save <SaveIcon />
-                  </>
-                )}
-                {activeStep == totalSteps() && (
-                  <>
-                    Finish <CheckCircleIcon />
-                  </>
-                )}
-              </button>
+              {activeStep != 0 && (
+                <button
+                  onClick={() => {
+                    handleNext('SAVE')
+                  }}
+                  className='mr-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                >
+                  {activeStep != totalSteps() && (
+                    <>
+                      Save <SaveIcon />
+                    </>
+                  )}
+                  {activeStep == totalSteps() && (
+                    <>
+                      Finish <CheckCircleIcon />
+                    </>
+                  )}
+                </button>
+              )}
               {activeStep != totalSteps() && (
                 <button
                   onClick={() => {
