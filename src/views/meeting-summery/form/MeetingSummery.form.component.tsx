@@ -29,7 +29,6 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setSrrorMessage] = useState<any>({})
-  const [meetingSummeryText, setMeetingSummeryText] = useState<any>('')
   const [summaryText, setSummeryText] = useState<any>('')
 
   const handleChange = (e: React.ChangeEvent<any>) => {
@@ -40,12 +39,12 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
   }
 
   const handleCheckChange = (e: React.ChangeEvent<any>) => {
-    const { name, checked } = e.target;
-    setFormData((prevData) => ({
+    const { name, checked } = e.target
+    setFormData(prevData => ({
       ...prevData,
-      [name]: checked,
-    }));
-  };
+      [name]: checked
+    }))
+  }
 
   const handleSelectChange = (e: any) => {
     setFormData({
@@ -57,6 +56,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
     if (editDataId) {
+      formData['summaryText'] = summaryText
       apiRequest
         .put(`/meeting-summery/${editDataId}`, formData)
         .then(res => {
@@ -111,10 +111,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
       summaryText: editData?.['meetingSummeryText'],
       clickupLink: editData?.['clickupLink'],
       tldvLink: editData?.['tldvLink'],
-      pushToClickUp: false,
+      pushToClickUp: false
     })
-    setMeetingSummeryText(editData?.['meetingSummeryText'])
-    setSummeryText(editData?.['summaryText'])
+    setSummeryText(editData?.['meetingSummeryText'])
   }, [editDataId, editData])
 
   const onClear = () => {
@@ -261,8 +260,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             </Box>
           </Box>
 
-
-          {!!meetingSummeryText && (
+          {!!editDataId && (
             <Box sx={{ display: 'flex', gap: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm' htmlFor={'#summaryText'}>
@@ -270,7 +268,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
                   <MdEditor
                     ref={summaryTextEditorRef}
-                    modelValue={meetingSummeryText}
+                    modelValue={summaryText}
                     onChange={setSummeryText}
                     language='en-US'
                   />
