@@ -15,7 +15,7 @@ export default function ProjectListComponent(props: TProjectComponent) {
 
       setListData(res.data)
       setCurrentPage(paginationData?.['current_page'])
-      setTotalPages(Math.max(2, Math.ceil(paginationData?.['total'] / 10)))
+      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
     })
   }
 
