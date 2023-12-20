@@ -30,6 +30,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setSrrorMessage] = useState<any>({})
   const [meetingSummeryText, setMeetingSummeryText] = useState<any>('')
+  const [summaryText, setSummeryText] = useState<any>('')
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -113,6 +114,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
       pushToClickUp: false,
     })
     setMeetingSummeryText(editData?.['meetingSummeryText'])
+    setSummeryText(editData?.['summaryText'])
   }, [editDataId, editData])
 
   const onClear = () => {
@@ -269,7 +271,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   <MdEditor
                     ref={summaryTextEditorRef}
                     modelValue={meetingSummeryText}
-                    onChange={setMeetingSummeryText}
+                    onChange={setSummeryText}
                     language='en-US'
                   />
                   {!!errorMessage?.['summaryText'] &&
