@@ -21,7 +21,8 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     transcriptText: '',
     summaryText: '',
     clickupLink: '',
-    tldvLink: ''
+    tldvLink: '',
+    pushToClickUp: false
   }
 
   const summaryTextEditorRef = useRef<ExposeParam>()
@@ -29,6 +30,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setSrrorMessage] = useState<any>({})
   const [meetingSummeryText, setMeetingSummeryText] = useState<any>('')
+  const [summaryText, setSummeryText] = useState<any>('')
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -36,6 +38,14 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
       [e.target.name]: e.target.value
     })
   }
+
+  const handleCheckChange = (e: React.ChangeEvent<any>) => {
+    const { name, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: checked,
+    }));
+  };
 
   const handleSelectChange = (e: any) => {
     setFormData({
@@ -101,8 +111,10 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
       summaryText: editData?.['meetingSummeryText'],
       clickupLink: editData?.['clickupLink'],
       tldvLink: editData?.['tldvLink'],
+      pushToClickUp: false,
     })
     setMeetingSummeryText(editData?.['meetingSummeryText'])
+    setSummeryText(editData?.['summaryText'])
   }, [editDataId, editData])
 
   const onClear = () => {
@@ -200,6 +212,31 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               </label>
             </Box>
           </Box>
+
+          {!!editDataId && (
+            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+              <Box sx={{ width: '50%' }}>
+                <label className='block text-sm' htmlFor='pushToClickUp'>
+                  <span className='text-gray-700 dark:text-gray-400'>Push to clickup</span>
+                  <input
+                    id='pushToClickUp'
+                    type='checkbox'
+                    className='mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-checkbox'
+                    name='pushToClickUp'
+                    checked={formData.pushToClickUp}
+                    onChange={handleCheckChange}
+                  />
+                  {!!errorMessage?.['pushToClickUp'] &&
+                    errorMessage?.['pushToClickUp']?.map((message: any, index: number) => (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    ))}
+                </label>
+              </Box>
+            </Box>
+          )}
+
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
@@ -223,6 +260,8 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               </label>
             </Box>
           </Box>
+
+
           {!!meetingSummeryText && (
             <Box sx={{ display: 'flex', gap: 5 }}>
               <Box sx={{ width: '100%' }}>
@@ -232,7 +271,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   <MdEditor
                     ref={summaryTextEditorRef}
                     modelValue={meetingSummeryText}
-                    onChange={setMeetingSummeryText}
+                    onChange={setSummeryText}
                     language='en-US'
                   />
                   {!!errorMessage?.['summaryText'] &&
