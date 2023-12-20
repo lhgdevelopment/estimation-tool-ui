@@ -22,7 +22,8 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
 
       setListData(res.data)
       setCurrentPage(paginationData?.['current_page'])
-      setTotalPages(Math.round(paginationData?.['total'] / 10))
+      setTotalPages(Math.max(2, Math.ceil(paginationData?.['total'] / 10)))
+      console.log(totalPages)
     })
   }
 
