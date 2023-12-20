@@ -339,11 +339,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         placeholder='Enter Transcript Text'
                         name='transcriptText'
                         value={projectSOWFormData.transcriptText}
-                        onChange={handleTranscriptTextChange}
                         onKeyUp={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
                           calculateNumberOfRows((event.target as HTMLTextAreaElement)?.value)
                         }}
-                        rows={transcriptTextRows}
+
+                        // rows={transcriptTextRows}
                       />
                       {!!errorMessage?.['transcriptText'] &&
                         errorMessage?.['transcriptText']?.map((message: any, index: number) => {
@@ -503,7 +503,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm' htmlFor={'#summaryText'}>
                       <span className='text-gray-700 dark:text-gray-400'>Summary Text</span>
-                      <MdEditor language='en-US' ref={summaryTextEditorRef} modelValue={summaryText} onChange={setSummaryText} />
+                      <MdEditor
+                        language='en-US'
+                        ref={summaryTextEditorRef}
+                        modelValue={summaryText}
+                        onChange={setSummaryText}
+                      />
 
                       {!!errorMessage?.['summaryText'] &&
                         errorMessage?.['summaryText']?.map((message: any, index: number) => {
@@ -525,7 +530,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     <label className='block text-sm' htmlFor={'#problemGoalText'}>
                       <span className='text-gray-700 dark:text-gray-400'>Problem Goal Text</span>
 
-                      <MdEditor language='en-US'
+                      <MdEditor
+                        language='en-US'
                         ref={problemGoalTextEditorRef}
                         modelValue={problemGoalText}
                         onChange={setProblemGoalText}
@@ -549,7 +555,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm' htmlFor={'#problemGoalText'}>
                       <span className='text-gray-700 dark:text-gray-400'>Overview Text</span>
-                      <MdEditor language='en-US' ref={overviewTextEditorRef} modelValue={overviewText} onChange={setOverviewText} />
+                      <MdEditor
+                        language='en-US'
+                        ref={overviewTextEditorRef}
+                        modelValue={overviewText}
+                        onChange={setOverviewText}
+                      />
                       {!!errorMessage?.['overviewText'] &&
                         errorMessage?.['overviewText']?.map((message: any, index: number) => {
                           return (
@@ -569,7 +580,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm' htmlFor={'#problemGoalText'}>
                       <span className='text-gray-700 dark:text-gray-400'>Scope of Work</span>
-                      <MdEditor language='en-US' ref={scopeTextEditorRef} modelValue={scopeText} onChange={setScopeText} />
+                      <MdEditor
+                        language='en-US'
+                        ref={scopeTextEditorRef}
+                        modelValue={scopeText}
+                        onChange={setScopeText}
+                      />
                       {!!errorMessage?.['scopeText'] &&
                         errorMessage?.['scopeText']?.map((message: any, index: number) => {
                           return (
@@ -589,7 +605,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm' htmlFor={'#deliverablesText'}>
                       <span className='text-gray-700 dark:text-gray-400'>Deliverable</span>
-                      <MdEditor language='en-US'
+                      <MdEditor
+                        language='en-US'
                         ref={deliverablesTextEditorRef}
                         modelValue={deliverablesText}
                         onChange={setDeliverablesText}

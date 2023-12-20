@@ -54,6 +54,10 @@ export default function PromptsListComponent(props: TPromptsComponent) {
     getList()
   }, [editDataId])
 
+  const handlePageChange = (newPage: number) => {
+    getList(newPage)
+  }
+
   return (
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
