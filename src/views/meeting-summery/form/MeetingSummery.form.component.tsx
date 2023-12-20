@@ -21,7 +21,8 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     transcriptText: '',
     summaryText: '',
     clickupLink: '',
-    tldvLink: ''
+    tldvLink: '',
+    pushToClickUp: false
   }
 
   const summaryTextEditorRef = useRef<ExposeParam>()
@@ -101,6 +102,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
       summaryText: editData?.['meetingSummeryText'],
       clickupLink: editData?.['clickupLink'],
       tldvLink: editData?.['tldvLink'],
+      pushToClickUp: editData?.['pushToClickUp'],
     })
     setMeetingSummeryText(editData?.['meetingSummeryText'])
   }, [editDataId, editData])
@@ -200,6 +202,30 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               </label>
             </Box>
           </Box>
+
+          {!!editDataId && (
+            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+              <Box sx={{ width: '50%' }}>
+                <label className='block text-sm'>
+                  <span className='text-gray-700 dark:text-gray-400'>Push to clickup</span>
+                  <input
+                    type='checkbox'
+                    className='mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-checkbox'
+                    name='pushToClickUp'
+                    checked={formData.pushToClickUp}
+                    onChange={handleChange}
+                  />
+                  {!!errorMessage?.['tldvLink'] &&
+                    errorMessage?.['tldvLink']?.map((message: any, index: number) => (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    ))}
+                </label>
+              </Box>
+            </Box>
+          )}
+
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
@@ -223,6 +249,8 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               </label>
             </Box>
           </Box>
+
+
           {!!meetingSummeryText && (
             <Box sx={{ display: 'flex', gap: 5 }}>
               <Box sx={{ width: '100%' }}>
