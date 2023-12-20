@@ -38,6 +38,14 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     })
   }
 
+  const handleCheckChange = (e: React.ChangeEvent<any>) => {
+    const { name, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: checked,
+    }));
+  };
+
   const handleSelectChange = (e: any) => {
     setFormData({
       ...formData,
@@ -102,7 +110,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
       summaryText: editData?.['meetingSummeryText'],
       clickupLink: editData?.['clickupLink'],
       tldvLink: editData?.['tldvLink'],
-      pushToClickUp: editData?.['pushToClickUp'],
+      pushToClickUp: false,
     })
     setMeetingSummeryText(editData?.['meetingSummeryText'])
   }, [editDataId, editData])
@@ -206,17 +214,18 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           {!!editDataId && (
             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
               <Box sx={{ width: '50%' }}>
-                <label className='block text-sm'>
+                <label className='block text-sm' htmlFor='pushToClickUp'>
                   <span className='text-gray-700 dark:text-gray-400'>Push to clickup</span>
                   <input
+                    id='pushToClickUp'
                     type='checkbox'
                     className='mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-checkbox'
                     name='pushToClickUp'
                     checked={formData.pushToClickUp}
-                    onChange={handleChange}
+                    onChange={handleCheckChange}
                   />
-                  {!!errorMessage?.['tldvLink'] &&
-                    errorMessage?.['tldvLink']?.map((message: any, index: number) => (
+                  {!!errorMessage?.['pushToClickUp'] &&
+                    errorMessage?.['pushToClickUp']?.map((message: any, index: number) => (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
                       </span>
