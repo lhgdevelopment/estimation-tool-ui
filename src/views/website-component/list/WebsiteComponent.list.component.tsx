@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import { Fragment, useEffect } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TWebsiteComponentComponent } from '../WebsiteComponent.decorator'
@@ -53,6 +53,10 @@ export default function WebsiteComponentListComponent(props: TWebsiteComponentCo
   useEffect(() => {
     getList()
   }, [editDataId])
+
+  const handlePageChange = (newPage: number) => {
+    getList(newPage)
+  }
 
   return (
     <Fragment>
