@@ -1,21 +1,24 @@
+import AddIcon from '@material-ui/icons/Add'
+import ClearIcon from '@material-ui/icons/Clear'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import EditNoteIcon from '@mui/icons-material/EditNote'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import SaveIcon from '@mui/icons-material/Save'
+import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, CircularProgress, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
 import { useMask } from '@react-input/mask'
 import '@uiw/react-md-editor/markdown-editor.css'
 import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
-import React, { ChangeEvent, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TProjectSOWFormComponent, projectTypeList } from '../ProjectSOW.decorator'
+import { TProjectSOWComponent, projectTypeList } from '../ProjectSOW.decorator'
 
 const steps = ['Transcript', 'Summery', 'Problems & Goals', 'Project Overview', 'SOW', 'Deliverables']
 
-export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
-  const { setListDataRefresh } = props
+export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
+  const { listData, setEditData, setEditDataId, setListData, editData, editDataId } = props
 
   const phoneInputRef = useMask({
     mask: '+0 (___) ___-__-__',
@@ -32,7 +35,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     company: '',
     clientPhone: '',
     clientEmail: '',
-    clientWebsite: ''
+    clientWebsite: '',
+    summaryText: ''
   }
 
   const [activeStep, setActiveStep] = useState(0)
@@ -88,10 +92,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTranscriptTextRows(Math.max(5, numberOfLines))
   }
 
-  const onClear = () => {
-    setProjectSOWFormData(prevState => ({ ...projectSOWDefaultData }))
-  }
-
   const totalSteps = () => {
     return steps.length
   }
@@ -114,32 +114,61 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     const newActiveStep =
       isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1
     if (activeStep === 0) {
-      apiRequest
-        .post('/project-summery', projectSOWFormData)
-        .then(res => {
-          setProjectSOWFormData({
-            ...projectSOWFormData,
-            ['transcriptId']: res?.data?.transcriptId
-          })
-          setProjectSOWID(res?.data?.id)
-          setSummaryText(res?.data?.summaryText)
+      if (projectSOWID) {
+        apiRequest
+          .put(`/project-summery/${projectSOWID}`, projectSOWFormData)
+          .then(res => {
+            setProjectSOWFormData({
+              ...projectSOWFormData,
+              ['transcriptId']: res?.data?.transcriptId
+            })
+            setProjectSOWID(res?.data?.id)
+            setSummaryText(res?.data?.summaryText)
 
-          // onClear()
-          setTimeout(() => {
-            if (type == 'NEXT') {
-              setActiveStep(newActiveStep)
-              if (enabledStep < newActiveStep) {
-                setEnabledStep(newActiveStep)
+            // onClear()
+            setTimeout(() => {
+              if (type == 'NEXT') {
+                setActiveStep(newActiveStep)
+                if (enabledStep < newActiveStep) {
+                  setEnabledStep(newActiveStep)
+                }
               }
-            }
 
+              setPreload(false)
+            }, 1000)
+          })
+          .catch(error => {
             setPreload(false)
-          }, 1000)
-        })
-        .catch(error => {
-          setPreload(false)
-          setSrrorMessage(error?.response?.data?.errors)
-        })
+            setSrrorMessage(error?.response?.data?.errors)
+          })
+      } else {
+        apiRequest
+          .post('/project-summery', projectSOWFormData)
+          .then(res => {
+            setProjectSOWFormData({
+              ...projectSOWFormData,
+              ['transcriptId']: res?.data?.transcriptId
+            })
+            setProjectSOWID(res?.data?.id)
+            setSummaryText(res?.data?.summaryText)
+
+            // onClear()
+            setTimeout(() => {
+              if (type == 'NEXT') {
+                setActiveStep(newActiveStep)
+                if (enabledStep < newActiveStep) {
+                  setEnabledStep(newActiveStep)
+                }
+              }
+
+              setPreload(false)
+            }, 1000)
+          })
+          .catch(error => {
+            setPreload(false)
+            setSrrorMessage(error?.response?.data?.errors)
+          })
+      }
     }
     if (activeStep === 1) {
       apiRequest
@@ -294,7 +323,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           setTimeout(() => {
             setActiveStep(0)
             setPreload(false)
-            setListDataRefresh(res)
+            setListData(res)
           }, 1000)
         })
         .catch(error => {
@@ -307,7 +336,30 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const handleStep = (step: number) => () => {
     setActiveStep(step)
   }
-  const editorRef = useRef<ExposeParam>()
+
+  useEffect(() => {
+    setProjectSOWFormData({
+      transcriptId: editData?.['transcriptId'],
+      transcriptText: editData?.['meeting_transcript']?.['transcriptText'],
+      projectType: editData?.['meeting_transcript']?.['projectType'],
+      projectName: editData?.['meeting_transcript']?.['projectName'],
+      company: editData?.['meeting_transcript']?.['company'],
+      clientEmail: editData?.['meeting_transcript']?.['clientEmail'],
+      clientPhone: editData?.['meeting_transcript']?.['clientPhone'],
+      clientWebsite: editData?.['meeting_transcript']?.['clientWebsite'],
+      summaryText: editData?.['summaryText']
+    })
+    setProjectSOWID(editData?.['transcriptId'])
+    setSummaryText(editData?.['summaryText'])
+  }, [editDataId, editData])
+
+  const onClear = () => {
+    setProjectSOWFormData(prevState => ({ ...projectSOWDefaultData }))
+    setProjectSOWID(null)
+    setSummaryText('')
+    setEditDataId(null)
+    setEditData({})
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -644,6 +696,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
             <Box sx={{ flex: '1 1 auto' }} />
             <Box className='my-4 text-right'>
+              <button
+                onClick={onClear}
+                type='button'
+                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+              >
+                {editDataId ? 'Cancel ' : 'Clear '}
+                {editDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
+              </button>
               {activeStep != 0 && (
                 <button
                   onClick={() => {
@@ -653,7 +713,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 >
                   {activeStep != totalSteps() && (
                     <>
-                      Save <SaveIcon />
+                      {editDataId ? 'Update ' : 'Save '}
+
+                      {editDataId ? <EditNoteIcon /> : <AddIcon />}
                     </>
                   )}
                   {activeStep == totalSteps() && (

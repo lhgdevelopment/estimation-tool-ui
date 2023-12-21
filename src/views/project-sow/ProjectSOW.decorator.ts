@@ -1,8 +1,13 @@
-import { Dispatch } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 
-export type TProjectSOWComponent = { listData: any[]; setListData: Dispatch<any> }
-export type TProjectSOWFormComponent = { setListDataRefresh: Dispatch<any> }
-export type TProjectSOWListComponent = { listDataRefresh: any[] }
+export type TProjectSOWComponent = {
+  editDataId?: string | null
+  setEditDataId: Dispatch<SetStateAction<string | null>>
+  editData?: any
+  setEditData: Dispatch<any> // Remove the optional '?'
+  listData: any[]
+  setListData: Dispatch<any>
+}
 
 export const projectTypeList = [
   { title: 'Logo/Branding', id: 1 },

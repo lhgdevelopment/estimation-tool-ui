@@ -152,7 +152,7 @@ export default function WebsiteComponentFormComponent(props: TWebsiteComponentCo
               className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
             >
               {editDataId ? 'Cancel ' : 'Clear '}
-              {editDataId ? <PlaylistRemoveIcon /> : <ClearIcon />}
+              {editDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
             </button>
             <button
               type='submit'
