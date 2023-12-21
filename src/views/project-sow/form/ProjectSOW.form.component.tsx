@@ -410,6 +410,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
                         name='transcriptText'
                         value={projectSOWFormData.transcriptText}
                         onChange={handleTranscriptTextChange}
+                        rows={10}
 
                         // rows={transcriptTextRows}
                       />
