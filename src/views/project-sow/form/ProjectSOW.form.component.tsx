@@ -311,6 +311,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
       apiRequest
         .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
         .then(res => {
+          apiRequest.get(`/project-summery?page=1`).then(res => {
+            setListData(res.data)
+          })
           console.log(res)
           Swal.fire({
             title: 'Data Created Successfully!',
@@ -323,7 +326,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
           setTimeout(() => {
             setActiveStep(0)
             setPreload(false)
-            setListData(res)
+            // setListData(res)
           }, 1000)
         })
         .catch(error => {
