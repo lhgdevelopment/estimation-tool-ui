@@ -16,16 +16,13 @@ const steps = ['Transcript', 'Summery', 'Problems & Goals', 'Project Overview', 
 
 export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
   const { setListDataRefresh } = props
+
   const phoneInputRef = useMask({
     mask: '+0 (___) ___-__-__',
     replacement: { _: /\d/ },
     showMask: true,
     separate: true
   })
-  const [activeStep, setActiveStep] = useState(0)
-  const [completed, setCompleted] = useState<{
-    [k: number]: boolean
-  }>({})
 
   const projectSOWDefaultData = {
     transcriptId: '',
@@ -37,6 +34,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     clientEmail: '',
     clientWebsite: ''
   }
+
+  const [activeStep, setActiveStep] = useState(0)
+  const [enabledStep, setEnabledStep] = useState(0)
+  const [completed, setCompleted] = useState<{
+    [k: number]: boolean
+  }>({})
 
   const summaryTextEditorRef = useRef<ExposeParam>()
   const problemGoalTextEditorRef = useRef<ExposeParam>()
@@ -125,6 +128,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           setTimeout(() => {
             if (type == 'NEXT') {
               setActiveStep(newActiveStep)
+              if (enabledStep < newActiveStep) {
+                setEnabledStep(newActiveStep)
+              }
             }
 
             setPreload(false)
@@ -152,6 +158,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               setProblemGoalText(res2?.data?.problemGoalText)
               setTimeout(() => {
                 setActiveStep(newActiveStep)
+                if (enabledStep < newActiveStep) {
+                  setEnabledStep(newActiveStep)
+                }
                 setPreload(false)
               }, 1000)
             })
@@ -183,6 +192,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               setTimeout(() => {
                 if (type == 'NEXT') {
                   setActiveStep(newActiveStep)
+                  if (enabledStep < newActiveStep) {
+                    setEnabledStep(newActiveStep)
+                  }
                 }
                 setPreload(false)
               }, 1000)
@@ -214,6 +226,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               setTimeout(() => {
                 if (type == 'NEXT') {
                   setActiveStep(newActiveStep)
+                  if (enabledStep < newActiveStep) {
+                    setEnabledStep(newActiveStep)
+                  }
                 }
                 setPreload(false)
               }, 1000)
@@ -247,6 +262,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               setTimeout(() => {
                 if (type == 'NEXT') {
                   setActiveStep(newActiveStep)
+                  if (enabledStep < newActiveStep) {
+                    setEnabledStep(newActiveStep)
+                  }
                 }
                 setPreload(false)
               }, 1000)
@@ -296,7 +314,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       <Stepper nonLinear activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
-            <StepButton color='inherit' onClick={handleStep(index)}>
+            <StepButton color='inherit' onClick={handleStep(index)} disabled={enabledStep < index}>
               {label}
             </StepButton>
           </Step>
@@ -339,9 +357,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         placeholder='Enter Transcript Text'
                         name='transcriptText'
                         value={projectSOWFormData.transcriptText}
-                        onKeyUp={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-                          calculateNumberOfRows((event.target as HTMLTextAreaElement)?.value)
-                        }}
+                        onChange={handleTranscriptTextChange}
 
                         // rows={transcriptTextRows}
                       />

@@ -14,9 +14,13 @@ export default function AppNavbarComponent() {
       <Box className='z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0'>
         <Box className='py-4 text-gray-500 dark:text-gray-400 '>
           <Box className={'text-center'}>
-            <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 leading-3' href='#'>
+            {/* <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 leading-3' href='#'>
               LHG <br />
               Sales/Proposal Tools
+            </Box> */}
+
+            <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 leading-3' href='#'>
+              Test Socket
             </Box>
           </Box>
           <Box component={'ul'} className='mt-6'>
