@@ -1,7 +1,7 @@
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { Box, Modal, Typography } from '@mui/material'
+import { Box } from '@mui/material'
+import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
-import ReactMarkdown from 'react-markdown'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateToCustomFormat } from 'src/@core/utils/utils'
 import { TProjectSOWListComponent } from '../ProjectSOW.decorator'
@@ -9,10 +9,6 @@ import { TProjectSOWListComponent } from '../ProjectSOW.decorator'
 export default function ProjectSOWListComponent(props: TProjectSOWListComponent) {
   const { listDataRefresh } = props
   const [listData, setListData] = useState<any>([])
-  const [open, setOpen] = useState(false)
-  const [projectSOW, setProjectSOW] = useState<any>({})
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
@@ -49,13 +45,6 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
     p: 4
   }
 
-  const openModal = (id: any) => {
-    apiRequest.get(`/project-summery/${id}`).then(res => {
-      handleOpen()
-      setProjectSOW(res.data)
-    })
-  }
-
   return (
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
@@ -79,15 +68,16 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
-                        <button
-                          onClick={() => {
-                            openModal(data?.id)
-                          }}
-                          className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                          aria-label='Edit'
-                        >
-                          <VisibilityIcon />
-                        </button>
+                        <Link href={`/project-summery/${data?.id}`}>
+                          <Box
+                            sx={{ cursor: 'pointer' }}
+                            component={'a'}
+                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                            aria-label='View'
+                          >
+                            <VisibilityIcon />
+                          </Box>
+                        </Link>
                       </Box>
                     </td>
                   </Box>
@@ -171,59 +161,6 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
           </span>
         </Box>
       </Box>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
-        <Box sx={style}>
-          <Box>
-            <Typography variant='h6' component={'h2'}>
-              Project Summery:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
-              <ReactMarkdown>{projectSOW?.['summaryText']}</ReactMarkdown>
-            </Typography>
-            <Typography variant='h6' component={'h2'}>
-              Problems and Goals:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
-              <ReactMarkdown>
-                {projectSOW?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
-              </ReactMarkdown>
-            </Typography>
-            <Typography variant='h6' component={'h2'}>
-              Project Overview:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
-              <ReactMarkdown>
-                {projectSOW?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']}
-              </ReactMarkdown>
-            </Typography>
-            <Typography variant='h6' component={'h2'}>
-              Scope of Work:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
-              <ReactMarkdown>
-                {projectSOW?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']}
-              </ReactMarkdown>
-            </Typography>
-            <Typography variant='h6' component={'h2'}>
-              Deliverables:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
-              <ReactMarkdown>
-                {
-                  projectSOW?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
-                    'deliverablesText'
-                  ]
-                }
-              </ReactMarkdown>
-            </Typography>
-          </Box>
-        </Box>
-      </Modal>
     </Fragment>
   )
 }
