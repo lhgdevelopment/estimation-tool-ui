@@ -2,7 +2,7 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box } from '@mui/material'
+import { Box, CircularProgress } from '@mui/material'
 import '@uiw/react-md-editor/markdown-editor.css'
 import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
@@ -14,6 +14,7 @@ import { MeetingTypeList, TMeetingSummeryComponent } from '../MeetingSummery.dec
 
 export default function MeetingSummeryFormComponent(props: TMeetingSummeryComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
+  const [preload, setPreload] = useState<boolean>(false)
 
   const defaultData = {
     meetingName: '',
@@ -55,6 +56,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
+    setPreload(true)
     if (editDataId) {
       formData['summaryText'] = summaryText
       apiRequest
@@ -76,11 +78,13 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               showConfirmButton: false
             })
             onClear()
+            setPreload(false)
 
             return updatedList
           })
         })
         .catch(error => {
+          setPreload(false)
           setSrrorMessage(error?.response?.data?.errors)
         })
     } else {
@@ -96,8 +100,10 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             showConfirmButton: false
           })
           onClear()
+          setPreload(false)
         })
         .catch(error => {
+          setPreload(false)
           setSrrorMessage(error?.response?.data?.errors)
         })
     }
@@ -125,6 +131,27 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
   return (
     <Fragment>
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+        {preload && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              width: '100%',
+              height: '100%',
+              background: '#0000006e',
+              zIndex: '111'
+            }}
+          >
+            <CircularProgress
+              sx={{
+                position: 'absolute',
+                top: 'calc(50% - 20px)',
+                left: 'calc(50% - 20px)'
+              }}
+            />
+          </Box>
+        )}
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
