@@ -312,7 +312,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
         .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
         .then(res => {
           apiRequest.get(`/project-summery?page=1`).then(res => {
-
             setListData(res.data)
           })
 
@@ -360,10 +359,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
 
   const onClear = () => {
     setProjectSOWFormData(prevState => ({ ...projectSOWDefaultData }))
+
     setProjectSOWID(null)
     setSummaryText('')
+
+    setProblemGoalID(null)
+    setProblemGoalText('')
+
+    setOverviewTextID(null)
+    setOverviewTextID('')
+
+    setScopeTextID(null)
+    setScopeText('')
+
+    setDeliverablesTextID(null)
+    setDeliverablesText('')
+
     setEditDataId(null)
     setEditData({})
+    setActiveStep(0)
+    setEnabledStep(0)
   }
 
   return (
