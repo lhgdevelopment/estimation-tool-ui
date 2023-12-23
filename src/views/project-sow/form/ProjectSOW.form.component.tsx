@@ -4,13 +4,15 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box, CircularProgress, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
+import { Box, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
 import { useMask } from '@react-input/mask'
 import '@uiw/react-md-editor/markdown-editor.css'
 import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
+import MdPreviewTitle from 'src/@core/components/md-preview-title'
+import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TProjectSOWComponent, projectTypeList } from '../ProjectSOW.decorator'
@@ -341,20 +343,52 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
     setActiveStep(step)
   }
 
-  useEffect(() => {
-    setProjectSOWFormData({
-      transcriptId: editData?.['transcriptId'],
-      transcriptText: editData?.['meeting_transcript']?.['transcriptText'],
-      projectType: editData?.['meeting_transcript']?.['projectType'],
-      projectName: editData?.['meeting_transcript']?.['projectName'],
-      company: editData?.['meeting_transcript']?.['company'],
-      clientEmail: editData?.['meeting_transcript']?.['clientEmail'],
-      clientPhone: editData?.['meeting_transcript']?.['clientPhone'],
-      clientWebsite: editData?.['meeting_transcript']?.['clientWebsite'],
-      summaryText: editData?.['summaryText']
+  const getDetails = (id: string | null | undefined) => {
+    if (!id) return
+
+    setPreload(true)
+    apiRequest.get(`/project-summery/${id}`).then((res: any) => {
+      console.log(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview'])
+      setProjectSOWFormData({
+        transcriptId: res?.data?.id,
+        transcriptText: res?.data?.['meeting_transcript']?.['transcriptText'],
+        projectType: res?.data?.['meeting_transcript']?.['projectType'],
+        projectName: res?.data?.['meeting_transcript']?.['projectName'],
+        company: res?.data?.['meeting_transcript']?.['company'],
+        clientEmail: res?.data?.['meeting_transcript']?.['clientEmail'],
+        clientPhone: res?.data?.['meeting_transcript']?.['clientPhone'],
+        clientWebsite: res?.data?.['meeting_transcript']?.['clientWebsite'],
+        summaryText: res?.data?.['summaryText']
+      })
+      setProjectSOWID(id)
+      setSummaryText(res?.data?.['summaryText'])
+
+      setProblemGoalID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['id'])
+      setProblemGoalText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText'])
+
+      setOverviewTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['id'])
+      setOverviewText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText'])
+
+      setScopeTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id'])
+      setScopeText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText'])
+
+      setDeliverablesTextID(
+        res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['id']
+      )
+      setDeliverablesText(
+        res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
+          'deliverablesText'
+        ]
+      )
+
+      setActiveStep(0)
+      setEnabledStep(5)
+      setPreload(false)
     })
-    setProjectSOWID(editData?.['transcriptId'])
-    setSummaryText(editData?.['summaryText'])
+  }
+
+  useEffect(() => {
+    getDetails(editDataId)
   }, [editDataId, editData])
 
   const onClear = () => {
@@ -367,7 +401,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
     setProblemGoalText('')
 
     setOverviewTextID(null)
-    setOverviewTextID('')
+    setOverviewText('')
 
     setScopeTextID(null)
     setScopeText('')
@@ -382,393 +416,410 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
   }
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Stepper nonLinear activeStep={activeStep}>
-        {steps.map((label, index) => (
-          <Step key={label} completed={completed[index]}>
-            <StepButton color='inherit' onClick={handleStep(index)} disabled={enabledStep < index}>
-              {label}
-            </StepButton>
-          </Step>
-        ))}
-      </Stepper>
-      <Box sx={{ position: 'relative' }}>
-        {preload && (
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '0',
-              left: '0',
-              width: '100%',
-              height: '100%',
-              background: '#0000006e',
-              zIndex: '111'
-            }}
-          >
-            <CircularProgress
-              sx={{
-                position: 'absolute',
-                top: 'calc(50% - 20px)',
-                left: 'calc(50% - 20px)'
-              }}
-            />
-          </Box>
-        )}
-        <React.Fragment>
-          <Box sx={{ mt: 10, p: 10, border: '2px solid #7e3af2', borderRadius: 2 }}>
-            {activeStep == 0 && (
-              <Box>
-                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                  <Box sx={{ width: '100%' }}>
-                    <label className='block text-sm'>
-                      <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
-                      <textarea
-                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage?.['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
-                        }`}
-                        placeholder='Enter Transcript Text'
-                        name='transcriptText'
-                        value={projectSOWFormData.transcriptText}
-                        onChange={handleTranscriptTextChange}
-                        rows={10}
+    <Box>
+      {!!preload && <Preloader close={!preload} />}
+      <Box sx={{ width: '100%' }}>
+        <Stepper nonLinear activeStep={activeStep}>
+          {steps.map((label, index) => (
+            <Step key={label} completed={completed[index]}>
+              <StepButton color='inherit' onClick={handleStep(index)} disabled={enabledStep < index}>
+                {label}
+              </StepButton>
+            </Step>
+          ))}
+        </Stepper>
+        <Box sx={{ position: 'relative' }}>
+          <React.Fragment>
+            <Box sx={{ mt: 10, p: 10, border: '2px solid #7e3af2', borderRadius: 2 }}>
+              {activeStep == 0 && (
+                <Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
+                        <textarea
+                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                            errorMessage?.['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          }`}
+                          placeholder='Enter Transcript Text'
+                          name='transcriptText'
+                          value={projectSOWFormData.transcriptText}
+                          onChange={handleTranscriptTextChange}
+                          rows={10}
 
-                        // rows={transcriptTextRows}
-                      />
-                      {!!errorMessage?.['transcriptText'] &&
-                        errorMessage?.['transcriptText']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                </Box>
-
-                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                  <Box sx={{ width: '50%' }}>
-                    <label className='block text-sm'>
-                      <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
-                      <Dropdown
-                        isEnumField
-                        enumList={projectTypeList}
-                        name='projectType'
-                        value={projectSOWFormData.projectType}
-                        onChange={handleSelectChange}
-                      />
-                      {!!errorMessage?.['projectType'] &&
-                        errorMessage?.['projectType']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
+                          // rows={transcriptTextRows}
+                        />
+                        {!!errorMessage?.['transcriptText'] &&
+                          errorMessage?.['transcriptText']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
                   </Box>
 
-                  <Box sx={{ width: '50%' }}>
-                    <label className='block text-sm'>
-                      <span className='text-gray-700 dark:text-gray-400'>Project Name</span>
-                      <input
-                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                        }`}
-                        placeholder='Enter Project Name'
-                        name='projectName'
-                        value={projectSOWFormData.projectName}
-                        onChange={handleProjectSOWChange}
-                      />
-                      {!!errorMessage?.['projectName'] &&
-                        errorMessage?.['projectName']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                  <Box sx={{ width: '50%' }}>
-                    <label className='block text-sm'>
-                      <span className='text-gray-700 dark:text-gray-400'>Company</span>
-                      <input
-                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                        }`}
-                        placeholder='Enter Company'
-                        name='company'
-                        value={projectSOWFormData.company}
-                        onChange={handleProjectSOWChange}
-                      />
-                      {!!errorMessage?.['company'] &&
-                        errorMessage?.['company']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                  <Box sx={{ width: '50%' }}>
-                    <label className='block text-sm'>
-                      <span className='text-gray-700 dark:text-gray-400'>Phone</span>
-                      <input
-                        ref={phoneInputRef}
-                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
-                        }`}
-                        placeholder='Enter Phone Number'
-                        name='clientPhone'
-                        value={projectSOWFormData.clientPhone}
-                        onChange={handleProjectSOWChange}
-                      />
-                      {!!errorMessage?.['clientPhone'] &&
-                        errorMessage?.['clientPhone']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                </Box>
-                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                  <Box sx={{ width: '50%' }}>
-                    <label className='block text-sm'>
-                      <span className='text-gray-700 dark:text-gray-400'>Email</span>
-                      <input
-                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage?.['clientEmail'] ? 'border-red-600' : 'dark:border-gray-600 '
-                        }`}
-                        placeholder='Enter Email'
-                        name='clientEmail'
-                        value={projectSOWFormData.clientEmail}
-                        onChange={handleProjectSOWChange}
-                      />
-                      {!!errorMessage?.['clientEmail'] &&
-                        errorMessage?.['clientEmail']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                  <Box sx={{ width: '50%' }}>
-                    <label className='block text-sm'>
-                      <span className='text-gray-700 dark:text-gray-400'>Website</span>
-                      <input
-                        className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                          errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
-                        }`}
-                        placeholder='Enter Website'
-                        name='clientWebsite'
-                        value={projectSOWFormData.clientWebsite}
-                        onChange={handleProjectSOWChange}
-                      />
-                      {!!errorMessage?.['clientWebsite'] &&
-                        errorMessage?.['clientWebsite']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                </Box>
-              </Box>
-            )}
-            {activeStep == 1 && (
-              <Box>
-                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                  <Box sx={{ width: '100%' }}>
-                    <label className='block text-sm' htmlFor={'#summaryText'}>
-                      <span className='text-gray-700 dark:text-gray-400'>Summary Text</span>
-                      <MdEditor
-                        language='en-US'
-                        ref={summaryTextEditorRef}
-                        modelValue={summaryText}
-                        onChange={setSummaryText}
-                      />
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '50%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
+                        <Dropdown
+                          isEnumField
+                          enumList={projectTypeList}
+                          name='projectType'
+                          value={projectSOWFormData.projectType}
+                          onChange={handleSelectChange}
+                        />
+                        {!!errorMessage?.['projectType'] &&
+                          errorMessage?.['projectType']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
 
-                      {!!errorMessage?.['summaryText'] &&
-                        errorMessage?.['summaryText']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
+                    <Box sx={{ width: '50%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Project Name</span>
+                        <input
+                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                            errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          }`}
+                          placeholder='Enter Project Name'
+                          name='projectName'
+                          value={projectSOWFormData.projectName}
+                          onChange={handleProjectSOWChange}
+                        />
+                        {!!errorMessage?.['projectName'] &&
+                          errorMessage?.['projectName']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '50%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Company</span>
+                        <input
+                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                            errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          }`}
+                          placeholder='Enter Company'
+                          name='company'
+                          value={projectSOWFormData.company}
+                          onChange={handleProjectSOWChange}
+                        />
+                        {!!errorMessage?.['company'] &&
+                          errorMessage?.['company']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                    <Box sx={{ width: '50%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Phone</span>
+                        <input
+                          ref={phoneInputRef}
+                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                            errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          }`}
+                          placeholder='Enter Phone Number'
+                          name='clientPhone'
+                          value={projectSOWFormData.clientPhone}
+                          onChange={handleProjectSOWChange}
+                        />
+                        {!!errorMessage?.['clientPhone'] &&
+                          errorMessage?.['clientPhone']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '50%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Email</span>
+                        <input
+                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                            errorMessage?.['clientEmail'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          }`}
+                          placeholder='Enter Email'
+                          name='clientEmail'
+                          value={projectSOWFormData.clientEmail}
+                          onChange={handleProjectSOWChange}
+                        />
+                        {!!errorMessage?.['clientEmail'] &&
+                          errorMessage?.['clientEmail']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                    <Box sx={{ width: '50%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Website</span>
+                        <input
+                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                            errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          }`}
+                          placeholder='Enter Website'
+                          name='clientWebsite'
+                          value={projectSOWFormData.clientWebsite}
+                          onChange={handleProjectSOWChange}
+                        />
+                        {!!errorMessage?.['clientWebsite'] &&
+                          errorMessage?.['clientWebsite']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            )}
-            {activeStep == 2 && (
-              <Box>
-                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                  <Box sx={{ width: '100%' }}>
-                    <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                      <span className='text-gray-700 dark:text-gray-400'>Problem Goal Text</span>
-
-                      <MdEditor
-                        language='en-US'
-                        ref={problemGoalTextEditorRef}
-                        modelValue={problemGoalText}
-                        onChange={setProblemGoalText}
-                      />
-                      {!!errorMessage?.['problemGoalText'] &&
-                        errorMessage?.['problemGoalText']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                </Box>
-              </Box>
-            )}
-            {activeStep == 3 && (
-              <Box>
-                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                  <Box sx={{ width: '100%' }}>
-                    <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                      <span className='text-gray-700 dark:text-gray-400'>Overview Text</span>
-                      <MdEditor
-                        language='en-US'
-                        ref={overviewTextEditorRef}
-                        modelValue={overviewText}
-                        onChange={setOverviewText}
-                      />
-                      {!!errorMessage?.['overviewText'] &&
-                        errorMessage?.['overviewText']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                </Box>
-              </Box>
-            )}
-            {activeStep == 4 && (
-              <Box>
-                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                  <Box sx={{ width: '100%' }}>
-                    <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                      <span className='text-gray-700 dark:text-gray-400'>Scope of Work</span>
-                      <MdEditor
-                        language='en-US'
-                        ref={scopeTextEditorRef}
-                        modelValue={scopeText}
-                        onChange={setScopeText}
-                      />
-                      {!!errorMessage?.['scopeText'] &&
-                        errorMessage?.['scopeText']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                </Box>
-              </Box>
-            )}
-            {activeStep == 5 && (
-              <Box>
-                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                  <Box sx={{ width: '100%' }}>
-                    <label className='block text-sm' htmlFor={'#deliverablesText'}>
-                      <span className='text-gray-700 dark:text-gray-400'>Deliverable</span>
-                      <MdEditor
-                        language='en-US'
-                        ref={deliverablesTextEditorRef}
-                        modelValue={deliverablesText}
-                        onChange={setDeliverablesText}
-                      />
-                      {!!errorMessage?.['deliverablesText'] &&
-                        errorMessage?.['deliverablesText']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                </Box>
-              </Box>
-            )}
-          </Box>
-          <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Box className='my-4 text-right'>
-              <button
-                onClick={onClear}
-                type='button'
-                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-              >
-                {editDataId ? 'Cancel ' : 'Clear '}
-                {editDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
-              </button>
-              {activeStep != 0 && (
-                <button
-                  onClick={() => {
-                    handleNext('SAVE')
-                  }}
-                  className='mr-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-                >
-                  {activeStep != totalSteps() && (
-                    <>
-                      {editDataId ? 'Update ' : 'Save '}
-
-                      {editDataId ? <EditNoteIcon /> : <AddIcon />}
-                    </>
-                  )}
-                  {activeStep == totalSteps() && (
-                    <>
-                      Finish <CheckCircleIcon />
-                    </>
-                  )}
-                </button>
               )}
-              {activeStep != totalSteps() && (
-                <button
-                  onClick={() => {
-                    handleNext()
-                  }}
-                  className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-                >
-                  Next <NavigateNextIcon />
-                </button>
+              {activeStep == 1 && (
+                <Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm' htmlFor={'#summaryText'}>
+                        <span className='text-gray-700 dark:text-gray-400'>Summary Text</span>
+                        <Box
+                          sx={{
+                            position: 'relative'
+                          }}
+                        >
+                          <MdPreviewTitle />
+                          <MdEditor
+                            language='en-US'
+                            ref={summaryTextEditorRef}
+                            modelValue={summaryText}
+                            onChange={setSummaryText}
+                          />
+                        </Box>
+
+                        {!!errorMessage?.['summaryText'] &&
+                          errorMessage?.['summaryText']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {activeStep == 2 && (
+                <Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm' htmlFor={'#problemGoalText'}>
+                        <span className='text-gray-700 dark:text-gray-400'>Problem Goal Text</span>
+
+                        <Box
+                          sx={{
+                            position: 'relative'
+                          }}
+                        >
+                          <MdPreviewTitle />
+                          <MdEditor
+                            language='en-US'
+                            ref={problemGoalTextEditorRef}
+                            modelValue={problemGoalText}
+                            onChange={setProblemGoalText}
+                          />
+                        </Box>
+                        {!!errorMessage?.['problemGoalText'] &&
+                          errorMessage?.['problemGoalText']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {activeStep == 3 && (
+                <Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm' htmlFor={'#problemGoalText'}>
+                        <span className='text-gray-700 dark:text-gray-400'>Overview Text</span>
+                        <Box
+                          sx={{
+                            position: 'relative'
+                          }}
+                        >
+                          <MdPreviewTitle />
+                          <MdEditor
+                            language='en-US'
+                            ref={overviewTextEditorRef}
+                            modelValue={overviewText}
+                            onChange={setOverviewText}
+                          />
+                        </Box>
+                        {!!errorMessage?.['overviewText'] &&
+                          errorMessage?.['overviewText']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {activeStep == 4 && (
+                <Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm' htmlFor={'#problemGoalText'}>
+                        <span className='text-gray-700 dark:text-gray-400'>Scope of Work</span>
+                        <Box
+                          sx={{
+                            position: 'relative'
+                          }}
+                        >
+                          <MdPreviewTitle />
+                          <MdEditor
+                            language='en-US'
+                            ref={scopeTextEditorRef}
+                            modelValue={scopeText}
+                            onChange={setScopeText}
+                          />
+                        </Box>
+                        {!!errorMessage?.['scopeText'] &&
+                          errorMessage?.['scopeText']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {activeStep == 5 && (
+                <Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm' htmlFor={'#deliverablesText'}>
+                        <span className='text-gray-700 dark:text-gray-400'>Deliverable</span>
+                        <Box
+                          sx={{
+                            position: 'relative'
+                          }}
+                        >
+                          <MdPreviewTitle />
+                          <MdEditor
+                            language='en-US'
+                            ref={deliverablesTextEditorRef}
+                            modelValue={deliverablesText}
+                            onChange={setDeliverablesText}
+                          />
+                        </Box>
+                        {!!errorMessage?.['deliverablesText'] &&
+                          errorMessage?.['deliverablesText']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                  </Box>
+                </Box>
               )}
             </Box>
-            {/* {activeStep !== steps.length &&
-                (completed[activeStep] ? (
-                  <Typography variant='caption' sx={{ display: 'inline-block' }}>
-                    Step {activeStep + 1} already completed
-                  </Typography>
-                ) : (
-                  <Button onClick={handleComplete}>
-                    {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
-                  </Button>
-                ))} */}
-          </Box>
-        </React.Fragment>
+            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+              <Box sx={{ flex: '1 1 auto' }} />
+              <Box className='my-4 text-right'>
+                <button
+                  onClick={onClear}
+                  type='button'
+                  className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                >
+                  {editDataId ? 'Cancel ' : 'Clear '}
+                  {editDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
+                </button>
+                {activeStep != 0 && (
+                  <button
+                    onClick={() => {
+                      handleNext('SAVE')
+                    }}
+                    className='mr-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                  >
+                    {activeStep != totalSteps() && (
+                      <>
+                        {editDataId ? 'Update ' : 'Save '}
+
+                        {editDataId ? <EditNoteIcon /> : <AddIcon />}
+                      </>
+                    )}
+                    {activeStep == totalSteps() && (
+                      <>
+                        Finish <CheckCircleIcon />
+                      </>
+                    )}
+                  </button>
+                )}
+                {activeStep != totalSteps() && (
+                  <button
+                    onClick={() => {
+                      handleNext()
+                    }}
+                    className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                  >
+                    Next <NavigateNextIcon />
+                  </button>
+                )}
+              </Box>
+              {/* {activeStep !== steps.length &&
+              (completed[activeStep] ? (
+                <Typography variant='caption' sx={{ display: 'inline-block' }}>
+                  Step {activeStep + 1} already completed
+                </Typography>
+              ) : (
+                <Button onClick={handleComplete}>
+                  {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
+                </Button>
+              ))} */}
+            </Box>
+          </React.Fragment>
+        </Box>
       </Box>
     </Box>
   )
