@@ -7,7 +7,7 @@ import apiRequest from 'src/@core/utils/axios-config'
 export default function DetailsDataDetailsComponent() {
   const router = useRouter()
   const [detailsData, setDetailsData] = useState<any>({})
-  const getDetails = (page = 1) => {
+  const getDetails = () => {
     apiRequest.get(`/project-summery/${router?.query['id']}`).then(res => {
       setDetailsData(res.data)
     })

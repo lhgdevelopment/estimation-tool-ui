@@ -29,3 +29,12 @@ code[class*='language-'] {
 button:focus {
   outline: none;
 }
+
+@keyframes progress {
+  from {
+    stroke-dashoffset: 360;
+  }
+  to {
+    stroke-dashoffset: 100;
+  }
+}
