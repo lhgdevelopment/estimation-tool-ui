@@ -1,7 +1,7 @@
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { Box, Modal, Typography } from '@mui/material'
+import { Box } from '@mui/material'
+import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
-import ReactMarkdown from 'react-markdown'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateToCustomFormat } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
@@ -9,10 +9,7 @@ import { MeetingTypeList, TMeetingSummeryComponent } from '../MeetingSummery.dec
 
 export default function MeetingSummeryListComponent(props: TMeetingSummeryComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
-  const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
-  const [meetingSummery, setMeetingSummery] = useState<any>({})
+
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
@@ -79,13 +76,6 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
     p: 4
   }
 
-  const openModal = (id: any) => {
-    apiRequest.get(`/meeting-summery/${id}`).then(res => {
-      handleOpen()
-      setMeetingSummery(res.data)
-    })
-  }
-
   return (
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
@@ -113,15 +103,16 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
-                        <button
-                          onClick={() => {
-                            openModal(data?.id)
-                          }}
-                          className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                          aria-label='Edit'
-                        >
-                          <VisibilityIcon />
-                        </button>
+                        <Link href={`/meeting-summery/${data?.id}`}>
+                          <Box
+                            sx={{ cursor: 'pointer' }}
+                            component={'a'}
+                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                            aria-label='View'
+                          >
+                            <VisibilityIcon />
+                          </Box>
+                        </Link>
 
                         <button
                           onClick={() => {
@@ -232,23 +223,6 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
           </span>
         </Box>
       </Box>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
-        <Box sx={style}>
-          <Box>
-            <Typography variant='h6' component={'h2'}>
-              Meeting Summery:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
-              <ReactMarkdown>{meetingSummery?.['meetingSummeryText']}</ReactMarkdown>
-            </Typography>
-          </Box>
-        </Box>
-      </Modal>
     </Fragment>
   )
 }

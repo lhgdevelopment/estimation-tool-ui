@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import DetailsDataDetailsComponent from 'src/views/project-sow/details/ProjectSOW.details.component'
+import ProjectSOWDetailsComponent from 'src/views/project-sow/details/ProjectSOW.details.component'
 
 const ProjectSOWDetailsPage = () => {
-  return <DetailsDataDetailsComponent></DetailsDataDetailsComponent>
+  return <ProjectSOWDetailsComponent></ProjectSOWDetailsComponent>
 }
 ProjectSOWDetailsPage.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
 export default ProjectSOWDetailsPage

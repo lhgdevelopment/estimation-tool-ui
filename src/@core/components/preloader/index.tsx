@@ -103,7 +103,7 @@ const Preloader = (props: TPreloaderProps) => {
         <div className='percent'>
           <svg>
             <circle cx='105' cy='105' r='100'></circle>
-            <circle cx='105' cy='105' r='100' style={{ '--percent': `${counter}%` }}></circle>
+            <circle cx='105' cy='105' r='100'></circle>
           </svg>
           <div className='number'>
             <h3>
