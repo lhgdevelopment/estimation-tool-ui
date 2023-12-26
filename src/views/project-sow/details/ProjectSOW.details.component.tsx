@@ -1,11 +1,11 @@
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 
-export default function DetailsDataDetailsComponent() {
+export default function ProjectSOWDetailsComponent() {
   const router = useRouter()
   console.log(router?.query['id'])
 
@@ -20,49 +20,67 @@ export default function DetailsDataDetailsComponent() {
   }
 
   useEffect(() => {
-    getDetails()
+    if (router?.query['id']) {
+      getDetails()
+    }
   }, [router?.query['id']])
+
+  const sowHeadingSx = {
+    fontSize: '20px',
+    fontWeight: '600',
+    textAlign: 'center',
+    py: 2,
+    my: 3,
+    borderTop: '2px solid #6c2bd9',
+    borderBottom: '2px solid #6c2bd9',
+    color: '#6c2bd9'
+  }
+
+  const sowBodySx = { p: 2, my: 2 }
 
   return (
     <Fragment>
       {!!preload && <Preloader close={!preload} />}
       <Box sx={{ p: 5 }}>
-        <Box sx={{ mt: 5 }}>
-          <Box>
-            <Typography variant='h6' component={'h2'}>
-              Project Summery:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
+        <Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Box
+              sx={{
+                fontSize: '26px',
+                fontWeight: '600',
+                textAlign: 'center',
+                margin: '8px',
+                lineHeight: 'normal',
+                color: '#6c2bd9',
+                padding: '15px'
+              }}
+            >
+              Project Name: {detailsData?.['meeting_transcript']?.['projectName']}
+            </Box>
+            <Box sx={sowHeadingSx}>Project Summery: </Box>
+            <Box sx={sowBodySx}>
               <ReactMarkdown>{detailsData?.['summaryText']}</ReactMarkdown>
-            </Typography>
-            <Typography variant='h6' component={'h2'}>
-              Problems and Goals:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
+            </Box>
+            <Box sx={sowHeadingSx}>Problems and Goals:</Box>
+            <Box sx={sowBodySx}>
               <ReactMarkdown>
                 {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
               </ReactMarkdown>
-            </Typography>
-            <Typography variant='h6' component={'h2'}>
-              Project Overview:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
+            </Box>
+            <Box sx={sowHeadingSx}>Project Overview:</Box>
+            <Box sx={sowBodySx}>
               <ReactMarkdown>
                 {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']}
               </ReactMarkdown>
-            </Typography>
-            <Typography variant='h6' component={'h2'}>
-              Scope of Work:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
+            </Box>
+            <Box sx={sowHeadingSx}>Scope of Work:</Box>
+            <Box sx={sowBodySx}>
               <ReactMarkdown>
                 {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']}
               </ReactMarkdown>
-            </Typography>
-            <Typography variant='h6' component={'h2'}>
-              Deliverables:
-            </Typography>
-            <Typography sx={{ ml: 5, mb: 10 }}>
+            </Box>
+            <Box sx={sowHeadingSx}>Deliverables:</Box>
+            <Box sx={sowBodySx}>
               <ReactMarkdown>
                 {
                   detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
@@ -70,7 +88,7 @@ export default function DetailsDataDetailsComponent() {
                   ]
                 }
               </ReactMarkdown>
-            </Typography>
+            </Box>
           </Box>
         </Box>
       </Box>
