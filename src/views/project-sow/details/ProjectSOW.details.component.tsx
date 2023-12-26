@@ -2,6 +2,7 @@ import { Box } from '@mui/material'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import CopyToClipboard from 'src/@core/components/copy-to-clipboard/CopyToClipboard'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 
@@ -60,24 +61,41 @@ export default function ProjectSOWDetailsComponent() {
             <Box sx={sowHeadingSx}>Project Summery: </Box>
             <Box sx={sowBodySx}>
               <ReactMarkdown>{detailsData?.['summaryText']}</ReactMarkdown>
+              <CopyToClipboard sx={{ mt: 5 }} textToCopy={detailsData?.['summaryText']} />
             </Box>
             <Box sx={sowHeadingSx}>Problems and Goals:</Box>
             <Box sx={sowBodySx}>
               <ReactMarkdown>
                 {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
               </ReactMarkdown>
+              <CopyToClipboard
+                sx={{ mt: 5 }}
+                textToCopy={detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
+              />
             </Box>
             <Box sx={sowHeadingSx}>Project Overview:</Box>
             <Box sx={sowBodySx}>
               <ReactMarkdown>
                 {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']}
               </ReactMarkdown>
+              <CopyToClipboard
+                sx={{ mt: 5 }}
+                textToCopy={
+                  detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']
+                }
+              />
             </Box>
             <Box sx={sowHeadingSx}>Scope of Work:</Box>
             <Box sx={sowBodySx}>
               <ReactMarkdown>
                 {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']}
               </ReactMarkdown>
+              <CopyToClipboard
+                sx={{ mt: 5 }}
+                textToCopy={
+                  detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']
+                }
+              />
             </Box>
             <Box sx={sowHeadingSx}>Deliverables:</Box>
             <Box sx={sowBodySx}>
@@ -88,6 +106,14 @@ export default function ProjectSOWDetailsComponent() {
                   ]
                 }
               </ReactMarkdown>
+              <CopyToClipboard
+                sx={{ mt: 5 }}
+                textToCopy={
+                  detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
+                    'deliverablesText'
+                  ]
+                }
+              />
             </Box>
           </Box>
         </Box>

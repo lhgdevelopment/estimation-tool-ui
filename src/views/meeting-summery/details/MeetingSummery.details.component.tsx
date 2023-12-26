@@ -2,6 +2,7 @@ import { Box } from '@mui/material'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import CopyToClipboard from 'src/@core/components/copy-to-clipboard/CopyToClipboard'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 
@@ -60,6 +61,7 @@ export default function MeetingSummeryDetailsComponent() {
             <Box sx={sowHeadingSx}>Meeting Summery: </Box>
             <Box sx={sowBodySx}>
               <ReactMarkdown>{detailsData?.['meetingSummeryText']}</ReactMarkdown>
+              <CopyToClipboard sx={{ mt: 5 }} textToCopy={detailsData?.['meetingSummeryText']} />
             </Box>
           </Box>
         </Box>
