@@ -20,7 +20,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
 
   const [formData, setFormData] = useState(defaultData)
 
-  const [serviceScopeUrl, setServiceScopeUrl] = useState('')
+  const [serviceScopeUrl, setServiceScopeUrl] = useState('service-scopes')
 
 
   const handleChange = (e: React.ChangeEvent<any>) => {
