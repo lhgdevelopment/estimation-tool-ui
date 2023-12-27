@@ -14,6 +14,8 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
 
   const defaultData = {
     name: '',
+    serviceId: '',
+    serviceScopeId: '',
     serviceDeliverableId: '',
     cost: '',
     description: ''
@@ -21,6 +23,8 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   }
 
   const [formData, setFormData] = useState(defaultData)
+  const [serviceScopeUrl, setServiceScopeUrl] = useState('')
+  const [serviceDeliverableUrl, setServiceDeliverableUrl] = useState('')
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -76,8 +80,26 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   }
 
   useEffect(() => {
+    if (formData.serviceId) {
+      setServiceScopeUrl(`service-scopes?serviceId=${formData.serviceId}`);
+    } else {
+      setServiceScopeUrl(''); // Reset the URL when serviceId is not selected
+    }
+  }, [formData.serviceId]);
+
+  useEffect(() => {
+    if (formData.serviceScopeId) {
+      setServiceDeliverableUrl(`service-deliverables?serviceScopeId=${formData.serviceScopeId}`);
+    } else {
+      setServiceDeliverableUrl('');
+    }
+  }, [formData.serviceScopeId]);
+
+  useEffect(() => {
     setFormData({
       name: editData?.['name'],
+      serviceId: editData?.['serviceId'],
+      serviceScopeId: editData?.['serviceScopeId'],
       serviceDeliverableId: editData?.['serviceDeliverableId'],
       cost: editData?.['cost'],
       description: editData?.['description']
@@ -95,7 +117,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Name</span>
                 <input
@@ -107,13 +129,25 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                 />
               </label>
             </Box>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service Deliverable</span>
+                <span className='text-gray-700 dark:text-gray-400'>Service</span>
                 <Dropdown
-                  url={'service-deliverables'}
-                  name='serviceDeliverableId'
-                  value={formData.serviceDeliverableId}
+                  url={'services'}
+                  name='serviceId'
+                  value={formData.serviceId}
+                  onChange={handleSelectChange}
+                  optionConfig={{ id: 'id', title: 'name' }}
+                />
+              </label>
+            </Box>
+            <Box sx={{ width: '33%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Service Scope</span>
+                <Dropdown
+                  url={serviceScopeUrl}
+                  name='serviceScopeId'
+                  value={formData.serviceScopeId}
                   onChange={handleSelectChange}
                   optionConfig={{ id: 'id', title: 'name' }}
                 />
@@ -121,7 +155,19 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
             </Box>
           </Box>
           <Box sx={{ display: 'flex', gap: 5 }}>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '33%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Service Deliverable</span>
+                <Dropdown
+                  url={serviceDeliverableUrl}
+                  name='serviceDeliverableId'
+                  value={formData.serviceDeliverableId}
+                  onChange={handleSelectChange}
+                  optionConfig={{ id: 'id', title: 'name' }}
+                />
+              </label>
+            </Box>
+            <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Cost</span>
                 <input
@@ -133,7 +179,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                 />
               </label>
             </Box>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Description</span>
                 <input
