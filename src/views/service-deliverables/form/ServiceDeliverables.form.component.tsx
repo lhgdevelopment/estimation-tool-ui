@@ -14,10 +14,14 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
 
   const defaultData = {
     name: '',
+    serviceId: '',
     serviceScopeId: ''
   }
 
   const [formData, setFormData] = useState(defaultData)
+
+  const [serviceScopeUrl, setServiceScopeUrl] = useState('')
+
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -75,9 +79,18 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
   useEffect(() => {
     setFormData({
       name: editData?.['name'],
-      serviceScopeId: editData?.['serviceScopeId']
+      serviceScopeId: editData?.['serviceScopeId'],
+      serviceId: editData?.['serviceId'],
     })
   }, [editDataId, editData])
+
+  useEffect(() => {
+    if (formData.serviceId) {
+      setServiceScopeUrl(`service-scopes?serviceId=${formData.serviceId}`);
+    } else {
+      setServiceScopeUrl(''); // Reset the URL when serviceId is not selected
+    }
+  }, [formData.serviceId]);
 
   const onClear = () => {
     setFormData(prevState => ({ ...defaultData }))
@@ -90,7 +103,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Name</span>
                 <input
@@ -102,11 +115,23 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
                 />
               </label>
             </Box>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '33%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Service</span>
+                <Dropdown
+                  url={'services'}
+                  name='serviceId'
+                  value={formData.serviceId}
+                  onChange={handleSelectChange}
+                  optionConfig={{ id: 'id', title: 'name' }}
+                />
+              </label>
+            </Box>
+            <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Service Scope</span>
                 <Dropdown
-                  url={'service-scopes'}
+                  url={serviceScopeUrl}
                   name='serviceScopeId'
                   value={formData.serviceScopeId}
                   onChange={handleSelectChange}
