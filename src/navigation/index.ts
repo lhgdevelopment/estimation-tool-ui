@@ -60,6 +60,11 @@ const navigation: TNavigation[] = [
     title: 'Service Scopes',
     icon: SettingsEthernetIcon,
     path: '/service-scopes'
+  },
+  {
+    title: 'Service Deliverables',
+    icon: SettingsEthernetIcon,
+    path: '/service-deliverables'
   }
 ]
 
