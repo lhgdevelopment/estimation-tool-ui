@@ -68,6 +68,7 @@ export default function ServiceDeliverableTasksListComponent(props: TServiceDeli
                 <th className='px-4 py-3'>Name</th>
                 <th className='px-4 py-3'>Service</th>
                 <th className='px-4 py-3'>Service Scope</th>
+                <th className='px-4 py-3'>Deliverable</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
@@ -76,8 +77,9 @@ export default function ServiceDeliverableTasksListComponent(props: TServiceDeli
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.service_scope?.service?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.service_scope?.name}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.service_deliverable?.service_scope?.service?.name}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.service_deliverable?.service_scope?.name}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.service_deliverable?.name}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>

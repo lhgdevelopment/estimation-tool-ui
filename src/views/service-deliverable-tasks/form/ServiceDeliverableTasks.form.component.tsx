@@ -14,7 +14,10 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
 
   const defaultData = {
     name: '',
-    serviceDeliverableId: ''
+    serviceDeliverableId: '',
+    cost: '',
+    description: ''
+
   }
 
   const [formData, setFormData] = useState(defaultData)
@@ -75,7 +78,9 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   useEffect(() => {
     setFormData({
       name: editData?.['name'],
-      serviceDeliverableId: editData?.['serviceDeliverableId']
+      serviceDeliverableId: editData?.['serviceDeliverableId'],
+      cost: editData?.['cost'],
+      description: editData?.['description']
     })
   }, [editDataId, editData])
 
@@ -111,6 +116,32 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                   value={formData.serviceDeliverableId}
                   onChange={handleSelectChange}
                   optionConfig={{ id: 'id', title: 'name' }}
+                />
+              </label>
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 5 }}>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Cost</span>
+                <input
+                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  placeholder='Examples: 50.00'
+                  name='cost'
+                  value={formData.cost}
+                  onChange={handleChange}
+                />
+              </label>
+            </Box>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Description</span>
+                <input
+                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  placeholder='Examples: Company logo for header'
+                  name='description'
+                  value={formData.description}
+                  onChange={handleChange}
                 />
               </label>
             </Box>
