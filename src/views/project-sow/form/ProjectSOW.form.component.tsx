@@ -348,7 +348,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
 
     setPreload(true)
     apiRequest.get(`/project-summery/${id}`).then((res: any) => {
-      console.log(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview'])
+      setActiveStep(0)
+
       setProjectSOWFormData({
         transcriptId: res?.data?.id,
         transcriptText: res?.data?.['meeting_transcript']?.['transcriptText'],
@@ -362,27 +363,39 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
       })
       setProjectSOWID(id)
       setSummaryText(res?.data?.['summaryText'])
+      setEnabledStep(1)
+      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['id']) {
+        setProblemGoalID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['id'])
+        setProblemGoalText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText'])
+        setEnabledStep(2)
+      }
 
-      setProblemGoalID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['id'])
-      setProblemGoalText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText'])
+      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['id']) {
+        setOverviewTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['id'])
+        setOverviewText(
+          res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']
+        )
+        setEnabledStep(3)
+      }
 
-      setOverviewTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['id'])
-      setOverviewText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText'])
+      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id']) {
+        setScopeTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id'])
+        setScopeText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText'])
+        setEnabledStep(4)
+      }
 
-      setScopeTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id'])
-      setScopeText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText'])
+      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['id']) {
+        setDeliverablesTextID(
+          res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['id']
+        )
+        setDeliverablesText(
+          res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
+            'deliverablesText'
+          ]
+        )
+        setEnabledStep(5)
+      }
 
-      setDeliverablesTextID(
-        res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['id']
-      )
-      setDeliverablesText(
-        res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
-          'deliverablesText'
-        ]
-      )
-
-      setActiveStep(0)
-      setEnabledStep(5)
       setPreload(false)
     })
   }

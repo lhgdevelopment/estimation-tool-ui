@@ -27,14 +27,13 @@ export const handleURLQueries = (router: NextRouter, path: string | undefined): 
 // }
 
 export function formatDateToCustomFormat(date: Date): string {
-  date = new Date(date);
+  date = new Date(date)
   const options: Intl.DateTimeFormatOptions = {
     month: '2-digit',
     day: '2-digit',
     year: 'numeric'
-  };
-  const formattedDate = date.toLocaleDateString('en-US', options);
+  }
+  const formattedDate = date.toLocaleDateString('en-US', options)
 
-  return formattedDate.replace(/\//g, '-');
+  return formattedDate.replace(/\//g, '-')
 }
-
