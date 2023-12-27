@@ -23,8 +23,8 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   }
 
   const [formData, setFormData] = useState(defaultData)
-  const [serviceScopeUrl, setServiceScopeUrl] = useState('')
-  const [serviceDeliverableUrl, setServiceDeliverableUrl] = useState('')
+  const [serviceScopeUrl, setServiceScopeUrl] = useState('service-scopes')
+  const [serviceDeliverableUrl, setServiceDeliverableUrl] = useState('service-deliverables')
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
