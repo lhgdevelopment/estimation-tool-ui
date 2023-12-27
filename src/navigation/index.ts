@@ -50,6 +50,11 @@ const navigation: TNavigation[] = [
     title: 'Meeting Summery',
     icon: GroupsIcon,
     path: '/meeting-summery'
+  },
+  {
+    title: 'Services',
+    icon: SettingsEthernetIcon,
+    path: '/services'
   }
 ]
 
