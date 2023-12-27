@@ -65,6 +65,11 @@ const navigation: TNavigation[] = [
     title: 'Service Deliverables',
     icon: SettingsEthernetIcon,
     path: '/service-deliverables'
+  },
+  {
+    title: 'Service Deliverable Tasks',
+    icon: SettingsEthernetIcon,
+    path: '/service-deliverable-tasks'
   }
 ]
 
