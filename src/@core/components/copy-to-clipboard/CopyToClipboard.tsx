@@ -2,7 +2,7 @@ import ContentPasteIcon from '@mui/icons-material/ContentPaste'
 import { Box, SxProps } from '@mui/material'
 import { useState } from 'react'
 
-type TCopyToClipboard = { textToCopy: string; sx?: SxProps }
+type TCopyToClipboard = { textToCopy: string | undefined; sx?: SxProps }
 
 const CopyToClipboard = (props: TCopyToClipboard) => {
   const { sx, textToCopy } = props
