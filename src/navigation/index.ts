@@ -50,6 +50,26 @@ const navigation: TNavigation[] = [
     title: 'Meeting Summery',
     icon: GroupsIcon,
     path: '/meeting-summery'
+  },
+  {
+    title: 'Services',
+    icon: SettingsEthernetIcon,
+    path: '/services'
+  },
+  {
+    title: 'Service Scopes',
+    icon: SettingsEthernetIcon,
+    path: '/service-scopes'
+  },
+  {
+    title: 'Service Deliverables',
+    icon: SettingsEthernetIcon,
+    path: '/service-deliverables'
+  },
+  {
+    title: 'Service Deliverable Tasks',
+    icon: SettingsEthernetIcon,
+    path: '/service-deliverable-tasks'
   }
 ]
 
