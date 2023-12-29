@@ -5,7 +5,7 @@ import { useState } from 'react'
 type TCopyToClipboard = { textToCopy: string | undefined; sx?: SxProps }
 
 const CopyToClipboard = (props: TCopyToClipboard) => {
-  const { sx, textToCopy } = props
+  const { sx, textToCopy = '' } = props
   const [isCopied, setIsCopied] = useState(false)
 
   const handleCopyClick = () => {
