@@ -1,8 +1,5 @@
 // ** Icon imports
 import BiotechIcon from '@mui/icons-material/Biotech'
-import CategoryIcon from '@mui/icons-material/Category'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize'
 import GroupsIcon from '@mui/icons-material/Groups'
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
 import { SvgIconTypeMap } from '@mui/material'
@@ -21,21 +18,21 @@ const navigation: TNavigation[] = [
   //   component: 'button'
   // },
 
-  {
-    title: 'Website Component Categories',
-    icon: CategoryIcon,
-    path: '/website-component-categories'
-  },
-  {
-    title: 'Website Component',
-    icon: DashboardIcon,
-    path: '/website-component'
-  },
-  {
-    title: 'Project Components',
-    icon: DashboardCustomizeIcon,
-    path: '/project-component'
-  },
+  // {
+  //   title: 'Website Component Categories',
+  //   icon: CategoryIcon,
+  //   path: '/website-component-categories'
+  // },
+  // {
+  //   title: 'Website Component',
+  //   icon: DashboardIcon,
+  //   path: '/website-component'
+  // },
+  // {
+  //   title: 'Project Components',
+  //   icon: DashboardCustomizeIcon,
+  //   path: '/project-component'
+  // },
   {
     title: 'Project SOW',
     icon: BiotechIcon,
