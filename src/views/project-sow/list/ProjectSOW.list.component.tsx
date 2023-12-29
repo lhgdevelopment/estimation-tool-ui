@@ -4,8 +4,8 @@ import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateToCustomFormat } from 'src/@core/utils/utils'
-import { TProjectSOWComponent } from '../ProjectSOW.decorator'
 import Swal from 'sweetalert2'
+import { TProjectSOWComponent } from '../ProjectSOW.decorator'
 
 export default function ProjectSOWListComponent(props: TProjectSOWComponent) {
   const { listData, setEditData, setEditDataId, setListData, editData, editDataId } = props
@@ -85,6 +85,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWComponent) {
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <th className='px-4 py-3'>Project</th>
                 <th className='px-4 py-3'>Summary Text</th>
+                <th className='px-4 py-3'>Created By</th>
                 <th className='px-4 py-3'>Created At</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
@@ -93,8 +94,13 @@ export default function ProjectSOWListComponent(props: TProjectSOWComponent) {
               {listData?.map((data: any, index: number) => {
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.meeting_transcript?.projectName}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.summaryText.substring(0, 100)}</td>
+                    <td className='px-4 py-3 text-sm w-200'>
+                      <Box sx={{ width: '200px', whiteSpace: 'normal' }}>{data?.meeting_transcript?.projectName}</Box>
+                    </td>
+                    <td className='px-4 py-3 text-sm'>
+                      <Box sx={{ width: '350px', whiteSpace: 'normal' }}>{data?.summaryText.substring(0, 100)}</Box>
+                    </td>
+                    <td className='px-4 py-3 text-sm'>---</td>
                     <td className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.created_at)}</td>
 
                     <td className='px-4 py-3'>
