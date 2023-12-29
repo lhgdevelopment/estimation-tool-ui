@@ -23,7 +23,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
   const { listData, setEditData, setEditDataId, setListData, editData, editDataId } = props
 
   const phoneInputRef = useMask({
-    mask: '+0 (___) ___-__-__',
+    mask: '(___) ___-____',
     replacement: { _: /\d/ },
     showMask: true,
     separate: true
