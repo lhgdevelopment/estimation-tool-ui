@@ -60,7 +60,7 @@ export default function ProjectSOWDetailsComponent() {
                 padding: '15px'
               }}
             >
-              Project Name: {detailsData?.['meeting_transcript']?.['projectName']}
+              {detailsData?.['meeting_transcript']?.['projectName']}
             </Box>
             <Box sx={sowHeadingSx}>Project Summery: </Box>
             <Box sx={sowBodySx}>

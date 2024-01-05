@@ -15,8 +15,7 @@ export default function AppNavbarComponent() {
         <Box className='py-4 text-gray-500 dark:text-gray-400 '>
           <Box className={'text-center'}>
             <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 leading-3' href='#'>
-              LHG <br />
-              Sales/Proposal Tools
+              The Hive
             </Box>
           </Box>
           <Box component={'ul'} className='mt-6'>

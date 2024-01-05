@@ -13,7 +13,7 @@ const Preloader = (props: TPreloaderProps) => {
   const [closing, setClosing] = useState(false)
 
   useEffect(() => {
-    const duration = 5000
+    const duration = 20000
     const startTime = Date.now()
 
     const updateProgress = () => {
@@ -44,6 +44,8 @@ const Preloader = (props: TPreloaderProps) => {
     }
   }, [close, closing])
 
+  const gradientOffset = 625 - (625 * counter) / 100
+
   return (
     <Box
       sx={{
@@ -60,56 +62,122 @@ const Preloader = (props: TPreloaderProps) => {
         opacity: closing ? 0 : 1,
         pointerEvents: closing ? 'none' : 'auto',
         transition: 'opacity 0.5s ease',
+        '& .loader': {
+          display: 'block',
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          width: '160px',
+          height: '160px',
+          margin: '-75px 0 0 -75px',
+          borderRadius: '50%',
+          border: '3px solid transparent',
+          borderTopColor: '#9370DB',
+          WebkitAnimation: 'spin 2s linear infinite',
+          animation: 'spin 2s linear infinite',
+          '&:before': {
+            content: '""',
+            position: 'absolute',
+            top: '5px',
+            left: '5px',
+            right: '5px',
+            bottom: '5px',
+            borderRadius: '50%',
+            border: '3px solid transparent',
+            borderTopColor: '#BA55D3',
+            WebkitAnimation: 'spin 3s linear infinite',
+            animation: 'spin 3s linear infinite'
+          },
+          '&:after': {
+            content: '""',
+            position: 'absolute',
+            top: '15px',
+            left: '15px',
+            right: '15px',
+            bottom: '15px',
+            borderRadius: '50%',
+            border: '3px solid transparent',
+            borderTopColor: '#FF00FF',
+            WebkitAnimation: 'spin 1.5s linear infinite',
+            animation: 'spin 1.5s linear infinite'
+          }
+        },
         '& .percent': {
           position: 'relative'
         },
-        '& svg': {
-          position: 'relative',
-          width: '210px',
-          height: '210px',
-          transform: 'rotate(-90deg)'
-        },
-        '& circle': {
-          width: '100%',
-          height: '100%',
-          fill: 'none',
-          stroke: '#f0f0f0',
-          strokeWidth: '10',
-          strokeLinecap: 'round',
 
-          '&:last-of-type': {
-            strokeDasharray: '625px',
-            strokeDashoffset: `calc(625px - (625px * ${counter}) / 100)`,
-            stroke: '#3498db'
-          }
-        },
+        // '& svg': {
+        //   position: 'relative',
+        //   width: '210px',
+        //   height: '210px',
+        //   transform: 'rotate(-90deg)'
+        // },
+        // '& circle': {
+        //   width: '100%',
+        //   height: '100%',
+        //   fill: 'none',
+        //   stroke: '#f0f0f0',
+        //   strokeWidth: '10',
+        //   strokeLinecap: 'round',
+
+        //   '&:last-of-type': {
+        //     strokeDasharray: '625px',
+        //     strokeDashoffset: `calc(625px - ${gradientOffset})`,
+        //     animation: 'strokeAnimation 5s linear forwards'
+        //   }
+        // },
         '& .number': {
           position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           fontWeight: '600',
-          fontSize: '3.5rem',
+          fontSize: '2.5rem',
           '& h3': {
-            color: '#fff',
+            color: '#d400ff',
             '& span': {
-              fontSize: '2rem'
+              fontSize: '1.5rem'
             }
           }
         }
       }}
     >
       <Box>
+        <div className='loader'></div>
         <div className='percent'>
-          <svg>
-            <circle cx='105' cy='105' r='100'></circle>
-            <circle cx='105' cy='105' r='100'></circle>
-          </svg>
           <div className='number'>
             <h3>
               {counter}
               <span>%</span>
             </h3>
+          </div>
+
+          {/* <svg>
+            <circle cx='105' cy='105' r='100'></circle>
+            <circle cx='105' cy='105' r='100'></circle>
+          </svg> */}
+        </div>
+        <div className='preloader-loading-text'>
+          <div id='loadingText1' className='loading-text'>
+            L
+          </div>
+          <div id='loadingText2' className='loading-text'>
+            o
+          </div>
+          <div id='loadingText3' className='loading-text'>
+            a
+          </div>
+          <div id='loadingText4' className='loading-text'>
+            d
+          </div>
+          <div id='loadingText5' className='loading-text'>
+            i
+          </div>
+          <div id='loadingText6' className='loading-text'>
+            n
+          </div>
+          <div id='loadingText7' className='loading-text'>
+            g
           </div>
         </div>
       </Box>
