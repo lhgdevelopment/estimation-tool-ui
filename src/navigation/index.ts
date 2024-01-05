@@ -54,17 +54,17 @@ const navigation: TNavigation[] = [
     path: '/services'
   },
   {
-    title: 'Service Scopes',
+    title: 'SOWs',
     icon: SettingsEthernetIcon,
     path: '/service-scopes'
   },
   {
-    title: 'Service Deliverables',
+    title: 'Deliverables',
     icon: SettingsEthernetIcon,
     path: '/service-deliverables'
   },
   {
-    title: 'Service Deliverable Tasks',
+    title: 'Tasks',
     icon: SettingsEthernetIcon,
     path: '/service-deliverable-tasks'
   }

@@ -16,5 +16,6 @@ export const projectTypeList = [
   { title: 'Website Design', id: 4 },
   { title: 'Website Redesign', id: 5 },
   { title: 'Research', id: 6 },
-  { title: 'Custom Development', id: 7 }
+  { title: 'Custom Development', id: 7 },
+  { title: 'Marketing', id: 8 }
 ]

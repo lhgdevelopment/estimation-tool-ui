@@ -11,7 +11,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWComponent) {
   const { listData, setEditData, setEditDataId, setListData, editData, editDataId } = props
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-
+  const [preload, setPreload] = useState<boolean>(false)
   const getList = (page = 1) => {
     apiRequest.get(`/project-summery?page=${page}`).then(res => {
       const paginationData: any = res
@@ -19,7 +19,6 @@ export default function ProjectSOWListComponent(props: TProjectSOWComponent) {
       setListData(res.data)
       setCurrentPage(paginationData?.['current_page'])
       setTotalPages(Math.ceil(paginationData?.['total'] / 10))
-      console.log(totalPages)
     })
   }
 
