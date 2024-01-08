@@ -5,9 +5,9 @@ import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateToCustomFormat } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
-import { TProjectSOWComponent } from '../ProjectSOW.decorator'
+import { TProjectSOWListComponent } from '../ProjectSOW.decorator'
 
-export default function ProjectSOWListComponent(props: TProjectSOWComponent) {
+export default function ProjectSOWListComponent(props: TProjectSOWListComponent) {
   const { listData, setEditData, setEditDataId, setListData, editData, editDataId } = props
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -114,17 +114,18 @@ export default function ProjectSOWListComponent(props: TProjectSOWComponent) {
                             <VisibilityIcon />
                           </Box>
                         </Link>
-                        <button
-                          onClick={() => {
-                            onEdit(data['id'])
-                          }}
-                          className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                          aria-label='Edit'
-                        >
-                          <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
-                            <path d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'></path>
-                          </svg>
-                        </button>
+                        <Link href={`/project-summery/edit/${data?.id}`}>
+                          <Box
+                            sx={{ cursor: 'pointer' }}
+                            component={'a'}
+                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                            aria-label='View'
+                          >
+                            <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
+                              <path d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'></path>
+                            </svg>
+                          </Box>
+                        </Link>
 
                         <button
                           onClick={() => {
