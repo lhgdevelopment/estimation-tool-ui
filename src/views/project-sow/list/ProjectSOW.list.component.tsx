@@ -8,10 +8,10 @@ import Swal from 'sweetalert2'
 import { TProjectSOWListComponent } from '../ProjectSOW.decorator'
 
 export default function ProjectSOWListComponent(props: TProjectSOWListComponent) {
-  const { listData, setEditData, setEditDataId, setListData, editData, editDataId } = props
+  const { listData, setListData } = props
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const [preload, setPreload] = useState<boolean>(false)
+
   const getList = (page = 1) => {
     apiRequest.get(`/project-summery?page=${page}`).then(res => {
       const paginationData: any = res
@@ -20,13 +20,6 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
       setCurrentPage(paginationData?.['current_page'])
       setTotalPages(Math.ceil(paginationData?.['total'] / 10))
     })
-  }
-
-  const onEdit = (i: string) => {
-    setEditDataId(i)
-
-    const editData = listData.length ? listData?.filter((data: any) => data['id'] == i)[0] : {}
-    setEditData(editData)
   }
 
   const onDelete = (i: string) => {
@@ -55,7 +48,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)
@@ -104,7 +97,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
-                        <Link href={`/project-summery/${data?.id}`}>
+                        <Link href={`/project-summery/${data?.id}`} passHref>
                           <Box
                             sx={{ cursor: 'pointer' }}
                             component={'a'}
@@ -114,7 +107,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
                             <VisibilityIcon />
                           </Box>
                         </Link>
-                        <Link href={`/project-summery/edit/${data?.id}`}>
+                        <Link href={`/project-summery/edit/${data?.id}`} passHref>
                           <Box
                             sx={{ cursor: 'pointer' }}
                             component={'a'}

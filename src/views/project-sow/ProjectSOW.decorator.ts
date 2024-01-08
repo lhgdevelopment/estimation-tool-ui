@@ -7,8 +7,8 @@ export type TProjectSOWFormComponent = {
 }
 
 export type TProjectSOWListComponent = {
-  listData?: any[]
-  setListData?: Dispatch<any>
+  listData: any[]
+  setListData: Dispatch<any>
 }
 
 export const projectTypeList = [
