@@ -1,4 +1,10 @@
+import EditNoteIcon from '@mui/icons-material/EditNote'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box } from '@mui/material'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
@@ -23,6 +29,7 @@ export default function ProjectSOWDetailsComponent() {
       setPreload(false)
     })
   }
+  console.log(detailsData)
 
   useEffect(() => {
     if (router?.query['id']) {
@@ -31,13 +38,10 @@ export default function ProjectSOWDetailsComponent() {
   }, [router?.query['id']])
 
   const sowHeadingSx = {
-    fontSize: '20px',
+    fontSize: '16x',
     fontWeight: '600',
     textAlign: 'center',
-    py: 2,
-    my: 3,
-    borderTop: '2px solid #6c2bd9',
-    borderBottom: '2px solid #6c2bd9',
+
     color: '#6c2bd9'
   }
 
@@ -62,54 +66,178 @@ export default function ProjectSOWDetailsComponent() {
             >
               {detailsData?.['meeting_transcript']?.['projectName']}
             </Box>
-            <Box sx={sowHeadingSx}>Project Summery: </Box>
-            <Box sx={sowBodySx}>
-              <Box ref={summaryTextRef}>
-                <ReactMarkdown>{detailsData?.['summaryText']}</ReactMarkdown>
-              </Box>
-              <CopyToClipboard sx={{ mt: 5 }} textToCopy={summaryTextRef?.current?.innerText} />
-            </Box>
-            <Box sx={sowHeadingSx}>Problems and Goals:</Box>
-            <Box sx={sowBodySx}>
-              <Box ref={problemGoalTextRef}>
-                <ReactMarkdown>
-                  {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
-                </ReactMarkdown>
-              </Box>
+            <div>
+              <Accordion>
+                <AccordionSummary
+                  sx={{ borderBottom: '2px solid #f9fafb' }}
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls='sow1-content'
+                  id='sow1-header'
+                >
+                  <Box sx={sowHeadingSx}>Project Summery</Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box sx={sowBodySx}>
+                    <Box ref={summaryTextRef}>
+                      <ReactMarkdown>{detailsData?.['summaryText']}</ReactMarkdown>
+                    </Box>
+                    <Box className='flex' sx={{ mt: 5 }}>
+                      <CopyToClipboard textToCopy={summaryTextRef?.current?.innerText} />
 
-              <CopyToClipboard sx={{ mt: 5 }} textToCopy={problemGoalTextRef?.current?.innerText} />
-            </Box>
-            <Box sx={sowHeadingSx}>Project Overview:</Box>
-            <Box sx={sowBodySx}>
-              <Box ref={overviewTextRef}>
-                <ReactMarkdown>
-                  {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']}
-                </ReactMarkdown>
-              </Box>
-              <CopyToClipboard sx={{ mt: 5 }} textToCopy={overviewTextRef?.current?.innerText} />
-            </Box>
-            <Box sx={sowHeadingSx}>Scope of Work:</Box>
-            <Box sx={sowBodySx}>
-              <Box ref={scopeTextRef}>
-                <ReactMarkdown>
-                  {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']}
-                </ReactMarkdown>
-              </Box>
-              <CopyToClipboard sx={{ mt: 5 }} textToCopy={scopeTextRef?.current?.innerText} />
-            </Box>
-            <Box sx={sowHeadingSx}>Deliverables:</Box>
-            <Box sx={sowBodySx}>
-              <Box ref={deliverablesRef}>
-                <ReactMarkdown>
-                  {
-                    detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
-                      'deliverablesText'
-                    ]
-                  }
-                </ReactMarkdown>
-              </Box>
-              <CopyToClipboard sx={{ mt: 5 }} textToCopy={deliverablesRef?.current?.innerText} />
-            </Box>
+                      <Link
+                        href={`/project-summery/edit/${detailsData?.id}?step=${detailsData?.['summaryText'] ? 1 : 0}`}
+                        passHref
+                      >
+                        <Box
+                          sx={{ cursor: 'pointer' }}
+                          component={'a'}
+                          className='flex items-center justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+                          aria-label='View'
+                        >
+                          <EditNoteIcon sx={{ mr: 2 }} /> Edit Project Summery
+                        </Box>
+                      </Link>
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  sx={{ borderBottom: '2px solid #f9fafb' }}
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls='sow2-content'
+                  id='sow2-header'
+                >
+                  <Box sx={sowHeadingSx}>Problems and Goals</Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box sx={sowBodySx}>
+                    <Box ref={problemGoalTextRef}>
+                      <ReactMarkdown>
+                        {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
+                      </ReactMarkdown>
+                    </Box>
+                    <Box className='flex' sx={{ mt: 5 }}>
+                      <CopyToClipboard textToCopy={problemGoalTextRef?.current?.innerText} />
+                      <Link href={`/project-summery/edit/${detailsData?.id}?step=2`} passHref>
+                        <Box
+                          sx={{ cursor: 'pointer' }}
+                          component={'a'}
+                          className='flex items-center justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+                          aria-label='View'
+                        >
+                          <EditNoteIcon sx={{ mr: 2 }} /> Edit Problems and Goals
+                        </Box>
+                      </Link>
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  sx={{ borderBottom: '2px solid #f9fafb' }}
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls='sow3-content'
+                  id='sow3-header'
+                >
+                  <Box sx={sowHeadingSx}>Project Overview</Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box sx={sowBodySx}>
+                    <Box ref={overviewTextRef}>
+                      <ReactMarkdown>
+                        {
+                          detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.[
+                            'overviewText'
+                          ]
+                        }
+                      </ReactMarkdown>
+                    </Box>
+                    <Box className='flex' sx={{ mt: 5 }}>
+                      <CopyToClipboard textToCopy={overviewTextRef?.current?.innerText} />
+                      <Link href={`/project-summery/edit/${detailsData?.id}?step=3`} passHref>
+                        <Box
+                          sx={{ cursor: 'pointer' }}
+                          component={'a'}
+                          className='flex items-center justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+                          aria-label='View'
+                        >
+                          <EditNoteIcon sx={{ mr: 2 }} /> Edit Project Overview
+                        </Box>
+                      </Link>
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  sx={{ borderBottom: '2px solid #f9fafb' }}
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls='sow4-content'
+                  id='sow4-header'
+                >
+                  <Box sx={sowHeadingSx}>Scope of Work</Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box sx={sowBodySx}>
+                    <Box ref={scopeTextRef}>
+                      <ReactMarkdown>
+                        {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']}
+                      </ReactMarkdown>
+                    </Box>
+                    <Box className='flex' sx={{ mt: 5 }}>
+                      <CopyToClipboard textToCopy={scopeTextRef?.current?.innerText} />
+                      <Link href={`/project-summery/edit/${detailsData?.id}?step=4`} passHref>
+                        <Box
+                          sx={{ cursor: 'pointer' }}
+                          component={'a'}
+                          className='flex items-center justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+                          aria-label='View'
+                        >
+                          <EditNoteIcon sx={{ mr: 2 }} /> Edit Scope of Work
+                        </Box>
+                      </Link>
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  sx={{ borderBottom: '2px solid #f9fafb' }}
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls='sow5-content'
+                  id='sow5-header'
+                >
+                  <Box sx={sowHeadingSx}>Deliverables</Box>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Box sx={sowBodySx}>
+                    <Box ref={deliverablesRef}>
+                      <ReactMarkdown>
+                        {
+                          detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.[
+                            'deliverables'
+                          ]?.['deliverablesText']
+                        }
+                      </ReactMarkdown>
+                    </Box>
+                    <Box className='flex' sx={{ mt: 5 }}>
+                      <CopyToClipboard textToCopy={deliverablesRef?.current?.innerText} />
+                      <Link href={`/project-summery/edit/${detailsData?.id}?step=5`} passHref>
+                        <Box
+                          sx={{ cursor: 'pointer' }}
+                          component={'a'}
+                          className='flex items-center justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+                          aria-label='View'
+                        >
+                          <EditNoteIcon sx={{ mr: 2 }} /> Edit Deliverables
+                        </Box>
+                      </Link>
+                    </Box>
+                  </Box>
+                </AccordionDetails>
+              </Accordion>
+            </div>
           </Box>
         </Box>
       </Box>

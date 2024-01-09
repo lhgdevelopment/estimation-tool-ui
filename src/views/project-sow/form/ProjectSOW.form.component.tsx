@@ -1,26 +1,26 @@
 import AddIcon from '@material-ui/icons/Add'
-import ClearIcon from '@material-ui/icons/Clear'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
 import { useMask } from '@react-input/mask'
-import '@uiw/react-md-editor/markdown-editor.css'
 import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
+import { useRouter } from 'next/router'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import MdPreviewTitle from 'src/@core/components/md-preview-title'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TProjectSOWComponent, projectTypeList } from '../ProjectSOW.decorator'
+import { TProjectSOWFormComponent, projectTypeList } from '../ProjectSOW.decorator'
 
 const steps = ['Transcript', 'Summery', 'Problems & Goals', 'Project Overview', 'SOW', 'Deliverables']
 
-export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
-  const { listData, setEditData, setEditDataId, setListData, editData, editDataId } = props
+export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
+  const { listData, setListData, isEdit = false } = props
+  const router = useRouter()
 
   const phoneInputRef = useMask({
     mask: '(___) ___-____',
@@ -314,7 +314,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
         .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
         .then(res => {
           apiRequest.get(`/project-summery?page=1`).then(res => {
-            setListData(res.data)
+            if (setListData) {
+              setListData(res.data)
+            } else {
+            }
           })
 
           Swal.fire({
@@ -396,13 +399,23 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
         setEnabledStep(5)
       }
 
+      console.log(Number(router?.query?.['step']) < enabledStep)
+      console.log(enabledStep)
+      console.log(Number(router?.query?.['step']))
+
       setPreload(false)
     })
   }
 
   useEffect(() => {
-    getDetails(editDataId)
-  }, [editDataId, editData])
+    getDetails(router?.query['id'] as string)
+  }, [router?.query['id']])
+
+  useEffect(() => {
+    if (isEdit && router?.query?.['step'] && Number(router?.query?.['step']) <= enabledStep) {
+      setActiveStep(Number(router?.query?.['step']))
+    }
+  }, [enabledStep])
 
   const onClear = () => {
     setProjectSOWFormData(prevState => ({ ...projectSOWDefaultData }))
@@ -422,8 +435,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
     setDeliverablesTextID(null)
     setDeliverablesText('')
 
-    setEditDataId(null)
-    setEditData({})
     setActiveStep(0)
     setEnabledStep(0)
   }
@@ -780,14 +791,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
               <Box className='my-4 text-right'>
-                <button
-                  onClick={onClear}
-                  type='button'
-                  className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-                >
-                  {editDataId ? 'Cancel ' : 'Clear '}
-                  {editDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
-                </button>
+                {!router?.query['id'] && (
+                  <button
+                    onClick={onClear}
+                    type='button'
+                    className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                  >
+                    Clear <PlaylistRemoveIcon />
+                  </button>
+                )}
                 {activeStep != 0 && (
                   <button
                     onClick={() => {
@@ -797,9 +809,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWComponent) {
                   >
                     {activeStep != totalSteps() && (
                       <>
-                        {editDataId ? 'Update ' : 'Save '}
+                        {router?.query['id'] ? 'Update ' : 'Save '}
 
-                        {editDataId ? <EditNoteIcon /> : <AddIcon />}
+                        {router?.query['id'] ? <EditNoteIcon /> : <AddIcon />}
                       </>
                     )}
                     {activeStep == totalSteps() && (

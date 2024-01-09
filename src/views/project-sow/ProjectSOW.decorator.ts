@@ -1,10 +1,12 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch } from 'react'
 
-export type TProjectSOWComponent = {
-  editDataId?: string | null
-  setEditDataId: Dispatch<SetStateAction<string | null>>
-  editData?: any
-  setEditData: Dispatch<any> // Remove the optional '?'
+export type TProjectSOWFormComponent = {
+  listData?: any[]
+  setListData?: Dispatch<any>
+  isEdit?: boolean
+}
+
+export type TProjectSOWListComponent = {
   listData: any[]
   setListData: Dispatch<any>
 }
