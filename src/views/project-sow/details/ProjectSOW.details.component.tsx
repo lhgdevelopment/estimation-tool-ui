@@ -14,6 +14,7 @@ import apiRequest from 'src/@core/utils/axios-config'
 
 export default function ProjectSOWDetailsComponent() {
   const router = useRouter()
+  const allTextRef = useRef<HTMLDivElement>(null)
   const summaryTextRef = useRef<HTMLDivElement>(null)
   const problemGoalTextRef = useRef<HTMLDivElement>(null)
   const overviewTextRef = useRef<HTMLDivElement>(null)
@@ -66,8 +67,21 @@ export default function ProjectSOWDetailsComponent() {
             >
               {detailsData?.['meeting_transcript']?.['projectName']}
             </Box>
-            <div>
-              <Accordion>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 5 }}>
+              <CopyToClipboard textToCopy={allTextRef?.current?.innerText} title='Copy All' />
+              <Link href={`/project-summery/edit/${detailsData?.id}`} passHref>
+                <Box
+                  sx={{ cursor: 'pointer' }}
+                  component={'a'}
+                  className='flex items-center justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+                  aria-label='View'
+                >
+                  <EditNoteIcon sx={{ mr: 2 }} /> Edit
+                </Box>
+              </Link>
+            </Box>
+            <Box ref={allTextRef}>
+              <Accordion expanded={!!detailsData?.['summaryText']}>
                 <AccordionSummary
                   sx={{ borderBottom: '2px solid #f9fafb' }}
                   expandIcon={<ExpandMoreIcon />}
@@ -101,7 +115,7 @@ export default function ProjectSOWDetailsComponent() {
                   </Box>
                 </AccordionDetails>
               </Accordion>
-              <Accordion>
+              <Accordion expanded={!!detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}>
                 <AccordionSummary
                   sx={{ borderBottom: '2px solid #f9fafb' }}
                   expandIcon={<ExpandMoreIcon />}
@@ -133,7 +147,11 @@ export default function ProjectSOWDetailsComponent() {
                   </Box>
                 </AccordionDetails>
               </Accordion>
-              <Accordion>
+              <Accordion
+                expanded={
+                  !!detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']
+                }
+              >
                 <AccordionSummary
                   sx={{ borderBottom: '2px solid #f9fafb' }}
                   expandIcon={<ExpandMoreIcon />}
@@ -169,7 +187,11 @@ export default function ProjectSOWDetailsComponent() {
                   </Box>
                 </AccordionDetails>
               </Accordion>
-              <Accordion>
+              <Accordion
+                expanded={
+                  !!detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']
+                }
+              >
                 <AccordionSummary
                   sx={{ borderBottom: '2px solid #f9fafb' }}
                   expandIcon={<ExpandMoreIcon />}
@@ -201,7 +223,13 @@ export default function ProjectSOWDetailsComponent() {
                   </Box>
                 </AccordionDetails>
               </Accordion>
-              <Accordion>
+              <Accordion
+                expanded={
+                  !!detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
+                    'deliverablesText'
+                  ]
+                }
+              >
                 <AccordionSummary
                   sx={{ borderBottom: '2px solid #f9fafb' }}
                   expandIcon={<ExpandMoreIcon />}
@@ -237,7 +265,7 @@ export default function ProjectSOWDetailsComponent() {
                   </Box>
                 </AccordionDetails>
               </Accordion>
-            </div>
+            </Box>
           </Box>
         </Box>
       </Box>
