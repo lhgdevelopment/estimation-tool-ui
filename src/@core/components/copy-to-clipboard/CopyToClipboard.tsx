@@ -2,10 +2,10 @@ import ContentPasteIcon from '@mui/icons-material/ContentPaste'
 import { Box, SxProps } from '@mui/material'
 import { useState } from 'react'
 
-type TCopyToClipboard = { textToCopy: string | undefined; sx?: SxProps }
+type TCopyToClipboard = { textToCopy: string | undefined; sx?: SxProps; title?: string }
 
 const CopyToClipboard = (props: TCopyToClipboard) => {
-  const { sx, textToCopy = '' } = props
+  const { sx, textToCopy = '', title = 'Copy to Clipboard' } = props
   const [isCopied, setIsCopied] = useState(false)
 
   const handleCopyClick = () => {
@@ -29,7 +29,7 @@ const CopyToClipboard = (props: TCopyToClipboard) => {
         className='flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
       >
         <ContentPasteIcon sx={{ mr: 2 }} />
-        {isCopied ? 'Copied!' : 'Copy to Clipboard'}
+        {isCopied ? 'Copied!' : title}
       </button>
     </Box>
   )
