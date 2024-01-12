@@ -557,7 +557,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       <label className='block text-sm'>
                         <span className='text-gray-700 dark:text-gray-400'>Phone</span>
                         <input
-                          ref={phoneInputRef}
                           className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                             errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
                           }`}
@@ -565,6 +564,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           name='clientPhone'
                           value={projectSOWFormData.clientPhone}
                           onChange={handleProjectSOWChange}
+                          type='tel'
                         />
                         {!!errorMessage?.['clientPhone'] &&
                           errorMessage?.['clientPhone']?.map((message: any, index: number) => {

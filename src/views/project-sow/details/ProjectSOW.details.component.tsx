@@ -4,10 +4,11 @@ import { Box } from '@mui/material'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
+import { MdPreview } from 'md-editor-rt'
+import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import ReactMarkdown from 'react-markdown'
 import CopyToClipboard from 'src/@core/components/copy-to-clipboard/CopyToClipboard'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -93,7 +94,7 @@ export default function ProjectSOWDetailsComponent() {
                 <AccordionDetails>
                   <Box sx={sowBodySx}>
                     <Box ref={summaryTextRef}>
-                      <ReactMarkdown>{detailsData?.['summaryText']}</ReactMarkdown>
+                      <MdPreview modelValue={detailsData?.['summaryText']} />
                     </Box>
                     <Box className='flex' sx={{ mt: 5 }}>
                       <CopyToClipboard textToCopy={summaryTextRef?.current?.innerText} />
@@ -127,9 +128,9 @@ export default function ProjectSOWDetailsComponent() {
                 <AccordionDetails>
                   <Box sx={sowBodySx}>
                     <Box ref={problemGoalTextRef}>
-                      <ReactMarkdown>
-                        {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
-                      </ReactMarkdown>
+                      <MdPreview
+                        modelValue={detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
+                      />
                     </Box>
                     <Box className='flex' sx={{ mt: 5 }}>
                       <CopyToClipboard textToCopy={problemGoalTextRef?.current?.innerText} />
@@ -163,13 +164,13 @@ export default function ProjectSOWDetailsComponent() {
                 <AccordionDetails>
                   <Box sx={sowBodySx}>
                     <Box ref={overviewTextRef}>
-                      <ReactMarkdown>
-                        {
+                      <MdPreview
+                        modelValue={
                           detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.[
                             'overviewText'
                           ]
                         }
-                      </ReactMarkdown>
+                      />
                     </Box>
                     <Box className='flex' sx={{ mt: 5 }}>
                       <CopyToClipboard textToCopy={overviewTextRef?.current?.innerText} />
@@ -203,9 +204,11 @@ export default function ProjectSOWDetailsComponent() {
                 <AccordionDetails>
                   <Box sx={sowBodySx}>
                     <Box ref={scopeTextRef}>
-                      <ReactMarkdown>
-                        {detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']}
-                      </ReactMarkdown>
+                      <MdPreview
+                        modelValue={
+                          detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']
+                        }
+                      />
                     </Box>
                     <Box className='flex' sx={{ mt: 5 }}>
                       <CopyToClipboard textToCopy={scopeTextRef?.current?.innerText} />
@@ -241,13 +244,13 @@ export default function ProjectSOWDetailsComponent() {
                 <AccordionDetails>
                   <Box sx={sowBodySx}>
                     <Box ref={deliverablesRef}>
-                      <ReactMarkdown>
-                        {
+                      <MdPreview
+                        modelValue={
                           detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.[
                             'deliverables'
                           ]?.['deliverablesText']
                         }
-                      </ReactMarkdown>
+                      />
                     </Box>
                     <Box className='flex' sx={{ mt: 5 }}>
                       <CopyToClipboard textToCopy={deliverablesRef?.current?.innerText} />

@@ -30,6 +30,15 @@ button:focus {
   outline: none;
 }
 
+.md-editor-preview ol,
+.md-editor-preview ul,
+.md-editor-preview menu,
+.markdown-preview-container ol,
+.markdown-preview-container ul,
+.markdown-preview-container menu {
+  list-style: initial;
+}
+
 .preloader-loading-text {
   margin: auto;
   position: absolute;
