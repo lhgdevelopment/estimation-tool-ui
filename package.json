@@ -1,6 +1,6 @@
 {
-  "name": "lhg-sales-proposal-tools",
-  "description": "LHG Sales/Proposal Tools",
+  "name": "the-hive",
+  "description": "The Hive",
   "license": "MIT",
   "version": "1.0.0",
   "author": {
@@ -47,7 +47,6 @@
     "@mui/x-date-pickers": "^6.16.2",
     "@popperjs/core": "^2.11.2",
     "@react-input/mask": "^1.0.20",
-    "@uiw/react-md-editor": "^4.0.1",
     "apexcharts-clevision": "3.28.5",
     "axios": "^1.5.1",
     "chart.js": "^4.4.0",
@@ -70,7 +69,6 @@
     "react-datepicker": "^4.5.0",
     "react-dom": "17.0.2",
     "react-hook-form": "^7.47.0",
-    "react-markdown": "^8.0.7",
     "react-perfect-scrollbar": "^1.5.8",
     "react-popper": "^2.2.5",
     "react-redux": "^8.1.3",
