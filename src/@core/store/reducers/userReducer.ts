@@ -1,8 +1,8 @@
-const initialState = {
+const initialUserState = {
   user: null
 }
 
-const userReducer = (state = initialState, action: any) => {
+const userReducer = (state = initialUserState, action: any) => {
   switch (action.type) {
     case 'LOGIN_USER':
       return { ...state, user: action.payload }

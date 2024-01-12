@@ -8,9 +8,10 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useSettings } from 'src/@core/hooks/useSettings'
 import { loginUser } from 'src/@core/store/actions/userActions'
+import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
 import AppHeaderComponent from './components/AppHeader.component'
 import AppNavbarComponent from './components/AppNavbar.component'
@@ -24,7 +25,7 @@ interface Props {
 const AppLayout = ({ children }: Props) => {
   // ** Hooks
   const { settings, saveSettings } = useSettings()
-
+  const isDarkTheme = useSelector((state: RootState) => state.theme.isDark)
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'))
 
   const router = useRouter()
@@ -60,7 +61,7 @@ const AppLayout = ({ children }: Props) => {
 
   return (
     <>
-      <Box className='flex h-screen bg-gray-50 dark:bg-gray-900'>
+      <Box className={`flex h-screen bg-gray-50 dark:bg-gray-900 ${isDarkTheme ? 'theme-dark' : ''}`}>
         {/* <!-- Desktop sidebar --> */}
         <AppNavbarComponent />
         <Box className='flex flex-col flex-1'>
