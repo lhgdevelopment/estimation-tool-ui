@@ -11,7 +11,10 @@ export default function AppNavbarComponent() {
 
   return (
     <Fragment>
-      <Box className='z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0'>
+      <Box
+        sx={{ width: '250px', height: '100vh', position: 'fixed', top: '0', left: '0' }}
+        className='z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0'
+      >
         <Box className='py-4 text-gray-500 dark:text-gray-400 '>
           <Box className={'text-center'}>
             <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 leading-3' href='#'>
@@ -92,7 +95,7 @@ export default function AppNavbarComponent() {
       <Box className='fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-white dark:bg-gray-800 md:hidden'>
         <Box className='py-4 text-gray-500 dark:text-gray-400'>
           <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 display-block' href='#'>
-            LHG Sales/Proposal Tools
+            The Hive
           </Box>
           <Box component={'ul'} className='mt-6'>
             <Box component={'li'} className='relative px-6 py-3'>
