@@ -147,6 +147,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         apiRequest
           .post('/project-summery', projectSOWFormData)
           .then(res => {
+            apiRequest.get(`/project-summery?page=1`).then(res => {
+              if (setListData) {
+                setListData(res.data)
+              }
+            })
             setProjectSOWFormData({
               ...projectSOWFormData,
               ['transcriptId']: res?.data?.transcriptId
@@ -185,6 +190,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 timerProgressBar: true,
                 showConfirmButton: false
               })
+
               setProblemGoalID(res2?.data?.id)
               setProblemGoalText(res2?.data?.problemGoalText)
               setTimeout(() => {
@@ -316,7 +322,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           apiRequest.get(`/project-summery?page=1`).then(res => {
             if (setListData) {
               setListData(res.data)
-            } else {
             }
           })
 

@@ -86,6 +86,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                 <th className='px-4 py-3'>Meeting Name</th>
                 <th className='px-4 py-3'>Meeting Type</th>
                 <th className='px-4 py-3'>Summery</th>
+                <th className='px-4 py-3'>Created By</th>
                 <th className='px-4 py-3'>Created At</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
@@ -99,6 +100,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                     <td className='px-4 py-3 text-sm'>{data?.meetingName.substring(0, 30)}...</td>
                     <td className='px-4 py-3 text-sm'>{meetingType?.title}</td>
                     <td className='px-4 py-3 text-sm'>{data?.meetingSummeryText.substring(0, 50)}...</td>
+                    <td className='px-4 py-3 text-sm'>--</td>
                     <td className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.created_at)}</td>
 
                     <td className='px-4 py-3'>
