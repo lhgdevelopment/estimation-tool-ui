@@ -1,6 +1,7 @@
 // ** Icon imports
 import BiotechIcon from '@mui/icons-material/Biotech'
 import GroupsIcon from '@mui/icons-material/Groups'
+import SettingsIcon from '@mui/icons-material/Settings'
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
@@ -8,7 +9,13 @@ import { OverridableComponent } from '@mui/material/OverridableComponent'
 type TNavigation = {
   title: string
   icon?: OverridableComponent<SvgIconTypeMap>
-  path: string
+  path?: string
+  subMenu?: TSubMenu[]
+}
+type TSubMenu = {
+  title: string
+  icon?: OverridableComponent<SvgIconTypeMap>
+  path?: string
 }
 const navigation: TNavigation[] = [
   // {
@@ -67,6 +74,22 @@ const navigation: TNavigation[] = [
     title: 'Tasks',
     icon: SettingsEthernetIcon,
     path: '/service-deliverable-tasks'
+  },
+  {
+    title: 'Setings',
+    icon: SettingsIcon,
+    subMenu: [
+      {
+        title: 'Meeting Type',
+        icon: SettingsEthernetIcon,
+        path: '/meeting-type'
+      },
+      {
+        title: 'Project Type',
+        icon: SettingsEthernetIcon,
+        path: '/project-type'
+      }
+    ]
   }
 ]
 

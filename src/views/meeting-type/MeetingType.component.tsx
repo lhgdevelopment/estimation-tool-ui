@@ -1,9 +1,9 @@
 import { Box } from '@mui/material'
 import { useState } from 'react'
-import MeetingSummeryFormComponent from './form/MeetingSummery.form.component'
-import MeetingSummeryListComponent from './list/MeetingSummery.list.component'
+import MeetingTypeFormComponent from './form/MeetingType.form.component'
+import MeetingTypeListComponent from './list/MeetingType.list.component'
 
-export default function MeetingSummeryComponent() {
+export default function MeetingTypeComponent() {
   const [editDataId, setEditDataId] = useState<null | string>(null)
   const [listData, setListData] = useState<any>([])
   const [editData, setEditData] = useState<any>({})
@@ -12,9 +12,9 @@ export default function MeetingSummeryComponent() {
     <>
       <Box className='container grid px-6 mx-auto'>
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
-          Meeting Summery
+          Meeting Type
         </Box>
-        <MeetingSummeryFormComponent
+        <MeetingTypeFormComponent
           setEditDataId={setEditDataId}
           editDataId={editDataId}
           listData={listData}
@@ -22,7 +22,7 @@ export default function MeetingSummeryComponent() {
           editData={editData}
           setEditData={setEditData}
         />
-        <MeetingSummeryListComponent
+        <MeetingTypeListComponent
           setEditDataId={setEditDataId}
           editDataId={editDataId}
           listData={listData}
