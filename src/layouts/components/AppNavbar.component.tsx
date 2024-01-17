@@ -1,13 +1,15 @@
 import AccountTreeIcon from '@mui/icons-material/AccountTree'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { Box } from '@mui/material'
 import HomeOutline from 'mdi-material-ui/HomeOutline'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { Fragment } from 'react'
+import React, { Fragment, useState } from 'react'
 import navigation from 'src/navigation'
 
 export default function AppNavbarComponent() {
   const router = useRouter()
+  const [dropdownOpen, setDropdownOpen] = useState('')
 
   return (
     <Fragment>
@@ -48,30 +50,73 @@ export default function AppNavbarComponent() {
             </Box>
           </Box>
           <Box component={'ul'}>
-            {navigation?.map((nav, index) => (
-              <Box component={'li'} key={index} className='relative px-6 py-3'>
-                {router.pathname == nav.path && (
+            {navigation?.map((nav, index) =>
+              nav.subMenu?.length ? (
+                <Box component={'li'} key={index} className='relative px-6 py-3'>
                   <Box
-                    component={'span'}
-                    className='absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
-                    aria-hidden='true'
-                  ></Box>
-                )}
-                <Link href={nav.path} passHref>
-                  <Box
-                    component={'a'}
-                    className={`inline-flex items-center w-full text-sm font-semibold  transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100 ${
-                      router.pathname == nav.path ? 'text-gray-800' : ''
-                    }`}
+                    component={'button'}
+                    className='inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200'
+                    aria-haspopup='true'
+                    onClick={() => {
+                      setDropdownOpen(prevState => (prevState == `submenu_${index}` ? '' : `submenu_${index}`))
+                    }}
                   >
-                    {React.createElement(nav.icon ? nav.icon : HomeOutline)}
-                    <Box component={'span'} className='ml-4'>
-                      {nav.title}
-                    </Box>
+                    <span className='inline-flex items-center'>
+                      {React.createElement(nav.icon ? nav.icon : HomeOutline)}
+                      <span className='ml-4'>{nav.title}</span>
+                    </span>
+                    <KeyboardArrowDownIcon />
                   </Box>
-                </Link>
-              </Box>
-            ))}
+                  <>
+                    <Box
+                      component={'ul'}
+                      className={`p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900 ${
+                        dropdownOpen === 'submenu_' + index ? '' : 'hidden'
+                      }`}
+                      aria-label='submenu'
+                    >
+                      {nav?.subMenu?.map((subNav, subIndex) => (
+                        <Box
+                          key={subIndex}
+                          component={'li'}
+                          className='px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200'
+                        >
+                          <Link href={subNav.path ? subNav.path : ''} passHref>
+                            <Box component={'a'} className='w-full'>
+                              {subNav.title}
+                            </Box>
+                          </Link>
+                        </Box>
+                      ))}
+                    </Box>
+                  </>
+                </Box>
+              ) : (
+                <Box component={'li'} key={index} className='relative px-6 py-3'>
+                  {router.pathname == nav.path && (
+                    <Box
+                      component={'span'}
+                      className='absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
+                      aria-hidden='true'
+                    ></Box>
+                  )}
+
+                  <Link href={nav.path ? nav.path : ''} passHref>
+                    <Box
+                      component={'a'}
+                      className={`inline-flex items-center w-full text-sm font-semibold  transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100 ${
+                        router.pathname == nav.path ? 'text-gray-800' : ''
+                      }`}
+                    >
+                      {React.createElement(nav.icon ? nav.icon : HomeOutline)}
+                      <Box component={'span'} className='ml-4'>
+                        {nav.title}
+                      </Box>
+                    </Box>
+                  </Link>
+                </Box>
+              )
+            )}
           </Box>
           <Box className='px-4 my-2'>
             <Link href={'/project'} passHref>
