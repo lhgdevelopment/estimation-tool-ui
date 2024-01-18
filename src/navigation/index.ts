@@ -55,25 +55,37 @@ const navigation: TNavigation[] = [
     icon: GroupsIcon,
     path: '/meeting-summery'
   },
+
   {
     title: 'Services',
-    icon: SettingsEthernetIcon,
-    path: '/services'
-  },
-  {
-    title: 'SOWs',
-    icon: SettingsEthernetIcon,
-    path: '/service-scopes'
-  },
-  {
-    title: 'Deliverables',
-    icon: SettingsEthernetIcon,
-    path: '/service-deliverables'
-  },
-  {
-    title: 'Tasks',
-    icon: SettingsEthernetIcon,
-    path: '/service-deliverable-tasks'
+    icon: SettingsIcon,
+    subMenu: [
+      {
+        title: 'Service',
+        icon: SettingsEthernetIcon,
+        path: '/services/service'
+      },
+      {
+        title: 'Groups',
+        icon: SettingsEthernetIcon,
+        path: '/services/service-groups'
+      },
+      {
+        title: 'SOWs',
+        icon: SettingsEthernetIcon,
+        path: '/services/service-scopes'
+      },
+      {
+        title: 'Deliverables',
+        icon: SettingsEthernetIcon,
+        path: '/services/service-deliverables'
+      },
+      {
+        title: 'Tasks',
+        icon: SettingsEthernetIcon,
+        path: '/services/service-deliverable-tasks'
+      }
+    ]
   },
   {
     title: 'Setings',

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import ServiceDeliverableTasks from 'src/views/service-deliverable-tasks/ServiceDeliverableTasks.component'
+import ServiceDeliverableTasks from 'src/views/services/service-deliverable-tasks/ServiceDeliverableTasks.component'
 
 const ServiceDeliverableTasksPage = () => {
   return <ServiceDeliverableTasks></ServiceDeliverableTasks>
