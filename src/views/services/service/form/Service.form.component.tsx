@@ -6,9 +6,9 @@ import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TServicesComponent } from '../Services.decorator'
+import { TServiceComponent } from '../Service.decorator'
 
-export default function ServicesFormComponent(props: TServicesComponent) {
+export default function ServiceFormComponent(props: TServiceComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {

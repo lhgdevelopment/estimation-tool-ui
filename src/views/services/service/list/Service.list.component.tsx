@@ -2,9 +2,9 @@ import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TServicesComponent } from '../Services.decorator'
+import { TServiceComponent } from '../Service.decorator'
 
-export default function ServicesListComponent(props: TServicesComponent) {
+export default function ServiceListComponent(props: TServiceComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
 
   const [currentPage, setCurrentPage] = useState(1)

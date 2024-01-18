@@ -10,6 +10,7 @@ import navigation from 'src/navigation'
 export default function AppNavbarComponent() {
   const router = useRouter()
   const [dropdownOpen, setDropdownOpen] = useState('')
+  console.log(router)
 
   return (
     <Fragment>
@@ -53,6 +54,15 @@ export default function AppNavbarComponent() {
             {navigation?.map((nav, index) =>
               nav.subMenu?.length ? (
                 <Box component={'li'} key={index} className='relative px-6 py-3'>
+                  <></>
+                  {router.pathname.split('/')?.[1] == (nav?.subMenu?.[0]?.path || '').split('/')?.[1] && (
+                    <Box
+                      component={'span'}
+                      className='absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
+                      aria-hidden='true'
+                    ></Box>
+                  )}
+
                   <Box
                     component={'button'}
                     className='inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200'
@@ -79,7 +89,9 @@ export default function AppNavbarComponent() {
                         <Box
                           key={subIndex}
                           component={'li'}
-                          className='px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200'
+                          className={`px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 ${
+                            router.pathname == subNav.path ? 'text-gray-800' : ''
+                          }`}
                         >
                           <Link href={subNav.path ? subNav.path : ''} passHref>
                             <Box component={'a'} className='w-full'>

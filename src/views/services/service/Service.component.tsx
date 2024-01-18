@@ -1,9 +1,9 @@
 import { Box } from '@mui/material'
 import { useState } from 'react'
-import ServicesFormComponent from './form/Services.form.component'
-import ServicesListComponent from './list/Services.list.component'
+import ServiceFormComponent from './form/Service.form.component'
+import ServiceListComponent from './list/Service.list.component'
 
-export default function ServicesComponent() {
+export default function ServiceComponent() {
   const [editDataId, setEditDataId] = useState<null | string>(null)
   const [listData, setListData] = useState<any>([])
   const [editData, setEditData] = useState<any>({})
@@ -12,9 +12,9 @@ export default function ServicesComponent() {
     <>
       <Box className='container grid px-6 mx-auto'>
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
-          Services
+          Service
         </Box>
-        <ServicesFormComponent
+        <ServiceFormComponent
           setEditDataId={setEditDataId}
           editDataId={editDataId}
           listData={listData}
@@ -22,7 +22,7 @@ export default function ServicesComponent() {
           editData={editData}
           setEditData={setEditData}
         />
-        <ServicesListComponent
+        <ServiceListComponent
           setEditDataId={setEditDataId}
           editDataId={editDataId}
           listData={listData}
