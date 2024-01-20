@@ -14,8 +14,13 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
 
   const defaultData = {
     name: '',
+    serviceId: '', 
     serviceGroupId: ''
   }
+
+  const [serviceGroupUrl, setServiceGroupUrl] = useState('service-groups')
+
+  
 
   const [formData, setFormData] = useState(defaultData)
 
@@ -73,8 +78,17 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
   }
 
   useEffect(() => {
+    if (formData.serviceId) {
+      setServiceGroupUrl(`service-groups?serviceId=${formData.serviceId}`);
+    } else {
+      setServiceGroupUrl(''); // Reset the URL when serviceId is not selected
+    }
+  }, [formData.serviceId]);
+
+  useEffect(() => {
     setFormData({
       name: editData?.['name'],
+      serviceId: editData?.['serviceId'],
       serviceGroupId: editData?.['serviceGroupId']
     })
   }, [editDataId, editData])
@@ -104,9 +118,21 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Service</span>
+                <Dropdown
+                  url={'services'}
+                  name='serviceId'
+                  value={formData.serviceId}
+                  onChange={handleSelectChange}
+                  optionConfig={{ id: 'id', title: 'name' }}
+                />
+              </label>
+            </Box>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Service Group</span>
                 <Dropdown
-                  url={'service-groups'}
+                  url={serviceGroupUrl}
                   name='serviceGroupId'
                   value={formData.serviceGroupId}
                   onChange={handleSelectChange}
