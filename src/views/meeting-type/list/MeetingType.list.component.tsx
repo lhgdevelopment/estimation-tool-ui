@@ -11,7 +11,7 @@ export default function MeetingTypeListComponent(props: TMeetingTypeComponent) {
   const [totalPages, setTotalPages] = useState(1)
 
   const getList = (page = 1) => {
-    apiRequest.get(`/Project-type?page=${page}`).then(res => {
+    apiRequest.get(`/meeting-type?page=${page}`).then(res => {
       const paginationData: any = res
 
       setListData(res.data)
@@ -37,7 +37,7 @@ export default function MeetingTypeListComponent(props: TMeetingTypeComponent) {
       cancelButtonText: 'No'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/Project-type/${i}`).then(res => {
+        apiRequest.delete(`/meeting-type/${i}`).then(res => {
           Swal.fire({
             title: 'Data Deleted Successfully!',
             icon: 'success',
@@ -52,7 +52,7 @@ export default function MeetingTypeListComponent(props: TMeetingTypeComponent) {
   }
 
   useEffect(() => {
-    // getList()
+    getList()
   }, [editDataId])
 
   const handlePageChange = (newPage: number) => {
