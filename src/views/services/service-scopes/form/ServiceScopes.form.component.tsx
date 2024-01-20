@@ -14,7 +14,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
 
   const defaultData = {
     name: '',
-    serviceId: ''
+    serviceGroupId: ''
   }
 
   const [formData, setFormData] = useState(defaultData)
@@ -75,7 +75,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
   useEffect(() => {
     setFormData({
       name: editData?.['name'],
-      serviceId: editData?.['serviceId']
+      serviceGroupId: editData?.['serviceGroupId']
     })
   }, [editDataId, editData])
 
@@ -104,11 +104,11 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service</span>
+                <span className='text-gray-700 dark:text-gray-400'>Service Group</span>
                 <Dropdown
-                  url={'services'}
-                  name='serviceId'
-                  value={formData.serviceId}
+                  url={'service-groups'}
+                  name='serviceGroupId'
+                  value={formData.serviceGroupId}
                   onChange={handleSelectChange}
                   optionConfig={{ id: 'id', title: 'name' }}
                 />

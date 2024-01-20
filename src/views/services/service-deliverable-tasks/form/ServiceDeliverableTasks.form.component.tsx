@@ -15,6 +15,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   const defaultData = {
     name: '',
     serviceId: '',
+    serviceGroupId: '',
     serviceScopeId: '',
     serviceDeliverableId: '',
     cost: '',
@@ -23,6 +24,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   }
 
   const [formData, setFormData] = useState(defaultData)
+  const [serviceGroupUrl, setServiceGroupUrl] = useState('service-groups')
   const [serviceScopeUrl, setServiceScopeUrl] = useState('service-scopes')
   const [serviceDeliverableUrl, setServiceDeliverableUrl] = useState('service-deliverables')
 
@@ -81,11 +83,19 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
 
   useEffect(() => {
     if (formData.serviceId) {
-      setServiceScopeUrl(`service-scopes?serviceId=${formData.serviceId}`);
+      setServiceGroupUrl(`service-groups?serviceId=${formData.serviceId}`);
     } else {
-      setServiceScopeUrl(''); // Reset the URL when serviceId is not selected
+      setServiceGroupUrl(''); // Reset the URL when serviceId is not selected
     }
   }, [formData.serviceId]);
+
+  useEffect(() => {
+    if (formData.serviceGroupId) {
+      setServiceScopeUrl(`service-scopes?serviceGroupId=${formData.serviceGroupId}`);
+    } else {
+      setServiceScopeUrl(''); // Reset the URL when serviceGroupId is not selected
+    }
+  }, [formData.serviceGroupId]);
 
   useEffect(() => {
     if (formData.serviceScopeId) {
@@ -99,6 +109,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
     setFormData({
       name: editData?.['name'],
       serviceId: editData?.['serviceId'],
+      serviceGroupId: editData?.['serviceGroupId'],
       serviceScopeId: editData?.['serviceScopeId'],
       serviceDeliverableId: editData?.['serviceDeliverableId'],
       cost: editData?.['cost'],
@@ -136,6 +147,18 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                   url={'services'}
                   name='serviceId'
                   value={formData.serviceId}
+                  onChange={handleSelectChange}
+                  optionConfig={{ id: 'id', title: 'name' }}
+                />
+              </label>
+            </Box>
+            <Box sx={{ width: '33%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Service Group</span>
+                <Dropdown
+                  url={serviceGroupUrl}
+                  name='serviceGroupId'
+                  value={formData.serviceGroupId}
                   onChange={handleSelectChange}
                   optionConfig={{ id: 'id', title: 'name' }}
                 />
