@@ -102,7 +102,12 @@ const navigation: TNavigation[] = [
         path: '/project-type'
       }
     ]
-  }
+  },
+  {
+    title: 'Users',
+    icon: GroupsIcon,
+    path: '/users'
+  },
 ]
 
 export default navigation

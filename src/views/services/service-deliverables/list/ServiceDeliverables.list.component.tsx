@@ -67,6 +67,7 @@ export default function ServiceDeliverablesListComponent(props: TServiceDelivera
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <th className='px-4 py-3'>Name</th>
                 <th className='px-4 py-3'>Service</th>
+                <th className='px-4 py-3'>Service Group</th>
                 <th className='px-4 py-3'>Service Scope</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
@@ -76,7 +77,8 @@ export default function ServiceDeliverablesListComponent(props: TServiceDelivera
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.service_scope?.service?.name}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.service_scope?.service_group?.service?.name}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.service_scope?.service_group?.name}</td>
                     <td className='px-4 py-3 text-sm'>{data?.service_scope?.name}</td>
 
                     <td className='px-4 py-3'>

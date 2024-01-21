@@ -12,13 +12,13 @@ import { TServiceScopesComponent } from '../ServiceScopes.decorator'
 export default function ServiceScopesFormComponent(props: TServiceScopesComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
-  const [serviceGroupsUrl, setServiceGroupsUrl] = useState('service-groups')
-
   const defaultData = {
     name: '',
     serviceId: '',
     serviceGroupId: ''
   }
+
+  const [serviceGroupUrl, setServiceGroupUrl] = useState('service-groups')
 
   const [formData, setFormData] = useState(defaultData)
 
@@ -76,20 +76,20 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
   }
 
   useEffect(() => {
+    if (formData.serviceId) {
+      setServiceGroupUrl(`service-groups?serviceId=${formData.serviceId}`)
+    } else {
+      setServiceGroupUrl('') // Reset the URL when serviceId is not selected
+    }
+  }, [formData.serviceId])
+
+  useEffect(() => {
     setFormData({
       name: editData?.['name'],
       serviceId: editData?.['serviceId'],
       serviceGroupId: editData?.['serviceGroupId']
     })
   }, [editDataId, editData])
-
-  useEffect(() => {
-    if (formData.serviceId) {
-      setServiceGroupsUrl(`service-groups?serviceId=${formData.serviceId}`)
-    } else {
-      setServiceGroupsUrl('') // Reset the URL when serviceId is not selected
-    }
-  }, [formData.serviceId])
 
   const onClear = () => {
     setFormData(prevState => ({ ...defaultData }))
@@ -102,7 +102,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Name</span>
                 <input
@@ -114,8 +114,6 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
                 />
               </label>
             </Box>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Service</span>
@@ -128,12 +126,11 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
                 />
               </label>
             </Box>
-
-            <Box sx={{ width: '33%' }}>
+            <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service Scope</span>
+                <span className='text-gray-700 dark:text-gray-400'>Service Group</span>
                 <Dropdown
-                  url={serviceGroupsUrl}
+                  url={serviceGroupUrl}
                   name='serviceGroupId'
                   value={formData.serviceGroupId}
                   onChange={handleSelectChange}

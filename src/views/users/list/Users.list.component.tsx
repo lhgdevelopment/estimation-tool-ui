@@ -1,25 +1,29 @@
-import VisibilityIcon from '@mui/icons-material/Visibility'
 import { Box } from '@mui/material'
-import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
-import { formatDateToCustomFormat } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
-import { TProjectSOWListComponent } from '../ProjectSOW.decorator'
+import { TUsersComponent, promptsTypeList } from '../Users.decorator'
 
-export default function ProjectSOWListComponent(props: TProjectSOWListComponent) {
-  const { listData, setListData } = props
+export default function UsersListComponent(props: TUsersComponent) {
+  const { setEditDataId, listData, setListData, setEditData, editDataId } = props
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
   const getList = (page = 1) => {
-    apiRequest.get(`/project-summery?page=${page}`).then(res => {
+    apiRequest.get(`/users?page=${page}`).then(res => {
       const paginationData: any = res
 
       setListData(res.data)
       setCurrentPage(paginationData?.['current_page'])
       setTotalPages(Math.ceil(paginationData?.['total'] / 10))
     })
+  }
+
+  const onEdit = (i: string) => {
+    setEditDataId(i)
+
+    const editData = listData.length ? listData?.filter((data: any) => data['id'] == i)[0] : {}
+    setEditData(editData)
   }
 
   const onDelete = (i: string) => {
@@ -32,7 +36,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
       cancelButtonText: 'No'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/project-summery/${i}`).then(res => {
+        apiRequest.delete(`/users/${i}`).then(res => {
           Swal.fire({
             title: 'Data Deleted Successfully!',
             icon: 'success',
@@ -48,24 +52,10 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
 
   useEffect(() => {
     getList()
-  }, [])
+  }, [editDataId])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)
-  }
-
-  const style = {
-    position: 'absolute' as const,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '80%',
-    height: '90vh',
-    overflowY: 'auto',
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4
   }
 
   return (
@@ -75,47 +65,32 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
           <table className='w-full whitespace-no-wrap'>
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                <th className='px-4 py-3'>Project</th>
-                <th className='px-4 py-3'>Created By</th>
-                <th className='px-4 py-3'>Created At</th>
+                <th className='px-4 py-3'>Name</th>
+                <th className='px-4 py-3'>Email</th> 
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
             <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
-              {listData?.map((data: any, index: number) => {
+              {listData?.map((data: any, index: number) => { 
+
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm w-200'>
-                      <Box sx={{ width: '200px', whiteSpace: 'normal' }}>{data?.meeting_transcript?.projectName}</Box>
-                    </td> 
-                    <td className='px-4 py-3 text-sm'>{data.created_by?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.created_at)}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.name}</td>
+                    <td className='px-4 py-3 text-sm'>{data?.email}</td> 
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
-                        <Link href={`/project-summery/${data?.id}`} passHref>
-                          <Box
-                            sx={{ cursor: 'pointer' }}
-                            component={'a'}
-                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                            aria-label='View'
-                          >
-                            <VisibilityIcon />
-                          </Box>
-                        </Link>
-                        <Link href={`/project-summery/edit/${data?.id}`} passHref>
-                          <Box
-                            sx={{ cursor: 'pointer' }}
-                            component={'a'}
-                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                            aria-label='View'
-                          >
-                            <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
-                              <path d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'></path>
-                            </svg>
-                          </Box>
-                        </Link>
-
+                        <button
+                          onClick={() => {
+                            onEdit(data['id'])
+                          }}
+                          className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                          aria-label='Edit'
+                        >
+                          <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
+                            <path d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'></path>
+                          </svg>
+                        </button>
                         <button
                           onClick={() => {
                             onDelete(data['id'])

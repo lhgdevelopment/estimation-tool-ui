@@ -21,8 +21,8 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
 
   const [formData, setFormData] = useState(defaultData)
 
+  const [serviceGroupUrl, setServiceGroupUrl] = useState('service-groups')
   const [serviceScopeUrl, setServiceScopeUrl] = useState('service-scopes')
-  const [serviceGroupsUrl, setServiceGroupsUrl] = useState('service-groups')
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -80,27 +80,27 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
   useEffect(() => {
     setFormData({
       name: editData?.['name'],
-      serviceId: editData?.['serviceId'],
       serviceGroupId: editData?.['serviceGroupId'],
-      serviceScopeId: editData?.['serviceScopeId']
+      serviceScopeId: editData?.['serviceScopeId'],
+      serviceId: editData?.['serviceId']
     })
   }, [editDataId, editData])
-
-  useEffect(() => {
-    if (formData.serviceId) {
-      setServiceGroupsUrl(`service-groups?serviceId=${formData.serviceId}`)
-    } else {
-      setServiceGroupsUrl('') // Reset the URL when serviceId is not selected
-    }
-  }, [formData.serviceId])
 
   useEffect(() => {
     if (formData.serviceGroupId) {
       setServiceScopeUrl(`service-scopes?serviceGroupId=${formData.serviceGroupId}`)
     } else {
-      setServiceScopeUrl('') // Reset the URL when serviceId is not selected
+      setServiceScopeUrl('') // Reset the URL when serviceGroupId is not selected
     }
   }, [formData.serviceGroupId])
+
+  useEffect(() => {
+    if (formData.serviceId) {
+      setServiceGroupUrl(`service-groups?serviceId=${formData.serviceId}`)
+    } else {
+      setServiceGroupUrl('') // Reset the URL when serviceId is not selected
+    }
+  }, [formData.serviceId])
 
   const onClear = () => {
     setFormData(prevState => ({ ...defaultData }))
@@ -113,7 +113,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Name</span>
                 <input
@@ -125,7 +125,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
                 />
               </label>
             </Box>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Service</span>
                 <Dropdown
@@ -137,13 +137,11 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
                 />
               </label>
             </Box>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service Scope</span>
+                <span className='text-gray-700 dark:text-gray-400'>Service Group</span>
                 <Dropdown
-                  url={serviceGroupsUrl}
+                  url={serviceGroupUrl}
                   name='serviceGroupId'
                   value={formData.serviceGroupId}
                   onChange={handleSelectChange}
@@ -151,7 +149,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
                 />
               </label>
             </Box>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Service Scope</span>
                 <Dropdown

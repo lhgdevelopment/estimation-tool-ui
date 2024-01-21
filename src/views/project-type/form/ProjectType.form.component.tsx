@@ -27,7 +27,7 @@ export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
     if (editDataId) {
-      apiRequest.put(`/Project-type/${editDataId}`, formData).then(res => {
+      apiRequest.put(`/project-type/${editDataId}`, formData).then(res => {
         setListData((prevState: []) => {
           const updatedList: any = [...prevState]
           const editedServiceIndex = updatedList.findIndex(
@@ -49,7 +49,7 @@ export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
         onClear()
       })
     } else {
-      apiRequest.post('/Project-type', formData).then(res => {
+      apiRequest.post('/project-type', formData).then(res => {
         setListData((prevState: []) => [...prevState, res.data])
         Swal.fire({
           title: 'Data Created Successfully!',
