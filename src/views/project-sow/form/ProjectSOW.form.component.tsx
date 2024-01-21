@@ -501,6 +501,18 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           value={projectSOWFormData.projectType}
                           onChange={handleSelectChange}
                         />
+                      </label>
+                    </Box>
+                    {/* <Box sx={{ width: '50%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
+                        <Dropdown
+                          url={'project-type'}
+                          name='projectType'
+                          value={projectSOWFormData.projectType}
+                          onChange={handleSelectChange}
+                          optionConfig={{ id: 'id', title: 'name' }}
+                        />
                         {!!errorMessage?.['projectType'] &&
                           errorMessage?.['projectType']?.map((message: any, index: number) => {
                             return (
@@ -510,7 +522,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             )
                           })}
                       </label>
-                    </Box>
+                    </Box> */}
 
                     <Box sx={{ width: '50%' }}>
                       <label className='block text-sm'>
