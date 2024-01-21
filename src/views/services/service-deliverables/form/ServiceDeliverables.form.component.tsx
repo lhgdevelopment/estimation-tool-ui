@@ -24,7 +24,6 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
   const [serviceGroupUrl, setServiceGroupUrl] = useState('service-groups')
   const [serviceScopeUrl, setServiceScopeUrl] = useState('service-scopes')
 
-
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
@@ -83,25 +82,25 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
       name: editData?.['name'],
       serviceGroupId: editData?.['serviceGroupId'],
       serviceScopeId: editData?.['serviceScopeId'],
-      serviceId: editData?.['serviceId'],
+      serviceId: editData?.['serviceId']
     })
   }, [editDataId, editData])
 
   useEffect(() => {
     if (formData.serviceGroupId) {
-      setServiceScopeUrl(`service-scopes?serviceGroupId=${formData.serviceGroupId}`);
+      setServiceScopeUrl(`service-scopes?serviceGroupId=${formData.serviceGroupId}`)
     } else {
-      setServiceScopeUrl(''); // Reset the URL when serviceGroupId is not selected
+      setServiceScopeUrl('') // Reset the URL when serviceGroupId is not selected
     }
-  }, [formData.serviceGroupId]);
+  }, [formData.serviceGroupId])
 
   useEffect(() => {
     if (formData.serviceId) {
-      setServiceGroupUrl(`service-groups?serviceId=${formData.serviceId}`);
+      setServiceGroupUrl(`service-groups?serviceId=${formData.serviceId}`)
     } else {
-      setServiceGroupUrl(''); // Reset the URL when serviceId is not selected
+      setServiceGroupUrl('') // Reset the URL when serviceId is not selected
     }
-  }, [formData.serviceId]);
+  }, [formData.serviceId])
 
   const onClear = () => {
     setFormData(prevState => ({ ...defaultData }))

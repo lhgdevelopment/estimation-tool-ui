@@ -14,13 +14,11 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
 
   const defaultData = {
     name: '',
-    serviceId: '', 
+    serviceId: '',
     serviceGroupId: ''
   }
 
   const [serviceGroupUrl, setServiceGroupUrl] = useState('service-groups')
-
-  
 
   const [formData, setFormData] = useState(defaultData)
 
@@ -79,11 +77,11 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
 
   useEffect(() => {
     if (formData.serviceId) {
-      setServiceGroupUrl(`service-groups?serviceId=${formData.serviceId}`);
+      setServiceGroupUrl(`service-groups?serviceId=${formData.serviceId}`)
     } else {
-      setServiceGroupUrl(''); // Reset the URL when serviceId is not selected
+      setServiceGroupUrl('') // Reset the URL when serviceId is not selected
     }
-  }, [formData.serviceId]);
+  }, [formData.serviceId])
 
   useEffect(() => {
     setFormData({

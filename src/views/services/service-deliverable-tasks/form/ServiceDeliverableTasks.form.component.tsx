@@ -20,7 +20,6 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
     serviceDeliverableId: '',
     cost: '',
     description: ''
-
   }
 
   const [formData, setFormData] = useState(defaultData)
@@ -83,27 +82,27 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
 
   useEffect(() => {
     if (formData.serviceId) {
-      setServiceGroupUrl(`service-groups?serviceId=${formData.serviceId}`);
+      setServiceGroupUrl(`service-groups?serviceId=${formData.serviceId}`)
     } else {
-      setServiceGroupUrl(''); // Reset the URL when serviceId is not selected
+      setServiceGroupUrl('') // Reset the URL when serviceId is not selected
     }
-  }, [formData.serviceId]);
+  }, [formData.serviceId])
 
   useEffect(() => {
     if (formData.serviceGroupId) {
-      setServiceScopeUrl(`service-scopes?serviceGroupId=${formData.serviceGroupId}`);
+      setServiceScopeUrl(`service-scopes?serviceGroupId=${formData.serviceGroupId}`)
     } else {
-      setServiceScopeUrl(''); // Reset the URL when serviceGroupId is not selected
+      setServiceScopeUrl('') // Reset the URL when serviceGroupId is not selected
     }
-  }, [formData.serviceGroupId]);
+  }, [formData.serviceGroupId])
 
   useEffect(() => {
     if (formData.serviceScopeId) {
-      setServiceDeliverableUrl(`service-deliverables?serviceScopeId=${formData.serviceScopeId}`);
+      setServiceDeliverableUrl(`service-deliverables?serviceScopeId=${formData.serviceScopeId}`)
     } else {
-      setServiceDeliverableUrl('');
+      setServiceDeliverableUrl('')
     }
-  }, [formData.serviceScopeId]);
+  }, [formData.serviceScopeId])
 
   useEffect(() => {
     setFormData({
