@@ -2,6 +2,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import { Box } from '@mui/material'
 import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
+import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateToCustomFormat } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
@@ -68,6 +69,10 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
     p: 4
   }
 
+  if (!listData?.length) {
+    return <UiSkeleton />
+  }
+
   return (
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
@@ -87,7 +92,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm w-200'>
                       <Box sx={{ width: '200px', whiteSpace: 'normal' }}>{data?.meeting_transcript?.projectName}</Box>
-                    </td> 
+                    </td>
                     <td className='px-4 py-3 text-sm'>{data.created_by?.name}</td>
                     <td className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.created_at)}</td>
 

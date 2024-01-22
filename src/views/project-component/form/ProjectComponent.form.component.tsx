@@ -5,6 +5,7 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, SelectChangeEvent } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
+import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TProjectComponentComponent } from '../ProjectComponent.decorator'
@@ -86,6 +87,10 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
     setFormData(prevState => ({ ...defaultData }))
     setEditDataId(null)
     setEditData({})
+  }
+
+  if (!listData?.length) {
+    return <UiSkeleton />
   }
 
   return (

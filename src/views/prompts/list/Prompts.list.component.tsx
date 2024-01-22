@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
+import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TPromptsComponent, promptsTypeList } from '../Prompts.decorator'
@@ -58,6 +59,10 @@ export default function PromptsListComponent(props: TPromptsComponent) {
     getList(newPage)
   }
 
+  if (!listData?.length) {
+    return <UiSkeleton />
+  }
+
   return (
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
@@ -79,7 +84,13 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.name}</td>
                     <td className='px-4 py-3 text-sm'>{promptsType?.title}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.prompt.substring(0, 50)}</td>
+                    <td className='px-4 py-3 text-sm'>
+                      <Box sx={{ width: '200px', whiteSpace: 'normal' }}>
+                        {data?.prompt.substring(0, 100).length < data?.prompt.length
+                          ? data?.prompt.substring(0, 100) + '...'
+                          : data?.prompt.substring(0, 100)}
+                      </Box>
+                    </td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>

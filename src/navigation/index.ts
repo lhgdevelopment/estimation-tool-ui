@@ -94,12 +94,12 @@ const navigation: TNavigation[] = [
       {
         title: 'Meeting Type',
         icon: SettingsEthernetIcon,
-        path: '/meeting-type'
+        path: '/settings/meeting-type'
       },
       {
         title: 'Project Type',
         icon: SettingsEthernetIcon,
-        path: '/project-type'
+        path: '/settings/project-type'
       }
     ]
   },
@@ -107,7 +107,7 @@ const navigation: TNavigation[] = [
     title: 'Users',
     icon: GroupsIcon,
     path: '/users'
-  },
+  }
 ]
 
 export default navigation

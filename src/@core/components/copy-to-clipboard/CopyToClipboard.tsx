@@ -18,9 +18,9 @@ const CopyToClipboard = (props: TCopyToClipboard) => {
       .catch(error => console.error('Error copying to clipboard:', error))
   }
 
-  if (!textToCopy) {
-    return <></>
-  }
+  // if (!textToCopy) {
+  //   return <></>
+  // }
 
   return (
     <Box sx={sx}>

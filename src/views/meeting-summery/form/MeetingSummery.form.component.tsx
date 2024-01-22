@@ -56,6 +56,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
+    setSrrorMessage({})
     setPreload(true)
     if (editDataId) {
       formData['summaryText'] = summaryText
@@ -91,7 +92,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
       apiRequest
         .post('/meeting-summery', formData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, res.data])
+          apiRequest.get(`/meeting-summery`).then(res => {
+            setListData(res.data)
+          })
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -126,6 +129,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     setFormData(prevState => ({ ...defaultData }))
     setEditDataId(null)
     setEditData({})
+    setSrrorMessage({})
   }
 
   return (

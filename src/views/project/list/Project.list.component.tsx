@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
+import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TProjectComponent } from '../Project.decorator'
@@ -57,6 +58,10 @@ export default function ProjectListComponent(props: TProjectComponent) {
   useEffect(() => {
     getList()
   }, [editDataId])
+
+  if (!listData?.length) {
+    return <UiSkeleton />
+  }
 
   return (
     <Fragment>
