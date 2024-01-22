@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
+import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TMeetingTypeComponent } from '../MeetingType.decorator'
@@ -57,6 +58,10 @@ export default function MeetingTypeListComponent(props: TMeetingTypeComponent) {
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)
+  }
+
+  if (!listData?.length) {
+    return <UiSkeleton />
   }
 
   return (

@@ -147,11 +147,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         apiRequest
           .post('/project-summery', projectSOWFormData)
           .then(res => {
+            if (setListData) {
+              setListData([])
+            }
             apiRequest.get(`/project-summery?page=1`).then(res => {
               if (setListData) {
                 setListData(res.data)
               }
             })
+
             setProjectSOWFormData({
               ...projectSOWFormData,
               ['transcriptId']: res?.data?.transcriptId
@@ -404,13 +408,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         setEnabledStep(5)
       }
 
-      console.log(Number(router?.query?.['step']) < enabledStep)
-      console.log(enabledStep)
-      console.log(Number(router?.query?.['step']))
-
       setPreload(false)
     })
   }
+
+  useEffect(() => {
+    console.log('ji')
+
+    onClear()
+    setEnabledStep(0)
+    setActiveStep(0)
+  }, [])
 
   useEffect(() => {
     getDetails(router?.query['id'] as string)

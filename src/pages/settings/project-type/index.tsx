@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import ProjectTypeComponent from 'src/views/project-type/ProjectType.component'
+import ProjectTypeComponent from 'src/views/settings/project-type/ProjectType.component'
 
 const ProjectTypePage = () => {
   return <ProjectTypeComponent></ProjectTypeComponent>

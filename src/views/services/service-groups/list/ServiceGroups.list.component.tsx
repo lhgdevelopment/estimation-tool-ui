@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
+import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TServiceGroupsComponent } from '../ServiceGroups.decorator'
@@ -58,6 +59,10 @@ export default function ServiceGroupsListComponent(props: TServiceGroupsComponen
     getList(newPage)
   }
 
+  if (!listData?.length) {
+    return <UiSkeleton />
+  }
+
   return (
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
@@ -74,7 +79,13 @@ export default function ServiceGroupsListComponent(props: TServiceGroupsComponen
               {listData?.map((data: any, index: number) => {
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.name}</td>
+                    <td className='px-4 py-3 text-sm'>
+                      <Box sx={{ width: '200px', whiteSpace: 'normal' }}>
+                        {data?.name.substring(0, 100).length < data?.name.length
+                          ? data?.name.substring(0, 100) + '...'
+                          : data?.name.substring(0, 100)}
+                      </Box>
+                    </td>
                     <td className='px-4 py-3 text-sm'>{data?.service?.name}</td>
 
                     <td className='px-4 py-3'>

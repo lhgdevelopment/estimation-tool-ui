@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
+import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TServiceComponent } from '../Service.decorator'
@@ -57,6 +58,10 @@ export default function ServiceListComponent(props: TServiceComponent) {
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)
+  }
+
+  if (!listData?.length) {
+    return <UiSkeleton />
   }
 
   return (

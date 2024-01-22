@@ -2,6 +2,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import { Box } from '@mui/material'
 import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
+import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateToCustomFormat } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
@@ -16,7 +17,6 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
   const getList = (page = 1) => {
     apiRequest.get(`/meeting-summery?page=${page}`).then(res => {
       const paginationData: any = res
-
       setListData(res.data)
       setCurrentPage(paginationData?.['current_page'])
       setTotalPages(Math.ceil(paginationData?.['total'] / 10))
@@ -29,7 +29,6 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
 
   const onEdit = (i: string) => {
     setEditDataId(i)
-
     const editData = listData.length ? listData?.filter((data: any) => data['id'] == i)[0] : {}
     setEditData(editData)
   }
@@ -75,6 +74,9 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
     boxShadow: 24,
     p: 4
   }
+  if (!listData?.length) {
+    return <UiSkeleton />
+  }
 
   return (
     <Fragment>
@@ -84,7 +86,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <th className='px-4 py-3'>Meeting Name</th>
-                <th className='px-4 py-3'>Meeting Type</th> 
+                <th className='px-4 py-3'>Meeting Type</th>
                 <th className='px-4 py-3'>Created By</th>
                 <th className='px-4 py-3'>Created At</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
@@ -96,14 +98,20 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
 
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.meetingName.substring(0, 30)}...</td>
-                    <td className='px-4 py-3 text-sm'>{meetingType?.title}</td> 
+                    <td className='px-4 py-3 text-sm'>
+                      <Box sx={{ width: '200px', whiteSpace: 'normal' }}>
+                        {data?.meetingName.substring(0, 100).length < data?.meetingName.length
+                          ? data?.meetingName.substring(0, 100) + '...'
+                          : data?.meetingName.substring(0, 100)}
+                      </Box>
+                    </td>
+                    <td className='px-4 py-3 text-sm'>{meetingType?.title}</td>
                     <td className='px-4 py-3 text-sm'>{data.created_by?.name}</td>
                     <td className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.created_at)}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
-                        <Link href={`/meeting-summery/${data?.id}`}>
+                        <Link href={`/meeting-summery/${data?.id}`} passHref>
                           <Box
                             sx={{ cursor: 'pointer' }}
                             component={'a'}

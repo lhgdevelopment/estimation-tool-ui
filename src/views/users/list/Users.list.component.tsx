@@ -1,8 +1,9 @@
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
+import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TUsersComponent, promptsTypeList } from '../Users.decorator'
+import { TUsersComponent } from '../Users.decorator'
 
 export default function UsersListComponent(props: TUsersComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
@@ -58,6 +59,10 @@ export default function UsersListComponent(props: TUsersComponent) {
     getList(newPage)
   }
 
+  if (!listData?.length) {
+    return <UiSkeleton />
+  }
+
   return (
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
@@ -66,17 +71,16 @@ export default function UsersListComponent(props: TUsersComponent) {
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <th className='px-4 py-3'>Name</th>
-                <th className='px-4 py-3'>Email</th> 
+                <th className='px-4 py-3'>Email</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
             <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
-              {listData?.map((data: any, index: number) => { 
-
+              {listData?.map((data: any, index: number) => {
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.email}</td> 
+                    <td className='px-4 py-3 text-sm'>{data?.email}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>

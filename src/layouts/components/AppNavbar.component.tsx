@@ -26,28 +26,27 @@ export default function AppNavbarComponent() {
           </Box>
           <Box component={'ul'} className='mt-6'>
             <Box component={'li'} className='relative px-6 py-3'>
-              <Link href={'/'} passHref>
-                <Box
-                  component={'a'}
-                  className='inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200'
+              <Box
+                component={'a'}
+                href={'/'}
+                className='inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200'
+              >
+                <svg
+                  className='w-5 h-5'
+                  aria-hidden='true'
+                  fill='none'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  viewBox='0 0 24 24'
+                  stroke='currentColor'
                 >
-                  <svg
-                    className='w-5 h-5'
-                    aria-hidden='true'
-                    fill='none'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                  >
-                    <path d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'></path>
-                  </svg>
-                  <Box component={'span'} className='ml-4'>
-                    Dashboard
-                  </Box>
+                  <path d='M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'></path>
+                </svg>
+                <Box component={'span'} className='ml-4'>
+                  Dashboard
                 </Box>
-              </Link>
+              </Box>
             </Box>
           </Box>
           <Box component={'ul'}>
@@ -93,11 +92,9 @@ export default function AppNavbarComponent() {
                             router.pathname == subNav.path ? 'text-gray-800' : ''
                           }`}
                         >
-                          <Link href={subNav.path ? subNav.path : ''} passHref>
-                            <Box component={'a'} className='w-full'>
-                              {subNav.title}
-                            </Box>
-                          </Link>
+                          <Box component={'a'} className='w-full' href={subNav.path ? subNav.path : ''}>
+                            {subNav.title}
+                          </Box>
                         </Box>
                       ))}
                     </Box>
@@ -113,19 +110,18 @@ export default function AppNavbarComponent() {
                     ></Box>
                   )}
 
-                  <Link href={nav.path ? nav.path : ''} passHref>
-                    <Box
-                      component={'a'}
-                      className={`inline-flex items-center w-full text-sm font-semibold  transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100 ${
-                        router.pathname == nav.path ? 'text-gray-800' : ''
-                      }`}
-                    >
-                      {React.createElement(nav.icon ? nav.icon : HomeOutline)}
-                      <Box component={'span'} className='ml-4'>
-                        {nav.title}
-                      </Box>
+                  <Box
+                    component={'a'}
+                    href={nav.path ? nav.path : ''}
+                    className={`inline-flex items-center w-full text-sm font-semibold  transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100 ${
+                      router.pathname == nav.path ? 'text-gray-800' : ''
+                    }`}
+                  >
+                    {React.createElement(nav.icon ? nav.icon : HomeOutline)}
+                    <Box component={'span'} className='ml-4'>
+                      {nav.title}
                     </Box>
-                  </Link>
+                  </Box>
                 </Box>
               )
             )}
