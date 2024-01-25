@@ -1,6 +1,7 @@
-import { Box } from '@mui/material'
+import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
+import { TableSx } from 'src/@core/theme/tableStyle'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TPromptsComponent, promptsTypeList } from '../Prompts.decorator'
@@ -9,6 +10,10 @@ export default function PromptsListComponent(props: TPromptsComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [expendedRow, setExpended] = useState('')
+  const handleRowExpendable = (id: any) => {
+    setExpended(prevState => id)
+  }
 
   const getList = (page = 1) => {
     apiRequest.get(`/prompts?page=${page}`).then(res => {
@@ -67,66 +72,94 @@ export default function PromptsListComponent(props: TPromptsComponent) {
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
         <Box className='w-full overflow-x-auto'>
-          <table className='w-full whitespace-no-wrap'>
-            <thead>
-              <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                <th className='px-4 py-3'>Name</th>
-                <th className='px-4 py-3'>Type</th>
-                <th className='px-4 py-3'>Prompt</th>
-                <th className='px-4 py-3 text-right'>Actions</th>
-              </tr>
-            </thead>
-            <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
-              {listData?.map((data: any, index: number) => {
-                const promptsType = promptsTypeList.find(type => type.id === data?.type)
+          <TableContainer component={Paper}>
+            <Table className='w-full whitespace-no-wrap' sx={TableSx}>
+              <TableHead>
+                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+                  <TableCell className='px-4 py-3'>Name</TableCell>
+                  <TableCell className='px-4 py-3'>Type</TableCell>
+                  <TableCell className='px-4 py-3'>Prompt</TableCell>
+                  <TableCell className='px-4 py-3 text-right'>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
+                {listData?.map((data: any, index: number) => {
+                  const promptsType: any = promptsTypeList.find(type => type.id === data?.type)
 
-                return (
-                  <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{promptsType?.title}</td>
-                    <td className='px-4 py-3 text-sm'>
-                      <Box sx={{ width: '200px', whiteSpace: 'normal' }}>
-                        {data?.prompt.substring(0, 100).length < data?.prompt.length
-                          ? data?.prompt.substring(0, 100) + '...'
-                          : data?.prompt.substring(0, 100)}
-                      </Box>
-                    </td>
+                  return (
+                    <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
+                      <TableCell className='px-4 py-3 text-sm'>{data?.name}</TableCell>
+                      <TableCell className='px-4 py-3 text-sm'>{promptsType?.title}</TableCell>
 
-                    <td className='px-4 py-3'>
-                      <Box className='flex items-center justify-end space-x-4 text-sm'>
-                        <button
-                          onClick={() => {
-                            onEdit(data['id'])
-                          }}
-                          className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                          aria-label='Edit'
-                        >
-                          <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
-                            <path d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'></path>
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => {
-                            onDelete(data['id'])
-                          }}
-                          className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                          aria-label='Delete'
-                        >
-                          <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
-                            <path
-                              fillRule='evenodd'
-                              d='M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z'
-                              clipRule='evenodd'
-                            ></path>
-                          </svg>
-                        </button>
-                      </Box>
-                    </td>
-                  </Box>
-                )
-              })}
-            </tbody>
-          </table>
+                      <TableCell className='px-4 py-3 text-sm w-200 expendable-row'>
+                        <Box className='expendable-row-inner'>
+                          {expendedRow == `row-${index}` ? (
+                            <Box className='expended-row-box'>{data?.prompt}</Box>
+                          ) : (
+                            <Box className='expendable-row-box'>{data?.prompt}</Box>
+                          )}
+                          {String(data?.prompt).length > 75 ? (
+                            expendedRow == `row-${index}` ? (
+                              <Button
+                                onClick={() => {
+                                  handleRowExpendable('')
+                                }}
+                                className='see-more-btn'
+                              >
+                                Show Less
+                              </Button>
+                            ) : (
+                              <Button
+                                onClick={() => {
+                                  handleRowExpendable(`row-${index}`)
+                                }}
+                                className='see-more-btn'
+                              >
+                                See More...
+                              </Button>
+                            )
+                          ) : (
+                            <></>
+                          )}
+                        </Box>
+                      </TableCell>
+
+                      <TableCell className='px-4 py-3'>
+                        <Box className='flex items-center justify-end space-x-4 text-sm'>
+                          <button
+                            onClick={() => {
+                              onEdit(data['id'])
+                            }}
+                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                            aria-label='Edit'
+                          >
+                            <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
+                              <path d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'></path>
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => {
+                              onDelete(data['id'])
+                            }}
+                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                            aria-label='Delete'
+                          >
+                            <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
+                              <path
+                                fillRule='evenodd'
+                                d='M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z'
+                                clipRule='evenodd'
+                              ></path>
+                            </svg>
+                          </button>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
           {!listData?.length && (
             <Box
               sx={{
