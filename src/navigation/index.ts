@@ -59,6 +59,7 @@ const navigation: TNavigation[] = [
   {
     title: 'Services',
     icon: SettingsIcon,
+    path: 'services',
     subMenu: [
       {
         title: 'Service',
@@ -90,6 +91,7 @@ const navigation: TNavigation[] = [
   {
     title: 'Setings',
     icon: SettingsIcon,
+    path: 'settings',
     subMenu: [
       {
         title: 'Meeting Type',
