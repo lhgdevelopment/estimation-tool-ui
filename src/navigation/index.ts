@@ -1,6 +1,7 @@
 // ** Icon imports
 import BiotechIcon from '@mui/icons-material/Biotech'
 import GroupsIcon from '@mui/icons-material/Groups'
+import LinkIcon from '@mui/icons-material/Link'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
 import { SvgIconTypeMap } from '@mui/material'
@@ -109,6 +110,29 @@ const navigation: TNavigation[] = [
     title: 'Users',
     icon: GroupsIcon,
     path: '/users'
+  },
+
+  {
+    title: 'Referance Links',
+    icon: LinkIcon,
+    path: 'settings',
+    subMenu: [
+      {
+        title: 'Windmill',
+        icon: GroupsIcon,
+        path: 'https://search.vercel.app/'
+      },
+      {
+        title: 'MUI',
+        icon: GroupsIcon,
+        path: 'https://mui.com/material-ui/all-components/'
+      },
+      {
+        title: 'MUI Icons',
+        icon: GroupsIcon,
+        path: 'https://mui.com/material-ui/material-icons/'
+      }
+    ]
   }
 ]
 

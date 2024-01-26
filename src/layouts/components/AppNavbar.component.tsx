@@ -82,7 +82,7 @@ export default function AppNavbarComponent() {
                       className={`p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900 ${
                         dropdownOpen === 'submenu_' + index
                           ? ''
-                          : router.pathname.indexOf(`${nav.path}`) !== -1
+                          : nav.subMenu?.filter(subMenu => subMenu.path === router.pathname).length
                           ? ''
                           : 'hidden'
                       }`}
@@ -96,7 +96,12 @@ export default function AppNavbarComponent() {
                             router.pathname == subNav.path ? 'text-gray-800' : ''
                           }`}
                         >
-                          <Box component={'a'} className='w-full' href={subNav.path ? subNav.path : ''}>
+                          <Box
+                            component={'a'}
+                            className='w-full'
+                            href={subNav.path ? subNav.path : ''}
+                            target={subNav.path?.indexOf('http') !== -1 ? '_blank' : ''}
+                          >
                             {subNav.title}
                           </Box>
                         </Box>
