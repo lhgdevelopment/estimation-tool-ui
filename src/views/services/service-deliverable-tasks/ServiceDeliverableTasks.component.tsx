@@ -12,7 +12,7 @@ export default function ServiceDeliverableTasksComponent() {
     <>
       <Box className='container grid px-6 mx-auto'>
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
-          Service Deliverable Tasks
+          Deliverable Tasks
         </Box>
         <ServiceDeliverableTasksFormComponent
           setEditDataId={setEditDataId}

@@ -3,7 +3,8 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
@@ -11,6 +12,9 @@ import { TServiceScopesComponent } from '../ServiceScopes.decorator'
 
 export default function ServiceScopesFormComponent(props: TServiceScopesComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
+
+  const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
+  const nameEditorRef = useRef(null)
 
   const defaultData = {
     name: '',
@@ -21,6 +25,13 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
   const [serviceGroupUrl, setServiceGroupUrl] = useState('service-groups')
 
   const [formData, setFormData] = useState(defaultData)
+
+  const handleReachText = (value: string, field: string) => {
+    setFormData({
+      ...formData,
+      [field]: value
+    })
+  }
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -104,18 +115,6 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Name</span>
-                <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Examples: Logo'
-                  name='name'
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-              </label>
-            </Box>
-            <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Service</span>
                 <Dropdown
                   url={'services'}
@@ -128,7 +127,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service Group</span>
+                <span className='text-gray-700 dark:text-gray-400'>Group</span>
                 <Dropdown
                   url={serviceGroupUrl}
                   name='serviceGroupId'
@@ -137,6 +136,19 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
                   optionConfig={{ id: 'id', title: 'name' }}
                 />
               </label>
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '100%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+              </label>
+              <JoditEditor
+                ref={nameEditorRef}
+                config={{ enter: 'br' }}
+                value={formData.name}
+                onBlur={newContent => handleReachText(newContent, 'name')}
+              />
             </Box>
           </Box>
           <Box className='my-4 text-right'>

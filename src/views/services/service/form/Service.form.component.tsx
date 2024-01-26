@@ -3,7 +3,8 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TServiceComponent } from '../Service.decorator'
@@ -11,11 +12,21 @@ import { TServiceComponent } from '../Service.decorator'
 export default function ServiceFormComponent(props: TServiceComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
+  const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
+  const nameEditorRef = useRef(null)
+
   const defaultData = {
     name: ''
   }
 
   const [formData, setFormData] = useState(defaultData)
+
+  const handleReachText = (value: string, field: string) => {
+    setFormData({
+      ...formData,
+      [field]: value
+    })
+  }
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -79,17 +90,18 @@ export default function ServiceFormComponent(props: TServiceComponent) {
     <Fragment>
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
-          <Box>
-            <label className='block text-sm'>
-              <span className='text-gray-700 dark:text-gray-400'>Name</span>
-              <input
-                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                placeholder='Examples: Header, Footer, etc'
-                name='name'
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '100%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+              </label>
+              <JoditEditor
+                ref={nameEditorRef}
+                config={{ enter: 'br' }}
                 value={formData.name}
-                onChange={handleChange}
+                onBlur={newContent => handleReachText(newContent, 'name')}
               />
-            </label>
+            </Box>
           </Box>
           <Box className='my-4 text-right'>
             <button
