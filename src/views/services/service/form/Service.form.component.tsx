@@ -10,9 +10,11 @@ import Swal from 'sweetalert2'
 import { TServiceComponent } from '../Service.decorator'
 
 export default function ServiceFormComponent(props: TServiceComponent) {
-  const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
-  const editor = useRef(null)
+
+  const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
+  const nameEditorRef = useRef(null)
+
   const defaultData = {
     name: ''
   }
@@ -88,16 +90,18 @@ export default function ServiceFormComponent(props: TServiceComponent) {
     <Fragment>
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
-          <Box>
-            <label className='block text-sm'>
-              <span className='text-gray-700 dark:text-gray-400'>Name</span>
-            </label>
-            <JoditEditor
-              ref={editor}
-              config={{}}
-              value={formData.name}
-              onChange={newContent => handleReachText(newContent, 'name')}
-            />
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '100%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+              </label>
+              <JoditEditor
+                ref={nameEditorRef}
+                config={{ enter: 'br' }}
+                value={formData.name}
+                onBlur={newContent => handleReachText(newContent, 'name')}
+              />
+            </Box>
           </Box>
           <Box className='my-4 text-right'>
             <button

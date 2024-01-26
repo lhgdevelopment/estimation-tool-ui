@@ -153,7 +153,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
             </Box>
             <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service Group</span>
+                <span className='text-gray-700 dark:text-gray-400'>Group</span>
                 <Dropdown
                   url={serviceGroupUrl}
                   name='serviceGroupId'
@@ -165,7 +165,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
             </Box>
             <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service Scope</span>
+                <span className='text-gray-700 dark:text-gray-400'>Scope</span>
                 <Dropdown
                   url={serviceScopeUrl}
                   name='serviceScopeId'
@@ -179,7 +179,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
           <Box sx={{ display: 'flex', gap: 5 }}>
             <Box sx={{ width: '33%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service Deliverable</span>
+                <span className='text-gray-700 dark:text-gray-400'>Deliverable</span>
                 <Dropdown
                   url={serviceDeliverableUrl}
                   name='serviceDeliverableId'
