@@ -14,7 +14,6 @@ class CustomDocument extends Document {
   render() {
     return (
       <Html lang='en'>
-        {/* @ts-ignore*/}
         <Head>
           <link rel='preconnect' href='https://fonts.googleapis.com' />
           <link rel='preconnect' href='https://fonts.gstatic.com' />
@@ -32,7 +31,6 @@ class CustomDocument extends Document {
         </Head>
         <body>
           <Main />
-          {/* @ts-ignore*/}
           <NextScript />
         </body>
       </Html>

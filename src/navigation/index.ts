@@ -120,7 +120,7 @@ const navigation: TNavigation[] = [
       {
         title: 'Windmill',
         icon: GroupsIcon,
-        path: 'https://search.vercel.app/'
+        path: 'https://windmill-dashboard.vercel.app/'
       },
       {
         title: 'MUI',
