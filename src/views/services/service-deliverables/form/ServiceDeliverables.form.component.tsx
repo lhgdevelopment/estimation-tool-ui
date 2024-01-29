@@ -91,12 +91,12 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
   useEffect(() => {
     setFormData({
       name: editData?.['name'],
-      serviceGroupId: editData?.['serviceGroupId'],
+      serviceGroupId: editData?.['service_scope']?.['serviceGroupId'],
       serviceScopeId: editData?.['serviceScopeId'],
-      serviceId: editData?.['serviceId']
+      serviceId: editData?.['service_scope']?.['service_group']?.['serviceId']
     })
   }, [editDataId, editData])
-
+  console.log(editData)
   useEffect(() => {
     if (formData.serviceGroupId) {
       setServiceScopeUrl(`service-scopes?serviceGroupId=${formData.serviceGroupId}`)
