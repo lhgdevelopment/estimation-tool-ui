@@ -10,7 +10,6 @@ import navigation from 'src/navigation'
 export default function AppNavbarComponent() {
   const router = useRouter()
   const [dropdownOpen, setDropdownOpen] = useState('')
-  console.log(router)
 
   return (
     <Fragment>
@@ -53,7 +52,6 @@ export default function AppNavbarComponent() {
             {navigation?.map((nav, index) =>
               nav.subMenu?.length ? (
                 <Box component={'li'} key={index} className='relative px-6 py-3'>
-                  <></>
                   {router.pathname.split('/')?.[1] == (nav?.subMenu?.[0]?.path || '').split('/')?.[1] && (
                     <Box
                       component={'span'}

@@ -118,14 +118,15 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   useEffect(() => {
     setFormData({
       name: editData?.['name'],
-      serviceId: editData?.['serviceId'],
-      serviceGroupId: editData?.['serviceGroupId'],
-      serviceScopeId: editData?.['serviceScopeId'],
       serviceDeliverableId: editData?.['serviceDeliverableId'],
+      serviceScopeId: editData?.['service_deliverable']?.['serviceScopeId'],
+      serviceGroupId: editData?.['service_deliverable']?.['service_scope']?.['serviceGroupId'],
+      serviceId: editData?.['service_deliverable']?.['service_scope']?.['service_group']?.['serviceId'],
       cost: editData?.['cost'],
       description: editData?.['description']
     })
   }, [editDataId, editData])
+  console.log(editData)
 
   const onClear = () => {
     setFormData(prevState => ({ ...defaultData }))
@@ -138,7 +139,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '33%' }}>
+            <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Service</span>
                 <Dropdown
@@ -150,7 +151,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                 />
               </label>
             </Box>
-            <Box sx={{ width: '33%' }}>
+            <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Group</span>
                 <Dropdown
@@ -162,7 +163,9 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                 />
               </label>
             </Box>
-            <Box sx={{ width: '33%' }}>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Scope</span>
                 <Dropdown
@@ -174,7 +177,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                 />
               </label>
             </Box>
-            <Box sx={{ width: '33%' }}>
+            <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Deliverable</span>
                 <Dropdown

@@ -31,7 +31,7 @@ export function Dropdown(props: ISelectProps) {
   const [menuItems, setMenuItems] = useState<{ title: string; id: string | number }[]>([])
 
   const getList = () => {
-    if (!isEnumField && url !='') {
+    if (!isEnumField && url != '') {
       apiRequest.get(`/${url}`).then(res => {
         setMenuItems(
           res.data?.map((item: any) => ({
@@ -51,9 +51,9 @@ export function Dropdown(props: ISelectProps) {
 
   useEffect(() => {
     if (url) {
-      getList();
+      getList()
     }
-  }, [url]);
+  }, [url])
 
   return (
     <FormControl fullWidth>
@@ -64,6 +64,7 @@ export function Dropdown(props: ISelectProps) {
         multiple={multiple}
         sx={{ mt: 1, height: 38 }}
         displayEmpty
+        autoWidth
       >
         {placeholder && (
           <MenuItem value='' disabled>

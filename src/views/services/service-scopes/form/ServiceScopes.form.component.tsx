@@ -97,7 +97,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
   useEffect(() => {
     setFormData({
       name: editData?.['name'],
-      serviceId: editData?.['serviceId'],
+      serviceId: editData?.['service_group']?.['serviceId'],
       serviceGroupId: editData?.['serviceGroupId']
     })
   }, [editDataId, editData])

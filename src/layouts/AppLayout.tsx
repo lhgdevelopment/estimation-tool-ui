@@ -1,15 +1,14 @@
 // ** React Imports
 // ** MUI Imports
-import { Box, CircularProgress } from '@mui/material'
+import { Box } from '@mui/material'
 import { Theme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 
 // ** Hook Import
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useSettings } from 'src/@core/hooks/useSettings'
 import { loginUser } from 'src/@core/store/actions/userActions'
 import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -24,13 +23,12 @@ interface Props {
 
 const AppLayout = ({ children }: Props) => {
   // ** Hooks
-  const { settings, saveSettings } = useSettings()
   const isDarkTheme = useSelector((state: RootState) => state.theme.isDark)
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'))
+  const [token, setToken] = useState(Cookies.get('accessToken'))
 
   const router = useRouter()
   const dispatch = useDispatch()
-  const token = Cookies.get('accessToken')
 
   useEffect(() => {
     if (!token) {
@@ -41,7 +39,6 @@ const AppLayout = ({ children }: Props) => {
       apiRequest
         .get('/user')
         .then(res => {
-          console.log(res)
           dispatch(loginUser(res))
         })
         .catch(() => {
@@ -52,26 +49,20 @@ const AppLayout = ({ children }: Props) => {
   }, [])
 
   if (!token) {
-    return (
-      <Box sx={{ display: 'flex' }}>
-        <CircularProgress />
-      </Box>
-    )
+    return <></>
   }
 
   return (
-    <>
-      <Box className={`flex h-screen bg-gray-50 dark:bg-gray-900 ${isDarkTheme ? 'theme-dark' : ''}`}>
-        {/* <!-- Desktop sidebar --> */}
-        <AppNavbarComponent />
-        <Box className='flex flex-col flex-1' sx={{ marginLeft: '250px', width: '100%' }}>
-          <AppHeaderComponent />
-          <Box component={'main'} className='h-full pb-16 overflow-y-auto'>
-            {children}
-          </Box>
+    <Box className={`flex h-screen bg-gray-50 dark:bg-gray-900 ${isDarkTheme ? 'theme-dark' : ''}`}>
+      {/* <!-- Desktop sidebar --> */}
+      <AppNavbarComponent />
+      <Box className='flex flex-col flex-1' sx={{ marginLeft: '250px', width: '100%' }}>
+        <AppHeaderComponent />
+        <Box component={'main'} className='h-full pb-16 overflow-y-auto'>
+          {children}
         </Box>
       </Box>
-    </>
+    </Box>
   )
 }
 
