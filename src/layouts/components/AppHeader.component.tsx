@@ -3,15 +3,21 @@ import { Box } from '@mui/material'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import { Fragment, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { isDarkTheme } from 'src/@core/store/actions/userActions'
+import { RootState } from 'src/@core/store/reducers'
 
 export default function AppHeaderComponent() {
   const dispatch = useDispatch()
   const router = useRouter()
-  const [isDark, setIsDark] = useState(false)
+  const isDark = useSelector((state: RootState) => state.theme.isDark)
   const [isOpenProfileDropdown, setIsOpenProfileDropdown] = useState(false)
   const [isOpenNotificationDropdown, setIsOpenNotificationDropdown] = useState(false)
+
+  const toggleTheme = () => {
+    Cookies.set('isDark', (!isDark).toString())
+    dispatch(isDarkTheme(!isDark))
+  }
 
   const handleLogout = () => {
     Cookies.remove('accessToken')
@@ -37,16 +43,7 @@ export default function AppHeaderComponent() {
           <Box component={'ul'} className='flex items-center flex-shrink-0 space-x-6'>
             {/* <!-- Theme toggler --> */}
             <Box component={'li'} className='flex'>
-              <Box
-                component={'button'}
-                className='rounded-md'
-                aria-label='Toggle color mode'
-                onClick={() => {
-                  setIsDark(prevState => !prevState)
-                  Cookies.set('isDark', (!isDark).toString())
-                  dispatch(isDarkTheme(!isDark))
-                }}
-              >
+              <Box component={'button'} className='rounded-md' aria-label='Toggle color mode' onClick={toggleTheme}>
                 {!isDark && (
                   <Box>
                     <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
