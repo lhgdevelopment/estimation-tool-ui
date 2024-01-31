@@ -52,9 +52,9 @@ export default function MeetingSummeryDetailsComponent() {
                 textAlign: 'center',
                 margin: '8px',
                 lineHeight: 'normal',
-                color: '#6c2bd9',
                 padding: '15px'
               }}
+              className={'details-page-title'}
             >
               Meeting Name: {detailsData?.['meetingName']}
             </Box>

@@ -65,9 +65,9 @@ export default function ProjectSOWDetailsComponent() {
               textAlign: 'center',
               margin: '8px',
               lineHeight: 'normal',
-              color: '#6c2bd9',
               padding: '15px'
             }}
+            className={'details-page-title'}
           >
             {detailsData?.['meeting_transcript']?.['projectName']}
           </Box>

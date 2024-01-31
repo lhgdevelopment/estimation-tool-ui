@@ -1,6 +1,9 @@
 import { SxProps } from '@mui/material'
 
 export const TableSx: SxProps = {
+  '& .MuiTableCell-body, .MuiTableCell-head': {
+    color: 'inherit !important'
+  },
   '& .expendable-row': {
     width: '40%',
     maxWidth: '500px',

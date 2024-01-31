@@ -5,7 +5,9 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Dropdown } from 'src/@core/components/dropdown'
+import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TServiceGroupsComponent } from '../ServiceGroups.decorator'
@@ -14,6 +16,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
+  const isDark = useSelector((state: RootState) => state.theme.isDark)
   const nameEditorRef = useRef(null)
 
   const defaultData = {
@@ -121,7 +124,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
               </label>
               <JoditEditor
                 ref={nameEditorRef}
-                config={{ enter: 'br' }}
+                config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
                 value={formData.name}
                 onBlur={newContent => handleReachText(newContent, 'name')}
               />
