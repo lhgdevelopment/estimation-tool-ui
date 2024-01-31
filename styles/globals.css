@@ -184,3 +184,35 @@ button:focus {
     transform: rotate(360deg);
   }
 }
+
+.MuiFormControl-root .MuiInputBase-formControl .MuiOutlinedInput-notchedOutline {
+  border-color: #e2e8f0;
+}
+.theme-dark .MuiFormControl-root .MuiInputBase-formControl .MuiOutlinedInput-notchedOutline {
+  border-color: #1a1c23;
+}
+.theme-dark .MuiInputBase-formControl {
+  color: #9e9e9e !important;
+  background: #24262d;
+}
+.theme-dark .MuiStepButton-root .MuiStepLabel-labelContainer .MuiStepLabel-label {
+  color: #9e9e9e !important;
+}
+
+.theme-dark .MuiStepButton-root .Mui-active {
+  color: #9333ea;
+}
+.theme-dark .md-editor-preview,
+.theme-dark .md-editor-previewOnly {
+  color: #9e9e9e;
+  background: #24262d;
+}
+.theme-dark .MuiAccordionSummary-expandIconWrapper {
+  color: #9e9e9e;
+}
+.theme-dark .details-page-title {
+  color: #9e9e9e;
+}
+.theme-dark .MuiAccordion-root {
+  background: #24262d;
+}
