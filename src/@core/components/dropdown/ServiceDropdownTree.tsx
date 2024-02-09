@@ -45,8 +45,8 @@ export function ServiceDropdownTree(props: ISelectProps) {
   const containsText = (text: string, searchText: string) =>
     text?.toString().toLowerCase().indexOf(searchText?.toString().toLowerCase()) > -1
 
-  const filterOptionsByText = (options, searchText) => {
-    return options.filter(option => {
+  const filterOptionsByText = (options: any, searchText: string) => {
+    return options.filter((option: any) => {
       if (containsText(option.name, searchText)) {
         return true
       }
