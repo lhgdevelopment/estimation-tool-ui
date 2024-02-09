@@ -6,7 +6,7 @@ import { Box } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Dropdown } from 'src/@core/components/dropdown'
+import { ServiceDropdownTree } from 'src/@core/components/dropdown'
 import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
@@ -46,6 +46,8 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
   }
 
   const handleSelectChange = (e: any) => {
+    console.log(e)
+
     setFormData({
       ...formData,
       [e?.target?.name]: e?.target?.value
@@ -99,7 +101,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
       serviceId: editData?.['service_scope']?.['service_group']?.['serviceId']
     })
   }, [editDataId, editData])
-  console.log(editData)
+
   useEffect(() => {
     if (formData.serviceGroupId) {
       setServiceScopeUrl(`service-scopes?serviceGroupId=${formData.serviceGroupId}`)
@@ -127,39 +129,14 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '33%' }}>
+            <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service</span>
-                <Dropdown
-                  url={'services'}
-                  name='serviceId'
-                  value={formData.serviceId}
-                  onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
-                />
-              </label>
-            </Box>
-            <Box sx={{ width: '33%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Group</span>
-                <Dropdown
-                  url={serviceGroupUrl}
-                  name='serviceGroupId'
-                  value={formData.serviceGroupId}
-                  onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
-                />
-              </label>
-            </Box>
-            <Box sx={{ width: '33%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Scope</span>
-                <Dropdown
-                  url={serviceScopeUrl}
+                <span className='text-gray-700 dark:text-gray-400'>Service Scope</span>
+                <ServiceDropdownTree
                   name='serviceScopeId'
                   value={formData.serviceScopeId}
                   onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
+                  type='sows'
                 />
               </label>
             </Box>

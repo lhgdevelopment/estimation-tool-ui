@@ -45,16 +45,57 @@ export function ServiceDropdownTree(props: ISelectProps) {
   const containsText = (text: string, searchText: string) =>
     text?.toString().toLowerCase().indexOf(searchText?.toString().toLowerCase()) > -1
 
+  const filterOptionsByText = (options, searchText) => {
+    return options.filter(option => {
+      if (containsText(option.name, searchText)) {
+        return true
+      }
+      if (option.groups && option.groups.length > 0) {
+        const filteredGroups = filterOptionsByText(option.groups, searchText)
+        if (filteredGroups.length > 0) {
+          option.groups = filteredGroups
+
+          return true
+        }
+      }
+      if (option.sows && option.sows.length > 0) {
+        const filteredSows = filterOptionsByText(option.sows, searchText)
+        if (filteredSows.length > 0) {
+          option.sows = filteredSows
+
+          return true
+        }
+      }
+      if (option.deliverables && option.deliverables.length > 0) {
+        const filteredDeliverables = filterOptionsByText(option.deliverables, searchText)
+        if (filteredDeliverables.length > 0) {
+          option.deliverables = filteredDeliverables
+
+          return true
+        }
+      }
+      if (option.tasks && option.tasks.length > 0) {
+        const filteredTasks = filterOptionsByText(option.tasks, searchText)
+        if (filteredTasks.length > 0) {
+          option.tasks = filteredTasks
+
+          return true
+        }
+      }
+
+      return false
+    })
+  }
+
   useEffect(() => {
-    setOptionItems(initialOptionList.filter(item => containsText(item['title'], searchText)))
+    const filteredOptions = filterOptionsByText(initialOptionList, searchText)
+    setOptionItems(filteredOptions)
   }, [searchText])
 
   const selectOnOpen = () => {
     setOptionItems(initialOptionList)
     setSearchText('')
   }
-
-  console.log(optionItems)
 
   const listSubHeaderSx = { color: 'rgba(0, 0, 0, 0.5)', textTransform: 'none', lineHeight: '32px' }
   const menuItemSx = {
@@ -120,7 +161,7 @@ export function ServiceDropdownTree(props: ISelectProps) {
               serviceOption?.groups?.map((groupsOption: any, groupsOptionIndex: number) => (
                 <MenuItem
                   sx={{ ...listSubHeaderSx, ...{ pl: '32px' } }}
-                  value={groupsOptionIndex}
+                  value={groupsOption.id}
                   key={groupsOptionIndex}
                 >
                   {groupsOption.name}
@@ -140,7 +181,7 @@ export function ServiceDropdownTree(props: ISelectProps) {
                   groupsOption?.sows?.map((sowsOption: any, sowsOptionIndex: number) => (
                     <MenuItem
                       sx={{ ...listSubHeaderSx, ...{ pl: '48px' } }}
-                      value={sowsOptionIndex}
+                      value={sowsOption.id}
                       key={sowsOptionIndex}
                     >
                       {sowsOption.name}

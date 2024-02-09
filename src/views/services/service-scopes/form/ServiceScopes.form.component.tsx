@@ -6,7 +6,7 @@ import { Box } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Dropdown } from 'src/@core/components/dropdown'
+import { ServiceDropdownTree } from 'src/@core/components/dropdown'
 import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
@@ -116,27 +116,14 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service</span>
-                <Dropdown
-                  url={'services'}
-                  name='serviceId'
-                  value={formData.serviceId}
-                  onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
-                />
-              </label>
-            </Box>
-            <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Group</span>
-                <Dropdown
-                  url={serviceGroupUrl}
+                <span className='text-gray-700 dark:text-gray-400'>Service Group</span>
+                <ServiceDropdownTree
                   name='serviceGroupId'
                   value={formData.serviceGroupId}
                   onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
+                  type='groups'
                 />
               </label>
             </Box>

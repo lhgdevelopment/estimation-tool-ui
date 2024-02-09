@@ -2,11 +2,10 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Dropdown } from 'src/@core/components/dropdown'
 import { ServiceDropdownTree } from 'src/@core/components/dropdown/ServiceDropdownTree'
 import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -145,51 +144,19 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service</span>
-                <ServiceDropdownTree name='serviceId' value={formData.serviceId} onChange={handleSelectChange} />
-              </label>
-            </Box>
-            <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Group</span>
-                <Dropdown
-                  url={serviceGroupUrl}
-                  name='serviceGroupId'
-                  value={formData.serviceGroupId}
-                  onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
-                />
-              </label>
-            </Box>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Scope</span>
-                <Dropdown
-                  url={serviceScopeUrl}
-                  name='serviceScopeId'
-                  value={formData.serviceScopeId}
-                  onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
-                />
-              </label>
-            </Box>
-            <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Deliverable</span>
-                <Dropdown
-                  url={serviceDeliverableUrl}
+                <span className='text-gray-700 dark:text-gray-400'>Service Deliverable</span>
+                <ServiceDropdownTree
                   name='serviceDeliverableId'
                   value={formData.serviceDeliverableId}
                   onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
+                  type='deliverables'
                 />
               </label>
             </Box>
           </Box>
+
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
@@ -207,7 +174,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Cost</span>
-                <input
+                <TextField
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Examples: 50.00'
                   name='cost'
@@ -219,7 +186,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Description</span>
-                <input
+                <TextField
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Examples: Company logo for header'
                   name='description'
