@@ -7,7 +7,6 @@ import { TServiceComponent } from '../Service.decorator'
 
 export default function ServiceListComponent(props: TServiceComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
-
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
@@ -72,14 +71,22 @@ export default function ServiceListComponent(props: TServiceComponent) {
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <th className='px-4 py-3'>Name</th>
+                <th className='px-4 py-3'>Project Type</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
             <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
               {listData?.map((data: any, index: number) => {
                 return (
-                  <tr key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.name}</td>
+                  <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
+                    <td className='px-4 py-3 text-sm'>
+                      <Box sx={{ width: '200px', whiteSpace: 'normal' }}>
+                        {data?.name.substring(0, 100).length < data?.name.length
+                          ? data?.name.substring(0, 100) + '...'
+                          : data?.name.substring(0, 100)}
+                      </Box>
+                    </td>
+                    <td className='px-4 py-3 text-sm'>{data?.project_type?.name}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>
@@ -111,7 +118,7 @@ export default function ServiceListComponent(props: TServiceComponent) {
                         </button>
                       </Box>
                     </td>
-                  </tr>
+                  </Box>
                 )
               })}
             </tbody>

@@ -41,7 +41,7 @@ export function Dropdown(props: ISelectProps) {
 
   const getList = () => {
     if (!isEnumField && url !== '') {
-      apiRequest.get(`/${url}`).then(res => {
+      apiRequest.get(`/${url}?per_page=1000`).then(res => {
         const fetchedOptions =
           res.data?.map((item: any) => ({
             title: item?.[optionConfig?.title],

@@ -6,6 +6,7 @@ import { Box } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Dropdown } from 'src/@core/components/dropdown'
 import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
@@ -19,10 +20,9 @@ export default function ServiceFormComponent(props: TServiceComponent) {
   const nameEditorRef = useRef(null)
 
   const defaultData = {
-    name: ''
+    name: '',
+    projectTypeId: ''
   }
-
-  const [formData, setFormData] = useState(defaultData)
 
   const handleReachText = (value: string, field: string) => {
     setFormData({
@@ -31,10 +31,19 @@ export default function ServiceFormComponent(props: TServiceComponent) {
     })
   }
 
+  const [formData, setFormData] = useState(defaultData)
+
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
+    })
+  }
+
+  const handleSelectChange = (e: any) => {
+    setFormData({
+      ...formData,
+      [e?.target?.name]: e?.target?.value
     })
   }
 
@@ -79,7 +88,8 @@ export default function ServiceFormComponent(props: TServiceComponent) {
 
   useEffect(() => {
     setFormData({
-      name: editData?.['name']
+      name: editData?.['name'],
+      projectTypeId: editData?.['projectTypeId']
     })
   }, [editDataId, editData])
 
@@ -93,6 +103,20 @@ export default function ServiceFormComponent(props: TServiceComponent) {
     <Fragment>
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '100%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
+                <Dropdown
+                  url={'project-type'}
+                  name='projectTypeId'
+                  value={formData.projectTypeId}
+                  onChange={handleSelectChange}
+                  optionConfig={{ id: 'id', title: 'name' }}
+                />
+              </label>
+            </Box>
+          </Box>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>

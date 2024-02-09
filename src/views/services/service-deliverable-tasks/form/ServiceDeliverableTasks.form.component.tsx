@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Dropdown } from 'src/@core/components/dropdown'
+import { ServiceDropdownTree } from 'src/@core/components/dropdown/ServiceDropdownTree'
 import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
@@ -49,6 +50,8 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   }
 
   const handleSelectChange = (e: any) => {
+    console.log(e)
+
     setFormData({
       ...formData,
       [e?.target?.name]: e?.target?.value
@@ -145,13 +148,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Service</span>
-                <Dropdown
-                  url={'services'}
-                  name='serviceId'
-                  value={formData.serviceId}
-                  onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
-                />
+                <ServiceDropdownTree name='serviceId' value={formData.serviceId} onChange={handleSelectChange} />
               </label>
             </Box>
             <Box sx={{ width: '50%' }}>

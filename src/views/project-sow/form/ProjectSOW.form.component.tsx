@@ -14,7 +14,7 @@ import MdPreviewTitle from 'src/@core/components/md-preview-title'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TProjectSOWFormComponent, projectTypeList } from '../ProjectSOW.decorator'
+import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
 
 const steps = ['Transcript', 'Summery', 'Problems & Goals', 'Project Overview', 'SOW', 'Deliverables']
 
@@ -32,7 +32,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const projectSOWDefaultData = {
     transcriptId: '',
     transcriptText: '',
-    projectType: '',
+    projectTypeId: '',
     projectName: '',
     company: '',
     clientPhone: '',
@@ -365,7 +365,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       setProjectSOWFormData({
         transcriptId: res?.data?.id,
         transcriptText: res?.data?.['meeting_transcript']?.['transcriptText'],
-        projectType: res?.data?.['meeting_transcript']?.['projectType'],
+        projectTypeId: res?.data?.['meeting_transcript']?.['projectTypeId'],
         projectName: res?.data?.['meeting_transcript']?.['projectName'],
         company: res?.data?.['meeting_transcript']?.['company'],
         clientEmail: res?.data?.['meeting_transcript']?.['clientEmail'],
@@ -503,11 +503,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       <label className='block text-sm'>
                         <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
                         <Dropdown
-                          isEnumField
-                          enumList={projectTypeList}
-                          name='projectType'
-                          value={projectSOWFormData.projectType}
+                          url={'project-type'}
+                          name='projectTypeId'
+                          value={projectSOWFormData.projectTypeId}
                           onChange={handleSelectChange}
+                          optionConfig={{ id: 'id', title: 'name' }}
                         />
                       </label>
                     </Box>
@@ -516,13 +516,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
                         <Dropdown
                           url={'project-type'}
-                          name='projectType'
-                          value={projectSOWFormData.projectType}
+                          name='projectTypeId'
+                          value={projectSOWFormData.projectTypeId}
                           onChange={handleSelectChange}
                           optionConfig={{ id: 'id', title: 'name' }}
                         />
-                        {!!errorMessage?.['projectType'] &&
-                          errorMessage?.['projectType']?.map((message: any, index: number) => {
+                        {!!errorMessage?.['projectTypeId'] &&
+                          errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
                             return (
                               <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                 {message}
