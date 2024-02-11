@@ -12,9 +12,9 @@ import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 
 import DeleteIcon from '@mui/icons-material/Delete'
-import { TServiceGroupsComponent } from '../../service-scopes/ServiceGroups.decorator'
+import { TServiceScopesComponent } from '../ServiceScopes.decorator'
 
-export default function ServiceGroupsFormComponent(props: TServiceGroupsComponent) {
+export default function ServiceScopesFormComponent(props: TServiceScopesComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
