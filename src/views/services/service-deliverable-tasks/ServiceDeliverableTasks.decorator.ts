@@ -8,3 +8,9 @@ export type TServiceDeliverableTasksComponent = {
   listData: any[]
   setListData: Dispatch<any>
 }
+
+export interface Task {
+  name: string
+  cost: string
+  description: string
+}
