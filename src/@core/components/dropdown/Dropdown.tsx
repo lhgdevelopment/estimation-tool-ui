@@ -1,5 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search'
-import { InputAdornment, ListSubheader, TextField } from '@mui/material'
+import { InputAdornment, ListSubheader, SxProps, TextField } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
@@ -16,6 +16,7 @@ interface ISelectProps extends SelectProps {
   searchPlaceholder?: string
   optionConfig?: TOptionConfig
   enumList?: { title: string; id: string | number }[]
+  sx?: SxProps
 }
 
 export function Dropdown(props: ISelectProps) {
