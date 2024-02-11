@@ -72,6 +72,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
               <TableHead>
                 <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                   <TableCell className='px-4 py-3'>Project</TableCell>
+                  <TableCell className='px-4 py-3'>Project Type</TableCell>
                   <TableCell className='px-4 py-3'>Created By</TableCell>
                   <TableCell className='px-4 py-3'>Created At</TableCell>
                   <TableCell className='px-4 py-3 text-right'>Actions</TableCell>
@@ -113,6 +114,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
                           )}
                         </Box>
                       </TableCell>
+                      <TableCell className='px-4 py-3 text-sm'>{data.created_by?.name}</TableCell>
                       <TableCell className='px-4 py-3 text-sm'>{data.created_by?.name}</TableCell>
                       <TableCell className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.created_at)}</TableCell>
 
