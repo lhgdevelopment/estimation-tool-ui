@@ -20,30 +20,66 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
   const nameEditorRef = useRef(null)
 
   const defaultData = {
+    serviceId: '',
     name: '',
-    serviceId: ''
-  }
-
-  const handleReachText = (value: string, field: string) => {
-    setFormData({
-      ...formData,
-      [field]: value
-    })
+    names: ['']
   }
 
   const [formData, setFormData] = useState(defaultData)
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+  const handleReachText = (value: string, field: string, index = -1) => {
+    if (index != -1) {
+      const names = [...formData.names]
+      names[index] = value
+      setFormData({
+        ...formData,
+        names: names
+      })
+    } else {
+      setFormData({
+        ...formData,
+        [field]: value
+      })
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<any>, index = -1) => {
+    const { name, value } = e.target
+    if (index != -1) {
+      const names = [...formData.names]
+      names[index] = value
+      setFormData({
+        ...formData,
+        names: names
+      })
+    } else {
+      setFormData({
+        ...formData,
+        [e?.target?.name]: e?.target?.value
+      })
+    }
   }
 
   const handleSelectChange = (e: any) => {
     setFormData({
       ...formData,
       [e?.target?.name]: e?.target?.value
+    })
+  }
+
+  const addNameField = () => {
+    setFormData({
+      ...formData,
+      names: [...formData.names, ''] // Add an empty string to the names array
+    })
+  }
+
+  const removeNameField = (index: number) => {
+    const names = [...formData.names]
+    names.splice(index, 1)
+    setFormData({
+      ...formData,
+      names: names
     })
   }
 
@@ -73,7 +109,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
       })
     } else {
       apiRequest.post('/service-groups', formData).then(res => {
-        setListData((prevState: []) => [...prevState, res.data])
+        setListData((prevState: []) => [...prevState, ...res.data])
         Swal.fire({
           title: 'Data Created Successfully!',
           icon: 'success',
@@ -85,11 +121,11 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
       })
     }
   }
-
   useEffect(() => {
     setFormData({
-      name: editData?.['name'],
-      serviceId: editData?.['serviceId']
+      serviceId: editData?.serviceId || '',
+      name: editData?.name || '',
+      names: editData?.names || ['']
     })
   }, [editDataId, editData])
 
@@ -117,19 +153,63 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
               </label>
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '100%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Name</span>
-              </label>
-              <JoditEditor
-                ref={nameEditorRef}
-                config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
-                value={formData.name}
-                onBlur={newContent => handleReachText(newContent, 'name')}
-              />
+          {editDataId ? (
+            <>
+              <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                <Box sx={{ width: '100%' }}>
+                  <label className='block text-sm'>
+                    <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                  </label>
+                  <JoditEditor
+                    ref={nameEditorRef}
+                    config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                    value={formData.name}
+                    onBlur={newContent => handleReachText(newContent, 'name')}
+                  />
+                </Box>
+              </Box>
+            </>
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 5,
+                mb: 5,
+                flexDirection: 'column',
+                border: '2px solid #9333ea',
+                padding: '24px',
+                borderRadius: '5px'
+              }}
+            >
+              <>
+                {formData.names?.map((name, index) => (
+                  <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                      </label>
+                      <JoditEditor
+                        ref={nameEditorRef}
+                        config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                        value={formData.name}
+                        onBlur={newContent => handleReachText(newContent, 'name', index)}
+                      />
+                    </Box>
+                  </Box>
+                ))}
+              </>
+
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button
+                  type='button'
+                  onClick={addNameField}
+                  className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
+                >
+                  <AddIcon /> Add Another Name
+                </button>
+              </Box>
             </Box>
-          </Box>
+          )}
           <Box className='my-4 text-right'>
             <button
               onClick={onClear}
@@ -144,7 +224,6 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
               className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
             >
               {editDataId ? 'Update ' : 'Save '}
-
               {editDataId ? <EditNoteIcon /> : <AddIcon />}
             </button>
           </Box>
