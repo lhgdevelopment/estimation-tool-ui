@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import { MdPreview } from 'md-editor-rt'
+import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import CopyToClipboard from 'src/@core/components/copy-to-clipboard/CopyToClipboard'
