@@ -19,7 +19,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
   }
 
   const [promptsPromptsFormData, setPromptsFormData] = useState(defaultData)
-  const [errorMessage, setSrrorMessage] = useState<any>({})
+  const [errorMessage, setErrorMessage] = useState<any>({})
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setPromptsFormData({
@@ -62,7 +62,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           onClear()
         })
         .catch(error => {
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     } else {
       apiRequest
@@ -79,7 +79,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           onClear()
         })
         .catch(error => {
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
   }

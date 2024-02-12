@@ -29,7 +29,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
   const summaryTextEditorRef = useRef<ExposeParam>()
 
   const [formData, setFormData] = useState(defaultData)
-  const [errorMessage, setSrrorMessage] = useState<any>({})
+  const [errorMessage, setErrorMessage] = useState<any>({})
   const [summaryText, setSummeryText] = useState<any>('')
 
   const handleChange = (e: React.ChangeEvent<any>) => {
@@ -56,7 +56,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
-    setSrrorMessage({})
+    setErrorMessage({})
     setPreload(true)
     if (editDataId) {
       formData['summaryText'] = summaryText
@@ -86,7 +86,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         })
         .catch(error => {
           setPreload(false)
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     } else {
       apiRequest
@@ -107,7 +107,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         })
         .catch(error => {
           setPreload(false)
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
   }
@@ -129,7 +129,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     setFormData(prevState => ({ ...defaultData }))
     setEditDataId(null)
     setEditData({})
-    setSrrorMessage({})
+    setErrorMessage({})
   }
 
   return (
