@@ -4,10 +4,9 @@ import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TUsersComponent, promptsTypeList } from '../Users.decorator'
+import { TUsersComponent } from '../Users.decorator'
 
 export default function UsersFormComponent(props: TUsersComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
@@ -20,7 +19,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
   }
 
   const [usersFormData, setUsersFormData] = useState(defaultData)
-  const [errorMessage, setSrrorMessage] = useState<any>({})
+  const [errorMessage, setErrorMessage] = useState<any>({})
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setUsersFormData({
@@ -63,7 +62,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
           onClear()
         })
         .catch(error => {
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     } else {
       apiRequest
@@ -80,7 +79,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
           onClear()
         })
         .catch(error => {
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
   }
@@ -90,7 +89,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
       name: editData?.['name'],
       email: editData?.['email'],
       password: '',
-      password_confirmation: '',
+      password_confirmation: ''
     })
   }, [editDataId, editData])
 
@@ -124,7 +123,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                     )
                   })}
               </label>
-            </Box> 
+            </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Email</span>
@@ -144,7 +143,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                     )
                   })}
               </label>
-            </Box>  
+            </Box>
           </Box>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
@@ -167,7 +166,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                     )
                   })}
               </label>
-            </Box> 
+            </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Confrim Password</span>
@@ -188,9 +187,9 @@ export default function UsersFormComponent(props: TUsersComponent) {
                     )
                   })}
               </label>
-            </Box>  
+            </Box>
           </Box>
-          
+
           <Box className='my-4 text-right'>
             <button
               onClick={onClear}

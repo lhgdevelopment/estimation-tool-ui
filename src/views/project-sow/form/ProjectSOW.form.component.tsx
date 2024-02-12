@@ -68,7 +68,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [deliverablesTextID, setDeliverablesTextID] = useState<any>(null)
   const [deliverablesText, setDeliverablesText] = useState<any>('')
 
-  const [errorMessage, setSrrorMessage] = useState<any>({})
+  const [errorMessage, setErrorMessage] = useState<any>({})
 
   const handleProjectSOWChange = (e: SelectChangeEvent<any>) => {
     setProjectSOWFormData({
@@ -112,7 +112,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const handleNext = (type: 'SAVE' | 'NEXT' = 'NEXT') => {
     setPreload(true)
-    setSrrorMessage({})
+    setErrorMessage({})
     const newActiveStep =
       isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1
     if (activeStep === 0) {
@@ -141,7 +141,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           })
           .catch(error => {
             setPreload(false)
-            setSrrorMessage(error?.response?.data?.errors)
+            setErrorMessage(error?.response?.data?.errors)
           })
       } else {
         apiRequest
@@ -177,7 +177,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           })
           .catch(error => {
             setPreload(false)
-            setSrrorMessage(error?.response?.data?.errors)
+            setErrorMessage(error?.response?.data?.errors)
           })
       }
     }
@@ -211,7 +211,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         })
         .catch(error => {
           setPreload(false)
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
     if (activeStep === 2) {
@@ -246,7 +246,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         })
         .catch(error => {
           setPreload(false)
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
     if (activeStep === 3) {
@@ -280,7 +280,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         })
         .catch(error => {
           setPreload(false)
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
 
@@ -316,7 +316,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         })
         .catch(error => {
           setPreload(false)
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
     if (activeStep === 5) {
@@ -346,7 +346,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         })
         .catch(error => {
           setPreload(false)
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
   }

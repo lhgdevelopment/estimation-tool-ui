@@ -20,7 +20,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
   const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
   const isDark = useSelector((state: RootState) => state.theme.isDark)
   const nameEditorRef = useRef(null)
-  const [errorMessage, setSrrorMessage] = useState<any>({})
+  const [errorMessage, setErrorMessage] = useState<any>({})
 
   const defaultData = {
     serviceGroupId: '',
@@ -87,7 +87,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
   }
 
   const onSubmit = (e: React.FormEvent<any>) => {
-    setSrrorMessage({})
+    setErrorMessage({})
     e.preventDefault()
     if (editDataId) {
       apiRequest
@@ -114,7 +114,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
           onClear()
         })
         .catch(error => {
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     } else {
       apiRequest
@@ -131,7 +131,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
           onClear()
         })
         .catch(error => {
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
   }
@@ -148,7 +148,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
     setFormData(prevState => ({ ...defaultData }))
     setEditDataId(null)
     setEditData({})
-    setSrrorMessage({})
+    setErrorMessage({})
   }
 
   return (
@@ -264,7 +264,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
                         errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
                           return (
                             <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
+                              {String(message).replaceAll('names.0', 'name')}
                             </span>
                           )
                         })}

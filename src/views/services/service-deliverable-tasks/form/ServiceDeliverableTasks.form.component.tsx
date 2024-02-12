@@ -20,7 +20,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
   const isDark = useSelector((state: RootState) => state.theme.isDark)
   const nameEditorRef = useRef(null)
-  const [errorMessage, setSrrorMessage] = useState<any>({})
+  const [errorMessage, setErrorMessage] = useState<any>({})
 
   const defaultData = {
     tasks: [
@@ -30,9 +30,12 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
         description: ''
       }
     ],
+    name: '',
+    cost: '',
+    description: '',
     serviceDeliverableId: ''
   }
-  const [formData, setFormData] = useState(defaultData)
+  const [formData, setFormData] = useState<any>(defaultData)
 
   const handleReachText = (value: string, field: string, index = -1) => {
     if (index !== -1) {
@@ -54,6 +57,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
 
   const handleChange = (e: React.ChangeEvent<any>, index = -1) => {
     const { name, value } = e.target
+
     if (index != -1) {
       const tasks: any = [...formData.tasks]
       if (typeof tasks[index] === 'object') {
@@ -79,10 +83,17 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   }
 
   const addTaskFields = () => {
-    setFormData({
-      ...formData,
-      tasks: [...formData.tasks, defaultData.tasks[0]] // Add an empty string to the tasks array
-    })
+    if (formData.tasks?.[0]) {
+      setFormData({
+        ...formData,
+        tasks: [...formData.tasks, defaultData.tasks[0]] // Add an empty string to the tasks array
+      })
+    } else {
+      setFormData({
+        ...formData,
+        tasks: defaultData.tasks
+      })
+    }
   }
 
   const removeTasksFields = (index: number) => {
@@ -95,7 +106,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   }
 
   const onSubmit = (e: React.FormEvent<any>) => {
-    setSrrorMessage({})
+    setErrorMessage({})
     e.preventDefault()
     if (editDataId) {
       apiRequest
@@ -122,13 +133,16 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
           onClear()
         })
         .catch(error => {
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     } else {
       apiRequest
         .post('/service-deliverable-tasks', formData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, ...res.data])
+          apiRequest.get(`/service-deliverable-tasks?page=${1}`).then(res => {
+            setListData(res.data)
+          })
+
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -139,24 +153,30 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
           onClear()
         })
         .catch(error => {
-          setSrrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
   }
   useEffect(() => {
+    console.log(editData)
+
     setFormData({
       serviceDeliverableId: editData?.serviceDeliverableId || '',
 
-      // name: editData?.name || '',
-      tasks: editData?.tasks || ['']
+      name: editData?.name || '',
+      cost: editData?.cost || '',
+      description: editData?.description || '',
+      tasks: defaultData.tasks
     })
   }, [editDataId, editData])
 
   const onClear = () => {
-    setFormData(prevState => ({ ...defaultData }))
+    setFormData(defaultData)
+
+    // addTaskFields()
     setEditDataId(null)
     setEditData({})
-    setSrrorMessage({})
+    setErrorMessage({})
   }
 
   return (
@@ -198,12 +218,12 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                   <label className='block text-sm'>
                     <span className='text-gray-700 dark:text-gray-400'>Name</span>
                   </label>
-                  {/* <JoditEditor
+                  <JoditEditor
                     ref={nameEditorRef}
                     config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
                     value={formData.name}
                     onBlur={newContent => handleReachText(newContent, 'name')}
-                  /> */}
+                  />
                   {!!errorMessage?.['name'] &&
                     errorMessage?.['name']?.map((message: any, index: number) => {
                       return (
@@ -212,6 +232,52 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                         </span>
                       )
                     })}
+                </Box>
+              </Box>
+              <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                <Box sx={{ width: '50%' }}>
+                  <label className='block text-sm'>
+                    <span className='text-gray-700 dark:text-gray-400'>Cost</span>
+                    <input
+                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      placeholder='Examples: 50.00'
+                      name='cost'
+                      value={formData.cost}
+                      onChange={e => {
+                        handleChange(e)
+                      }}
+                    />
+                    {!!errorMessage?.['cost'] &&
+                      errorMessage?.['cost']?.map((message: any, index: number) => {
+                        return (
+                          <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                            {message}
+                          </span>
+                        )
+                      })}
+                  </label>
+                </Box>
+                <Box sx={{ width: '50%' }}>
+                  <label className='block text-sm'>
+                    <span className='text-gray-700 dark:text-gray-400'>Description</span>
+                    <input
+                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      placeholder='Examples: Company logo for header'
+                      name='description'
+                      value={formData.description}
+                      onChange={e => {
+                        handleChange(e)
+                      }}
+                    />
+                    {!!errorMessage?.['description'] &&
+                      errorMessage?.['description']?.map((message: any, index: number) => {
+                        return (
+                          <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                            {message}
+                          </span>
+                        )
+                      })}
+                  </label>
                 </Box>
               </Box>
             </>
@@ -228,7 +294,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
               }}
             >
               <>
-                {formData.tasks?.map((task, index) => (
+                {formData.tasks?.map((task: any, index: number) => (
                   <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
@@ -246,6 +312,14 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                               value={task.name}
                               onBlur={newContent => handleReachText(newContent, 'name', index)}
                             />
+                            {!!errorMessage?.[`tasks.${index}.name`] &&
+                              errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {
+                                return (
+                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                    {String(message).replaceAll('tasks.0.', '')}
+                                  </span>
+                                )
+                              })}
                           </Box>
                           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                             <Box sx={{ width: '50%' }}>
@@ -260,6 +334,14 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                                     handleChange(e, index)
                                   }}
                                 />
+                                {!!errorMessage?.[`tasks.${index}.cost`] &&
+                                  errorMessage?.[`tasks.${index}.cost`]?.map((message: any, index: number) => {
+                                    return (
+                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                        {String(message).replaceAll('tasks.0.', '')}
+                                      </span>
+                                    )
+                                  })}
                               </label>
                             </Box>
                             <Box sx={{ width: '50%' }}>
@@ -274,6 +356,14 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                                     handleChange(e, index)
                                   }}
                                 />
+                                {!!errorMessage?.[`tasks.${index}.description`] &&
+                                  errorMessage?.[`tasks.${index}.description`]?.map((message: any, index: number) => {
+                                    return (
+                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                        {String(message).replaceAll('tasks.0.', '')}
+                                      </span>
+                                    )
+                                  })}
                               </label>
                             </Box>
                           </Box>
@@ -300,14 +390,6 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                           <DeleteIcon />
                         </Button>
                       </Box>
-                      {!!errorMessage?.[`tasks.${index}`] &&
-                        errorMessage?.[`tasks.${index}`]?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
                     </Box>
                   </Box>
                 ))}
