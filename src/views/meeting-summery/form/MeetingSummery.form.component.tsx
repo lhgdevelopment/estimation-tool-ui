@@ -10,7 +10,7 @@ import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { MeetingTypeList, TMeetingSummeryComponent } from '../MeetingSummery.decorator'
+import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
 
 export default function MeetingSummeryFormComponent(props: TMeetingSummeryComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
@@ -161,12 +161,14 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Meeting Type</span>
+
                 <Dropdown
-                  isEnumField
-                  enumList={MeetingTypeList}
+                  url='meeting-type'
                   name='meetingType'
                   value={formData.meetingType}
                   onChange={handleSelectChange}
+
+                  //optionConfig={{ id: 'id', title: 'name' }}
                 />
                 {!!errorMessage?.['meetingType'] &&
                   errorMessage?.['meetingType']?.map((message: any, index: number) => {

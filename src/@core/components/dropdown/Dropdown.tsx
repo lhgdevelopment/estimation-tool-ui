@@ -25,7 +25,7 @@ export function Dropdown(props: ISelectProps) {
     url,
     isEnumField = false,
     enumList,
-    optionConfig = { title: 'name', id: '_id' },
+    optionConfig = { title: 'name', id: 'id' },
     multiple = false,
     searchable = true,
     searchPlaceholder = 'Type to search...',
@@ -78,6 +78,7 @@ export function Dropdown(props: ISelectProps) {
     setOptionItems(initialOptionList)
     setSearchText('')
   }
+  console.log(optionItems)
 
   return (
     <FormControl fullWidth>
