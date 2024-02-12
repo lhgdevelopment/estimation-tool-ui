@@ -509,6 +509,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           onChange={handleSelectChange}
                           optionConfig={{ id: 'id', title: 'name' }}
                         />
+                        {!!errorMessage?.['projectTypeId'] &&
+                          errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
                       </label>
                     </Box>
                     {/* <Box sx={{ width: '50%' }}>

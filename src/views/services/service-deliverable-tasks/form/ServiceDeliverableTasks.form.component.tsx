@@ -6,7 +6,7 @@ import { Box, Button } from '@mui/material'
 import dynamic from 'next/dynamic'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { ServiceDropdownTree } from 'src/@core/components/dropdown'
+import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
@@ -33,7 +33,8 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
     name: '',
     cost: '',
     description: '',
-    serviceDeliverableId: ''
+    serviceDeliverableId: '',
+    parentTaskId: ''
   }
   const [formData, setFormData] = useState<any>(defaultData)
 
@@ -162,6 +163,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
 
     setFormData({
       serviceDeliverableId: editData?.serviceDeliverableId || '',
+      parentTaskId: editData?.parentTaskId || '',
 
       name: editData?.name || '',
       cost: editData?.cost || '',
@@ -186,7 +188,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box
               sx={{
-                width: '100%',
+                width: '50%',
                 '& .MuiInputBase-root': {
                   border: errorMessage?.['serviceDeliverableId'] ? '1px solid #dc2626' : ''
                 }
@@ -202,6 +204,32 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                 />
                 {!!errorMessage?.['serviceDeliverableId'] &&
                   errorMessage?.['serviceDeliverableId']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
+              </label>
+            </Box>
+            <Box
+              sx={{
+                width: '50%',
+                '& .MuiInputBase-root': {
+                  border: errorMessage?.['parentTaskId'] ? '1px solid #dc2626' : ''
+                }
+              }}
+            >
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Parent Task</span>
+                <Dropdown
+                  url={`service-deliverable-tasks?serviceDeliverableId=${formData.serviceDeliverableId}`}
+                  name='parentTaskId'
+                  value={formData.parentTaskId}
+                  onChange={handleSelectChange}
+                />
+                {!!errorMessage?.['parentTaskId'] &&
+                  errorMessage?.['parentTaskId']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
@@ -237,7 +265,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
               <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                 <Box sx={{ width: '50%' }}>
                   <label className='block text-sm'>
-                    <span className='text-gray-700 dark:text-gray-400'>Cost</span>
+                    <span className='text-gray-700 dark:text-gray-400'>Hour</span>
                     <input
                       className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                       placeholder='Examples: 50.00'
@@ -324,7 +352,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                             <Box sx={{ width: '50%' }}>
                               <label className='block text-sm'>
-                                <span className='text-gray-700 dark:text-gray-400'>Cost</span>
+                                <span className='text-gray-700 dark:text-gray-400'>Hour</span>
                                 <input
                                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                   placeholder='Examples: 50.00'
