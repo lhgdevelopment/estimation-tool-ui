@@ -169,10 +169,10 @@ export default function UsersFormComponent(props: TUsersComponent) {
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Confrim Password</span>
+                <span className='text-gray-700 dark:text-gray-400'>Confirm Password</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Confrim Password'
+                  placeholder='Confirm Password'
                   name='password_confirmation'
                   value={usersFormData.password_confirmation}
                   onChange={handleChange}
