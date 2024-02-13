@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import ServiceComponent from 'src/views/services/service/Service.component'
+import ServiceComponent from 'src/views/service-management/service/Service.component'
 
 const ServicePage = () => {
   return <ServiceComponent></ServiceComponent>

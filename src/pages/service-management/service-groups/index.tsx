@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import ServiceGroupsComponent from 'src/views/services/service-groups/ServiceGroups.component'
+import ServiceGroupsComponent from 'src/views/service-management/service-groups/ServiceGroups.component'
 
 const ServiceGroupsPage = () => {
   return <ServiceGroupsComponent></ServiceGroupsComponent>

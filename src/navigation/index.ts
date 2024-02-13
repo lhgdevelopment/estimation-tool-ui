@@ -58,34 +58,34 @@ const navigation: TNavigation[] = [
   },
 
   {
-    title: 'Services',
+    title: 'Service Management',
     icon: SettingsIcon,
-    path: 'services',
+    path: 'service-management',
     subMenu: [
       {
         title: 'Service',
         icon: SettingsEthernetIcon,
-        path: '/services/service'
+        path: '/service-management/service'
       },
       {
         title: 'Groups',
         icon: SettingsEthernetIcon,
-        path: '/services/service-groups'
+        path: '/service-management/service-groups'
       },
       {
         title: 'SOWs',
         icon: SettingsEthernetIcon,
-        path: '/services/service-scopes'
+        path: '/service-management/service-scopes'
       },
       {
         title: 'Deliverables',
         icon: SettingsEthernetIcon,
-        path: '/services/service-deliverables'
+        path: '/service-management/service-deliverables'
       },
       {
         title: 'Tasks',
         icon: SettingsEthernetIcon,
-        path: '/services/service-deliverable-tasks'
+        path: '/service-management/service-deliverable-tasks'
       }
     ]
   },
@@ -107,15 +107,27 @@ const navigation: TNavigation[] = [
     ]
   },
   {
-    title: 'Users',
+    title: 'User Management',
     icon: GroupsIcon,
-    path: '/users'
+    path: '/user-management',
+    subMenu: [
+      {
+        title: 'Role & Permission',
+        icon: SettingsEthernetIcon,
+        path: '/user-management/role-permission'
+      },
+      {
+        title: 'User',
+        icon: SettingsEthernetIcon,
+        path: '/user-management/users'
+      }
+    ]
   },
 
   {
     title: 'Referance Links',
     icon: LinkIcon,
-    path: 'settings',
+    path: '',
     subMenu: [
       {
         title: 'Windmill',

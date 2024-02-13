@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import UsersComponent from 'src/views/users/Users.component'
+import UsersComponent from 'src/views/user-management/users/Users.component'
 
 const PromptsPage = () => {
   return <UsersComponent></UsersComponent>
