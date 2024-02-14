@@ -63,7 +63,7 @@ const AppLayout = ({ children }: Props) => {
     <Box className={`flex h-screen bg-gray-50 dark:bg-gray-900 }`}>
       {/* <!-- Desktop sidebar --> */}
       <AppNavbarComponent />
-      <Box className='flex flex-col flex-1' sx={{ marginLeft: '250px', width: '100%' }}>
+      <Box className='flex flex-col flex-1' sx={{ marginLeft: '280px', width: '100%' }}>
         <AppHeaderComponent />
         <Box component={'main'} className='h-full pb-16 overflow-y-auto'>
           {children}
