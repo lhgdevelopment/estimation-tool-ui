@@ -1,9 +1,9 @@
-import AddModeratorIcon from '@mui/icons-material/AddModerator'
-import CloseIcon from '@mui/icons-material/Close'
-import GppGoodIcon from '@mui/icons-material/GppGood'
+import AddIcon from '@mui/icons-material/Add'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import {
   Box,
-  Checkbox,
+  Button,
+  Chip,
   Modal,
   Paper,
   Table,
@@ -17,47 +17,45 @@ import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TRolePermissionComponent } from '../RolePermission.decorator'
+import RolePermissionFormComponent from '../form/RolePermission.form.component'
 
-export default function RolePermissionListComponent(props: TRolePermissionComponent) {
-  const { setEditDataId, listData, setListData, setEditData, editDataId } = props
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [roleId, setRoleId] = useState<any>(null)
+export default function RolePermissionListComponent() {
+  const [editDataId, setEditDataId] = useState<null | string>(null)
+  const [listData, setListData] = useState<any>([])
+  const [editData, setEditData] = useState<any>({})
+
   const [permissionsList, setPermissionList] = useState<any>({})
-  const [selectedPermission, setSelectedPermission] = useState<string[]>([])
-  const [permissionModalOpen, setPermissionModalOpen] = useState(false)
-  const handlePermissionModalOpen = () => setPermissionModalOpen(true)
-  const handlePermissionModalClose = () => setPermissionModalOpen(false)
+  const [permissionModalOpen, setRoleModalOpen] = useState(false)
+  const handleRoleModalOpen = () => setRoleModalOpen(true)
+  const handleRoleModalClose = () => setRoleModalOpen(false)
 
-  const getPermisionsList = (page = 1) => {
+  const getPermisionsList = () => {
     apiRequest.get(`/permissions`).then(res => {
       setPermissionList(res.data)
     })
   }
 
-  const getList = (page = 1) => {
-    apiRequest.get(`/roles?page=${page}`).then(res => {
-      const paginationData: any = res
-      setListData(res.data)
-      setCurrentPage(paginationData?.['current_page'])
-      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+  const getList = () => {
+    apiRequest.get(`/roles?per_page=${1000}`).then(res => {
+      setListData(roleSorting(res.data))
     })
   }
 
-  const onChangePermission = (isChecked: boolean, permission: string) => {
-    if (isChecked) {
-      setSelectedPermission(prevState => [...new Set([...prevState, permission])])
+  const onChangePermission = (isChecked: boolean, roleId: number, permission: string, data: any) => {
+    const existingPermission = !!data?.map((permission: any) => permission.name).length
+      ? data?.map((permission: any) => permission.name)
+      : []
+    let newPermission = []
+    if (isChecked && existingPermission?.indexOf(permission)) {
+      newPermission = [...new Set([...existingPermission, permission])]
     } else {
-      setSelectedPermission(prevState => [...prevState.filter(data => data != permission)])
+      newPermission = [...existingPermission?.filter((data: any) => data != permission)]
     }
+    onUpdateRolePermission(roleId, newPermission)
   }
 
-  const onUpdateRolePermission = () => {
-    const formData = {
-      permissions: selectedPermission
-    }
-    apiRequest.put(`/roles/${roleId}`, formData).then(res => {
+  const onUpdateRolePermission = (roleId: number, permissions: any) => {
+    apiRequest.put(`/roles/${roleId}`, { permissions }).then(res => {
       Swal.fire({
         title: 'Data Created Successfully!',
         icon: 'success',
@@ -66,7 +64,6 @@ export default function RolePermissionListComponent(props: TRolePermissionCompon
         showConfirmButton: false
       })
       getList()
-      handlePermissionModalClose()
     })
   }
 
@@ -77,7 +74,7 @@ export default function RolePermissionListComponent(props: TRolePermissionCompon
     setEditData(editData)
   }
 
-  const onDelete = (i: string) => {
+  const onDelete = (id: string) => {
     Swal.fire({
       title: 'Are You sure?',
       icon: 'error',
@@ -87,7 +84,7 @@ export default function RolePermissionListComponent(props: TRolePermissionCompon
       cancelButtonText: 'No'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/roles/${i}`).then(res => {
+        apiRequest.delete(`/roles/${id}`).then(res => {
           Swal.fire({
             title: 'Data Deleted Successfully!',
             icon: 'success',
@@ -101,6 +98,24 @@ export default function RolePermissionListComponent(props: TRolePermissionCompon
     })
   }
 
+  const roleSorting = (data: any) => {
+    const desiredOrder = ['System Admin', 'Admin']
+
+    return data.sort((a: any, b: any) => {
+      const indexA = desiredOrder.indexOf(a.name)
+      const indexB = desiredOrder.indexOf(b.name)
+
+      if (indexA !== -1 && indexB !== -1) {
+        return indexA - indexB
+      }
+
+      if (indexA !== -1) return -1
+      if (indexB !== -1) return 1
+
+      return 0
+    })
+  }
+
   useEffect(() => {
     getPermisionsList()
   }, [])
@@ -109,167 +124,172 @@ export default function RolePermissionListComponent(props: TRolePermissionCompon
     getList()
   }, [editDataId])
 
-  const handlePageChange = (newPage: number) => {
-    getList(newPage)
-  }
-
   if (!listData?.length) {
     return <UiSkeleton />
   }
 
+  console.log(listData)
+
   return (
     <Fragment>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
+          RolePermission
+        </Box>
+        <Box>
+          <Button
+            variant='outlined'
+            sx={{ p: '5px 10px', minWidth: 'auto' }}
+            onClick={() => {
+              handleRoleModalOpen()
+            }}
+          >
+            Add Role
+            <AddIcon />
+          </Button>
+        </Box>
+      </Box>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
-        <Box className='w-full overflow-x-auto'>
-          <table className='w-full whitespace-no-wrap'>
-            <thead>
-              <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                <th className='px-4 py-3'>Name</th>
-                {/* <th className='px-4 py-3'>Permission</th> */}
-                <th className='px-4 py-3 text-right'>Actions</th>
-              </tr>
-            </thead>
-            <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
-              {listData?.map((data: any, index: number) => {
-                return (
-                  <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.name}</td>
-                    {/* <td className='px-4 py-3 text-sm'>
-                      <Box>{data?.permissions?.map((permission: any) => permission.name).join(',')}</Box>
-                    </td> */}
-
-                    <td className='px-4 py-3'>
-                      <Box className='flex items-center justify-end space-x-4 text-sm'>
-                        <button
-                          onClick={() => {
-                            handlePermissionModalOpen()
-                            setRoleId(data?.id)
-                            setSelectedPermission(data?.permissions?.map((permission: any) => permission.name) || [])
-                          }}
-                          className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                          aria-label='Edit'
-                        >
-                          <AddModeratorIcon />
-                        </button>
-                        <button
-                          onClick={() => {
-                            onEdit(data['id'])
-                          }}
-                          className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                          aria-label='Edit'
-                        >
-                          <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
-                            <path d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'></path>
-                          </svg>
-                        </button>
-                        <button
-                          onClick={() => {
-                            onDelete(data['id'])
-                          }}
-                          className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
-                          aria-label='Delete'
-                        >
-                          <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
-                            <path
-                              fillRule='evenodd'
-                              d='M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z'
-                              clipRule='evenodd'
-                            ></path>
-                          </svg>
-                        </button>
-                      </Box>
-                    </td>
-                  </Box>
-                )
-              })}
-            </tbody>
-          </table>
-          {!listData?.length && (
-            <Box
+        <Paper className='w-full overflow-x-auto' sx={{ width: '100%', maxWidth: '100vw', overflow: 'hidden' }}>
+          <TableContainer sx={{ maxHeight: '78vh' }}>
+            <Table
               sx={{
-                padding: '27px',
-                textAlign: 'center',
-                color: '#dd2828',
-                fontSize: '20px'
+                minWidth: 650,
+                '& .sticky': {
+                  position: 'sticky',
+                  left: 0,
+                  background: 'white',
+                  boxShadow: '5px 2px 5px #8080803b',
+                  borderRight: '2px solid #80808054',
+                  zIndex: '1'
+                }
               }}
+              stickyHeader
+              aria-label='sticky table'
             >
-              No Data Found!
-            </Box>
-          )}
-        </Box>
-        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
-          <span className='flex items-center col-span-3'>
-            Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
-            {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}
-          </span>
-          <span className='col-span-2'></span>
-          {/* <!-- Pagination --> */}
-          <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
-            <nav aria-label='Table navigation'>
-              <ul className='inline-flex items-center'>
-                <li>
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    className={`px-3 py-1 rounded-md 
-                    console.log(data?.permissions?.map((permission: any) => permission.name))
-rounded-l-lg focus:outline-none focus:shadow-outline-purple ${
-                      currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    aria-label='Previous'
-                    disabled={currentPage === 1}
-                  >
-                    <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
-                      <path
-                        d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
-                        clipRule='evenodd'
-                        fillRule='evenodd'
-                      ></path>
-                    </svg>
-                  </button>
-                </li>
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <li key={index}>
-                    <button
-                      onClick={() => handlePageChange(index + 1)}
-                      className={`px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple ${
-                        currentPage === index + 1 ? 'bg-purple-600 text-white' : ''
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
-                <li>
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    className={`px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple ${
-                      currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    aria-label='Next'
-                    disabled={currentPage === totalPages}
-                  >
-                    <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
-                      <path
-                        d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
-                        clipRule='evenodd'
-                        fillRule='evenodd'
-                      ></path>
-                    </svg>
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </span>
-        </Box>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: 'rgba(224, 224, 224, 1)' }}>
+                  <TableCell className='sticky' sx={{ zIndex: '99' }}>
+                    Module Name
+                  </TableCell>
+
+                  {listData?.map((role: any, index: number) => {
+                    return (
+                      <TableCell
+                        sx={{ minWidth: '160px', p: '10px', textAlign: 'center' }}
+                        key={index}
+                        align='center'
+                        colSpan={4}
+                      >
+                        <Box sx={{ display: 'inline-block', ml: '10px' }}>
+                          {role?.name}
+                          {role?.id !== 1 && (
+                            <DeleteForeverIcon
+                              onClick={() => {
+                                onDelete(role?.id)
+                              }}
+                              color='error'
+                              sx={{ ml: '5px', cursor: 'pointer' }}
+                            />
+                          )}
+                        </Box>
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              </TableHead>
+              <TableBody
+                sx={{
+                  '& .MuiTableCell-root': {
+                    p: '10px !important'
+                  }
+                }}
+              >
+                {Object.keys(permissionsList).map((key: any, index) => {
+                  return (
+                    <>
+                      <TableRow
+                        key={key}
+                        sx={{
+                          backgroundColor: 'rgba(224, 224, 224, 1)',
+                          '&:last-child td, &:last-child th': { border: 0 }
+                        }}
+                      >
+                        <>
+                          <TableCell component='th' scope='row' sx={{ textTransform: 'capitalize' }} className='sticky'>
+                            {String(key).replaceAll('_', ' ')}
+                          </TableCell>
+                          {listData?.map((role: any, roleIndex: number) => {
+                            return <TableCell key={roleIndex} align='center' colSpan={4}></TableCell>
+                          })}
+                        </>
+                      </TableRow>
+
+                      <>
+                        {permissionsList?.[key]?.map((permission: string, permissionIndex: number) => {
+                          return (
+                            <TableRow key={permissionIndex} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                              <TableCell key={permissionIndex} className='sticky'>
+                                <Box component={'label'}>{permission}</Box>
+                              </TableCell>
+                              {listData?.map((role: any, roleIndex: number) => {
+                                return (
+                                  <TableCell key={roleIndex} align='center' colSpan={4}>
+                                    {/* {permission}+{role?.id} */}
+                                    {/* <Checkbox
+                                      onChange={e => {
+                                        onChangePermission(e.target.checked, permission)
+                                      }}
+                                      checked={!!role?.permissions?.filter((data: any) => data.name == permission)[0]}
+                                    /> */}
+                                    {!!role?.permissions?.filter((data: any) => data.name == permission)[0] ? (
+                                      <Chip
+                                        label='Yes'
+                                        color='success'
+                                        clickable
+                                        onClick={e => {
+                                          onChangePermission(false, role?.id, permission, role?.permissions)
+                                        }}
+                                        sx={{ borderRadius: '5px', height: '25px', p: '3px' }}
+                                      />
+                                    ) : (
+                                      <Chip
+                                        label='No'
+                                        clickable
+                                        onClick={e => {
+                                          onChangePermission(true, role?.id, permission, role?.permissions)
+                                        }}
+                                        sx={{
+                                          borderRadius: '5px',
+                                          height: '25px',
+                                          p: '3px',
+                                          backgroundColor: 'rgb(58 53 65 / 30%)'
+                                        }}
+                                      />
+                                    )}
+                                  </TableCell>
+                                )
+                              })}
+                            </TableRow>
+                          )
+                        })}
+                      </>
+                    </>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
         <Modal
           open={permissionModalOpen}
-          onClose={handlePermissionModalClose}
+          onClose={handleRoleModalClose}
           aria-labelledby='modal-modal-title'
           aria-describedby='modal-modal-description'
           sx={{
             height: '100vh',
             width: '100%',
-            maxWidth: '80%',
+            maxWidth: '500px',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -286,60 +306,16 @@ rounded-l-lg focus:outline-none focus:shadow-outline-purple ${
               borderRadius: '5px'
             }}
           >
-            <TableContainer component={Paper} sx={{ height: '60vh' }}>
-              <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Module Name</TableCell>
-                    <TableCell align='center' colSpan={4}>
-                      Permissions
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Object.keys(permissionsList).map(key => (
-                    <TableRow key={key} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                      <TableCell component='th' scope='row' sx={{ width: '300px', textTransform: 'capitalize' }}>
-                        {String(key).replaceAll('_', ' ')}
-                      </TableCell>
-                      {permissionsList?.[key]?.map((permission: string, index: number) => {
-                        return (
-                          <TableCell key={index} align='center'>
-                            <Box component={'label'} sx={{ cursor: 'pointer', textTransform: 'capitalize' }}>
-                              <Checkbox
-                                onChange={e => {
-                                  onChangePermission(e.target.checked, permission)
-                                  console.log(selectedPermission?.filter(data => data != permission))
-                                }}
-                                checked={!!selectedPermission?.filter(data => data == permission)[0]}
-                              />
-                              {permission.split('.')[0]}
-                            </Box>
-                          </TableCell>
-                        )
-                      })}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <Box sx={{ textAlign: 'right', mt: '50px' }}>
-              <button
-                onClick={handlePermissionModalClose}
-                type='button'
-                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-              >
-                Close
-                <CloseIcon />
-              </button>
-              <button
-                onClick={onUpdateRolePermission}
-                type='button'
-                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-              >
-                Add Permission <GppGoodIcon />
-              </button>
-            </Box>
+            <RolePermissionFormComponent
+              setEditDataId={setEditDataId}
+              editDataId={editDataId}
+              listData={listData}
+              setListData={setListData}
+              editData={editData}
+              setEditData={setEditData}
+              roleModalClose={handleRoleModalClose}
+              roleSorting={roleSorting}
+            />
           </Box>
         </Modal>
       </Box>

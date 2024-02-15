@@ -1,7 +1,6 @@
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
-import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -9,7 +8,7 @@ import Swal from 'sweetalert2'
 import { TRolePermissionComponent } from '../RolePermission.decorator'
 
 export default function RolePermissionFormComponent(props: TRolePermissionComponent) {
-  const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
+  const { editDataId, setEditDataId, listData, setListData, editData, setEditData, roleModalClose, roleSorting } = props
 
   const defaultData = {
     name: '',
@@ -47,6 +46,7 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res.data
             }
+            roleModalClose()
             Swal.fire({
               title: 'Data Updated Successfully!',
               icon: 'success',
@@ -57,6 +57,7 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
 
             return updatedList
           })
+
           onClear()
         })
         .catch(error => {
@@ -66,7 +67,8 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
       apiRequest
         .post('/roles', rolesFormData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, res.data])
+          setListData((prevState: []) => roleSorting([res.data, ...prevState]))
+          roleModalClose()
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -124,12 +126,12 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
 
           <Box className='my-4 text-right'>
             <button
-              onClick={onClear}
+              onClick={roleModalClose}
               type='button'
               className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
             >
-              {editDataId ? 'Cancel ' : 'Clear '}
-              {editDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
+              Cancel
+              <ClearIcon />
             </button>
             <button
               type='submit'

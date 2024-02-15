@@ -7,6 +7,8 @@ export type TRolePermissionComponent = {
   setEditData: Dispatch<any> // Remove the optional '?'
   listData: any[]
   setListData: Dispatch<any>
+  roleModalClose: () => void
+  roleSorting: (data: any) => any[]
 }
 
 export const promptsTypeList = [
