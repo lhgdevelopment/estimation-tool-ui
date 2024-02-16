@@ -2,8 +2,8 @@ import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
 import WebsiteComponentComponent from 'src/views/website-component/WebsiteComponent.component'
 
-const WebsiteComponentPage = () => {
+const WebsiteComponent = () => {
   return <WebsiteComponentComponent></WebsiteComponentComponent>
 }
-WebsiteComponentPage.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
-export default WebsiteComponentPage
+WebsiteComponent.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
+export default WebsiteComponent

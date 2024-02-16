@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import ServiceDeliverableTasks from 'src/views/service-management/service-deliverable-tasks/ServiceDeliverableTasks.component'
+import ServiceDeliverableTasksComponent from 'src/views/service-management/service-deliverable-tasks/ServiceDeliverableTasks.component'
 
-const ServiceDeliverableTasksPage = () => {
-  return <ServiceDeliverableTasks></ServiceDeliverableTasks>
+const ServiceDeliverableTasks = () => {
+  return <ServiceDeliverableTasksComponent></ServiceDeliverableTasksComponent>
 }
-ServiceDeliverableTasksPage.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
-export default ServiceDeliverableTasksPage
+ServiceDeliverableTasks.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
+export default ServiceDeliverableTasks

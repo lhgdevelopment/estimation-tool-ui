@@ -2,8 +2,8 @@ import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
 import RolePermissionComponent from 'src/views/user-management/role-permission/RolePermission.component'
 
-const PromptsPage = () => {
+const RolePermission = () => {
   return <RolePermissionComponent></RolePermissionComponent>
 }
-PromptsPage.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
-export default PromptsPage
+RolePermission.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
+export default RolePermission

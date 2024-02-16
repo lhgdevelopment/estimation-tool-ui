@@ -5,6 +5,8 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
 import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
@@ -13,8 +15,9 @@ import Swal from 'sweetalert2'
 import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
 
 export default function MeetingSummeryFormComponent(props: TMeetingSummeryComponent) {
-  const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
+  const { listData, setListData, isEdit } = props
   const [preload, setPreload] = useState<boolean>(false)
+  const router = useRouter()
 
   const defaultData = {
     meetingName: '',
@@ -58,15 +61,15 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     e.preventDefault()
     setErrorMessage({})
     setPreload(true)
-    if (editDataId) {
-      formData['summaryText'] = summaryText
+    if (router?.query['id']) {
+      formData['summaryText'] = formData['tldvLink'] ? null : summaryText
       apiRequest
-        .put(`/meeting-summery/${editDataId}`, formData)
+        .put(`/meeting-summery/${router?.query['id']}`, formData)
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex(
-              (item: any) => item['_id'] === editDataId // Replace 'id' with the actual identifier of your item
+              (item: any) => item['_id'] === router?.query['id'] // Replace 'id' with the actual identifier of your item
             )
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res.data
@@ -83,6 +86,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
             return updatedList
           })
+          router.push('/meeting-summery/')
         })
         .catch(error => {
           setPreload(false)
@@ -112,23 +116,32 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     }
   }
 
-  useEffect(() => {
-    setFormData({
-      meetingName: editData?.['meetingName'],
-      meetingType: editData?.['meetingType'],
-      transcriptText: editData?.['transcriptText'],
-      summaryText: editData?.['meetingSummeryText'],
-      clickupLink: editData?.['clickupLink'],
-      tldvLink: editData?.['tldvLink'],
-      pushToClickUp: false
+  const getDetails = (id: string | null | undefined) => {
+    if (!id) return
+    setPreload(true)
+    apiRequest.get(`/meeting-summery/${id}`).then((res: any) => {
+      setFormData({
+        meetingName: res?.data?.['meetingName'],
+        meetingType: res?.data?.['meetingType'],
+        transcriptText: res?.data?.['transcriptText'],
+        summaryText: res?.data?.['meetingSummeryText'],
+        clickupLink: res?.data?.['clickupLink'],
+        tldvLink: res?.data?.['tldvLink'],
+        pushToClickUp: false
+      })
+      setSummeryText(res?.data?.['meetingSummeryText'])
+      setSummeryText('')
+      setPreload(false)
     })
-    setSummeryText(editData?.['meetingSummeryText'])
-  }, [editDataId, editData])
+  }
+
+  useEffect(() => {
+    getDetails(router?.query['id'] as string)
+  }, [router?.query['id']])
 
   const onClear = () => {
     setFormData(prevState => ({ ...defaultData }))
-    setEditDataId(null)
-    setEditData({})
+    setSummeryText('')
     setErrorMessage({})
   }
 
@@ -225,7 +238,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             </Box>
           </Box>
 
-          {!!editDataId && (
+          {!!router?.query['id'] && (
             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
               <Box sx={{ width: '50%' }}>
                 <label className='block text-sm' htmlFor='pushToClickUp'>
@@ -249,31 +262,33 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             </Box>
           )}
 
-          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '100%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
-                <textarea
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Examples: Transcript Text'
-                  name='transcriptText'
-                  rows={10}
-                  value={formData.transcriptText}
-                  onChange={handleChange}
-                />
-                {!!errorMessage?.['transcriptText'] &&
-                  errorMessage?.['transcriptText']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+          {!formData.tldvLink && (
+            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+              <Box sx={{ width: '100%' }}>
+                <label className='block text-sm'>
+                  <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
+                  <textarea
+                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                    placeholder='Examples: Transcript Text'
+                    name='transcriptText'
+                    rows={10}
+                    value={formData.transcriptText}
+                    onChange={handleChange}
+                  />
+                  {!!errorMessage?.['transcriptText'] &&
+                    errorMessage?.['transcriptText']?.map((message: any, index: number) => {
+                      return (
+                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                          {message}
+                        </span>
+                      )
+                    })}
+                </label>
+              </Box>
             </Box>
-          </Box>
+          )}
 
-          {!!editDataId && (
+          {!!router?.query['id'] && (
             <Box sx={{ display: 'flex', gap: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm' htmlFor={'#summaryText'}>
@@ -299,21 +314,35 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           )}
 
           <Box className='my-4 text-right'>
-            <button
-              onClick={onClear}
-              type='button'
-              className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-            >
-              {editDataId ? 'Cancel ' : 'Clear '}
-              {editDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
-            </button>
+            {router?.query['id'] ? (
+              <Link href={`/meeting-summery/`} passHref>
+                <Box
+                  sx={{ cursor: 'pointer' }}
+                  component={'a'}
+                  className='px-4 py-2 mr-3 inline-block text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                  aria-label='View'
+                >
+                  Cancel
+                  <ClearIcon />
+                </Box>
+              </Link>
+            ) : (
+              <button
+                onClick={onClear}
+                type='button'
+                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+              >
+                Clear <PlaylistRemoveIcon />
+              </button>
+            )}
+
             <button
               type='submit'
               className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
             >
-              {editDataId ? 'Update ' : 'Save '}
+              {router?.query['id'] ? 'Update ' : 'Save '}
 
-              {editDataId ? <EditNoteIcon /> : <AddIcon />}
+              {router?.query['id'] ? <EditNoteIcon /> : <AddIcon />}
             </button>
           </Box>
         </form>

@@ -2,8 +2,8 @@ import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
 import UsersComponent from 'src/views/user-management/users/Users.component'
 
-const PromptsPage = () => {
+const Users = () => {
   return <UsersComponent></UsersComponent>
 }
-PromptsPage.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
-export default PromptsPage
+Users.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
+export default Users
