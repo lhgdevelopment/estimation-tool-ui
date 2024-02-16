@@ -2,8 +2,8 @@ import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
 import ProjectTypeComponent from 'src/views/settings/project-type/ProjectType.component'
 
-const ProjectTypePage = () => {
+const ProjectType = () => {
   return <ProjectTypeComponent></ProjectTypeComponent>
 }
-ProjectTypePage.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
-export default ProjectTypePage
+ProjectType.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
+export default ProjectType

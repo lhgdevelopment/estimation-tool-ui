@@ -1,9 +1,11 @@
 // ** Icon imports
 import BiotechIcon from '@mui/icons-material/Biotech'
+import EngineeringIcon from '@mui/icons-material/Engineering'
 import GroupsIcon from '@mui/icons-material/Groups'
 import LinkIcon from '@mui/icons-material/Link'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
+import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
 
@@ -46,20 +48,16 @@ const navigation: TNavigation[] = [
     icon: BiotechIcon,
     path: '/project-summery'
   },
-  {
-    title: 'Prompts',
-    icon: SettingsEthernetIcon,
-    path: '/prompts'
-  },
+
   {
     title: 'Meeting Summery',
-    icon: GroupsIcon,
+    icon: SpeakerNotesIcon,
     path: '/meeting-summery'
   },
 
   {
     title: 'Service Management',
-    icon: SettingsIcon,
+    icon: EngineeringIcon,
     path: 'service-management',
     subMenu: [
       {
@@ -94,6 +92,11 @@ const navigation: TNavigation[] = [
     icon: SettingsIcon,
     path: 'settings',
     subMenu: [
+      {
+        title: 'Prompts',
+        icon: SettingsEthernetIcon,
+        path: '/settings/prompts'
+      },
       {
         title: 'Meeting Type',
         icon: SettingsEthernetIcon,

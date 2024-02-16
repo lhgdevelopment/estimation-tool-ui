@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import ServiceScopes from 'src/views/service-management/service-scopes/ServiceScopes.component'
+import ServiceScopesComponent from 'src/views/service-management/service-scopes/ServiceScopes.component'
 
-const ServiceScopesPage = () => {
-  return <ServiceScopes></ServiceScopes>
+const ServiceScopes = () => {
+  return <ServiceScopesComponent></ServiceScopesComponent>
 }
-ServiceScopesPage.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
-export default ServiceScopesPage
+ServiceScopes.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
+export default ServiceScopes
