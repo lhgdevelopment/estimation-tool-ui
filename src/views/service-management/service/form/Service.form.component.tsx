@@ -24,14 +24,14 @@ export default function ServiceFormComponent(props: TServiceComponent) {
     projectTypeId: ''
   }
 
+  const [formData, setFormData] = useState(defaultData)
+
   const handleReachText = (value: string, field: string) => {
     setFormData({
       ...formData,
       [field]: value
     })
   }
-
-  const [formData, setFormData] = useState(defaultData)
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
