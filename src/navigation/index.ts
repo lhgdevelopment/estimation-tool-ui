@@ -1,5 +1,6 @@
 // ** Icon imports
 import BiotechIcon from '@mui/icons-material/Biotech'
+import ChatIcon from '@mui/icons-material/Chat'
 import EngineeringIcon from '@mui/icons-material/Engineering'
 import GroupsIcon from '@mui/icons-material/Groups'
 import LinkIcon from '@mui/icons-material/Link'
@@ -53,6 +54,11 @@ const navigation: TNavigation[] = [
     title: 'Meeting Summery',
     icon: SpeakerNotesIcon,
     path: '/meeting-summery'
+  },
+  {
+    title: 'Chat',
+    icon: ChatIcon,
+    path: '/chat'
   },
 
   {
