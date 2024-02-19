@@ -1,12 +1,12 @@
 import { Box } from '@mui/material'
 
 type TNoDataComponentProps = {
-  data: any[]
+  preload?: boolean
 }
 export default function NoDataComponent(props: TNoDataComponentProps) {
-  const { data = [] } = props
+  const { preload = false } = props
 
-  if (!data?.length) {
+  if (preload) {
     return (
       <Box
         sx={{

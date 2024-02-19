@@ -45,6 +45,7 @@
     "@mui/lab": "^5.0.0-alpha.70",
     "@mui/material": "^5.4.3",
     "@mui/x-date-pickers": "^6.16.2",
+    "@mui/x-tree-view": "^6.17.0",
     "@popperjs/core": "^2.11.2",
     "@react-input/mask": "^1.0.20",
     "apexcharts-clevision": "^3.28.5",
