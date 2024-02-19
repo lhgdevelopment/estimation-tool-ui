@@ -7,27 +7,27 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import CopyToClipboard from 'src/@core/components/copy-to-clipboard/CopyToClipboard'
+import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 
 export default function MeetingSummeryDetailsComponent() {
-  const router = useRouter()
-  console.log(router?.query['id'])
+  const meetingId = useRouter()?.query['id']
 
   const [preload, setPreload] = useState<boolean>(false)
   const [detailsData, setDetailsData] = useState<any>({})
   const getDetails = () => {
     setPreload(true)
-    apiRequest.get(`/meeting-summery/${router?.query['id']}`).then(res => {
+    apiRequest.get(`/meeting-summery/${meetingId}`).then(res => {
       setDetailsData(res.data)
       setPreload(false)
     })
   }
 
   useEffect(() => {
-    if (router?.query['id']) {
+    if (meetingId) {
       getDetails()
     }
-  }, [router?.query['id']])
+  }, [meetingId])
 
   const sowHeadingSx = {
     fontSize: '16x',
@@ -38,6 +38,10 @@ export default function MeetingSummeryDetailsComponent() {
   }
 
   const sowBodySx = { p: 2, my: 2 }
+
+  if (preload) {
+    return <Preloader close={preload} />
+  }
 
   return (
     <Box sx={{ p: 5 }}>
@@ -58,16 +62,18 @@ export default function MeetingSummeryDetailsComponent() {
           </Box>
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 5 }}>
-            <Link href={`/meeting-summery/edit/${detailsData?.id}`} passHref>
-              <Box
-                sx={{ cursor: 'pointer' }}
-                component={'a'}
-                className='flex items-center justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
-                aria-label='View'
-              >
-                <EditNoteIcon sx={{ mr: 2 }} /> Edit
-              </Box>
-            </Link>
+            {!!meetingId && (
+              <Link href={`/meeting-summery/edit/${meetingId}`} passHref>
+                <Box
+                  sx={{ cursor: 'pointer' }}
+                  component={'a'}
+                  className='flex items-center justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+                  aria-label='View'
+                >
+                  <EditNoteIcon sx={{ mr: 2 }} /> Edit
+                </Box>
+              </Link>
+            )}
           </Box>
           <Box sx={sowBodySx}>
             <Box
@@ -87,9 +93,11 @@ export default function MeetingSummeryDetailsComponent() {
               >
                 <Box sx={{ fontWeight: '600' }}>Clickup Link: </Box>
                 <Box>
-                  <Link href={detailsData?.['clickupLink']} target='_blank'>
-                    {detailsData?.['clickupLink']}
-                  </Link>
+                  {!!detailsData?.['clickupLink'] && (
+                    <Link href={detailsData?.['clickupLink']} target='_blank'>
+                      {detailsData?.['clickupLink']}
+                    </Link>
+                  )}
                 </Box>
               </Box>
               <Box
@@ -100,9 +108,11 @@ export default function MeetingSummeryDetailsComponent() {
               >
                 <Box sx={{ fontWeight: '600' }}>TLDV Link: </Box>
                 <Box>
-                  <Link href={detailsData?.['tldvLink']} target='_blank'>
-                    {detailsData?.['tldvLink']}
-                  </Link>
+                  {!!detailsData?.['tldvLink'] && (
+                    <Link href={detailsData?.['tldvLink']} target='_blank'>
+                      {detailsData?.['tldvLink']}
+                    </Link>
+                  )}
                 </Box>
               </Box>
             </Box>
@@ -138,7 +148,7 @@ export default function MeetingSummeryDetailsComponent() {
                   <MdPreview modelValue={detailsData?.['meetingSummeryText']} />
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={detailsData?.['meetingSummeryText']} />
-                    <Link href={`/meeting-summery/edit/${detailsData?.id}`} passHref>
+                    <Link href={`/meeting-summery/edit/${meetingId}`} passHref>
                       <Box
                         sx={{ cursor: 'pointer' }}
                         component={'a'}
