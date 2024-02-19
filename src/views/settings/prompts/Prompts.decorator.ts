@@ -15,5 +15,6 @@ export const promptsTypeList = [
   { title: 'Project Overview', id: 3 },
   { title: 'Scope Of Work', id: 4 },
   { title: 'Deliverables', id: 5 },
-  { title: 'Meeting Summary', id: 6 }
+  { title: 'Meeting Summary', id: 6 },
+  { title: 'Other', id: 7 }
 ]
