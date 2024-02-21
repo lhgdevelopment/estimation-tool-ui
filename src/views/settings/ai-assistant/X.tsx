@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 
-export default function ChatSpeakerNotesIconComponent() {
+export default function AIAssistantComponent() {
   return (
     <>
       <Box className='container px-6 mx-auto' sx={{ height: 'calc(100vh - 126px)', position: 'relative' }}>

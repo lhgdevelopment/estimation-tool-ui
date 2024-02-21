@@ -1,3 +1,1 @@
-export ServiceTreeSx = {
-    
-} 
+export const ServiceTreeSx = {}

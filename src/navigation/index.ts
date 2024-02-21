@@ -55,11 +55,6 @@ const navigation: TNavigation[] = [
     icon: SpeakerNotesIcon,
     path: '/meeting-summery'
   },
-  {
-    title: 'Chat',
-    icon: ChatIcon,
-    path: '/chat'
-  },
 
   {
     title: 'Service Management',
@@ -107,6 +102,11 @@ const navigation: TNavigation[] = [
         title: 'Prompts',
         icon: SettingsEthernetIcon,
         path: '/settings/prompts'
+      },
+      {
+        title: 'AI Assistant',
+        icon: ChatIcon,
+        path: '/settings/ai-assistant'
       },
       {
         title: 'Meeting Type',
