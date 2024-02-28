@@ -77,7 +77,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     })
   }
 
-  const handleSelectChange = (e: any) => {
+  const handleSelectChange = (e: SelectChangeEvent<any>) => {
     setProjectSOWFormData({
       ...projectSOWFormData,
       [e?.target?.name]: e?.target?.value
