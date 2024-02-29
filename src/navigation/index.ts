@@ -104,7 +104,7 @@ const navigation: TNavigation[] = [
         path: '/settings/prompts'
       },
       {
-        title: 'AI Assistant',
+        title: 'HiveAI',
         icon: ChatIcon,
         path: '/settings/ai-assistant'
       },

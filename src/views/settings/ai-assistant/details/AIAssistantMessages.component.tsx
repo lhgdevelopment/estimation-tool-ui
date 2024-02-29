@@ -1,4 +1,3 @@
-import AssistantIcon from '@mui/icons-material/Assistant'
 import { Avatar, Box } from '@mui/material'
 import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
@@ -23,10 +22,12 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
           mr: '10px'
         }}
       >
-        <Avatar sx={{ width: 32, height: 32 }}>{index % 2 ? <AssistantIcon /> : `Y`}</Avatar>
+        <Avatar sx={{ width: 32, height: 32, border: '1px solid #ddd' }} src={index % 2 ? '/avatar/lhg-logo.png' : ''}>
+          {index % 2 ? '' : `Y`}
+        </Avatar>
       </Box>
       <Box>
-        <Box sx={{ fontWeight: 600, color: '#000' }}>{index % 2 ? `AI Assistant` : `You`}</Box>
+        <Box sx={{ fontWeight: 600, color: '#000' }}>{index % 2 ? `Hive AI` : `You`}</Box>
         <Box sx={{ lineHeight: 'normal' }}>
           {isWaiting ? (
             <Box
