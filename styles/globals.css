@@ -185,6 +185,17 @@ button:focus {
   }
 }
 
+@keyframes pulseSize {
+  0%,
+  to {
+    -webkit-transform: scaleX(1);
+    transform: scaleX(1);
+  }
+  50% {
+    -webkit-transform: scale3d(1.25, 1.25, 1);
+    transform: scale3d(1.25, 1.25, 1);
+  }
+}
 .MuiFormControl-root .MuiInputBase-formControl .MuiOutlinedInput-notchedOutline {
   border-color: #e2e8f0;
 }

@@ -65,7 +65,7 @@ const AppLayout = ({ children }: Props) => {
       <AppNavbarComponent />
       <Box className='flex flex-col flex-1' sx={{ marginLeft: '280px', width: '100%' }}>
         <AppHeaderComponent />
-        <Box component={'main'} className='h-full pb-16 overflow-y-auto'>
+        <Box component={'main'} className='h-full  overflow-y-auto'>
           {children}
         </Box>
       </Box>

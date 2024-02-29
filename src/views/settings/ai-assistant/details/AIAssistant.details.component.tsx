@@ -2,30 +2,37 @@ import NorthIcon from '@mui/icons-material/North'
 import { Box, Button, SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
+import AIAssistantMessagesComponent from './AIAssistantMessages.component'
 
 export default function AIAssistantDetailsComponent() {
-  const meetingId = useRouter()?.query['id']
+  const conversationId = useRouter()?.query['id']
 
   const [preload, setPreload] = useState<boolean>(false)
+  const [messagePreload, setMessagePreload] = useState<boolean>(false)
   const [detailsData, setDetailsData] = useState<any>({})
 
   const defaultData = {
-    conversation_id: '',
+    conversation_id: conversationId,
     prompt_id: '',
     message_content: ''
   }
   const [conversationFormData, setConversationFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
   const getDetails = () => {
     setPreload(true)
-    apiRequest.get(`/conversations/${meetingId}`).then(res => {
+    apiRequest.get(`/conversations/${conversationId}`).then(res => {
       setDetailsData(res.data)
       setPreload(false)
+      setTimeout(() => {
+        scrollToBottom()
+      }, 100)
     })
   }
 
@@ -43,11 +50,58 @@ export default function AIAssistantDetailsComponent() {
     })
   }
 
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
+  const onSubmit = () => {
+    setErrorMessage({})
+    const formData = { ...conversationFormData, conversation_id: conversationId }
+    setConversationFormData(defaultData)
+    setDetailsData((prevState: any) => ({
+      ...prevState,
+      messages: [
+        ...prevState.messages,
+        ...[
+          conversationFormData,
+          {
+            message_content: null
+          }
+        ]
+      ]
+    }))
+    setTimeout(() => {
+      scrollToBottom()
+    }, 100)
+    setMessagePreload(true)
+    apiRequest
+      .post(`/conversations/continue`, formData)
+      .then(res => {
+        setDetailsData((prevState: any) => ({
+          ...prevState,
+          messages: [...prevState.messages.filter((message: any) => message?.id), ...res?.data?.messages]
+        }))
+        setMessagePreload(false)
+        scrollToBottom()
+      })
+      .catch(error => {
+        setErrorMessage(error?.response?.data?.errors)
+        setDetailsData((prevState: any) => ({
+          ...prevState,
+          messages: [...prevState.messages.filter((message: any) => message?.id)]
+        }))
+        setMessagePreload(false)
+        scrollToBottom()
+      })
+  }
+
   useEffect(() => {
-    if (meetingId) {
+    if (conversationId) {
       getDetails()
     }
-  }, [meetingId])
+  }, [conversationId])
 
   const sowHeadingSx = {
     fontSize: '16x',
@@ -66,8 +120,27 @@ export default function AIAssistantDetailsComponent() {
   return (
     <Box sx={{ p: 5 }}>
       <Box>
-        <Box className='container px-6 mx-auto' sx={{ height: 'calc(100vh - 126px)', position: 'relative' }}>
-          <Box></Box>
+        <Box className='container px-6 mx-auto' sx={{ height: 'calc(100vh - 100px)', position: 'relative' }}>
+          <Box
+            sx={{
+              height: 'calc(100% - 130px)',
+              overflow: 'hidden',
+              overflowY: 'auto'
+            }}
+          >
+            {detailsData?.messages?.map((message: any, index: number) => {
+              return (
+                <AIAssistantMessagesComponent
+                  key={index}
+                  index={index}
+                  messageContent={message?.message_content}
+                  isWaiting={!message?.message_content}
+                />
+              )
+            })}
+            <Box ref={messagesEndRef}></Box>
+          </Box>
+
           <Box
             sx={{
               position: 'absolute',
@@ -126,14 +199,16 @@ export default function AIAssistantDetailsComponent() {
                   overflow: 'hidden',
                   resize: 'none'
                 }}
+                disabled={messagePreload}
               ></Box>
 
               <Button
+                onClick={onSubmit}
                 sx={{
                   position: 'absolute',
                   top: '50%',
                   right: '9px',
-                  background: '#e3e3e3',
+                  background: conversationFormData?.message_content ? '#000' : '#e3e3e3',
                   padding: '0',
                   height: '30px',
                   width: '30px',
@@ -143,10 +218,14 @@ export default function AIAssistantDetailsComponent() {
                   border: '0',
                   outline: '0',
                   borderRadius: '0.5rem',
-                  zIndex: 1
+                  zIndex: 1,
+                  '&:hover': {
+                    background: '#000'
+                  }
                 }}
+                disabled={!conversationFormData?.message_content}
               >
-                <NorthIcon />
+                <NorthIcon sx={{ fontSize: '16px' }} />
               </Button>
             </Box>
           </Box>
