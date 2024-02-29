@@ -8,13 +8,13 @@ import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 
 export default function AIAssistantDetailsComponent() {
-  const meetingId = useRouter()?.query['id']
+  const conversationId = useRouter()?.query['id']
 
   const [preload, setPreload] = useState<boolean>(false)
   const [detailsData, setDetailsData] = useState<any>({})
 
   const defaultData = {
-    conversation_id: '',
+    conversation_id: conversationId,
     prompt_id: '',
     message_content: ''
   }
@@ -23,7 +23,7 @@ export default function AIAssistantDetailsComponent() {
 
   const getDetails = () => {
     setPreload(true)
-    apiRequest.get(`/conversations/${meetingId}`).then(res => {
+    apiRequest.get(`/conversations/${conversationId}`).then(res => {
       setDetailsData(res.data)
       setPreload(false)
     })
@@ -43,11 +43,22 @@ export default function AIAssistantDetailsComponent() {
     })
   }
 
+  const onSubmit = () => {
+    apiRequest
+      .post(`/conversations/continue`, { ...conversationFormData, conversation_id: conversationId })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(error => {
+        setErrorMessage(error?.response?.data?.errors)
+      })
+  }
+
   useEffect(() => {
-    if (meetingId) {
+    if (conversationId) {
       getDetails()
     }
-  }, [meetingId])
+  }, [conversationId])
 
   const sowHeadingSx = {
     fontSize: '16x',
@@ -67,7 +78,9 @@ export default function AIAssistantDetailsComponent() {
     <Box sx={{ p: 5 }}>
       <Box>
         <Box className='container px-6 mx-auto' sx={{ height: 'calc(100vh - 126px)', position: 'relative' }}>
-          <Box></Box>
+          <Box>
+            <Box></Box>
+          </Box>
           <Box
             sx={{
               position: 'absolute',
@@ -129,6 +142,7 @@ export default function AIAssistantDetailsComponent() {
               ></Box>
 
               <Button
+                onClick={onSubmit}
                 sx={{
                   position: 'absolute',
                   top: '50%',
@@ -143,10 +157,13 @@ export default function AIAssistantDetailsComponent() {
                   border: '0',
                   outline: '0',
                   borderRadius: '0.5rem',
-                  zIndex: 1
+                  zIndex: 1,
+                  '&:hover': {
+                    background: '#e3e3e3'
+                  }
                 }}
               >
-                <NorthIcon />
+                <NorthIcon sx={{ fontSize: '16px' }} />
               </Button>
             </Box>
           </Box>
