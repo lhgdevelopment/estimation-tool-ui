@@ -1,8 +1,8 @@
 // ** Icon imports
 import BiotechIcon from '@mui/icons-material/Biotech'
-import ChatIcon from '@mui/icons-material/Chat'
 import EngineeringIcon from '@mui/icons-material/Engineering'
 import GroupsIcon from '@mui/icons-material/Groups'
+import HiveIcon from '@mui/icons-material/Hive'
 import LinkIcon from '@mui/icons-material/Link'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
@@ -55,7 +55,11 @@ const navigation: TNavigation[] = [
     icon: SpeakerNotesIcon,
     path: '/meeting-summery'
   },
-
+  {
+    title: 'HiveAI',
+    icon: HiveIcon,
+    path: '/settings/ai-assistant'
+  },
   {
     title: 'Service Management',
     icon: EngineeringIcon,
@@ -103,11 +107,7 @@ const navigation: TNavigation[] = [
         icon: SettingsEthernetIcon,
         path: '/settings/prompts'
       },
-      {
-        title: 'HiveAI',
-        icon: ChatIcon,
-        path: '/settings/ai-assistant'
-      },
+
       {
         title: 'Meeting Type',
         icon: SettingsEthernetIcon,
