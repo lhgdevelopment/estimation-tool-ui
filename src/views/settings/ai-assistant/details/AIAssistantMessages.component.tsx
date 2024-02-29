@@ -27,7 +27,7 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
         </Avatar>
       </Box>
       <Box>
-        <Box sx={{ fontWeight: 600, color: '#000' }}>{index % 2 ? `AI Assistant` : `You`}</Box>
+        <Box sx={{ fontWeight: 600, color: '#000' }}>{index % 2 ? `Hive AI` : `You`}</Box>
         <Box sx={{ lineHeight: 'normal' }}>
           {isWaiting ? (
             <Box
