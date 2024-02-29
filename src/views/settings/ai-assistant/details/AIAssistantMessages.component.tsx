@@ -1,0 +1,51 @@
+import AssistantIcon from '@mui/icons-material/Assistant'
+import { Avatar, Box } from '@mui/material'
+import { MdPreview } from 'md-editor-rt'
+import 'md-editor-rt/lib/style.css'
+
+type TAIAssistantMessagesComponentProps = {
+  messageContent: string
+  index: number
+  isWaiting?: boolean
+}
+export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
+  const { messageContent, index, isWaiting = false } = props
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        mb: '30px'
+      }}
+    >
+      <Box
+        sx={{
+          mr: '10px'
+        }}
+      >
+        <Avatar sx={{ width: 32, height: 32 }}>{index % 2 ? <AssistantIcon /> : `Y`}</Avatar>
+      </Box>
+      <Box>
+        <Box sx={{ fontWeight: 600, color: '#000' }}>{index % 2 ? `AI Assistant` : `You`}</Box>
+        <Box sx={{ lineHeight: 'normal' }}>
+          {isWaiting ? (
+            <Box
+              sx={{
+                height: '14px',
+                width: '14px',
+                background: '#000',
+                borderRadius: '50%',
+                animation: 'pulseSize 1.25s ease-in-out infinite',
+                mt: '5px'
+              }}
+            ></Box>
+          ) : index % 2 ? (
+            <MdPreview modelValue={messageContent}></MdPreview>
+          ) : (
+            messageContent
+          )}
+        </Box>
+      </Box>
+    </Box>
+  )
+}
