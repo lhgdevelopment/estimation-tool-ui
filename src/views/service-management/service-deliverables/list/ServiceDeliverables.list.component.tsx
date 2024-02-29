@@ -82,11 +82,15 @@ export default function ServiceDeliverablesListComponent(props: TServiceDelivera
                 return (
                   <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>
-                      <Box sx={{ width: '200px', whiteSpace: 'normal' }}>
-                        {data?.name.substring(0, 100).length < data?.name.length
-                          ? data?.name.substring(0, 100) + '...'
-                          : data?.name.substring(0, 100)}
-                      </Box>
+                      <Box
+                        sx={{ width: '200px', whiteSpace: 'normal' }}
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            data?.name.substring(0, 100).length < data?.name.length
+                              ? data?.name.substring(0, 100) + '...'
+                              : data?.name.substring(0, 100)
+                        }}
+                      ></Box>
                     </td>
                     <td className='px-4 py-3 text-sm'>{data?.service_scope?.service_group?.service?.name}</td>
                     <td className='px-4 py-3 text-sm'>{data?.service_scope?.service_group?.name}</td>
