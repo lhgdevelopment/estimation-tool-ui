@@ -46,23 +46,27 @@ export default function ServiceTreeComponent() {
 
   const serviceDefaultData = {
     name: '',
+    order: '',
     projectTypeId: ''
   }
   const serviceGroupDefaultData = {
     serviceId: '',
     name: '',
+    order: '',
     names: ['']
   }
 
   const serviceSOWDefaultData = {
     serviceGroupId: '',
     name: '',
+    order: '',
     names: ['']
   }
 
   const serviceDeliverableDefaultData = {
     serviceScopeId: '',
     name: '',
+    order: '',
     names: ['']
   }
 
@@ -75,6 +79,7 @@ export default function ServiceTreeComponent() {
       }
     ],
     name: '',
+    order: '',
     cost: '',
     description: '',
     serviceDeliverableId: '',
@@ -192,9 +197,11 @@ export default function ServiceTreeComponent() {
   const handleServiceEditButton = (e: any, data: any, id: string) => {
     e.preventDefault()
     e.stopPropagation()
+    console.log(data)
 
     setServiceFormData({
       name: data?.['name'],
+      order: data?.['order'],
       projectTypeId: data?.['projectTypeId']
     })
     setServiceEditDataId(id)
@@ -209,6 +216,7 @@ export default function ServiceTreeComponent() {
     setServiceGroupFormData({
       serviceId: data?.serviceId || '',
       name: data?.name || '',
+      order: data?.order,
       names: data?.names || ['']
     })
     setServiceGroupEditDataId(id)
@@ -223,11 +231,46 @@ export default function ServiceTreeComponent() {
     setServiceSOWFormData({
       serviceGroupId: data?.serviceGroupId || '',
       name: data?.name || '',
+      order: data?.order,
       names: data?.names || ['']
     })
     setServiceSOWEditDataId(id)
     handleServiceModalOpen()
     setFormType(EServiceFormType.SOW)
+  }
+
+  const handleServiceDeliverableEditButton = (e: any, data: any, id: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    setServiceDeliverableFormData({
+      serviceScopeId: data?.serviceScopeId || '',
+      name: data?.name || '',
+      order: data?.order,
+      names: data?.names || ['']
+    })
+    setServiceDeliverableEditDataId(id)
+    handleServiceModalOpen()
+    setFormType(EServiceFormType.DELIVARABLE)
+  }
+
+  const handleServiceTaskEditButton = (e: any, data: any, id: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    setServiceTaskFormData({
+      serviceDeliverableId: data?.serviceDeliverableId || '',
+      parentTaskId: data?.parentTaskId || '',
+
+      name: data?.name || '',
+      order: data?.order,
+      cost: data?.cost || '',
+      description: data?.description || '',
+      tasks: serviceTaskDefaultData.tasks
+    })
+    setServiceTaskEditDataId(id)
+    handleServiceModalOpen()
+    setFormType(EServiceFormType.TASK)
   }
 
   const onServiceSubmit = (e: React.FormEvent<any>) => {
@@ -773,6 +816,9 @@ export default function ServiceTreeComponent() {
                                           <Box dangerouslySetInnerHTML={{ __html: deliverable?.name }}></Box>
                                           <Box sx={{ width: '240px' }}>
                                             <Button
+                                              onClick={e => {
+                                                handleServiceDeliverableEditButton(e, deliverable, deliverable?.id)
+                                              }}
                                               sx={{
                                                 minWidth: 'auto',
                                                 fontSize: '12px',
@@ -828,6 +874,9 @@ export default function ServiceTreeComponent() {
                                                 <Box dangerouslySetInnerHTML={{ __html: task?.name }}></Box>
                                                 <Box sx={{ width: '240px' }}>
                                                   <Button
+                                                    onClick={e => {
+                                                      handleServiceTaskEditButton(e, task, task?.id)
+                                                    }}
                                                     sx={{
                                                       minWidth: 'auto',
                                                       fontSize: '12px',
@@ -896,11 +945,13 @@ export default function ServiceTreeComponent() {
             >
               <Box sx={{ mb: '20px' }}>
                 <h2 id='modal-title'>
-                  {formType === EServiceFormType.SERVICE && <>Add Service</>}
-                  {formType === EServiceFormType.GROUP && <>Add Group</>}
-                  {formType === EServiceFormType.SOW && <>Add Scope</>}
-                  {formType === EServiceFormType.DELIVARABLE && <>Add Deliverable</>}
-                  {formType === EServiceFormType.TASK && <>Add Task</>}
+                  {formType === EServiceFormType.SERVICE && <>{serviceEditDataId ? 'Update' : 'Add'} Service</>}
+                  {formType === EServiceFormType.GROUP && <>{serviceGroupEditDataId ? 'Update' : 'Add'} Group</>}
+                  {formType === EServiceFormType.SOW && <>{serviceSOWEditDataId ? 'Update' : 'Add'} Scope</>}
+                  {formType === EServiceFormType.DELIVARABLE && (
+                    <>{serviceDeliverableEditDataId ? 'Update' : 'Add'} Deliverable</>
+                  )}
+                  {formType === EServiceFormType.TASK && <>{serviceTaskEditDataId ? 'Update' : 'Add'} Task</>}
                 </h2>
               </Box>
               {formType === EServiceFormType.SERVICE && (
@@ -915,6 +966,22 @@ export default function ServiceTreeComponent() {
                           value={serviceFormData.projectTypeId}
                           onChange={e => handleSelectChange(e, serviceFormData, setServiceFormData)}
                           optionConfig={{ id: 'id', title: 'name' }}
+                        />
+                      </label>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                        <input
+                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                          placeholder='Examples: 1'
+                          name='order'
+                          value={serviceFormData.order}
+                          onChange={e => {
+                            handleChange(e, serviceFormData, setServiceFormData)
+                          }}
                         />
                       </label>
                     </Box>
@@ -982,6 +1049,22 @@ export default function ServiceTreeComponent() {
                               </span>
                             )
                           })}
+                      </label>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                        <input
+                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                          placeholder='Examples: 1'
+                          name='order'
+                          value={serviceGroupFormData.order}
+                          onChange={e => {
+                            handleChange(e, serviceGroupFormData, setServiceGroupFormData)
+                          }}
+                        />
                       </label>
                     </Box>
                   </Box>
@@ -1150,6 +1233,22 @@ export default function ServiceTreeComponent() {
                       </label>
                     </Box>
                   </Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                        <input
+                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                          placeholder='Examples: 1'
+                          name='order'
+                          value={serviceSOWFormData.order}
+                          onChange={e => {
+                            handleChange(e, serviceSOWFormData, setServiceSOWFormData)
+                          }}
+                        />
+                      </label>
+                    </Box>
+                  </Box>
                   {serviceSOWEditDataId ? (
                     <>
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -1312,6 +1411,22 @@ export default function ServiceTreeComponent() {
                               </span>
                             )
                           })}
+                      </label>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                        <input
+                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                          placeholder='Examples: 1'
+                          name='order'
+                          value={serviceDeliverableFormData.order}
+                          onChange={e => {
+                            handleChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
+                          }}
+                        />
                       </label>
                     </Box>
                   </Box>
@@ -1804,6 +1919,22 @@ export default function ServiceTreeComponent() {
                                     </span>
                                   )
                                 })}
+                            </label>
+                          </Box>
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                          <Box sx={{ width: '100%' }}>
+                            <label className='block text-sm'>
+                              <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                              <input
+                                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                placeholder='Examples: 1'
+                                name='order'
+                                value={serviceTaskFormData.order}
+                                onChange={e => {
+                                  handleChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                }}
+                              />
                             </label>
                           </Box>
                         </Box>
