@@ -8,7 +8,7 @@ import apiRequest from '../../utils/axios-config'
 
 type TOptionConfig = { title: string; id: string }
 
-interface ISelectProps extends SelectProps {
+interface ISelectProps {
   label?: string
   url?: string
   isEnumField?: boolean
@@ -18,8 +18,15 @@ interface ISelectProps extends SelectProps {
   enumList?: { title: string; id: string | number }[]
   sx?: SxProps
 }
+interface ISelectProps {
+  label?: string
+  url?: string
+  isEnumField?: boolean
+}
 
-export function Dropdown(props: ISelectProps) {
+type SelectPropsWithISelectProps = SelectProps & ISelectProps
+
+export function Dropdown(props: SelectPropsWithISelectProps) {
   const {
     placeholder = 'Please Select',
     url,
