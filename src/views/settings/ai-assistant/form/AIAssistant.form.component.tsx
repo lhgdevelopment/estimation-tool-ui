@@ -5,6 +5,7 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
+import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
@@ -19,6 +20,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
   }
 
   const [formData, setFormData] = useState(defaultData)
+  const [prelaoder, setPreloader] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -35,6 +37,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
   }
 
   const onSubmit = (e: React.FormEvent<any>) => {
+    setPreloader(true)
     e.preventDefault()
     apiRequest.post('/conversations/create', formData).then(res => {
       apiRequest.get(`/conversations?page=${1}`).then(res => {
@@ -48,6 +51,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
         showConfirmButton: false
       })
       onClear()
+      setPreloader(false)
     })
   }
 
@@ -67,6 +71,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
 
   return (
     <Fragment>
+      {!!prelaoder && <Preloader close={!!prelaoder} />}
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>

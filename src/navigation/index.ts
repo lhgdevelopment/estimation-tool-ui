@@ -56,7 +56,7 @@ const navigation: TNavigation[] = [
     path: '/meeting-summery'
   },
   {
-    title: 'HiveAI',
+    title: 'Hive AI',
     icon: HiveIcon,
     path: '/settings/ai-assistant'
   },
