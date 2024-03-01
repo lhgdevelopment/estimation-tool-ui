@@ -56,10 +56,10 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               timerProgressBar: true,
               showConfirmButton: false
             })
+            onClear()
 
             return updatedList
           })
-          onClear()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -93,7 +93,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
   }, [editDataId, editData])
 
   const onClear = () => {
-    setPromptsFormData(prevState => ({ ...defaultData }))
+    setPromptsFormData(prevState => defaultData)
     setEditDataId(null)
     setEditData({})
   }

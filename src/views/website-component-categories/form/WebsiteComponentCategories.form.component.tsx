@@ -44,9 +44,10 @@ export default function WebsiteComponentCategoriesFormComponent(props: TWebsiteC
             showConfirmButton: false
           })
 
+          onClear()
+
           return updatedList
         })
-        onClear()
       })
     } else {
       apiRequest.post('/categories', formData).then(res => {

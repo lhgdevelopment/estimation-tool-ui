@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import AIAssistantComponent from 'src/views/settings/ai-assistant/AIAssistant.component'
+import AIAssistantComponent from 'src/views/ai-assistant/AIAssistant.component'
 
 const AIAssistant = () => {
   return <AIAssistantComponent></AIAssistantComponent>

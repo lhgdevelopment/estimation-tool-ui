@@ -44,9 +44,10 @@ export default function MeetingTypeFormComponent(props: TMeetingTypeComponent) {
             showConfirmButton: false
           })
 
+          onClear()
+
           return updatedList
         })
-        onClear()
       })
     } else {
       apiRequest.post('/meeting-type', formData).then(res => {
