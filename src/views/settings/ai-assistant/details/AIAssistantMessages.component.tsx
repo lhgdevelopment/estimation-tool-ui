@@ -26,11 +26,13 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
           sx={{ width: 32, height: 32, border: '1px solid #ddd' }}
           src={message?.role === 'system' ? '/avatar/lhg-logo.png' : ''}
         >
-          {message?.role === 'system' ? '' : `Y`}
+          {message?.role === 'system' ? '' : message?.user?.name ? message?.user?.name[0] : 'Y'}
         </Avatar>
       </Box>
       <Box>
-        <Box sx={{ fontWeight: 600, color: '#000' }}>{index % 2 ? `Hive AI` : `You`}</Box>
+        <Box sx={{ fontWeight: 600, color: '#000' }}>
+          {message?.role === 'system' ? `Hive AI` : message?.user?.name ? message?.user?.name : 'You'}
+        </Box>
         <Box sx={{ lineHeight: 'normal' }}>
           {isWaiting ? (
             <Box
