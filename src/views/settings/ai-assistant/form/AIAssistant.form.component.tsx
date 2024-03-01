@@ -52,7 +52,6 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
         timerProgressBar: true,
         showConfirmButton: false
       })
-      console.log()
       router.push(`ai-assistant/${res?.data?.id}`)
 
       // onClear()
