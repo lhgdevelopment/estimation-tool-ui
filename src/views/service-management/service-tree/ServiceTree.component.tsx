@@ -202,7 +202,7 @@ export default function ServiceTreeComponent() {
     setServiceFormData({
       name: data?.['name'],
       order: data?.['order'],
-      projectTypeId: data?.['projectTypeId']
+      projectTypeId: data?.['projectType']?.['id']
     })
     setServiceEditDataId(id)
     handleServiceModalOpen()
