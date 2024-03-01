@@ -3,6 +3,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
+import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
@@ -12,6 +13,7 @@ import { TAIAssistantComponent } from '../AIAssistant.decorator'
 
 export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
+  const router = useRouter()
 
   const defaultData = {
     name: '',
@@ -40,9 +42,9 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
     setPreloader(true)
     e.preventDefault()
     apiRequest.post('/conversations/create', formData).then(res => {
-      apiRequest.get(`/conversations?page=${1}`).then(res => {
-        setListData((prevState: []) => [...res.data])
-      })
+      // apiRequest.get(`/conversations?page=${1}`).then(res => {
+      //   setListData((prevState: []) => [...res.data])
+      // })
       Swal.fire({
         title: 'Data Created Successfully!',
         icon: 'success',
@@ -50,8 +52,11 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
         timerProgressBar: true,
         showConfirmButton: false
       })
-      onClear()
-      setPreloader(false)
+      console.log()
+      router.push(`ai-assistant/${res?.data?.id}`)
+
+      // onClear()
+      // setPreloader(false)
     })
   }
 
