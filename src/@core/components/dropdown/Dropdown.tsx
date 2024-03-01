@@ -18,11 +18,6 @@ interface ISelectProps {
   enumList?: { title: string; id: string | number }[]
   sx?: SxProps
 }
-interface ISelectProps {
-  label?: string
-  url?: string
-  isEnumField?: boolean
-}
 
 type SelectPropsWithISelectProps = SelectProps & ISelectProps
 
