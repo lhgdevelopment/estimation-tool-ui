@@ -58,7 +58,7 @@ const navigation: TNavigation[] = [
   {
     title: 'Hive AI',
     icon: HiveIcon,
-    path: '/settings/ai-assistant'
+    path: '/ai-assistant'
   },
   {
     title: 'Service Management',

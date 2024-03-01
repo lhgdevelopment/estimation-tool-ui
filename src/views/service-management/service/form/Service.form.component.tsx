@@ -67,9 +67,10 @@ export default function ServiceFormComponent(props: TServiceComponent) {
             showConfirmButton: false
           })
 
+          onClear()
+
           return updatedList
         })
-        onClear()
       })
     } else {
       apiRequest.post('/services', formData).then(res => {

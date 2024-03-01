@@ -55,9 +55,10 @@ export default function WebsiteComponentFormComponent(props: TWebsiteComponentCo
             showConfirmButton: false
           })
 
+          onClear()
+
           return updatedList
         })
-        onClear()
       })
     } else {
       apiRequest.post('/components', formData).then(res => {

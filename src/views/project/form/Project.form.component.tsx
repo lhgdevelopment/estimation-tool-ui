@@ -45,10 +45,10 @@ export default function ProjectFormComponent(props: TProjectComponent) {
             timerProgressBar: true,
             showConfirmButton: false
           })
+          onClear()
 
           return updatedList
         })
-        onClear()
       })
     } else {
       apiRequest.post('/projects', formData).then(res => {

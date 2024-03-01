@@ -44,9 +44,10 @@ export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
             showConfirmButton: false
           })
 
+          onClear()
+
           return updatedList
         })
-        onClear()
       })
     } else {
       apiRequest.post('/project-type', formData).then(res => {
