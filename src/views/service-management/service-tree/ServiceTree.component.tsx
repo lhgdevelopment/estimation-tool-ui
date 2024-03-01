@@ -202,7 +202,7 @@ export default function ServiceTreeComponent() {
     setServiceFormData({
       name: data?.['name'],
       order: data?.['order'],
-      projectTypeId: data?.['projectTypeId']
+      projectTypeId: data?.['projectType']?.['id']
     })
     setServiceEditDataId(id)
     handleServiceModalOpen()
@@ -1183,7 +1183,7 @@ export default function ServiceTreeComponent() {
                   )}
                   <Box className='my-4 text-right'>
                     <button
-                      onClick={onServiceClear}
+                      onClick={onServiceGroupClear}
                       type='button'
                       className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
                     >
@@ -1364,7 +1364,7 @@ export default function ServiceTreeComponent() {
                   )}
                   <Box className='my-4 text-right'>
                     <button
-                      onClick={onServiceClear}
+                      onClick={onServiceSOWClear}
                       type='button'
                       className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
                     >
@@ -1552,7 +1552,7 @@ export default function ServiceTreeComponent() {
                   )}
                   <Box className='my-4 text-right'>
                     <button
-                      onClick={onServiceClear}
+                      onClick={onServiceDeliverableClear}
                       type='button'
                       className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
                     >
@@ -2164,7 +2164,7 @@ export default function ServiceTreeComponent() {
                         )}
                         <Box className='my-4 text-right'>
                           <button
-                            onClick={onServiceClear}
+                            onClick={onServiceTaskClear}
                             type='button'
                             className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
                           >

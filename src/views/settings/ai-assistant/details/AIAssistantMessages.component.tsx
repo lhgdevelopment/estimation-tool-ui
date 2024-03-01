@@ -3,12 +3,12 @@ import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 
 type TAIAssistantMessagesComponentProps = {
-  messageContent: string
+  message: any
   index: number
   isWaiting?: boolean
 }
 export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
-  const { messageContent, index, isWaiting = false } = props
+  const { message, index, isWaiting = false } = props
 
   return (
     <Box
@@ -22,8 +22,11 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
           mr: '10px'
         }}
       >
-        <Avatar sx={{ width: 32, height: 32, border: '1px solid #ddd' }} src={index % 2 ? '/avatar/lhg-logo.png' : ''}>
-          {index % 2 ? '' : `Y`}
+        <Avatar
+          sx={{ width: 32, height: 32, border: '1px solid #ddd' }}
+          src={message?.role === 'system' ? '/avatar/lhg-logo.png' : ''}
+        >
+          {message?.role === 'system' ? '' : `Y`}
         </Avatar>
       </Box>
       <Box>
@@ -40,10 +43,10 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
                 mt: '5px'
               }}
             ></Box>
-          ) : index % 2 ? (
-            <MdPreview modelValue={messageContent}></MdPreview>
+          ) : message?.role === 'system' ? (
+            <MdPreview modelValue={message?.message_content}></MdPreview>
           ) : (
-            messageContent
+            message?.message_content
           )}
         </Box>
       </Box>

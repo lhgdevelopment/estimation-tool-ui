@@ -36,7 +36,7 @@ export default function AIAssistantDetailsComponent() {
     })
   }
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setConversationFormData({
       ...conversationFormData,
       [e?.target?.name]: e.target.value
@@ -133,7 +133,7 @@ export default function AIAssistantDetailsComponent() {
                 <AIAssistantMessagesComponent
                   key={index}
                   index={index}
-                  messageContent={message?.message_content}
+                  message={message}
                   isWaiting={!message?.message_content}
                 />
               )
@@ -182,7 +182,7 @@ export default function AIAssistantDetailsComponent() {
               }}
             >
               <Box
-                component={'input'}
+                component={'textarea'}
                 className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                   errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
                 }`}
