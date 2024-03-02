@@ -50,6 +50,13 @@ export default function AIAssistantDetailsComponent() {
     })
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      onSubmit()
+    }
+  }
+
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
@@ -190,6 +197,7 @@ export default function AIAssistantDetailsComponent() {
                 name='message_content'
                 value={conversationFormData.message_content}
                 onChange={handleChange}
+                onKeyDown={handleKeyDown}
                 sx={{
                   paddingBottom: '0.875rem',
                   paddingTop: '0.875rem',
