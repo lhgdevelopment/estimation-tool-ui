@@ -18,7 +18,7 @@ export default function MeetingSummeryDetailsComponent() {
   const getDetails = () => {
     setPreload(true)
     apiRequest.get(`/meeting-summery/${meetingId}`).then(res => {
-      setDetailsData(res.data)
+      setDetailsData(res?.data)
       setPreload(false)
     })
   }

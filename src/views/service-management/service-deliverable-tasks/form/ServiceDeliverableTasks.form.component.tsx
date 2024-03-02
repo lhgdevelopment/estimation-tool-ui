@@ -119,7 +119,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
     apiRequest
       .post('/clickup/list', data)
       .then(res => {
-        setClickupTaskList(res.data)
+        setClickupTaskList(res?.data)
       })
       .catch(error => {
         setErrorMessage(error?.response?.data?.errors)
@@ -139,7 +139,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
               (item: any) => item['_id'] === editDataId // Replace 'id' with the actual identifier of your item
             )
             if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res.data
+              updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
               title: 'Data Updated Successfully!',
@@ -161,7 +161,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
         .post('/service-deliverable-tasks', formData)
         .then(res => {
           apiRequest.get(`/service-deliverable-tasks?page=${1}`).then(res => {
-            setListData(res.data)
+            setListData(res?.data)
           })
 
           Swal.fire({

@@ -152,7 +152,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             }
             apiRequest.get(`/project-summery?page=1`).then(res => {
               if (setListData) {
-                setListData(res.data)
+                setListData(res?.data)
               }
             })
 
@@ -325,7 +325,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .then(res => {
           apiRequest.get(`/project-summery?page=1`).then(res => {
             if (setListData) {
-              setListData(res.data)
+              setListData(res?.data)
             }
           })
 

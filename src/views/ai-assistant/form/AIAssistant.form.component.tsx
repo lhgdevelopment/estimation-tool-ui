@@ -43,7 +43,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
     e.preventDefault()
     apiRequest.post('/conversations/create', formData).then(res => {
       // apiRequest.get(`/conversations?page=${1}`).then(res => {
-      //   setListData((prevState: []) => [...res.data])
+      //   setListData((prevState: []) => [...res?.data])
       // })
       Swal.fire({
         title: 'Data Created Successfully!',

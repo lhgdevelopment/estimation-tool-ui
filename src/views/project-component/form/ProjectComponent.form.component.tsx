@@ -47,7 +47,7 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
             (item: any) => item['_id'] === editDataId // Replace 'id' with the actual identifier of your item
           )
           if (editedServiceIndex !== -1) {
-            updatedList[editedServiceIndex] = res.data
+            updatedList[editedServiceIndex] = res?.data
           }
           Swal.fire({
             title: 'Data Updated Successfully!',
@@ -64,7 +64,7 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
       })
     } else {
       apiRequest.post('/project-components', formData).then(res => {
-        setListData((prevState: []) => [...prevState, res.data])
+        setListData((prevState: []) => [...prevState, res?.data])
         Swal.fire({
           title: 'Data Created Successfully!',
           icon: 'success',

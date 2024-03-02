@@ -283,7 +283,7 @@ export default function ServiceTreeComponent() {
             (item: any) => item['_id'] === serviceEditDataId // Replace 'id' with the actual identifier of your item
           )
           if (editedServiceIndex !== -1) {
-            updatedList[editedServiceIndex] = res.data
+            updatedList[editedServiceIndex] = res?.data
           }
           Swal.fire({
             title: 'Data Updated Successfully!',
@@ -300,7 +300,7 @@ export default function ServiceTreeComponent() {
       })
     } else {
       apiRequest.post('/services', serviceFormData).then(res => {
-        setListData((prevState: []) => [...prevState, res.data])
+        setListData((prevState: []) => [...prevState, res?.data])
         Swal.fire({
           title: 'Data Created Successfully!',
           icon: 'success',
@@ -327,7 +327,7 @@ export default function ServiceTreeComponent() {
               (item: any) => item['_id'] === serviceGroupEditDataId // Replace 'id' with the actual identifier of your item
             )
             if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res.data
+              updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
               title: 'Data Updated Successfully!',
@@ -348,7 +348,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-groups', serviceGroupFormData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, ...res.data])
+          setListData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -377,7 +377,7 @@ export default function ServiceTreeComponent() {
               (item: any) => item['_id'] === serviceSOWEditDataId // Replace 'id' with the actual identifier of your item
             )
             if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res.data
+              updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
               title: 'Data Updated Successfully!',
@@ -398,7 +398,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-scopes', serviceSOWFormData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, ...res.data])
+          setListData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -427,7 +427,7 @@ export default function ServiceTreeComponent() {
               (item: any) => item['_id'] === serviceDeliverableEditDataId // Replace 'id' with the actual identifier of your item
             )
             if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res.data
+              updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
               title: 'Data Updated Successfully!',
@@ -448,7 +448,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-deliverables', serviceDeliverableFormData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, ...res.data])
+          setListData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -495,7 +495,7 @@ export default function ServiceTreeComponent() {
     apiRequest
       .post('/clickup/list', data)
       .then(res => {
-        setClickupTaskList(res.data)
+        setClickupTaskList(res?.data)
       })
       .catch(error => {
         setErrorMessage(error?.response?.data?.errors)
@@ -515,7 +515,7 @@ export default function ServiceTreeComponent() {
               (item: any) => item['_id'] === serviceTaskEditDataId // Replace 'id' with the actual identifier of your item
             )
             if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res.data
+              updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
               title: 'Data Updated Successfully!',
@@ -537,7 +537,7 @@ export default function ServiceTreeComponent() {
         .post('/service-deliverable-tasks', serviceTaskFormData)
         .then(res => {
           apiRequest.get(`/service-deliverable-tasks?page=${1}`).then(res => {
-            setListData(res.data)
+            setListData(res?.data)
           })
 
           Swal.fire({
@@ -587,7 +587,7 @@ export default function ServiceTreeComponent() {
 
   const getList = () => {
     apiRequest.get(`/service-tree?per_page=1000`).then(res => {
-      setListData(res.data.services)
+      setListData(res?.data.services)
     })
   }
 

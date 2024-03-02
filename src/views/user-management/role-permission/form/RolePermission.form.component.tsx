@@ -44,7 +44,7 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
               (item: any) => item['_id'] === editDataId // Replace 'id' with the actual identifier of your item
             )
             if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res.data
+              updatedList[editedServiceIndex] = res?.data
             }
             roleModalClose()
             Swal.fire({
@@ -67,7 +67,7 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
       apiRequest
         .post('/roles', rolesFormData)
         .then(res => {
-          setListData((prevState: []) => roleSorting([res.data, ...prevState]))
+          setListData((prevState: []) => roleSorting([res?.data, ...prevState]))
           roleModalClose()
           Swal.fire({
             title: 'Data Created Successfully!',

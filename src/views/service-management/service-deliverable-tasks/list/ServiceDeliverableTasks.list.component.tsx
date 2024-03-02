@@ -14,7 +14,7 @@ export default function ServiceDeliverableTasksListComponent(props: TServiceDeli
     apiRequest.get(`/service-deliverable-tasks?page=${page}`).then(res => {
       const paginationData: any = res
 
-      setListData(res.data)
+      setListData(res?.data)
       setCurrentPage(paginationData?.['current_page'])
       setTotalPages(Math.ceil(paginationData?.['total'] / 10))
     })

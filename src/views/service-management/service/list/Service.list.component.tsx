@@ -48,7 +48,7 @@ export default function ServiceListComponent(props: TServiceComponent) {
       .get(`/services?page=${page}&name=${filterData?.name}&projectTypeId=${filterData?.projectTypeId}`)
       .then(res => {
         const paginationData: any = res
-        setListData(res.data)
+        setListData(res?.data)
         setCurrentPage(paginationData?.['current_page'])
         setTotalPages(Math.ceil(paginationData?.['total'] / 10))
         setPreloader(false)

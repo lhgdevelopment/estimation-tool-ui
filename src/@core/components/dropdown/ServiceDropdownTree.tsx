@@ -33,8 +33,8 @@ export function ServiceDropdownTree(props: ISelectProps) {
 
   const getList = () => {
     apiRequest.get(`/service-tree?per_page=1000`).then(res => {
-      setOptionItems(res.data.services)
-      setInitialOptionList(res.data.services)
+      setOptionItems(res?.data.services)
+      setInitialOptionList(res?.data.services)
     })
   }
 

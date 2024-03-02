@@ -3,12 +3,14 @@ import { Box, Button, SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import AIAssistantMessagesComponent from './AIAssistantMessages.component'
 
 export default function AIAssistantDetailsComponent() {
+  const { user } = useSelector((state: any) => state.user)
   const conversationId = useRouter()?.query['id']
 
   const [preload, setPreload] = useState<boolean>(false)
@@ -20,7 +22,8 @@ export default function AIAssistantDetailsComponent() {
     prompt_id: '',
     message_content: ''
   }
-  const [conversationFormData, setConversationFormData] = useState(defaultData)
+  const [conversationFormData, setConversationFormData] = useState<>(defaultData)
+  const [prevConversationFormData, setPrevConversationFormData] = useState<>(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -28,7 +31,17 @@ export default function AIAssistantDetailsComponent() {
   const getDetails = () => {
     setPreload(true)
     apiRequest.get(`/conversations/${conversationId}`).then(res => {
-      setDetailsData(res.data)
+      setDetailsData(res?.data)
+      const userMessages = res?.data?.messages?.filter((message: any) => message?.role == 'user')
+
+      setPrevConversationFormData({
+        ...defaultData,
+        ...{
+          message_content: userMessages?.length ? userMessages[userMessages.length - 1].message_content : '',
+          prompt_id: userMessages?.length ? userMessages[userMessages.length - 1].prompt_id : ''
+        }
+      })
+
       setPreload(false)
       setTimeout(() => {
         scrollToBottom()
@@ -63,18 +76,25 @@ export default function AIAssistantDetailsComponent() {
     }
   }
 
-  const onSubmit = () => {
+  const onSubmit = (isRegenerate = false) => {
     setErrorMessage({})
-    const formData = { ...conversationFormData, conversation_id: conversationId }
+    const formData = {
+      ...(isRegenerate ? prevConversationFormData : conversationFormData),
+      conversation_id: conversationId
+    }
     setConversationFormData(defaultData)
     setDetailsData((prevState: any) => ({
       ...prevState,
       messages: [
         ...prevState.messages,
         ...[
-          conversationFormData,
           {
-            message_content: null
+            ...formData,
+            user: { name: user.name }
+          },
+          {
+            message_content: null,
+            role: 'system'
           }
         ]
       ]
@@ -90,6 +110,7 @@ export default function AIAssistantDetailsComponent() {
           ...prevState,
           messages: [...prevState.messages.filter((message: any) => message?.id), ...res?.data?.messages]
         }))
+        setPrevConversationFormData(res?.data?.messages?.[0])
         setMessagePreload(false)
         scrollToBottom()
       })
@@ -142,6 +163,9 @@ export default function AIAssistantDetailsComponent() {
                   index={index}
                   message={message}
                   isWaiting={!message?.message_content}
+                  onRegenerate={() => {
+                    onSubmit(true)
+                  }}
                 />
               )
             })}
@@ -211,7 +235,9 @@ export default function AIAssistantDetailsComponent() {
               ></Box>
 
               <Button
-                onClick={onSubmit}
+                onClick={() => {
+                  onSubmit()
+                }}
                 sx={{
                   position: 'absolute',
                   top: '50%',

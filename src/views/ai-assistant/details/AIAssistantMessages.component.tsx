@@ -1,14 +1,17 @@
-import { Avatar, Box } from '@mui/material'
+import ReplayIcon from '@mui/icons-material/Replay'
+import { Avatar, Box, Tooltip } from '@mui/material'
 import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
+import CopyToClipboard from 'src/@core/components/copy-to-clipboard/CopyToClipboard'
 
 type TAIAssistantMessagesComponentProps = {
   message: any
   index: number
   isWaiting?: boolean
+  onRegenerate?: () => void
 }
 export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
-  const { message, index, isWaiting = false } = props
+  const { message, index, isWaiting = false, onRegenerate } = props
 
   return (
     <Box
@@ -51,6 +54,49 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
             message?.message_content
           )}
         </Box>
+        {message?.role === 'system' && (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', mt: '10px' }}>
+            {!!message?.message_content && (
+              <CopyToClipboard
+                textToCopy={message?.message_content}
+                title=''
+                tooltipTitle='Copy'
+                sx={{
+                  p: 0,
+                  background: 'transparent',
+                  color: '#9b9b9b',
+
+                  '& svg': {
+                    fontSize: '18px',
+                    m: 0
+                  },
+                  ':hover': {
+                    background: 'transparent',
+                    color: '#000'
+                  },
+                  ':focus': { outline: 0, outlineOffset: 0, boxShadow: 0 }
+                }}
+              />
+            )}
+
+            {onRegenerate && (
+              <Tooltip title='Regenerate'>
+                <Box
+                  component={'button'}
+                  sx={{
+                    color: '#9b9b9b',
+                    ':hover': {
+                      color: '#000'
+                    }
+                  }}
+                  onClick={onRegenerate}
+                >
+                  <ReplayIcon sx={{ fontSize: '18px' }} />
+                </Box>
+              </Tooltip>
+            )}
+          </Box>
+        )}
       </Box>
     </Box>
   )

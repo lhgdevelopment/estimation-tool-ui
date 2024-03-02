@@ -72,7 +72,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               (item: any) => item['_id'] === router?.query['id'] // Replace 'id' with the actual identifier of your item
             )
             if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res.data
+              updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
               title: 'Data Updated Successfully!',
@@ -97,7 +97,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         .post('/meeting-summery', formData)
         .then(res => {
           apiRequest.get(`/meeting-summery`).then(res => {
-            setListData(res.data)
+            setListData(res?.data)
           })
           Swal.fire({
             title: 'Data Created Successfully!',
