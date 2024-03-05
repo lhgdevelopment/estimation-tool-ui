@@ -1,23 +1,21 @@
 import ClearIcon from '@material-ui/icons/Clear'
 import AddIcon from '@mui/icons-material/Add'
 import BrowserUpdatedIcon from '@mui/icons-material/BrowserUpdated'
-import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
 import EditNoteIcon from '@mui/icons-material/EditNote'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Button, Checkbox, Modal } from '@mui/material'
-import { TreeItem } from '@mui/x-tree-view/TreeItem'
-import { TreeView } from '@mui/x-tree-view/TreeView'
+import type { TreeDataNode, TreeProps } from 'antd'
+import { Tree } from 'antd'
 import dynamic from 'next/dynamic'
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
+import { transformServiceTree } from './ServiceTree.decorator'
 
 enum EServiceFormType {
   'SERVICE' = 'SERVICE',
@@ -27,7 +25,7 @@ enum EServiceFormType {
   'TASK' = 'TASK'
 }
 export default function ServiceTreeComponent() {
-  const [listData, setListData] = useState<any>([])
+  const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [serviceModalOpen, setServiceModalOpen] = useState(false)
   const handleServiceModalOpen = () => setServiceModalOpen(true)
   const handleServiceModalClose = () => setServiceModalOpen(false)
@@ -277,7 +275,7 @@ export default function ServiceTreeComponent() {
     e.preventDefault()
     if (serviceEditDataId) {
       apiRequest.put(`/services/${serviceEditDataId}`, serviceFormData).then(res => {
-        setListData((prevState: []) => {
+        setServiceTreeData((prevState: []) => {
           const updatedList: any = [...prevState]
           const editedServiceIndex = updatedList.findIndex(
             (item: any) => item['_id'] === serviceEditDataId // Replace 'id' with the actual identifier of your item
@@ -300,7 +298,7 @@ export default function ServiceTreeComponent() {
       })
     } else {
       apiRequest.post('/services', serviceFormData).then(res => {
-        setListData((prevState: []) => [...prevState, res?.data])
+        setServiceTreeData((prevState: []) => [...prevState, res?.data])
         Swal.fire({
           title: 'Data Created Successfully!',
           icon: 'success',
@@ -321,7 +319,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData)
         .then(res => {
-          setListData((prevState: []) => {
+          setServiceTreeData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex(
               (item: any) => item['_id'] === serviceGroupEditDataId // Replace 'id' with the actual identifier of your item
@@ -348,7 +346,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-groups', serviceGroupFormData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, ...res?.data])
+          setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -371,7 +369,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-scopes/${serviceSOWEditDataId}`, serviceSOWFormData)
         .then(res => {
-          setListData((prevState: []) => {
+          setServiceTreeData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex(
               (item: any) => item['_id'] === serviceSOWEditDataId // Replace 'id' with the actual identifier of your item
@@ -398,7 +396,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-scopes', serviceSOWFormData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, ...res?.data])
+          setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -421,7 +419,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverables/${serviceDeliverableEditDataId}`, serviceDeliverableFormData)
         .then(res => {
-          setListData((prevState: []) => {
+          setServiceTreeData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex(
               (item: any) => item['_id'] === serviceDeliverableEditDataId // Replace 'id' with the actual identifier of your item
@@ -448,7 +446,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-deliverables', serviceDeliverableFormData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, ...res?.data])
+          setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -509,7 +507,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverable-tasks/${serviceTaskEditDataId}`, serviceTaskFormData)
         .then(res => {
-          setListData((prevState: []) => {
+          setServiceTreeData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex(
               (item: any) => item['_id'] === serviceTaskEditDataId // Replace 'id' with the actual identifier of your item
@@ -537,7 +535,7 @@ export default function ServiceTreeComponent() {
         .post('/service-deliverable-tasks', serviceTaskFormData)
         .then(res => {
           apiRequest.get(`/service-deliverable-tasks?page=${1}`).then(res => {
-            setListData(res?.data)
+            setServiceTreeData(res?.data)
           })
 
           Swal.fire({
@@ -585,15 +583,83 @@ export default function ServiceTreeComponent() {
     handleServiceModalClose()
   }
 
-  const getList = () => {
-    apiRequest.get(`/service-tree?per_page=1000`).then(res => {
-      setListData(res?.data.services)
-    })
+  const getList = async () => {
+    try {
+      const response = await apiRequest.get(`/service-tree?per_page=1000`)
+      const services = response?.data?.services || []
+      setServiceTreeData(transformServiceTree(services))
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
   }
 
   useEffect(() => {
     getList()
   }, [])
+
+  const onDragEnter: TreeProps['onDragEnter'] = info => {
+    //console.log(info)
+    // expandedKeys, set it when controlled is needed
+    // setExpandedKeys(info.expandedKeys)
+  }
+
+  const onDrop: TreeProps['onDrop'] = info => {
+    console.log(info)
+    const dropKey = info.node.key
+    const dragKey = info.dragNode.key
+    const dropPos = info.node.pos.split('-')
+    const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]) // the drop position relative to the drop node, inside 0, top -1, bottom 1
+
+    const loop = (
+      data: TreeDataNode[],
+      key: React.Key,
+      callback: (node: TreeDataNode, i: number, data: TreeDataNode[]) => void
+    ) => {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].key === key) {
+          return callback(data[i], i, data)
+        }
+        if (data[i].children) {
+          loop(data[i].children!, key, callback)
+        }
+      }
+    }
+    const data = [...serviceTreeData]
+
+    // Find dragObject
+    let dragObj: TreeDataNode
+    loop(data, dragKey, (item, index, arr) => {
+      arr.splice(index, 1)
+      dragObj = item
+    })
+
+    if (!info.dropToGap) {
+      // Drop on the content
+      loop(data, dropKey, item => {
+        item.children = item.children || []
+
+        // where to insert. New item was inserted to the start of the array in this example, but can be anywhere
+        item.children.unshift(dragObj)
+      })
+    } else {
+      let ar: TreeDataNode[] = []
+      let i: number
+      loop(data, dropKey, (_item, index, arr) => {
+        ar = arr
+        i = index
+      })
+      if (dropPosition === -1) {
+        // Drop on the top of the drop node
+        ar.splice(i!, 0, dragObj!)
+      } else {
+        // Drop on the bottom of the drop node
+        ar.splice(i! + 1, 0, dragObj!)
+      }
+    }
+    console.log(data)
+
+    setServiceTreeData(data)
+  }
 
   return (
     <>
@@ -626,12 +692,24 @@ export default function ServiceTreeComponent() {
         </Box>
         <Box>
           <Box sx={{ flexGrow: 1 }}>
-            <TreeView
+            <Tree
+              className='draggable-tree'
+              draggable
+              blockNode
+              onDragEnter={onDragEnter}
+              onDrop={onDrop}
+              treeData={serviceTreeData}
+
+              // titleRender={node => {
+              //   return <>Hello</>
+              // }}
+            />
+            {/* <TreeView
               aria-label='file system navigator'
               defaultCollapseIcon={<ExpandMoreIcon />}
               defaultExpandIcon={<ChevronRightIcon />}
             >
-              {listData?.map((service: any, index: number) => {
+              {serviceTreeData?.map((service: any, index: number) => {
                 return (
                   <TreeItem
                     nodeId={`service-${index}`}
@@ -918,7 +996,7 @@ export default function ServiceTreeComponent() {
                   </TreeItem>
                 )
               })}
-            </TreeView>
+            </TreeView> */}
           </Box>
         </Box>
 
