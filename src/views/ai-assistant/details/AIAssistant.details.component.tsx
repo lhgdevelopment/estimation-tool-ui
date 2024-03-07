@@ -22,8 +22,8 @@ export default function AIAssistantDetailsComponent() {
     prompt_id: '',
     message_content: ''
   }
-  const [conversationFormData, setConversationFormData] = useState<>(defaultData)
-  const [prevConversationFormData, setPrevConversationFormData] = useState<>(defaultData)
+  const [conversationFormData, setConversationFormData] = useState(defaultData)
+  const [prevConversationFormData, setPrevConversationFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const messagesEndRef = useRef<HTMLDivElement>(null)

@@ -413,8 +413,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }
 
   useEffect(() => {
-    console.log('ji')
-
     onClear()
     setEnabledStep(0)
     setActiveStep(0)
