@@ -99,7 +99,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
               (item: any) => item['_id'] === editDataId // Replace 'id' with the actual identifier of your item
             )
             if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res.data
+              updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
               title: 'Data Updated Successfully!',
@@ -120,7 +120,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
       apiRequest
         .post('/service-groups', formData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, ...res.data])
+          setListData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',

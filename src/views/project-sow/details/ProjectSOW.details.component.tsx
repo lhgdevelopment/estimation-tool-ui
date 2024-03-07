@@ -27,7 +27,7 @@ export default function ProjectSOWDetailsComponent() {
   const getDetails = () => {
     setPreload(true)
     apiRequest.get(`/project-summery/${router?.query['id']}`).then(res => {
-      setDetailsData(res.data)
+      setDetailsData(res?.data)
       setPreload(false)
     })
   }

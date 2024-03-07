@@ -31,13 +31,13 @@ export default function RolePermissionListComponent() {
 
   const getPermisionsList = () => {
     apiRequest.get(`/permissions`).then(res => {
-      setPermissionList(res.data)
+      setPermissionList(res?.data)
     })
   }
 
   const getList = () => {
     apiRequest.get(`/roles?per_page=${1000}`).then(res => {
-      setListData(roleSorting(res.data))
+      setListData(roleSorting(res?.data))
     })
   }
 

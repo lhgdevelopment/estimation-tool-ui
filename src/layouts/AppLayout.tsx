@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { isDarkTheme, loginUser } from 'src/@core/store/actions/userActions'
 import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
+import AppBackToTopButton from './components/AppBackToTopButton.component'
 import AppHeaderComponent from './components/AppHeader.component'
 import AppNavbarComponent from './components/AppNavbar.component'
 
@@ -65,9 +66,10 @@ const AppLayout = ({ children }: Props) => {
       <AppNavbarComponent />
       <Box className='flex flex-col flex-1' sx={{ marginLeft: '280px', width: '100%' }}>
         <AppHeaderComponent />
-        <Box component={'main'} className='h-full  overflow-y-auto'>
+        <Box component={'main'} className='h-full'>
           {children}
         </Box>
+        <AppBackToTopButton />
       </Box>
     </Box>
   )

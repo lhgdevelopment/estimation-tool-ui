@@ -34,7 +34,7 @@ export function formatDateToCustomFormat(date: Date): string {
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-    hour12: true 
+    hour12: true
   }
   const formattedDate = date.toLocaleDateString('en-US', options)
 

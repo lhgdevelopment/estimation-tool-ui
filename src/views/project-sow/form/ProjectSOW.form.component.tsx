@@ -152,7 +152,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             }
             apiRequest.get(`/project-summery?page=1`).then(res => {
               if (setListData) {
-                setListData(res.data)
+                setListData(res?.data)
               }
             })
 
@@ -325,7 +325,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .then(res => {
           apiRequest.get(`/project-summery?page=1`).then(res => {
             if (setListData) {
-              setListData(res.data)
+              setListData(res?.data)
             }
           })
 
@@ -413,8 +413,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }
 
   useEffect(() => {
-    console.log('ji')
-
     onClear()
     setEnabledStep(0)
     setActiveStep(0)
