@@ -15,15 +15,8 @@ import Preloader from 'src/@core/components/preloader'
 import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { transformServiceTree } from './ServiceTree.decorator'
+import { EServiceFormType, transformServiceTree } from './ServiceTree.decorator'
 
-enum EServiceFormType {
-  'SERVICE' = 'SERVICE',
-  'GROUP' = 'GROUP',
-  'SOW' = 'SOW',
-  'DELIVARABLE' = 'DELIVARABLE',
-  'TASK' = 'TASK'
-}
 export default function ServiceTreeComponent() {
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [serviceModalOpen, setServiceModalOpen] = useState(false)
@@ -587,7 +580,7 @@ export default function ServiceTreeComponent() {
     try {
       const response = await apiRequest.get(`/service-tree?per_page=1000`)
       const services = response?.data?.services || []
-      setServiceTreeData(transformServiceTree(services))
+      setServiceTreeData(transformServiceTree(services, 'service'))
     } catch (error) {
       console.error('Error fetching data:', error)
     }
@@ -603,12 +596,23 @@ export default function ServiceTreeComponent() {
     // setExpandedKeys(info.expandedKeys)
   }
 
-  const onDrop: TreeProps['onDrop'] = info => {
-    console.log(info)
+  const onDrop: TreeProps['onDrop'] = (info: any) => {
+    const dragNode = info.dragNode
     const dropKey = info.node.key
     const dragKey = info.dragNode.key
     const dropPos = info.node.pos.split('-')
     const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]) // the drop position relative to the drop node, inside 0, top -1, bottom 1
+    if (dragNode?.type === 'service') {
+      apiRequest
+        .put(`/services/${dragNode?.id}`, {
+          ...info?.dragNode,
+          projectTypeId: dragNode?.projectType?.id,
+          order: dropPosition == -1 ? dropPosition + 1 : 1
+        })
+        .then(res => {
+          getList()
+        })
+    }
 
     const loop = (
       data: TreeDataNode[],
@@ -656,10 +660,10 @@ export default function ServiceTreeComponent() {
         ar.splice(i! + 1, 0, dragObj!)
       }
     }
-    console.log(data)
-
     setServiceTreeData(data)
   }
+
+  console.log(serviceTreeData)
 
   return (
     <>
@@ -694,309 +698,29 @@ export default function ServiceTreeComponent() {
           <Box sx={{ flexGrow: 1 }}>
             <Tree
               className='draggable-tree'
-              draggable
+              draggable={{
+                nodeDraggable(node: any) {
+                  return node?.['type'] == 'service'
+                }
+              }}
               blockNode
               onDragEnter={onDragEnter}
               onDrop={onDrop}
               treeData={serviceTreeData}
 
+              // allowDrop={(node: any, dropPosition: any) => {
+              //   console.log(node?.dragNode?.type)
+              //   if (node?.dragNode?.type === node?.dropNode?.type) {
+              //     return true
+              //   } else {
+              //     return false
+              //   }
+              // }}
+
               // titleRender={node => {
               //   return <>Hello</>
               // }}
             />
-            {/* <TreeView
-              aria-label='file system navigator'
-              defaultCollapseIcon={<ExpandMoreIcon />}
-              defaultExpandIcon={<ChevronRightIcon />}
-            >
-              {serviceTreeData?.map((service: any, index: number) => {
-                return (
-                  <TreeItem
-                    nodeId={`service-${index}`}
-                    key={index}
-                    sx={{ p: 1, my: 1 }}
-                    label={
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Box dangerouslySetInnerHTML={{ __html: service?.name }}></Box>
-                        <Box sx={{ width: '240px' }}>
-                          <Button
-                            onClick={e => {
-                              handleServiceEditButton(e, service, service?.id)
-                            }}
-                            sx={{
-                              minWidth: 'auto',
-                              fontSize: '12px',
-                              textTransform: 'none',
-                              padding: '2px',
-                              border: '1px solid #9333ea',
-                              lineHeight: 'normal',
-                              color: '#9333ea',
-                              mx: '5px',
-                              '&:hover': {
-                                background: '#9333ea',
-                                color: '#fff'
-                              }
-                            }}
-                          >
-                            <EditIcon sx={{ fontSize: '18px' }} />
-                          </Button>
-                          <Button
-                            onClick={e => {
-                              e.preventDefault()
-                              e.stopPropagation()
-                              handleServiceModalOpen()
-                              setFormType(EServiceFormType.GROUP)
-                            }}
-                            sx={{
-                              fontSize: '12px',
-                              textTransform: 'none',
-                              padding: '2px 10px',
-                              border: '1px solid #9333ea',
-                              lineHeight: 'normal',
-                              color: '#9333ea',
-                              mx: '5px',
-                              '&:hover': {
-                                background: '#9333ea',
-                                color: '#fff'
-                              }
-                            }}
-                          >
-                            <AddIcon sx={{ fontSize: '18px' }} /> Add Group
-                          </Button>
-                        </Box>
-                      </Box>
-                    }
-                  >
-                    {service?.groups?.map((group: any, groupIndex: number) => {
-                      return (
-                        <TreeItem
-                          nodeId={`group-${index}+${groupIndex}`}
-                          key={groupIndex}
-                          sx={{ p: 1, my: 1 }}
-                          label={
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <Box dangerouslySetInnerHTML={{ __html: group?.name }}></Box>
-                              <Box sx={{ width: '240px' }}>
-                                <Button
-                                  onClick={e => {
-                                    handleServiceGroupEditButton(e, group, group?.id)
-                                  }}
-                                  sx={{
-                                    minWidth: 'auto',
-                                    fontSize: '12px',
-                                    textTransform: 'none',
-                                    padding: '2px',
-                                    border: '1px solid #9333ea',
-                                    lineHeight: 'normal',
-                                    color: '#9333ea',
-                                    mx: '5px',
-                                    '&:hover': {
-                                      background: '#9333ea',
-                                      color: '#fff'
-                                    }
-                                  }}
-                                >
-                                  <EditIcon sx={{ fontSize: '18px' }} />
-                                </Button>
-                                <Button
-                                  onClick={e => {
-                                    e.preventDefault()
-                                    e.stopPropagation()
-                                    handleServiceModalOpen()
-                                    setFormType(EServiceFormType.SOW)
-                                  }}
-                                  sx={{
-                                    fontSize: '12px',
-                                    textTransform: 'none',
-                                    padding: '2px 10px',
-                                    border: '1px solid #9333ea',
-                                    lineHeight: 'normal',
-                                    color: '#9333ea',
-                                    mx: '5px',
-                                    '&:hover': {
-                                      background: '#9333ea',
-                                      color: '#fff'
-                                    }
-                                  }}
-                                >
-                                  <AddIcon sx={{ fontSize: '18px' }} /> Add SOW
-                                </Button>
-                              </Box>
-                            </Box>
-                          }
-                          onDragStart={() => {
-                            console.log('ondragStart')
-                          }}
-                          onDrag={() => {
-                            console.log('onDrag')
-                          }}
-                        >
-                          {group?.sows?.map((sow: any, sowIndex: number) => {
-                            return (
-                              <TreeItem
-                                nodeId={`sow-${groupIndex}+${sowIndex}`}
-                                key={sowIndex}
-                                sx={{ p: 1, my: 1 }}
-                                label={
-                                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                    <Box dangerouslySetInnerHTML={{ __html: sow?.name }}></Box>
-                                    <Box sx={{ width: '240px' }}>
-                                      <Button
-                                        onClick={e => {
-                                          handleServiceSOWEditButton(e, sow, sow?.id)
-                                        }}
-                                        sx={{
-                                          minWidth: 'auto',
-                                          fontSize: '12px',
-                                          textTransform: 'none',
-                                          padding: '2px',
-                                          border: '1px solid #9333ea',
-                                          lineHeight: 'normal',
-                                          color: '#9333ea',
-                                          mx: '5px',
-                                          '&:hover': {
-                                            background: '#9333ea',
-                                            color: '#fff'
-                                          }
-                                        }}
-                                      >
-                                        <EditIcon sx={{ fontSize: '18px' }} />
-                                      </Button>
-                                      <Button
-                                        onClick={e => {
-                                          e.preventDefault()
-                                          e.stopPropagation()
-                                          handleServiceModalOpen()
-                                          setFormType(EServiceFormType.DELIVARABLE)
-                                        }}
-                                        sx={{
-                                          fontSize: '12px',
-                                          textTransform: 'none',
-                                          padding: '2px 10px',
-                                          border: '1px solid #9333ea',
-                                          lineHeight: 'normal',
-                                          color: '#9333ea',
-                                          mx: '5px',
-                                          '&:hover': {
-                                            background: '#9333ea',
-                                            color: '#fff'
-                                          }
-                                        }}
-                                      >
-                                        <AddIcon sx={{ fontSize: '18px' }} /> Add Deliverable
-                                      </Button>
-                                    </Box>
-                                  </Box>
-                                }
-                              >
-                                {sow?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
-                                  return (
-                                    <TreeItem
-                                      nodeId={`deliverable-${sowIndex}+${deliverableIndex}`}
-                                      key={deliverableIndex}
-                                      sx={{ p: 1, my: 1 }}
-                                      label={
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                          <Box dangerouslySetInnerHTML={{ __html: deliverable?.name }}></Box>
-                                          <Box sx={{ width: '240px' }}>
-                                            <Button
-                                              onClick={e => {
-                                                handleServiceDeliverableEditButton(e, deliverable, deliverable?.id)
-                                              }}
-                                              sx={{
-                                                minWidth: 'auto',
-                                                fontSize: '12px',
-                                                textTransform: 'none',
-                                                padding: '2px',
-                                                border: '1px solid #9333ea',
-                                                lineHeight: 'normal',
-                                                color: '#9333ea',
-                                                mx: '5px',
-                                                '&:hover': {
-                                                  background: '#9333ea',
-                                                  color: '#fff'
-                                                }
-                                              }}
-                                            >
-                                              <EditIcon sx={{ fontSize: '18px' }} />
-                                            </Button>
-                                            <Button
-                                              onClick={e => {
-                                                e.preventDefault()
-                                                e.stopPropagation()
-                                                handleServiceModalOpen()
-                                                setFormType(EServiceFormType.TASK)
-                                              }}
-                                              sx={{
-                                                fontSize: '12px',
-                                                textTransform: 'none',
-                                                padding: '2px 10px',
-                                                border: '1px solid #9333ea',
-                                                lineHeight: 'normal',
-                                                color: '#9333ea',
-                                                mx: '5px',
-                                                '&:hover': {
-                                                  background: '#9333ea',
-                                                  color: '#fff'
-                                                }
-                                              }}
-                                            >
-                                              <AddIcon sx={{ fontSize: '18px' }} /> Add Task
-                                            </Button>
-                                          </Box>
-                                        </Box>
-                                      }
-                                    >
-                                      {deliverable?.tasks?.map((task: any, taskIndex: number) => {
-                                        return (
-                                          <TreeItem
-                                            nodeId={`task-${deliverableIndex}+${taskIndex}`}
-                                            key={taskIndex}
-                                            sx={{ p: 1, my: 1 }}
-                                            label={
-                                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                <Box dangerouslySetInnerHTML={{ __html: task?.name }}></Box>
-                                                <Box sx={{ width: '240px' }}>
-                                                  <Button
-                                                    onClick={e => {
-                                                      handleServiceTaskEditButton(e, task, task?.id)
-                                                    }}
-                                                    sx={{
-                                                      minWidth: 'auto',
-                                                      fontSize: '12px',
-                                                      textTransform: 'none',
-                                                      padding: '2px',
-                                                      border: '1px solid #9333ea',
-                                                      lineHeight: 'normal',
-                                                      color: '#9333ea',
-                                                      mx: '5px',
-                                                      '&:hover': {
-                                                        background: '#9333ea',
-                                                        color: '#fff'
-                                                      }
-                                                    }}
-                                                  >
-                                                    <EditIcon sx={{ fontSize: '18px' }} />
-                                                  </Button>
-                                                </Box>
-                                              </Box>
-                                            }
-                                          ></TreeItem>
-                                        )
-                                      })}
-                                    </TreeItem>
-                                  )
-                                })}
-                              </TreeItem>
-                            )
-                          })}
-                        </TreeItem>
-                      )
-                    })}
-                  </TreeItem>
-                )
-              })}
-            </TreeView> */}
           </Box>
         </Box>
 
