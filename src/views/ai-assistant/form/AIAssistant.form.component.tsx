@@ -22,7 +22,8 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
   }
 
   const [formData, setFormData] = useState(defaultData)
-  const [prelaoder, setPreloader] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<any>({})
+  const [prelaod, setPreload] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -39,23 +40,27 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
   }
 
   const onSubmit = (e: React.FormEvent<any>) => {
-    setPreloader(true)
     e.preventDefault()
-    apiRequest.post('/conversations/create', formData).then(res => {
-      // apiRequest.get(`/conversations?page=${1}`).then(res => {
-      //   setListData((prevState: []) => [...res?.data])
-      // })
-      Swal.fire({
-        title: 'Data Created Successfully!',
-        icon: 'success',
-        timer: 1000,
-        timerProgressBar: true,
-        showConfirmButton: false
+    setErrorMessage({})
+    setPreload(true)
+    apiRequest
+      .post('/conversations/create', formData)
+      .then(res => {
+        Swal.fire({
+          title: 'Data Created Successfully!',
+          icon: 'success',
+          timer: 1000,
+          timerProgressBar: true,
+          showConfirmButton: false
+        })
+        onClear()
+        setPreload(false)
+        router.push(`ai-assistant/${res?.data?.conversation?.id}`)
       })
-      onClear()
-      setPreloader(false)
-      router.push(`ai-assistant/${res?.data?.conversation?.id}`)
-    })
+      .catch(error => {
+        setPreload(false)
+        setErrorMessage(error?.response?.data?.errors)
+      })
   }
 
   useEffect(() => {
@@ -74,7 +79,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
 
   return (
     <Fragment>
-      {!!prelaoder && <Preloader close={!!prelaoder} />}
+      {!!prelaod && <Preloader close={!!prelaod} />}
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -82,12 +87,22 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Name</span>
                 <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['name'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  }`}
                   placeholder='Enter Name Here...'
                   name='name'
                   value={formData.name}
                   onChange={handleChange}
                 />
+                {!!errorMessage?.['name'] &&
+                  errorMessage?.['name']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
               </label>
             </Box>
             <Box sx={{ width: '50%' }}>
@@ -99,7 +114,18 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
                   value={formData.prompt_id}
                   onChange={handleSelectChange}
                   optionConfig={{ id: 'id', title: 'name' }}
+                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['prompt_id'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  }`}
                 />
+                {!!errorMessage?.['prompt_id'] &&
+                  errorMessage?.['prompt_id']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
               </label>
             </Box>
           </Box>
@@ -109,13 +135,23 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
                 <span className='text-gray-700 dark:text-gray-400'>Message</span>
               </label>
               <textarea
-                className='block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-textarea focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray'
+                className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                  errorMessage?.['message_content'] ? 'border-red-600' : 'dark:border-gray-600 '
+                }`}
                 rows={3}
                 placeholder='Message here...'
                 name='message_content'
                 value={formData.message_content}
                 onChange={handleChange}
               />
+              {!!errorMessage?.['message_content'] &&
+                errorMessage?.['message_content']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
           </Box>
           <Box className='my-4 text-right'>

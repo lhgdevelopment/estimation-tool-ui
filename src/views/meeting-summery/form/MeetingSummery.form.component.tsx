@@ -155,7 +155,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Meeting Name</span>
                 <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['meetingName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  }`}
                   placeholder='Enter meeting name'
                   name='meetingName'
                   value={formData.meetingName}
@@ -180,8 +182,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   name='meetingType'
                   value={formData.meetingType}
                   onChange={handleSelectChange}
-
-                  //optionConfig={{ id: 'id', title: 'name' }}
+                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['meetingType'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  }`}
                 />
                 {!!errorMessage?.['meetingType'] &&
                   errorMessage?.['meetingType']?.map((message: any, index: number) => {
@@ -200,7 +203,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Clickup Link</span>
                 <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['clickupLink'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  }`}
                   placeholder='Enter clickup task link'
                   name='clickupLink'
                   value={formData.clickupLink}
@@ -220,7 +225,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>TLDV Link</span>
                 <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['tldvLink'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  }`}
                   placeholder='Enter tldv link'
                   name='tldvLink'
                   value={formData.tldvLink}
@@ -268,7 +275,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                 <label className='block text-sm'>
                   <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
                   <textarea
-                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                    className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                      errorMessage?.['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
+                    }`}
                     placeholder='Examples: Transcript Text'
                     name='transcriptText'
                     rows={10}

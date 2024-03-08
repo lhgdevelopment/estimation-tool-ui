@@ -7,12 +7,10 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Button, Checkbox, Modal } from '@mui/material'
 import type { TreeDataNode, TreeProps } from 'antd'
 import { Tree } from 'antd'
-import dynamic from 'next/dynamic'
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
-import { RootState } from 'src/@core/store/reducers'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { EServiceFormType, transformServiceTree } from './ServiceTree.decorator'
@@ -23,10 +21,6 @@ export default function ServiceTreeComponent() {
   const handleServiceModalOpen = () => setServiceModalOpen(true)
   const handleServiceModalClose = () => setServiceModalOpen(false)
   const [formType, setFormType] = useState<EServiceFormType>()
-
-  const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
-  const isDark = useSelector((state: RootState) => state.theme.isDark)
-  const nameEditorRef = useRef(null)
 
   const [serviceEditDataId, setServiceEditDataId] = useState<null | string>(null)
   const [serviceGroupEditDataId, setServiceGroupEditDataId] = useState<null | string>(null)
@@ -799,9 +793,7 @@ export default function ServiceTreeComponent() {
                       <label className='block text-sm'>
                         <span className='text-gray-700 dark:text-gray-400'>Name</span>
                       </label>
-                      <JoditEditor
-                        ref={nameEditorRef}
-                        config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                      <RichTextEditor
                         value={serviceFormData.name}
                         onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
                       />
@@ -883,9 +875,7 @@ export default function ServiceTreeComponent() {
                           <label className='block text-sm'>
                             <span className='text-gray-700 dark:text-gray-400'>Name</span>
                           </label>
-                          <JoditEditor
-                            ref={nameEditorRef}
-                            config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                          <RichTextEditor
                             value={serviceGroupFormData.name}
                             onBlur={newContent =>
                               handleReachText(newContent, 'name', serviceGroupFormData, setServiceGroupFormData)
@@ -926,9 +916,7 @@ export default function ServiceTreeComponent() {
                                 sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                               >
                                 <Box sx={{ width: '100%' }}>
-                                  <JoditEditor
-                                    ref={nameEditorRef}
-                                    config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                  <RichTextEditor
                                     value={name}
                                     onBlur={newContent =>
                                       handleMultipleNameReachText(
@@ -1064,9 +1052,7 @@ export default function ServiceTreeComponent() {
                           <label className='block text-sm'>
                             <span className='text-gray-700 dark:text-gray-400'>Name</span>
                           </label>
-                          <JoditEditor
-                            ref={nameEditorRef}
-                            config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                          <RichTextEditor
                             value={serviceSOWFormData.name}
                             onBlur={newContent =>
                               handleReachText(newContent, 'name', serviceSOWFormData, setServiceSOWFormData)
@@ -1107,9 +1093,7 @@ export default function ServiceTreeComponent() {
                                 sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                               >
                                 <Box sx={{ width: '100%' }}>
-                                  <JoditEditor
-                                    ref={nameEditorRef}
-                                    config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                  <RichTextEditor
                                     value={name}
                                     onBlur={newContent =>
                                       handleMultipleNameReachText(
@@ -1245,9 +1229,7 @@ export default function ServiceTreeComponent() {
                           <label className='block text-sm'>
                             <span className='text-gray-700 dark:text-gray-400'>Name</span>
                           </label>
-                          <JoditEditor
-                            ref={nameEditorRef}
-                            config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                          <RichTextEditor
                             value={serviceDeliverableFormData.name}
                             onBlur={newContent =>
                               handleReachText(
@@ -1293,9 +1275,7 @@ export default function ServiceTreeComponent() {
                                 sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                               >
                                 <Box sx={{ width: '100%' }}>
-                                  <JoditEditor
-                                    ref={nameEditorRef}
-                                    config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                  <RichTextEditor
                                     value={name}
                                     onBlur={newContent =>
                                       handleMultipleNameReachText(
@@ -1477,9 +1457,7 @@ export default function ServiceTreeComponent() {
                                         }}
                                       >
                                         <Box sx={{ width: '100%' }}>
-                                          <JoditEditor
-                                            ref={nameEditorRef}
-                                            config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                          <RichTextEditor
                                             value={clickupTask.name}
                                             onBlur={newContent =>
                                               handleMultipleTaskReachText(newContent, 'name', index)
@@ -1495,9 +1473,7 @@ export default function ServiceTreeComponent() {
                                   })} */}
                                         </Box>
                                         <Box sx={{ width: '100%' }}>
-                                          <JoditEditor
-                                            ref={nameEditorRef}
-                                            config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                          <RichTextEditor
                                             value={clickupTask.name}
                                             onBlur={newContent =>
                                               handleMultipleTaskReachText(newContent, 'name', index)
@@ -1553,9 +1529,7 @@ export default function ServiceTreeComponent() {
                                                       }}
                                                     >
                                                       <Box sx={{ width: '100%' }}>
-                                                        <JoditEditor
-                                                          ref={nameEditorRef}
-                                                          config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                                        <RichTextEditor
                                                           value={subTask.name}
                                                           onBlur={newContent =>
                                                             handleMultipleTaskReachText(newContent, 'name', index)
@@ -1753,9 +1727,7 @@ export default function ServiceTreeComponent() {
                                 <label className='block text-sm'>
                                   <span className='text-gray-700 dark:text-gray-400'>Name</span>
                                 </label>
-                                <JoditEditor
-                                  ref={nameEditorRef}
-                                  config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                <RichTextEditor
                                   value={serviceTaskFormData.name}
                                   onBlur={newContent =>
                                     handleReachText(newContent, 'name', serviceTaskFormData, setServiceTaskFormData)
@@ -1856,9 +1828,7 @@ export default function ServiceTreeComponent() {
                                         }}
                                       >
                                         <Box sx={{ width: '100%' }}>
-                                          <JoditEditor
-                                            ref={nameEditorRef}
-                                            config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                          <RichTextEditor
                                             value={task.name}
                                             onBlur={newContent =>
                                               handleMultipleTaskReachText(newContent, 'name', index)

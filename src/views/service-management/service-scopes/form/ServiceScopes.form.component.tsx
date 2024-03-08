@@ -3,23 +3,18 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Button } from '@mui/material'
-import dynamic from 'next/dynamic'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { Fragment, useEffect, useState } from 'react'
 import { ServiceDropdownTree } from 'src/@core/components/dropdown'
-import { RootState } from 'src/@core/store/reducers'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 
 import DeleteIcon from '@mui/icons-material/Delete'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import { TServiceScopesComponent } from '../ServiceScopes.decorator'
 
 export default function ServiceScopesFormComponent(props: TServiceScopesComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
-  const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
-  const isDark = useSelector((state: RootState) => state.theme.isDark)
-  const nameEditorRef = useRef(null)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const defaultData = {
@@ -190,12 +185,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
                   <label className='block text-sm'>
                     <span className='text-gray-700 dark:text-gray-400'>Name</span>
                   </label>
-                  <JoditEditor
-                    ref={nameEditorRef}
-                    config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
-                    value={formData.name}
-                    onBlur={newContent => handleReachText(newContent, 'name')}
-                  />
+                  <RichTextEditor value={formData.name} onBlur={newContent => handleReachText(newContent, 'name')} />
                   {!!errorMessage?.['name'] &&
                     errorMessage?.['name']?.map((message: any, index: number) => {
                       return (
@@ -231,9 +221,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
                         sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                       >
                         <Box sx={{ width: '100%' }}>
-                          <JoditEditor
-                            ref={nameEditorRef}
-                            config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                          <RichTextEditor
                             value={name}
                             onBlur={newContent => handleReachText(newContent, 'name', index)}
                           />

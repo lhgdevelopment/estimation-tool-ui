@@ -5,12 +5,10 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Button, Checkbox } from '@mui/material'
-import dynamic from 'next/dynamic'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { Fragment, useEffect, useState } from 'react'
 import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
-import { RootState } from 'src/@core/store/reducers'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TServiceDeliverableTasksComponent } from '../ServiceDeliverableTasks.decorator'
@@ -18,9 +16,6 @@ import { TServiceDeliverableTasksComponent } from '../ServiceDeliverableTasks.de
 export default function ServiceDeliverableTasksFormComponent(props: TServiceDeliverableTasksComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
-  const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false })
-  const isDark = useSelector((state: RootState) => state.theme.isDark)
-  const nameEditorRef = useRef(null)
   const [errorMessage, setErrorMessage] = useState<any>({})
   const [isPullingTaskFromClickup, setIsPullingTaskFromClickup] = useState(false)
   const [isFatchFromClickUp, setIsFatchFromClickUp] = useState(false)
@@ -294,9 +289,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                           >
                             <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '100%' }}>
-                                <JoditEditor
-                                  ref={nameEditorRef}
-                                  config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                <RichTextEditor
                                   value={clickupTask.name}
                                   onBlur={newContent => handleReachText(newContent, 'name', index)}
                                 />
@@ -310,9 +303,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                                   })} */}
                               </Box>
                               <Box sx={{ width: '100%' }}>
-                                <JoditEditor
-                                  ref={nameEditorRef}
-                                  config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                <RichTextEditor
                                   value={clickupTask.name}
                                   onBlur={newContent => handleReachText(newContent, 'name', index)}
                                 />
@@ -366,9 +357,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                                             }}
                                           >
                                             <Box sx={{ width: '100%' }}>
-                                              <JoditEditor
-                                                ref={nameEditorRef}
-                                                config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                              <RichTextEditor
                                                 value={subTask.name}
                                                 onBlur={newContent => handleReachText(newContent, 'name', index)}
                                               />
@@ -540,9 +529,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                       <label className='block text-sm'>
                         <span className='text-gray-700 dark:text-gray-400'>Name</span>
                       </label>
-                      <JoditEditor
-                        ref={nameEditorRef}
-                        config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                      <RichTextEditor
                         value={formData.name}
                         onBlur={newContent => handleReachText(newContent, 'name')}
                       />
@@ -628,9 +615,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                           >
                             <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '100%' }}>
-                                <JoditEditor
-                                  ref={nameEditorRef}
-                                  config={{ enter: 'br', theme: isDark ? 'dark' : '' }}
+                                <RichTextEditor
                                   value={task.name}
                                   onBlur={newContent => handleReachText(newContent, 'name', index)}
                                 />
