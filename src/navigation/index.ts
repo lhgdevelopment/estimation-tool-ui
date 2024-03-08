@@ -3,6 +3,7 @@ import BiotechIcon from '@mui/icons-material/Biotech'
 import EngineeringIcon from '@mui/icons-material/Engineering'
 import GroupsIcon from '@mui/icons-material/Groups'
 import HiveIcon from '@mui/icons-material/Hive'
+import LeaderboardIcon from '@mui/icons-material/Leaderboard'
 import LinkIcon from '@mui/icons-material/Link'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
@@ -54,6 +55,11 @@ const navigation: TNavigation[] = [
     title: 'Meeting Summery',
     icon: SpeakerNotesIcon,
     path: '/meeting-summery'
+  },
+  {
+    title: 'Leads',
+    icon: LeaderboardIcon,
+    path: '/leads'
   },
   {
     title: 'Hive AI',
