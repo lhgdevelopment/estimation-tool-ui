@@ -3,30 +3,31 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
-import { ExposeParam, MdEditor } from 'md-editor-rt'
+import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
+import { TLeadsComponent } from '../Leads.decorator'
 
-export default function MeetingSummeryFormComponent(props: TMeetingSummeryComponent) {
+export default function LeadsFormComponent(props: TLeadsComponent) {
   const { listData, setListData, isEdit } = props
   const [preload, setPreload] = useState<boolean>(false)
   const router = useRouter()
 
   const defaultData = {
-    meetingName: '',
-    meetingType: null,
-    transcriptText: '',
-    summaryText: '',
-    clickupLink: '',
-    tldvLink: '',
-    pushToClickUp: false
+    firstName: '',
+    lastName: '',
+    company: '',
+    phone: '',
+    email: '',
+    projectTypeId: null,
+    description: ''
   }
 
   const summaryTextEditorRef = useRef<ExposeParam>()
@@ -35,19 +36,18 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
   const [errorMessage, setErrorMessage] = useState<any>({})
   const [summaryText, setSummeryText] = useState<any>('')
 
+  const handleReachText = (value: string, field: string) => {
+    setFormData({
+      ...formData,
+      [field]: value
+    })
+  }
+
   const handleChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     })
-  }
-
-  const handleCheckChange = (e: React.ChangeEvent<any>) => {
-    const { name, checked } = e.target
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: checked
-    }))
   }
 
   const handleSelectChange = (e: any) => {
@@ -62,9 +62,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     setErrorMessage({})
     setPreload(true)
     if (router?.query['id']) {
-      formData['summaryText'] = formData['tldvLink'] ? null : summaryText
+      //formData['summaryText'] = formData['phone'] ? null : summaryText
       apiRequest
-        .put(`/meeting-summery/${router?.query['id']}`, formData)
+        .put(`/leads/${router?.query['id']}`, formData)
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
@@ -86,7 +86,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
             return updatedList
           })
-          router.push('/meeting-summery/')
+          router.push('/leads/')
         })
         .catch(error => {
           setPreload(false)
@@ -94,9 +94,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         })
     } else {
       apiRequest
-        .post('/meeting-summery', formData)
+        .post('/leads', formData)
         .then(res => {
-          apiRequest.get(`/meeting-summery`).then(res => {
+          apiRequest.get(`/leads`).then(res => {
             setListData(res?.data)
           })
           Swal.fire({
@@ -119,15 +119,15 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
   const getDetails = (id: string | null | undefined) => {
     if (!id) return
     setPreload(true)
-    apiRequest.get(`/meeting-summery/${id}`).then((res: any) => {
+    apiRequest.get(`/leads/${id}`).then((res: any) => {
       setFormData({
-        meetingName: res?.data?.['meetingName'],
-        meetingType: res?.data?.['meetingType'],
-        transcriptText: res?.data?.['transcriptText'],
-        summaryText: res?.data?.['meetingSummeryText'],
-        clickupLink: res?.data?.['clickupLink'],
-        tldvLink: res?.data?.['tldvLink'],
-        pushToClickUp: false
+        firstName: res?.data?.['firstName'],
+        lastName: res?.data?.['lastName'],
+        company: res?.data?.['company'],
+        phone: res?.data?.['phone'],
+        email: res?.data?.['email'],
+        projectTypeId: res?.data?.['projectTypeId'],
+        description: res?.data?.['description']
       })
       setSummeryText(res?.data?.['meetingSummeryText'])
       setSummeryText('')
@@ -153,18 +153,18 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Meeting Name</span>
+                <span className='text-gray-700 dark:text-gray-400'>First Name</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['meetingName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                    errorMessage?.['firstName'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
-                  placeholder='Enter meeting name'
-                  name='meetingName'
-                  value={formData.meetingName}
+                  placeholder='Enter First name'
+                  name='firstName'
+                  value={formData.firstName}
                   onChange={handleChange}
                 />
-                {!!errorMessage?.['meetingName'] &&
-                  errorMessage?.['meetingName']?.map((message: any, index: number) => {
+                {!!errorMessage?.['firstName'] &&
+                  errorMessage?.['firstName']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
@@ -175,19 +175,18 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Meeting Type</span>
-
-                <Dropdown
-                  url='meeting-type'
-                  name='meetingType'
-                  value={formData.meetingType}
-                  onChange={handleSelectChange}
+                <span className='text-gray-700 dark:text-gray-400'>Last Name</span>
+                <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['meetingType'] ? 'border-red-600' : 'dark:border-gray-600 '
+                    errorMessage?.['lastName'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
+                  placeholder='Enter Last name'
+                  name='lastName'
+                  value={formData.lastName}
+                  onChange={handleChange}
                 />
-                {!!errorMessage?.['meetingType'] &&
-                  errorMessage?.['meetingType']?.map((message: any, index: number) => {
+                {!!errorMessage?.['lastName'] &&
+                  errorMessage?.['lastName']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
@@ -201,18 +200,18 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Clickup Link</span>
+                <span className='text-gray-700 dark:text-gray-400'>Company</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['clickupLink'] ? 'border-red-600' : 'dark:border-gray-600 '
+                    errorMessage?.['company'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
-                  placeholder='Enter clickup task link'
-                  name='clickupLink'
-                  value={formData.clickupLink}
+                  placeholder='Enter company name'
+                  name='company'
+                  value={formData.company}
                   onChange={handleChange}
                 />
-                {!!errorMessage?.['clickupLink'] &&
-                  errorMessage?.['clickupLink']?.map((message: any, index: number) => {
+                {!!errorMessage?.['company'] &&
+                  errorMessage?.['company']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
@@ -223,18 +222,18 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>TLDV Link</span>
+                <span className='text-gray-700 dark:text-gray-400'>Phone</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['tldvLink'] ? 'border-red-600' : 'dark:border-gray-600 '
+                    errorMessage?.['phone'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
-                  placeholder='Enter tldv link'
-                  name='tldvLink'
-                  value={formData.tldvLink}
+                  placeholder='Enter Phone'
+                  name='phone'
+                  value={formData.phone}
                   onChange={handleChange}
                 />
-                {!!errorMessage?.['tldvLink'] &&
-                  errorMessage?.['tldvLink']?.map((message: any, index: number) => {
+                {!!errorMessage?.['phone'] &&
+                  errorMessage?.['phone']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
@@ -244,87 +243,68 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               </label>
             </Box>
           </Box>
-
-          {!!router?.query['id'] && (
-            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-              <Box sx={{ width: '50%' }}>
-                <label className='block text-sm' htmlFor='pushToClickUp'>
-                  <span className='text-gray-700 dark:text-gray-400 mr-2'>Push to clickup</span>
-                  <input
-                    id='pushToClickUp'
-                    type='checkbox'
-                    className='h-6 w-6 border-purple-600 text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray'
-                    name='pushToClickUp'
-                    checked={formData.pushToClickUp}
-                    onChange={handleCheckChange}
-                  />
-                  {!!errorMessage?.['pushToClickUp'] &&
-                    errorMessage?.['pushToClickUp']?.map((message: any, index: number) => (
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Email</span>
+                <input
+                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['email'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  }`}
+                  placeholder='Enter Email'
+                  name='email'
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+                {!!errorMessage?.['email'] &&
+                  errorMessage?.['email']?.map((message: any, index: number) => {
+                    return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
                       </span>
-                    ))}
-                </label>
-              </Box>
+                    )
+                  })}
+              </label>
             </Box>
-          )}
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
 
-          {!formData.tldvLink && (
-            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-              <Box sx={{ width: '100%' }}>
-                <label className='block text-sm'>
-                  <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
-                  <textarea
-                    className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                      errorMessage?.['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
-                    }`}
-                    placeholder='Examples: Transcript Text'
-                    name='transcriptText'
-                    rows={10}
-                    value={formData.transcriptText}
-                    onChange={handleChange}
-                  />
-                  {!!errorMessage?.['transcriptText'] &&
-                    errorMessage?.['transcriptText']?.map((message: any, index: number) => {
-                      return (
-                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                          {message}
-                        </span>
-                      )
-                    })}
-                </label>
-              </Box>
+                <Dropdown
+                  url='project-type'
+                  name='projectTypeId'
+                  value={formData.projectTypeId}
+                  onChange={handleSelectChange}
+                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectTypeId'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  }`}
+                />
+                {!!errorMessage?.['projectTypeId'] &&
+                  errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
+              </label>
             </Box>
-          )}
-
-          {!!router?.query['id'] && (
-            <Box sx={{ display: 'flex', gap: 5 }}>
-              <Box sx={{ width: '100%' }}>
-                <label className='block text-sm' htmlFor={'#summaryText'}>
-                  <span className='text-gray-700 dark:text-gray-400'>Meeting Summery Text</span>
-
-                  <MdEditor
-                    ref={summaryTextEditorRef}
-                    modelValue={summaryText}
-                    onChange={setSummeryText}
-                    language='en-US'
-                  />
-                  {!!errorMessage?.['summaryText'] &&
-                    errorMessage?.['summaryText']?.map((message: any, index: number) => {
-                      return (
-                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                          {message}
-                        </span>
-                      )
-                    })}
-                </label>
-              </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '100%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Description</span>
+              </label>
+              <RichTextEditor
+                value={formData.description}
+                onBlur={newContent => handleReachText(newContent, 'description')}
+              />
             </Box>
-          )}
+          </Box>
 
           <Box className='my-4 text-right'>
             {router?.query['id'] ? (
-              <Link href={`/meeting-summery/`} passHref>
+              <Link href={`/leads/`} passHref>
                 <Box
                   sx={{ cursor: 'pointer' }}
                   component={'a'}
