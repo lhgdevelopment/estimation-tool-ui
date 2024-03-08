@@ -2,7 +2,6 @@ import { IJoditEditorProps, Jodit } from 'jodit-react'
 import dynamic from 'next/dynamic'
 import { RefObject, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { DeepPartial } from 'redux'
 import { RootState } from 'src/@core/store/reducers'
 
 type TRichTextEditorProps = IJoditEditorProps
@@ -12,7 +11,7 @@ export function RichTextEditor(props: TRichTextEditorProps) {
 
   const isDark = useSelector((state: RootState) => state.theme.isDark)
   const editorRef: RefObject<Jodit> = useRef<Jodit>(null)
-  const config: DeepPartial<Jodit['options']> = {
+  const config: any = {
     enter: 'br',
     theme: isDark ? 'dark' : '',
     defaultActionOnPaste: 'insert_as_html',
