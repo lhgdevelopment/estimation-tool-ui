@@ -7,6 +7,7 @@ import { TableSx } from 'src/@core/theme/tableStyle'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateToCustomFormat } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
+import { TLeadsComponent } from '../Leads.decorator'
 
 export default function LeadsListComponent(props: TLeadsComponent) {
   const { listData, setListData } = props

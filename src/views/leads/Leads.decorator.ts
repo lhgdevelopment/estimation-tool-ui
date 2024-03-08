@@ -5,8 +5,3 @@ export type TLeadsComponent = {
   setListData: Dispatch<any>
   isEdit?: boolean
 }
-
-export const MeetingTypeList = [
-  { title: 'Internal', id: 1 },
-  { title: 'Client', id: 2 }
-]
