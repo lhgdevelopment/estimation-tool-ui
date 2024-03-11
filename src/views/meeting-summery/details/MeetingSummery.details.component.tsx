@@ -94,9 +94,9 @@ export default function MeetingSummeryDetailsComponent() {
                 <Box sx={{ fontWeight: '600' }}>Clickup Link: </Box>
                 <Box>
                   {!!detailsData?.['clickupLink'] && (
-                    <Link href={detailsData?.['clickupLink']} target='_blank'>
+                    <Box component={'a'} href={detailsData?.['clickupLink']} target='_blank'>
                       {detailsData?.['clickupLink']}
-                    </Link>
+                    </Box>
                   )}
                 </Box>
               </Box>
@@ -109,9 +109,9 @@ export default function MeetingSummeryDetailsComponent() {
                 <Box sx={{ fontWeight: '600' }}>TLDV Link: </Box>
                 <Box>
                   {!!detailsData?.['tldvLink'] && (
-                    <Link href={detailsData?.['tldvLink']} target='_blank'>
+                    <Box component={'a'} href={detailsData?.['tldvLink']} target='_blank'>
                       {detailsData?.['tldvLink']}
-                    </Link>
+                    </Box>
                   )}
                 </Box>
               </Box>
