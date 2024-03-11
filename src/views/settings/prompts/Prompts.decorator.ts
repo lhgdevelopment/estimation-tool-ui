@@ -10,11 +10,11 @@ export type TPromptsComponent = {
 }
 
 export const promptsTypeList = [
-  { title: 'Project Summary', id: 1 },
-  { title: 'Problems And Goals', id: 2 },
-  { title: 'Project Overview', id: 3 },
-  { title: 'Scope Of Work', id: 4 },
-  { title: 'Deliverables', id: 5 },
-  { title: 'Meeting Summary', id: 6 },
-  { title: 'Other', id: 7 }
+  { name: 'Project Summary', id: 1 },
+  { name: 'Problems And Goals', id: 2 },
+  { name: 'Project Overview', id: 3 },
+  { name: 'Scope Of Work', id: 4 },
+  { name: 'Deliverables', id: 5 },
+  { name: 'Meeting Summary', id: 6 },
+  { name: 'Other', id: 7 }
 ]
