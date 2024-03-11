@@ -53,7 +53,7 @@ export default function ServiceScopesListComponent(props: TServiceScopesComponen
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

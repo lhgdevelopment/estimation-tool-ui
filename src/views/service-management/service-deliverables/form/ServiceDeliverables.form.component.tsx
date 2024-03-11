@@ -90,9 +90,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex(
-              (item: any) => item['_id'] === editDataId // Replace 'id' with the actual identifier of your item
-            )
+            const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }

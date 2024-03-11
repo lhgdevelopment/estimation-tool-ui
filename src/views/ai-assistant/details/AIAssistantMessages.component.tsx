@@ -1,3 +1,4 @@
+import EditIcon from '@mui/icons-material/Edit'
 import ReplayIcon from '@mui/icons-material/Replay'
 import { Avatar, Box, Tooltip } from '@mui/material'
 import { MdPreview } from 'md-editor-rt'
@@ -9,9 +10,10 @@ type TAIAssistantMessagesComponentProps = {
   index: number
   isWaiting?: boolean
   onRegenerate?: () => void
+  onEdit?: (data: any) => void
 }
 export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
-  const { message, index, isWaiting = false, onRegenerate } = props
+  const { message, index, isWaiting = false, onRegenerate, onEdit } = props
 
   return (
     <Box
@@ -92,6 +94,25 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
                   onClick={onRegenerate}
                 >
                   <ReplayIcon sx={{ fontSize: '18px' }} />
+                </Box>
+              </Tooltip>
+            )}
+
+            {onEdit && (
+              <Tooltip title='Edit'>
+                <Box
+                  component={'button'}
+                  sx={{
+                    color: '#9b9b9b',
+                    ':hover': {
+                      color: '#000'
+                    }
+                  }}
+                  onClick={() => {
+                    onEdit(message)
+                  }}
+                >
+                  <EditIcon sx={{ fontSize: '18px' }} />
                 </Box>
               </Tooltip>
             )}

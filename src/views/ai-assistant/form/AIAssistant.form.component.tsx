@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
@@ -31,7 +32,12 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
       [e.target.name]: e.target.value
     })
   }
-
+  const handleReachText = (value: string, field: string) => {
+    setFormData({
+      ...formData,
+      [field]: value
+    })
+  }
   const handleSelectChange = (e: any) => {
     setFormData({
       ...formData,
@@ -43,31 +49,62 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
     e.preventDefault()
     setErrorMessage({})
     setPreload(true)
-    apiRequest
-      .post('/conversations/create', formData)
-      .then(res => {
-        Swal.fire({
-          title: 'Data Created Successfully!',
-          icon: 'success',
-          timer: 1000,
-          timerProgressBar: true,
-          showConfirmButton: false
+    if (editDataId) {
+      apiRequest
+        .put(`/conversations/${editDataId}`, formData)
+        .then(res => {
+          setListData((prevState: []) => {
+            const updatedList: any = [...prevState]
+            const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
+            console.log(editedServiceIndex)
+
+            if (editedServiceIndex !== -1) {
+              updatedList[editedServiceIndex] = res?.data
+            }
+            Swal.fire({
+              title: 'Data Updated Successfully!',
+              icon: 'success',
+              timer: 1000,
+              timerProgressBar: true,
+              showConfirmButton: false
+            })
+            onClear()
+            setPreload(false)
+
+            return updatedList
+          })
         })
-        onClear()
-        setPreload(false)
-        router.push(`ai-assistant/${res?.data?.conversation?.id}`)
-      })
-      .catch(error => {
-        setPreload(false)
-        setErrorMessage(error?.response?.data?.errors)
-      })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+        })
+    } else {
+      apiRequest
+        .post('/conversations/create', formData)
+        .then(res => {
+          Swal.fire({
+            title: 'Data Created Successfully!',
+            icon: 'success',
+            timer: 1000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          })
+          onClear()
+          setPreload(false)
+          router.push(`ai-assistant/${res?.data?.conversation?.id}`)
+        })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+        })
+    }
   }
 
   useEffect(() => {
     setFormData({
       name: editData?.['name'],
-      prompt_id: editData?.['prompt_id'],
-      message_content: editData?.['message_content']
+      prompt_id: '',
+      message_content: ''
     })
   }, [editDataId, editData])
 
@@ -83,7 +120,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: editDataId ? '100%' : '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Name</span>
                 <input
@@ -105,55 +142,52 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
                   })}
               </label>
             </Box>
-            <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Prompt</span>
-                <Dropdown
-                  url={'prompts'}
-                  name='prompt_id'
-                  value={formData.prompt_id}
-                  onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['prompt_id'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
+            {!editDataId && (
+              <Box sx={{ width: '50%' }}>
+                <label className='block text-sm'>
+                  <span className='text-gray-700 dark:text-gray-400'>Prompt</span>
+                  <Dropdown
+                    url={'prompts'}
+                    name='prompt_id'
+                    value={formData.prompt_id}
+                    onChange={handleSelectChange}
+                    className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                      errorMessage?.['prompt_id'] ? 'border-red-600' : 'dark:border-gray-600 '
+                    }`}
+                  />
+                  {!!errorMessage?.['prompt_id'] &&
+                    errorMessage?.['prompt_id']?.map((message: any, index: number) => {
+                      return (
+                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                          {message}
+                        </span>
+                      )
+                    })}
+                </label>
+              </Box>
+            )}
+          </Box>
+          {!editDataId && (
+            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+              <Box sx={{ width: '100%' }}>
+                <label className='block text-sm'>
+                  <span className='text-gray-700 dark:text-gray-400'>Message</span>
+                </label>
+                <RichTextEditor
+                  value={formData.message_content}
+                  onBlur={newContent => handleReachText(newContent, 'message_content')}
                 />
-                {!!errorMessage?.['prompt_id'] &&
-                  errorMessage?.['prompt_id']?.map((message: any, index: number) => {
+                {!!errorMessage?.['message_content'] &&
+                  errorMessage?.['message_content']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
                       </span>
                     )
                   })}
-              </label>
+              </Box>
             </Box>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '100%' }}>
-              <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Message</span>
-              </label>
-              <textarea
-                className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['message_content'] ? 'border-red-600' : 'dark:border-gray-600 '
-                }`}
-                rows={3}
-                placeholder='Message here...'
-                name='message_content'
-                value={formData.message_content}
-                onChange={handleChange}
-              />
-              {!!errorMessage?.['message_content'] &&
-                errorMessage?.['message_content']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
-            </Box>
-          </Box>
+          )}
           <Box className='my-4 text-right'>
             <button
               onClick={onClear}

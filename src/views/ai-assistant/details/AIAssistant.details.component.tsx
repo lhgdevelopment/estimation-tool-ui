@@ -1,5 +1,5 @@
 import NorthIcon from '@mui/icons-material/North'
-import { Box, Button, SelectChangeEvent } from '@mui/material'
+import { Box, Button, Modal, SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
+import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
 import AIAssistantMessagesComponent from './AIAssistantMessages.component'
 
 export default function AIAssistantDetailsComponent() {
@@ -16,6 +17,10 @@ export default function AIAssistantDetailsComponent() {
   const [preload, setPreload] = useState<boolean>(false)
   const [messagePreload, setMessagePreload] = useState<boolean>(false)
   const [detailsData, setDetailsData] = useState<any>({})
+
+  const [messageEditOpenModal, setMessageEditOpenModal] = useState(false)
+  const handlemessageEditModalClose = () => setMessageEditOpenModal(false)
+  const [editData, setEditData] = useState(false)
 
   const defaultData = {
     conversation_id: conversationId,
@@ -63,8 +68,8 @@ export default function AIAssistantDetailsComponent() {
     })
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  const handleKeyDown = (e: any) => {
+    if (String(e?.target?.['value']).trim() && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       onSubmit()
     }
@@ -125,6 +130,11 @@ export default function AIAssistantDetailsComponent() {
       })
   }
 
+  const onEdit = (data: any) => {
+    setEditData(data)
+    setMessageEditOpenModal(true)
+  }
+
   useEffect(() => {
     if (conversationId) {
       getDetails()
@@ -166,6 +176,7 @@ export default function AIAssistantDetailsComponent() {
                   onRegenerate={() => {
                     onSubmit(true)
                   }}
+                  onEdit={onEdit}
                 />
               )
             })}
@@ -189,7 +200,6 @@ export default function AIAssistantDetailsComponent() {
                   name='prompt_id'
                   value={conversationFormData.prompt_id}
                   onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
                 />
                 {!!errorMessage?.['prompt_id'] &&
                   errorMessage?.['prompt_id']?.map((message: any, index: number) => {
@@ -242,7 +252,7 @@ export default function AIAssistantDetailsComponent() {
                   position: 'absolute',
                   top: '50%',
                   right: '9px',
-                  background: conversationFormData?.message_content ? '#000' : '#e3e3e3',
+                  background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
                   padding: '0',
                   height: '30px',
                   width: '30px',
@@ -257,7 +267,7 @@ export default function AIAssistantDetailsComponent() {
                     background: '#000'
                   }
                 }}
-                disabled={!conversationFormData?.message_content}
+                disabled={!String(conversationFormData?.message_content).trim()}
               >
                 <NorthIcon sx={{ fontSize: '16px' }} />
               </Button>
@@ -265,6 +275,18 @@ export default function AIAssistantDetailsComponent() {
           </Box>
         </Box>
       </Box>
+      <Modal
+        open={messageEditOpenModal}
+        onClose={handlemessageEditModalClose}
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
+      >
+        <AIAssistantMessagesEditComponent
+          editData={editData}
+          modalClose={handlemessageEditModalClose}
+          setDetailsData={setDetailsData}
+        />
+      </Modal>
     </Box>
   )
 }

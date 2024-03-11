@@ -56,7 +56,7 @@ export default function ProjectComponentListComponent(props: TProjectComponentCo
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   return (
     <Fragment>

@@ -53,7 +53,7 @@ export default function UsersListComponent(props: TUsersComponent) {
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

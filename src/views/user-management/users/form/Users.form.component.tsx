@@ -4,6 +4,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
+import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TUsersComponent } from '../Users.decorator'
@@ -14,23 +15,24 @@ export default function UsersFormComponent(props: TUsersComponent) {
   const defaultData = {
     name: '',
     email: '',
+    role: '',
     password: '',
     password_confirmation: ''
   }
 
-  const [usersFormData, setUsersFormData] = useState(defaultData)
+  const [formData, setUsersFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const handleChange = (e: React.ChangeEvent<any>) => {
     setUsersFormData({
-      ...usersFormData,
+      ...formData,
       [e.target.name]: e.target.value
     })
   }
 
   const handleSelectChange = (e: any) => {
     setUsersFormData({
-      ...usersFormData,
+      ...formData,
       [e?.target?.name]: e?.target?.value
     })
   }
@@ -39,13 +41,11 @@ export default function UsersFormComponent(props: TUsersComponent) {
     e.preventDefault()
     if (editDataId) {
       apiRequest
-        .put(`/users/${editDataId}`, usersFormData)
+        .put(`/users/${editDataId}`, formData)
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex(
-              (item: any) => item['_id'] === editDataId // Replace 'id' with the actual identifier of your item
-            )
+            const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
@@ -66,7 +66,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
         })
     } else {
       apiRequest
-        .post('/users', usersFormData)
+        .post('/users', formData)
         .then(res => {
           setListData((prevState: []) => [...prevState, res?.data])
           Swal.fire({
@@ -88,6 +88,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
     setUsersFormData({
       name: editData?.['name'],
       email: editData?.['email'],
+      role: editData?.['role'],
       password: '',
       password_confirmation: ''
     })
@@ -104,14 +105,14 @@ export default function UsersFormComponent(props: TUsersComponent) {
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '50%' }}>
+            <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Name</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Enter user name'
                   name='name'
-                  value={usersFormData.name}
+                  value={formData.name}
                   onChange={handleChange}
                 />
                 {!!errorMessage?.['name'] &&
@@ -124,6 +125,20 @@ export default function UsersFormComponent(props: TUsersComponent) {
                   })}
               </label>
             </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='text-gray-700 dark:text-gray-400'>Role</span>
+                <Dropdown
+                  url={'roles'}
+                  name='role'
+                  value={formData.role}
+                  onChange={handleSelectChange}
+                  optionConfig={{ id: 'name', name: 'name' }}
+                />
+              </label>
+            </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Email</span>
@@ -131,7 +146,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Enter user email'
                   name='email'
-                  value={usersFormData.email}
+                  value={formData.email}
                   onChange={handleChange}
                 />
                 {!!errorMessage?.['name'] &&
@@ -153,7 +168,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Enter user password'
                   name='password'
-                  value={usersFormData.password}
+                  value={formData.password}
                   onChange={handleChange}
                   type='password'
                 />
@@ -174,7 +189,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Confirm Password'
                   name='password_confirmation'
-                  value={usersFormData.password_confirmation}
+                  value={formData.password_confirmation}
                   onChange={handleChange}
                   type='password'
                 />

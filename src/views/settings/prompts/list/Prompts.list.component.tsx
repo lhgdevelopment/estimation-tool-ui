@@ -58,7 +58,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

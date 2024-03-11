@@ -90,9 +90,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex(
-              (item: any) => item['_id'] === editDataId // Replace 'id' with the actual identifier of your item
-            )
+            const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
@@ -160,13 +158,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
             >
               <label className='block text-sm'>
                 <span className='text-gray-700 dark:text-gray-400'>Service</span>
-                <Dropdown
-                  url={'services'}
-                  name='serviceId'
-                  value={formData.serviceId}
-                  onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
-                />
+                <Dropdown url={'services'} name='serviceId' value={formData.serviceId} onChange={handleSelectChange} />
                 {!!errorMessage?.['serviceId'] &&
                   errorMessage?.['serviceId']?.map((message: any, index: number) => {
                     return (

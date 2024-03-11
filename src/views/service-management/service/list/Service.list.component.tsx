@@ -130,7 +130,6 @@ export default function ServiceListComponent(props: TServiceComponent) {
                     name='projectTypeId'
                     value={filterData.projectTypeId}
                     onChange={handleFilterSelectChange}
-                    optionConfig={{ id: 'id', title: 'name' }}
                   />
                 </Box>
                 <Box component={'td'}>
