@@ -19,7 +19,6 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
     setPreloader(true)
     apiRequest.get(`/conversations?page=${page}`).then(res => {
       const paginationData: any = res
-
       setListData(res?.data)
       setCurrentPage(paginationData?.['current_page'])
       setTotalPages(Math.ceil(paginationData?.['total'] / 10))

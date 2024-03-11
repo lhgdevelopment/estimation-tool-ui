@@ -53,7 +53,7 @@ export default function ServiceGroupsListComponent(props: TServiceGroupsComponen
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

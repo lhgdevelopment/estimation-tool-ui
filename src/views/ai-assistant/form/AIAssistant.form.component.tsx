@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
@@ -31,7 +32,12 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
       [e.target.name]: e.target.value
     })
   }
-
+  const handleReachText = (value: string, field: string) => {
+    setFormData({
+      ...formData,
+      [field]: value
+    })
+  }
   const handleSelectChange = (e: any) => {
     setFormData({
       ...formData,
@@ -44,26 +50,34 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
     setErrorMessage({})
     setPreload(true)
     if (editDataId) {
-      apiRequest.put(`/conversations/${editDataId}`, formData).then(res => {
-        setListData((prevState: []) => {
-          const updatedList: any = [...prevState]
-          const editedServiceIndex = updatedList.findIndex((item: any) => item['_id'] === editDataId)
-          if (editedServiceIndex !== -1) {
-            updatedList[editedServiceIndex] = res?.data
-          }
-          Swal.fire({
-            title: 'Data Updated Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
+      apiRequest
+        .put(`/conversations/${editDataId}`, formData)
+        .then(res => {
+          setListData((prevState: []) => {
+            const updatedList: any = [...prevState]
+            const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
+            console.log(editedServiceIndex)
+
+            if (editedServiceIndex !== -1) {
+              updatedList[editedServiceIndex] = res?.data
+            }
+            Swal.fire({
+              title: 'Data Updated Successfully!',
+              icon: 'success',
+              timer: 1000,
+              timerProgressBar: true,
+              showConfirmButton: false
+            })
+            onClear()
+            setPreload(false)
+
+            return updatedList
           })
-
-          onClear()
-
-          return updatedList
         })
-      })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+        })
     } else {
       apiRequest
         .post('/conversations/create', formData)
@@ -137,7 +151,6 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
                     name='prompt_id'
                     value={formData.prompt_id}
                     onChange={handleSelectChange}
-                    optionConfig={{ id: 'id', title: 'name' }}
                     className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                       errorMessage?.['prompt_id'] ? 'border-red-600' : 'dark:border-gray-600 '
                     }`}
@@ -160,15 +173,9 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
                 <label className='block text-sm'>
                   <span className='text-gray-700 dark:text-gray-400'>Message</span>
                 </label>
-                <textarea
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['message_content'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  rows={3}
-                  placeholder='Message here...'
-                  name='message_content'
+                <RichTextEditor
                   value={formData.message_content}
-                  onChange={handleChange}
+                  onBlur={newContent => handleReachText(newContent, 'message_content')}
                 />
                 {!!errorMessage?.['message_content'] &&
                   errorMessage?.['message_content']?.map((message: any, index: number) => {

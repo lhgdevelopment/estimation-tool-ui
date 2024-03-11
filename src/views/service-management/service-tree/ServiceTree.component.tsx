@@ -965,7 +965,6 @@ export default function ServiceTreeComponent() {
                           name='projectTypeId'
                           value={serviceFormData.projectTypeId}
                           onChange={e => handleSelectChange(e, serviceFormData, setServiceFormData)}
-                          optionConfig={{ id: 'id', title: 'name' }}
                         />
                       </label>
                     </Box>
@@ -1037,7 +1036,6 @@ export default function ServiceTreeComponent() {
                           onChange={e => {
                             handleSelectChange(e, serviceGroupFormData, setServiceGroupFormData)
                           }}
-                          optionConfig={{ id: 'id', title: 'name' }}
                         />
                         {!!errorMessage?.['serviceId'] &&
                           errorMessage?.['serviceId']?.map((message: any, index: number) => {

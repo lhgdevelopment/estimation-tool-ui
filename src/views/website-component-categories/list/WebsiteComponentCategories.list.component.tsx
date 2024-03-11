@@ -53,7 +53,7 @@ export default function WebsiteComponentCategoriesListComponent(props: TWebsiteC
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

@@ -47,9 +47,7 @@ export default function ServiceFormComponent(props: TServiceComponent) {
       apiRequest.put(`/services/${editDataId}`, formData).then(res => {
         setListData((prevState: []) => {
           const updatedList: any = [...prevState]
-          const editedServiceIndex = updatedList.findIndex(
-            (item: any) => item['_id'] === editDataId // Replace 'id' with the actual identifier of your item
-          )
+          const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
           if (editedServiceIndex !== -1) {
             updatedList[editedServiceIndex] = res?.data
           }
@@ -107,7 +105,6 @@ export default function ServiceFormComponent(props: TServiceComponent) {
                   name='projectTypeId'
                   value={formData.projectTypeId}
                   onChange={handleSelectChange}
-                  optionConfig={{ id: 'id', title: 'name' }}
                 />
               </label>
             </Box>

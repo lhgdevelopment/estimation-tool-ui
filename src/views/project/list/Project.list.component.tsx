@@ -57,7 +57,7 @@ export default function ProjectListComponent(props: TProjectComponent) {
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   if (!listData?.length) {
     return <UiSkeleton />

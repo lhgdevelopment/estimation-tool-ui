@@ -53,7 +53,7 @@ export default function ServiceDeliverableTasksListComponent(props: TServiceDeli
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

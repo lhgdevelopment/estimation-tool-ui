@@ -505,7 +505,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           name='projectTypeId'
                           value={projectSOWFormData.projectTypeId}
                           onChange={handleSelectChange}
-                          optionConfig={{ id: 'id', title: 'name' }}
                         />
                         {!!errorMessage?.['projectTypeId'] &&
                           errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
@@ -525,7 +524,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           name='projectTypeId'
                           value={projectSOWFormData.projectTypeId}
                           onChange={handleSelectChange}
-                          optionConfig={{ id: 'id', title: 'name' }}
+                          
                         />
                         {!!errorMessage?.['projectTypeId'] &&
                           errorMessage?.['projectTypeId']?.map((message: any, index: number) => {

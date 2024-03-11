@@ -54,7 +54,7 @@ export default function MeetingTypeListComponent(props: TMeetingTypeComponent) {
 
   useEffect(() => {
     getList()
-  }, [editDataId])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)
