@@ -63,8 +63,8 @@ export default function AIAssistantDetailsComponent() {
     })
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+  const handleKeyDown = (e: any) => {
+    if (String(e?.target?.['value']).trim() && e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       onSubmit()
     }
@@ -242,7 +242,7 @@ export default function AIAssistantDetailsComponent() {
                   position: 'absolute',
                   top: '50%',
                   right: '9px',
-                  background: conversationFormData?.message_content ? '#000' : '#e3e3e3',
+                  background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
                   padding: '0',
                   height: '30px',
                   width: '30px',
@@ -257,7 +257,7 @@ export default function AIAssistantDetailsComponent() {
                     background: '#000'
                   }
                 }}
-                disabled={!conversationFormData?.message_content}
+                disabled={!String(conversationFormData?.message_content).trim()}
               >
                 <NorthIcon sx={{ fontSize: '16px' }} />
               </Button>
