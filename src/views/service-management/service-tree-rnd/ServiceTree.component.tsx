@@ -5,8 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Button, Checkbox, Modal } from '@mui/material'
-import type { TreeDataNode, TreeProps } from 'antd'
-import { Tree } from 'antd'
+import { Tree, type TreeProps } from 'antd'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
@@ -590,74 +589,163 @@ export default function ServiceTreeComponent() {
     // setExpandedKeys(info.expandedKeys)
   }
 
-  const onDrop: TreeProps['onDrop'] = (info: any) => {
-    const dragNode = info.dragNode
-    const dropKey = info.node.key
-    const dragKey = info.dragNode.key
-    const dropPos = info.node.pos.split('-')
-    const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]) // the drop position relative to the drop node, inside 0, top -1, bottom 1
-    if (dragNode?.type === 'service') {
+  // const onDrop: TreeProps['onDrop'] = (info: any) => {
+  //   const dragNode = info.dragNode
+  //   const dropKey = info.node.key
+  //   const dragKey = info.dragNode.key
+  //   const dropPos = info.node.pos.split('-')
+  //   const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]) // the drop position relative to the drop node, inside 0, top -1, bottom 1
+  //   if (dragNode?.type === 'service') {
+  //     apiRequest
+  //       .put(`/services/${dragNode?.id}`, {
+  //         ...info?.dragNode,
+  //         projectTypeId: dragNode?.projectType?.id,
+  //         order: dropPosition == -1 ? dropPosition + 1 : 1
+  //       })
+  //       .then(res => {
+  //         getList()
+  //       })
+  //   }
+
+  //   const loop = (
+  //     data: TreeDataNode[],
+  //     key: React.Key,
+  //     callback: (node: TreeDataNode, i: number, data: TreeDataNode[]) => void
+  //   ) => {
+  //     for (let i = 0; i < data.length; i++) {
+  //       if (data[i].key === key) {
+  //         return callback(data[i], i, data)
+  //       }
+  //       if (data[i].children) {
+  //         loop(data[i].children!, key, callback)
+  //       }
+  //     }
+  //   }
+  //   const data = [...serviceTreeData]
+
+  //   // Find dragObject
+  //   let dragObj: TreeDataNode
+  //   loop(data, dragKey, (item, index, arr) => {
+  //     arr.splice(index, 1)
+  //     dragObj = item
+  //   })
+
+  //   if (!info.dropToGap) {
+  //     // Drop on the content
+  //     loop(data, dropKey, item => {
+  //       item.children = item.children || []
+
+  //       // where to insert. New item was inserted to the start of the array in this example, but can be anywhere
+  //       item.children.unshift(dragObj)
+  //     })
+  //   } else {
+  //     let ar: TreeDataNode[] = []
+  //     let i: number
+  //     loop(data, dropKey, (_item, index, arr) => {
+  //       ar = arr
+  //       i = index
+  //     })
+  //     if (dropPosition === -1) {
+  //       // Drop on the top of the drop node
+  //       ar.splice(i!, 0, dragObj!)
+  //     } else {
+  //       // Drop on the bottom of the drop node
+  //       ar.splice(i! + 1, 0, dragObj!)
+  //     }
+  //   }
+  //   setServiceTreeData(data)
+  // }
+  const onDrop = (info: any) => {
+    let position = info.dropPosition
+    const { dragNode, node } = info
+
+    if (info.dropToGap && position !== -1) {
+      position = position - 1
+    }
+
+    if (position > dragNode.order) {
+      position = position - 1
+    }
+
+    console.log(position)
+    console.log(info.dropToGap)
+
+    if (dragNode.type == 'service') {
       apiRequest
-        .put(`/services/${dragNode?.id}`, {
-          ...info?.dragNode,
-          projectTypeId: dragNode?.projectType?.id,
-          order: dropPosition == -1 ? dropPosition + 1 : 1
+        .put(`/services/${dragNode.id}`, {
+          name: dragNode.name,
+          projectTypeId: dragNode.projectType.id,
+          order: position
         })
         .then(res => {
+          console.log(res)
           getList()
+        })
+        .catch(error => {
+          setErrorMessage(error?.response?.data?.errors)
+        })
+    }
+    if (dragNode.type == 'group') {
+      apiRequest
+        .put(`/service-groups/${dragNode.id}`, {
+          ...dragNode,
+
+          order: position
+        })
+        .then(res => {
+          console.log(res)
+          getList()
+        })
+        .catch(error => {
+          setErrorMessage(error?.response?.data?.errors)
+        })
+    }
+    if (dragNode.type == 'scope') {
+      apiRequest
+        .put(`/service-scopes/${dragNode.id}`, {
+          ...dragNode,
+
+          order: position
+        })
+        .then(res => {
+          console.log(res)
+          getList()
+        })
+        .catch(error => {
+          setErrorMessage(error?.response?.data?.errors)
         })
     }
 
-    const loop = (
-      data: TreeDataNode[],
-      key: React.Key,
-      callback: (node: TreeDataNode, i: number, data: TreeDataNode[]) => void
-    ) => {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].key === key) {
-          return callback(data[i], i, data)
-        }
-        if (data[i].children) {
-          loop(data[i].children!, key, callback)
-        }
-      }
+    if (dragNode.type == 'deliverable') {
+      apiRequest
+        .put(`/service-deliverables/${dragNode.id}`, {
+          ...dragNode,
+
+          order: position
+        })
+        .then(res => {
+          console.log(res)
+          getList()
+        })
+        .catch(error => {
+          setErrorMessage(error?.response?.data?.errors)
+        })
     }
-    const data = [...serviceTreeData]
-
-    // Find dragObject
-    let dragObj: TreeDataNode
-    loop(data, dragKey, (item, index, arr) => {
-      arr.splice(index, 1)
-      dragObj = item
-    })
-
-    if (!info.dropToGap) {
-      // Drop on the content
-      loop(data, dropKey, item => {
-        item.children = item.children || []
-
-        // where to insert. New item was inserted to the start of the array in this example, but can be anywhere
-        item.children.unshift(dragObj)
-      })
-    } else {
-      let ar: TreeDataNode[] = []
-      let i: number
-      loop(data, dropKey, (_item, index, arr) => {
-        ar = arr
-        i = index
-      })
-      if (dropPosition === -1) {
-        // Drop on the top of the drop node
-        ar.splice(i!, 0, dragObj!)
-      } else {
-        // Drop on the bottom of the drop node
-        ar.splice(i! + 1, 0, dragObj!)
-      }
+    if (dragNode.type == 'task') {
+      apiRequest
+        .put(`/service-deliverable-tasks/${dragNode.id}`, {
+          ...dragNode,
+          order: position
+        })
+        .then(res => {
+          console.log(res)
+          getList()
+        })
+        .catch(error => {
+          setErrorMessage(error?.response?.data?.errors)
+        })
     }
-    setServiceTreeData(data)
   }
-
-  console.log(serviceTreeData)
 
   return (
     <>
@@ -692,28 +780,23 @@ export default function ServiceTreeComponent() {
           <Box sx={{ flexGrow: 1 }}>
             <Tree
               className='draggable-tree'
-              draggable={{
-                nodeDraggable(node: any) {
-                  return node?.['type'] == 'service'
-                }
-              }}
+              draggable={true}
               blockNode
               onDragEnter={onDragEnter}
               onDrop={onDrop}
               treeData={serviceTreeData}
+              allowDrop={(options: any) => {
+                // console.log(options.dropPosition)
 
-              // allowDrop={(node: any, dropPosition: any) => {
-              //   console.log(node?.dragNode?.type)
-              //   if (node?.dragNode?.type === node?.dropNode?.type) {
-              //     return true
-              //   } else {
-              //     return false
-              //   }
-              // }}
-
-              // titleRender={node => {
-              //   return <>Hello</>
-              // }}
+                if (options?.dragNode?.type === options?.dropNode?.type) {
+                  return options
+                } else {
+                  return false
+                }
+              }}
+              titleRender={node => {
+                return <>{node?.title}</>
+              }}
             />
           </Box>
         </Box>
