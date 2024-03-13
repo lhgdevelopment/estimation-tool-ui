@@ -6,7 +6,7 @@ import Select, { SelectProps } from '@mui/material/Select'
 import { useEffect, useState } from 'react'
 import apiRequest from '../../utils/axios-config'
 
-type TOptionConfig = { name: string; id: string }
+type TOptionConfig = { title: string; id: string }
 
 interface ISelectProps {
   label?: string
@@ -15,7 +15,7 @@ interface ISelectProps {
   searchable?: boolean
   searchPlaceholder?: string
   optionConfig?: TOptionConfig
-  enumList?: { name: string; id: string | number }[]
+  enumList?: { title: string; id: string | number }[]
   sx?: SxProps
 }
 
@@ -27,7 +27,7 @@ export function Dropdown(props: SelectPropsWithISelectProps) {
     url,
     isEnumField = false,
     enumList,
-    optionConfig = { name: 'name', id: 'id' },
+    optionConfig = { title: 'name', id: 'id' },
     multiple = false,
     searchable = true,
     searchPlaceholder = 'Type to search...',
@@ -49,7 +49,7 @@ export function Dropdown(props: SelectPropsWithISelectProps) {
       apiRequest.get(`/${url}?per_page=1000`).then(res => {
         const fetchedOptions =
           res?.data?.map((item: any) => ({
-            name: item?.[optionConfig?.name],
+            title: item?.[optionConfig?.title],
             id: item?.[optionConfig?.id]
           })) || []
         setOptionItems(fetchedOptions)
@@ -77,7 +77,7 @@ export function Dropdown(props: SelectPropsWithISelectProps) {
     text?.toString().toLowerCase().indexOf(searchText?.toString().toLowerCase()) > -1
 
   useEffect(() => {
-    setOptionItems(initialOptionList.filter(item => containsText(item['name'], searchText)))
+    setOptionItems(initialOptionList.filter(item => containsText(item['title'], searchText)))
   }, [searchText])
 
   const selectOnOpen = () => {
@@ -136,7 +136,7 @@ export function Dropdown(props: SelectPropsWithISelectProps) {
         {preloader && <MenuItem disabled>Loading...</MenuItem>}
         {optionItems?.map((option: any, index: number) => (
           <MenuItem value={option.id} key={index}>
-            {option.name}
+            {option.title}
           </MenuItem>
         ))}
       </Select>

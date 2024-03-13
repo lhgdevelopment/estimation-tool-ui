@@ -113,7 +113,7 @@ export default function WebsiteComponentFormComponent(props: TWebsiteComponentCo
                   name='category_id'
                   value={formData.category_id}
                   onChange={handleSelectChange}
-                  optionConfig={{ id: 'category_id', name: 'category_name' }}
+                  optionConfig={{ id: 'category_id', title: 'category_name' }}
                 />
               </label>
             </Box>

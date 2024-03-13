@@ -105,7 +105,7 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
                   name='project_id'
                   value={formData.project_id}
                   onChange={handleChange}
-                  optionConfig={{ id: 'project_id', name: 'project_name' }}
+                  optionConfig={{ id: 'project_id', title: 'project_name' }}
                 />
               </label>
             </Box>
@@ -117,7 +117,7 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
                   name='components'
                   value={formData.components}
                   onChange={handleMultipleSelectChange}
-                  optionConfig={{ id: 'component_id', name: 'component_name' }}
+                  optionConfig={{ id: 'component_id', title: 'component_name' }}
                   multiple
                 />
               </label>
