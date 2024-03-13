@@ -135,7 +135,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                   name='role'
                   value={formData.role}
                   onChange={handleSelectChange}
-                  optionConfig={{ id: 'name', name: 'name' }}
+                  optionConfig={{ id: 'name', title: 'name' }}
                 />
               </label>
             </Box>

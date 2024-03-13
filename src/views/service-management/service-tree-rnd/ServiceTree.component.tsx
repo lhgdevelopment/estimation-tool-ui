@@ -795,7 +795,7 @@ export default function ServiceTreeComponent() {
                 }
               }}
               titleRender={node => {
-                return <>{node?.title}</>
+                return <Box>{node?.title}</Box>
               }}
             />
           </Box>
