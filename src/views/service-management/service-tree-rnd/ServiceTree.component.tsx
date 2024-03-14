@@ -789,6 +789,30 @@ export default function ServiceTreeComponent() {
                 // console.log(options.dropPosition)
 
                 if (options?.dragNode?.type === options?.dropNode?.type) {
+                  if (
+                    options?.dropNode?.type == 'group' &&
+                    options?.dragNode?.serviceId === options?.dropNode?.serviceId
+                  ) {
+                    return options
+                  } else if (
+                    options?.dropNode?.type == 'sow' &&
+                    options?.dragNode?.groupId === options?.dropNode?.groupId
+                  ) {
+                    return options
+                  } else if (
+                    options?.dropNode?.type == 'deliverable' &&
+                    options?.dragNode?.scopeId === options?.dropNode?.scopeId
+                  ) {
+                    return options
+                  } else if (
+                    options?.dropNode?.type == 'task' &&
+                    options?.dragNode?.deliverableId === options?.dropNode?.deliverableId
+                  ) {
+                    return options
+                  } else {
+                    return false
+                  }
+
                   return options
                 } else {
                   return false
