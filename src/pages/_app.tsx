@@ -11,6 +11,7 @@ import Head from 'next/head'
 import { Router } from 'next/router'
 
 // ** Loader Import
+import { SnackbarProvider } from 'notistack'
 import NProgress from 'nprogress'
 
 // ** React Perfect Scrollbar Style
@@ -73,15 +74,16 @@ const App = (props: ExtendedAppProps) => {
             <meta name='keywords' content={`${themeConfig.templateName}`} />
             <meta name='viewport' content='initial-scale=1, width=device-width' />
           </Head>
-
-          <SettingsProvider>
-            <SettingsConsumer>
-              {({ settings }) => {
-                // @ts-ignore
-                return <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
-              }}
-            </SettingsConsumer>
-          </SettingsProvider>
+          <SnackbarProvider autoHideDuration={1000} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+            <SettingsProvider>
+              <SettingsConsumer>
+                {({ settings }) => {
+                  // @ts-ignore
+                  return <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
+                }}
+              </SettingsConsumer>
+            </SettingsProvider>
+          </SnackbarProvider>
         </LocalizationProvider>
       </CacheProvider>
     </Provider>
