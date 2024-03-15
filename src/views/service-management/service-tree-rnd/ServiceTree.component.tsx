@@ -2,31 +2,35 @@ import ClearIcon from '@material-ui/icons/Clear'
 import AddIcon from '@mui/icons-material/Add'
 import BrowserUpdatedIcon from '@mui/icons-material/BrowserUpdated'
 import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Button, Checkbox, Modal } from '@mui/material'
-import { Tree, type TreeProps } from 'antd'
+import { Tree, TreeDataNode, type TreeProps } from 'antd'
+import { useSnackbar } from 'notistack'
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { EServiceFormType, transformServiceTree } from './ServiceTree.decorator'
+import {
+  EServiceFormType,
+  addButtonSx,
+  editButtonSx,
+  transformServiceTree,
+  treeButtonContainerSx,
+  treeTitleSx
+} from './ServiceTree.decorator'
 
 export default function ServiceTreeComponent() {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [serviceModalOpen, setServiceModalOpen] = useState(false)
   const handleServiceModalOpen = () => setServiceModalOpen(true)
   const handleServiceModalClose = () => setServiceModalOpen(false)
   const [formType, setFormType] = useState<EServiceFormType>()
-
-  const [serviceEditDataId, setServiceEditDataId] = useState<null | string>(null)
-  const [serviceGroupEditDataId, setServiceGroupEditDataId] = useState<null | string>(null)
-  const [serviceSOWEditDataId, setServiceSOWEditDataId] = useState<null | string>(null)
-  const [serviceDeliverableEditDataId, setServiceDeliverableEditDataId] = useState<null | string>(null)
-  const [serviceTaskEditDataId, setServiceTaskEditDataId] = useState<null | string>(null)
-  const [errorMessage, setErrorMessage] = useState<any>({})
+  const [defaultExpandedKeys, setDefaultExpandedKeys] = useState<string[]>(['Development_1050'])
 
   const serviceDefaultData = {
     name: '',
@@ -75,6 +79,14 @@ export default function ServiceTreeComponent() {
   const [serviceSOWFormData, setServiceSOWFormData] = useState(serviceSOWDefaultData)
   const [serviceDeliverableFormData, setServiceDeliverableFormData] = useState(serviceDeliverableDefaultData)
   const [serviceTaskFormData, setServiceTaskFormData] = useState(serviceTaskDefaultData)
+  const [isShowParentTaskField, setIsShowParentTaskField] = useState(true)
+
+  const [serviceEditDataId, setServiceEditDataId] = useState<null | string>(null)
+  const [serviceGroupEditDataId, setServiceGroupEditDataId] = useState<null | string>(null)
+  const [serviceSOWEditDataId, setServiceSOWEditDataId] = useState<null | string>(null)
+  const [serviceDeliverableEditDataId, setServiceDeliverableEditDataId] = useState<null | string>(null)
+  const [serviceTaskEditDataId, setServiceTaskEditDataId] = useState<null | string>(null)
+  const [errorMessage, setErrorMessage] = useState<any>({})
 
   const [isPullingTaskFromClickup, setIsPullingTaskFromClickup] = useState(false)
   const [isFatchFromClickUp, setIsFatchFromClickUp] = useState(false)
@@ -82,10 +94,10 @@ export default function ServiceTreeComponent() {
   const [clickupTaskList, setClickupTaskList] = useState<any[]>([])
 
   const handleReachText = (value: string, field: string, formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
-    setFormData({
-      ...formData,
+    setFormData((prevState: any) => ({
+      ...prevState,
       [field]: value
-    })
+    }))
   }
 
   const handleMultipleNameReachText = (
@@ -98,15 +110,16 @@ export default function ServiceTreeComponent() {
     if (index != -1) {
       const names = [...formData.names]
       names[index] = value
-      setFormData({
-        ...formData,
+
+      setFormData((prevState: any) => ({
+        ...prevState,
         names: names
-      })
+      }))
     } else {
-      setFormData({
-        ...formData,
+      setFormData((prevState: any) => ({
+        ...prevState,
         [field]: value
-      })
+      }))
     }
   }
 
@@ -129,10 +142,10 @@ export default function ServiceTreeComponent() {
   }
 
   const handleChange = (e: React.ChangeEvent<any>, formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+    setFormData((prevState: any) => ({
+      ...prevState,
+      [e?.target?.name]: e?.target?.value
+    }))
   }
 
   const handleTaskMultipleTextChange = (e: React.ChangeEvent<any>, index = -1) => {
@@ -156,10 +169,10 @@ export default function ServiceTreeComponent() {
   }
 
   const handleSelectChange = (e: any, formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
-    setFormData({
-      ...formData,
+    setFormData((prevState: any) => ({
+      ...prevState,
       [e?.target?.name]: e?.target?.value
-    })
+    }))
   }
 
   const addNameField = (formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
@@ -211,9 +224,8 @@ export default function ServiceTreeComponent() {
   const handleServiceSOWEditButton = (e: any, data: any, id: string) => {
     e.preventDefault()
     e.stopPropagation()
-
     setServiceSOWFormData({
-      serviceGroupId: data?.serviceGroupId || '',
+      serviceGroupId: data?.groupId || '',
       name: data?.name || '',
       order: data?.order,
       names: data?.names || ['']
@@ -228,7 +240,7 @@ export default function ServiceTreeComponent() {
     e.stopPropagation()
 
     setServiceDeliverableFormData({
-      serviceScopeId: data?.serviceScopeId || '',
+      serviceScopeId: data?.scopeId || '',
       name: data?.name || '',
       order: data?.order,
       names: data?.names || ['']
@@ -241,10 +253,12 @@ export default function ServiceTreeComponent() {
   const handleServiceTaskEditButton = (e: any, data: any, id: string) => {
     e.preventDefault()
     e.stopPropagation()
+    console.log(data)
 
+    setIsShowParentTaskField(!!data?.taskId)
     setServiceTaskFormData({
-      serviceDeliverableId: data?.serviceDeliverableId || '',
-      parentTaskId: data?.parentTaskId || '',
+      serviceDeliverableId: data?.deliverableId || '',
+      parentTaskId: data?.taskId || '',
 
       name: data?.name || '',
       order: data?.order,
@@ -272,7 +286,7 @@ export default function ServiceTreeComponent() {
           Swal.fire({
             title: 'Data Updated Successfully!',
             icon: 'success',
-            timer: 1000,
+            timer: 500,
             timerProgressBar: true,
             showConfirmButton: false
           })
@@ -288,7 +302,7 @@ export default function ServiceTreeComponent() {
         Swal.fire({
           title: 'Data Created Successfully!',
           icon: 'success',
-          timer: 1000,
+          timer: 500,
           timerProgressBar: true,
           showConfirmButton: false
         })
@@ -296,6 +310,7 @@ export default function ServiceTreeComponent() {
         handleServiceModalClose()
       })
     }
+    getList()
   }
 
   const onServiceGroupSubmit = (e: React.FormEvent<any>) => {
@@ -316,7 +331,7 @@ export default function ServiceTreeComponent() {
             Swal.fire({
               title: 'Data Updated Successfully!',
               icon: 'success',
-              timer: 1000,
+              timer: 500,
               timerProgressBar: true,
               showConfirmButton: false
             })
@@ -336,7 +351,7 @@ export default function ServiceTreeComponent() {
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
-            timer: 1000,
+            timer: 500,
             timerProgressBar: true,
             showConfirmButton: false
           })
@@ -346,6 +361,7 @@ export default function ServiceTreeComponent() {
           setErrorMessage(error?.response?.data?.errors)
         })
     }
+    getList()
   }
 
   const onServiceSOWSubmit = (e: React.FormEvent<any>) => {
@@ -366,7 +382,7 @@ export default function ServiceTreeComponent() {
             Swal.fire({
               title: 'Data Updated Successfully!',
               icon: 'success',
-              timer: 1000,
+              timer: 500,
               timerProgressBar: true,
               showConfirmButton: false
             })
@@ -386,7 +402,7 @@ export default function ServiceTreeComponent() {
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
-            timer: 1000,
+            timer: 500,
             timerProgressBar: true,
             showConfirmButton: false
           })
@@ -396,6 +412,7 @@ export default function ServiceTreeComponent() {
           setErrorMessage(error?.response?.data?.errors)
         })
     }
+    getList()
   }
 
   const onServiceDeliverableSubmit = (e: React.FormEvent<any>) => {
@@ -416,7 +433,7 @@ export default function ServiceTreeComponent() {
             Swal.fire({
               title: 'Data Updated Successfully!',
               icon: 'success',
-              timer: 1000,
+              timer: 500,
               timerProgressBar: true,
               showConfirmButton: false
             })
@@ -436,7 +453,7 @@ export default function ServiceTreeComponent() {
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
-            timer: 1000,
+            timer: 500,
             timerProgressBar: true,
             showConfirmButton: false
           })
@@ -446,6 +463,7 @@ export default function ServiceTreeComponent() {
           setErrorMessage(error?.response?.data?.errors)
         })
     }
+    getList()
   }
 
   const addTaskFields = () => {
@@ -504,7 +522,7 @@ export default function ServiceTreeComponent() {
             Swal.fire({
               title: 'Data Updated Successfully!',
               icon: 'success',
-              timer: 1000,
+              timer: 500,
               timerProgressBar: true,
               showConfirmButton: false
             })
@@ -527,7 +545,7 @@ export default function ServiceTreeComponent() {
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
-            timer: 1000,
+            timer: 500,
             timerProgressBar: true,
             showConfirmButton: false
           })
@@ -571,7 +589,7 @@ export default function ServiceTreeComponent() {
 
   const getList = async () => {
     try {
-      const response = await apiRequest.get(`/service-tree?per_page=1000`)
+      const response = await apiRequest.get(`/service-tree?per_page=500`)
       const services = response?.data?.services || []
       setServiceTreeData(transformServiceTree(services, 'service'))
     } catch (error) {
@@ -657,18 +675,61 @@ export default function ServiceTreeComponent() {
   // }
   const onDrop = (info: any) => {
     let position = info.dropPosition
-    const { dragNode, node } = info
+    const { dragNode, node, dropToGap, dragNodesKeys } = info
+    const dropKey = node.key
+    const dragKey = dragNode.key
+    const dropPos = node.pos.split('-')
+    if (position == -1) {
+      position = 0
+    } else {
+      if (!dropToGap) {
+        position = position + 1
+      }
+    }
+    console.log(info)
 
-    if (info.dropToGap && position !== -1) {
-      position = position - 1
+    if (position == dragNode.order) {
+      return
     }
 
-    if (position > dragNode.order) {
-      position = position - 1
+    const loop = (
+      data: TreeDataNode[],
+      key: React.Key,
+      callback: (node: TreeDataNode, i: number, data: TreeDataNode[]) => void
+    ) => {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].key === key) {
+          return callback(data[i], i, data)
+        }
+        if (data[i].children) {
+          loop(data[i].children!, key, callback)
+        }
+      }
     }
+    const initialServiceTreeData = [...serviceTreeData]
+    const updateServiceTreeData = [...serviceTreeData]
 
-    console.log(position)
-    console.log(info.dropToGap)
+    // Find dragObject
+    let dragObj: TreeDataNode
+    loop(updateServiceTreeData, dragKey, (item, index, arr) => {
+      arr.splice(index, 1)
+      dragObj = item
+    })
+
+    let ar: TreeDataNode[] = []
+    let i: number
+    loop(updateServiceTreeData, dropKey, (_item, index, arr) => {
+      ar = arr
+      i = index
+    })
+    if (position === -1) {
+      // Drop on the top of the drop node
+      ar.splice(i!, 0, dragObj!)
+    } else {
+      // Drop on the bottom of the drop node
+      ar.splice(i! + 1, 0, dragObj!)
+    }
+    setServiceTreeData(updateServiceTreeData)
 
     if (dragNode.type == 'service') {
       apiRequest
@@ -678,13 +739,17 @@ export default function ServiceTreeComponent() {
           order: position
         })
         .then(res => {
-          console.log(res)
-          getList()
+          enqueueSnackbar('Updated Successfully', { variant: 'success' })
         })
         .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+          console.log(error)
+
+          enqueueSnackbar(error?.message, { variant: 'error' })
+
+          setServiceTreeData(initialServiceTreeData)
         })
     }
+
     if (dragNode.type == 'group') {
       apiRequest
         .put(`/service-groups/${dragNode.id}`, {
@@ -693,11 +758,11 @@ export default function ServiceTreeComponent() {
           order: position
         })
         .then(res => {
-          console.log(res)
-          getList()
+          enqueueSnackbar('Updated Successfully', { variant: 'success' })
         })
         .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.message, { variant: 'error' })
+          setServiceTreeData(initialServiceTreeData)
         })
     }
     if (dragNode.type == 'scope') {
@@ -708,11 +773,11 @@ export default function ServiceTreeComponent() {
           order: position
         })
         .then(res => {
-          console.log(res)
-          getList()
+          enqueueSnackbar('Updated Successfully', { variant: 'success' })
         })
         .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.message, { variant: 'error' })
+          setServiceTreeData(initialServiceTreeData)
         })
     }
 
@@ -724,11 +789,11 @@ export default function ServiceTreeComponent() {
           order: position
         })
         .then(res => {
-          console.log(res)
-          getList()
+          enqueueSnackbar('Updated Successfully', { variant: 'success' })
         })
         .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.message, { variant: 'error' })
+          setServiceTreeData(initialServiceTreeData)
         })
     }
     if (dragNode.type == 'task') {
@@ -738,13 +803,15 @@ export default function ServiceTreeComponent() {
           order: position
         })
         .then(res => {
-          console.log(res)
-          getList()
+          enqueueSnackbar('Updated Successfully', { variant: 'success' })
         })
         .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.message, { variant: 'error' })
+          setServiceTreeData(initialServiceTreeData)
         })
     }
+
+    setDefaultExpandedKeys([dragNode.key])
   }
 
   return (
@@ -786,15 +853,194 @@ export default function ServiceTreeComponent() {
               onDrop={onDrop}
               treeData={serviceTreeData}
               allowDrop={(options: any) => {
-                // console.log(options.dropPosition)
+                // console.log(options);
 
                 if (options?.dragNode?.type === options?.dropNode?.type) {
+                  if (
+                    options?.dropNode?.type == 'group' &&
+                    options?.dragNode?.serviceId === options?.dropNode?.serviceId
+                  ) {
+                    return options
+                  } else if (
+                    options?.dropNode?.type == 'sow' &&
+                    options?.dragNode?.groupId === options?.dropNode?.groupId
+                  ) {
+                    return options
+                  } else if (
+                    options?.dropNode?.type == 'deliverable' &&
+                    options?.dragNode?.scopeId === options?.dropNode?.scopeId
+                  ) {
+                    return options
+                  } else if (
+                    options?.dropNode?.type == 'task' &&
+                    options?.dragNode?.deliverableId === options?.dropNode?.deliverableId
+                  ) {
+                    return options
+                  }
+
                   return options
                 } else {
                   return false
                 }
               }}
-              titleRender={node => {
+              titleRender={(node: any) => {
+                // console.log(node)
+
+                if (node?.['type'] == 'service') {
+                  return (
+                    <Box sx={treeTitleSx}>
+                      <Box dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box sx={treeButtonContainerSx}>
+                        <Button
+                          onClick={e => {
+                            handleServiceEditButton(e, node, node?.['id'])
+                          }}
+                          sx={editButtonSx}
+                        >
+                          <EditIcon sx={{ fontSize: '18px' }} />
+                        </Button>
+                        <Button
+                          onClick={e => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            console.log(node)
+
+                            handleServiceModalOpen()
+                            setFormType(EServiceFormType.GROUP)
+                            setServiceGroupFormData(prevState => ({ ...prevState, serviceId: node.id }))
+                          }}
+                          sx={addButtonSx}
+                        >
+                          <AddIcon sx={{ fontSize: '18px' }} /> Add Group
+                        </Button>
+                      </Box>
+                    </Box>
+                  )
+                } else if (node?.['type'] == 'group') {
+                  return (
+                    <Box sx={treeTitleSx}>
+                      <Box dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box sx={treeButtonContainerSx}>
+                        <Button
+                          onClick={e => {
+                            handleServiceGroupEditButton(e, node, node?.['id'])
+                          }}
+                          sx={editButtonSx}
+                        >
+                          <EditIcon sx={{ fontSize: '18px' }} />
+                        </Button>
+                        <Button
+                          onClick={e => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            handleServiceModalOpen()
+                            setFormType(EServiceFormType.SOW)
+                            setServiceSOWFormData(prevState => ({ ...prevState, serviceGroupId: node.id }))
+                          }}
+                          sx={addButtonSx}
+                        >
+                          <AddIcon sx={{ fontSize: '18px' }} /> Add SOW
+                        </Button>
+                      </Box>
+                    </Box>
+                  )
+                } else if (node?.['type'] == 'sow') {
+                  return (
+                    <Box sx={treeTitleSx}>
+                      <Box dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box sx={treeButtonContainerSx}>
+                        <Button
+                          onClick={e => {
+                            handleServiceSOWEditButton(e, node, node?.['id'])
+                          }}
+                          sx={editButtonSx}
+                        >
+                          <EditIcon sx={{ fontSize: '18px' }} />
+                        </Button>
+                        <Button
+                          onClick={e => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            handleServiceModalOpen()
+                            setFormType(EServiceFormType.DELIVARABLE)
+                            setServiceDeliverableFormData(prevState => ({ ...prevState, serviceScopeId: node.id }))
+                          }}
+                          sx={addButtonSx}
+                        >
+                          <AddIcon sx={{ fontSize: '18px' }} /> Add Deliverable
+                        </Button>
+                      </Box>
+                    </Box>
+                  )
+                } else if (node?.['type'] == 'deliverable') {
+                  return (
+                    <Box sx={treeTitleSx}>
+                      <Box dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box sx={treeButtonContainerSx}>
+                        <Button
+                          onClick={e => {
+                            handleServiceDeliverableEditButton(e, node, node?.['id'])
+                          }}
+                          sx={editButtonSx}
+                        >
+                          <EditIcon sx={{ fontSize: '18px' }} />
+                        </Button>
+                        <Button
+                          onClick={e => {
+                            console.log(node)
+                            e.preventDefault()
+                            e.stopPropagation()
+                            handleServiceModalOpen()
+                            setFormType(EServiceFormType.TASK)
+                            setServiceTaskFormData(prevState => ({
+                              ...prevState,
+                              serviceDeliverableId: node.id
+                            }))
+                          }}
+                          sx={addButtonSx}
+                        >
+                          <AddIcon sx={{ fontSize: '18px' }} /> Add Task
+                        </Button>
+                      </Box>
+                    </Box>
+                  )
+                } else if (node?.['type'] == 'task' || node?.['type'] == 'sub_task') {
+                  return (
+                    <Box sx={treeTitleSx}>
+                      <Box dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box sx={treeButtonContainerSx}>
+                        <Button
+                          onClick={e => {
+                            handleServiceTaskEditButton(e, node, node?.['id'])
+                          }}
+                          sx={editButtonSx}
+                        >
+                          <EditIcon sx={{ fontSize: '18px' }} />
+                        </Button>
+                      </Box>
+                      <Button
+                        onClick={e => {
+                          console.log(node)
+
+                          e.preventDefault()
+                          e.stopPropagation()
+                          handleServiceModalOpen()
+                          setFormType(EServiceFormType.TASK)
+                          setServiceTaskFormData(prevState => ({
+                            ...prevState,
+                            serviceDeliverableId: node.deliverableId,
+                            parentTaskId: node.id
+                          }))
+                        }}
+                        sx={addButtonSx}
+                      >
+                        <AddIcon sx={{ fontSize: '18px' }} />
+                        Add Sub Task
+                      </Button>
+                    </Box>
+                  )
+                }
+
                 return <Box>{node?.title}</Box>
               }}
             />
@@ -1756,34 +2002,36 @@ export default function ServiceTreeComponent() {
                                 })}
                             </label>
                           </Box>
-                          <Box
-                            sx={{
-                              width: '50%',
-                              '& .MuiInputBase-root': {
-                                border: errorMessage?.['parentTaskId'] ? '1px solid #dc2626' : ''
-                              }
-                            }}
-                          >
-                            <label className='block text-sm'>
-                              <span className='text-gray-700 dark:text-gray-400'>Parent Task</span>
-                              <Dropdown
-                                url={`service-deliverable-tasks?serviceDeliverableId=${serviceTaskFormData.serviceDeliverableId}`}
-                                name='parentTaskId'
-                                value={serviceTaskFormData.parentTaskId}
-                                onChange={e => {
-                                  handleSelectChange(e, serviceTaskFormData, setServiceTaskFormData)
-                                }}
-                              />
-                              {!!errorMessage?.['parentTaskId'] &&
-                                errorMessage?.['parentTaskId']?.map((message: any, index: number) => {
-                                  return (
-                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                      {message}
-                                    </span>
-                                  )
-                                })}
-                            </label>
-                          </Box>
+                          {isShowParentTaskField && (
+                            <Box
+                              sx={{
+                                width: '50%',
+                                '& .MuiInputBase-root': {
+                                  border: errorMessage?.['parentTaskId'] ? '1px solid #dc2626' : ''
+                                }
+                              }}
+                            >
+                              <label className='block text-sm'>
+                                <span className='text-gray-700 dark:text-gray-400'>Parent Task</span>
+                                <Dropdown
+                                  url={`service-deliverable-tasks?serviceDeliverableId=${serviceTaskFormData.serviceDeliverableId}`}
+                                  name='parentTaskId'
+                                  value={serviceTaskFormData.parentTaskId}
+                                  onChange={e => {
+                                    handleSelectChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                  }}
+                                />
+                                {!!errorMessage?.['parentTaskId'] &&
+                                  errorMessage?.['parentTaskId']?.map((message: any, index: number) => {
+                                    return (
+                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                        {message}
+                                      </span>
+                                    )
+                                  })}
+                              </label>
+                            </Box>
+                          )}
                         </Box>
                         <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                           <Box sx={{ width: '100%' }}>
