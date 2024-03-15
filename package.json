@@ -36,8 +36,6 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
   },
   "dependencies": {
-    "@ckeditor/ckeditor5-build-classic": "^41.2.0",
-    "@ckeditor/ckeditor5-react": "^6.2.0",
     "@emotion/cache": "^11.6.0",
     "@emotion/react": "^11.7.0",
     "@emotion/server": "^11.4.0",
