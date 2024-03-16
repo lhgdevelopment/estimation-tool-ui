@@ -41,21 +41,21 @@ export default function ServiceTreeComponent() {
     serviceId: '',
     name: '',
     order: '',
-    names: ['']
+    groups: [{ name: '', order: '' }]
   }
 
   const serviceSOWDefaultData = {
     serviceGroupId: '',
     name: '',
     order: '',
-    names: ['']
+    scopes: [{ name: '', order: '' }]
   }
 
   const serviceDeliverableDefaultData = {
     serviceScopeId: '',
     name: '',
     order: '',
-    names: ['']
+    deliverables: [{ name: '', order: '' }]
   }
 
   const serviceTaskDefaultData = {
@@ -63,7 +63,8 @@ export default function ServiceTreeComponent() {
       {
         name: '',
         cost: '',
-        description: ''
+        description: '',
+        order: ''
       }
     ],
     name: '',
@@ -100,20 +101,22 @@ export default function ServiceTreeComponent() {
     }))
   }
 
-  const handleMultipleNameReachText = (
+  const handleMultipleReachTextChange = (
     value: string,
     field: string,
     index = -1,
     formData: any,
-    setFormData: Dispatch<SetStateAction<any>>
+    setFormData: Dispatch<SetStateAction<any>>,
+    subArr: string
   ) => {
     if (index != -1) {
-      const names = [...formData.names]
-      names[index] = value
+      const subArrData = [...formData?.[subArr]]
+      subArrData[index][field] = value
+      console.log(subArrData)
 
       setFormData((prevState: any) => ({
         ...prevState,
-        names: names
+        [subArr]: [...subArrData]
       }))
     } else {
       setFormData((prevState: any) => ({
@@ -141,11 +144,29 @@ export default function ServiceTreeComponent() {
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<any>, formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>, formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
     setFormData((prevState: any) => ({
       ...prevState,
       [e?.target?.name]: e?.target?.value
     }))
+  }
+
+  const handleMultipleTextChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    formData: any,
+    setFormData: Dispatch<SetStateAction<any>>,
+    index = -1,
+    subArr: string
+  ): void => {
+    const subArrData = [...formData[subArr]]
+
+    if (subArrData && subArrData[index]) {
+      subArrData[index][e.target.name] = e.target.value
+      setFormData((prevState: any) => ({
+        ...prevState,
+        [subArr]: [...subArrData]
+      }))
+    }
   }
 
   const handleTaskMultipleTextChange = (e: React.ChangeEvent<any>, index = -1) => {
@@ -175,19 +196,26 @@ export default function ServiceTreeComponent() {
     }))
   }
 
-  const addNameField = (formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
+  const addSubField = (formData: any, setFormData: Dispatch<SetStateAction<any>>, subArr: string, data: any) => {
+    console.log(formData)
+
     setFormData({
       ...formData,
-      names: [...formData.names, '']
+      [subArr]: [...formData?.[subArr], data]
     })
   }
 
-  const removeNameField = (index: number, formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
-    const names = [...formData.names]
-    names.splice(index, 1)
+  const removeNameField = (
+    index: number,
+    formData: any,
+    setFormData: Dispatch<SetStateAction<any>>,
+    subArr: string
+  ) => {
+    const subArrData = [...formData?.[subArr]]
+    subArrData.splice(index, 1)
     setFormData({
       ...formData,
-      names: names
+      [subArr]: subArrData
     })
   }
 
@@ -213,8 +241,8 @@ export default function ServiceTreeComponent() {
     setServiceGroupFormData({
       serviceId: data?.serviceId || '',
       name: data?.name || '',
-      order: data?.order,
-      names: data?.names || ['']
+      order: data?.order || '',
+      groups: serviceGroupDefaultData.groups
     })
     setServiceGroupEditDataId(id)
     handleServiceModalOpen()
@@ -227,8 +255,8 @@ export default function ServiceTreeComponent() {
     setServiceSOWFormData({
       serviceGroupId: data?.groupId || '',
       name: data?.name || '',
-      order: data?.order,
-      names: data?.names || ['']
+      order: data?.order || '',
+      scopes: serviceSOWDefaultData.scopes
     })
     setServiceSOWEditDataId(id)
     handleServiceModalOpen()
@@ -242,8 +270,8 @@ export default function ServiceTreeComponent() {
     setServiceDeliverableFormData({
       serviceScopeId: data?.scopeId || '',
       name: data?.name || '',
-      order: data?.order,
-      names: data?.names || ['']
+      order: data?.order || '',
+      deliverables: serviceDeliverableDefaultData.deliverables
     })
     setServiceDeliverableEditDataId(id)
     handleServiceModalOpen()
@@ -274,43 +302,58 @@ export default function ServiceTreeComponent() {
   const onServiceSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
     if (serviceEditDataId) {
-      apiRequest.put(`/services/${serviceEditDataId}`, serviceFormData).then(res => {
-        setServiceTreeData((prevState: []) => {
-          const updatedList: any = [...prevState]
-          const editedServiceIndex = updatedList.findIndex(
-            (item: any) => item['_id'] === serviceEditDataId // Replace 'id' with the actual identifier of your item
-          )
-          if (editedServiceIndex !== -1) {
-            updatedList[editedServiceIndex] = res?.data
-          }
+      apiRequest
+        .put(`/services/${serviceEditDataId}`, serviceFormData)
+        .then(res => {
+          setServiceTreeData((prevState: []) => {
+            const updatedList: any = [...prevState]
+            const editedServiceIndex = updatedList.findIndex(
+              (item: any) => item['_id'] === serviceEditDataId // Replace 'id' with the actual identifier of your item
+            )
+            if (editedServiceIndex !== -1) {
+              updatedList[editedServiceIndex] = res?.data
+            }
+            Swal.fire({
+              title: 'Data Updated Successfully!',
+              icon: 'success',
+              timer: 500,
+              timerProgressBar: true,
+              showConfirmButton: false
+            })
+
+            return updatedList
+          })
+          onServiceClear()
+          handleServiceModalClose()
+          getList()
+        })
+        .catch(error => {
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        })
+    } else {
+      apiRequest
+        .post('/services', serviceFormData)
+        .then(res => {
+          setServiceTreeData((prevState: []) => [...prevState, res?.data])
           Swal.fire({
-            title: 'Data Updated Successfully!',
+            title: 'Data Created Successfully!',
             icon: 'success',
             timer: 500,
             timerProgressBar: true,
             showConfirmButton: false
           })
+          onServiceClear()
+          handleServiceModalClose()
+          getList()
+        })
+        .catch(error => {
+          console.log(error)
 
-          return updatedList
+          setErrorMessage(error?.response?.data?.message)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
-        onServiceClear()
-        handleServiceModalClose()
-      })
-    } else {
-      apiRequest.post('/services', serviceFormData).then(res => {
-        setServiceTreeData((prevState: []) => [...prevState, res?.data])
-        Swal.fire({
-          title: 'Data Created Successfully!',
-          icon: 'success',
-          timer: 500,
-          timerProgressBar: true,
-          showConfirmButton: false
-        })
-        onServiceClear()
-        handleServiceModalClose()
-      })
     }
-    getList()
   }
 
   const onServiceGroupSubmit = (e: React.FormEvent<any>) => {
@@ -339,9 +382,12 @@ export default function ServiceTreeComponent() {
             return updatedList
           })
           onServiceGroupClear()
+          handleServiceModalClose()
+          getList()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -356,12 +402,14 @@ export default function ServiceTreeComponent() {
             showConfirmButton: false
           })
           onServiceGroupClear()
+          handleServiceModalClose()
+          getList()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
-    getList()
   }
 
   const onServiceSOWSubmit = (e: React.FormEvent<any>) => {
@@ -390,9 +438,12 @@ export default function ServiceTreeComponent() {
             return updatedList
           })
           onServiceSOWClear()
+          handleServiceModalClose()
+          getList()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -407,12 +458,14 @@ export default function ServiceTreeComponent() {
             showConfirmButton: false
           })
           onServiceSOWClear()
+          handleServiceModalClose()
+          getList()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
-    getList()
   }
 
   const onServiceDeliverableSubmit = (e: React.FormEvent<any>) => {
@@ -441,9 +494,12 @@ export default function ServiceTreeComponent() {
             return updatedList
           })
           onServiceDeliverableClear()
+          handleServiceModalClose()
+          getList()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -458,12 +514,14 @@ export default function ServiceTreeComponent() {
             showConfirmButton: false
           })
           onServiceDeliverableClear()
+          handleServiceModalClose()
+          getList()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
-    getList()
   }
 
   const addTaskFields = () => {
@@ -501,6 +559,7 @@ export default function ServiceTreeComponent() {
       })
       .catch(error => {
         setErrorMessage(error?.response?.data?.errors)
+        enqueueSnackbar(error?.message, { variant: 'error' })
       })
   }
 
@@ -530,9 +589,11 @@ export default function ServiceTreeComponent() {
             return updatedList
           })
           onServiceTaskClear()
+          getList()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -550,9 +611,11 @@ export default function ServiceTreeComponent() {
             showConfirmButton: false
           })
           onServiceTaskClear()
+          getList()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -588,13 +651,15 @@ export default function ServiceTreeComponent() {
   }
 
   const getList = async () => {
-    try {
-      const response = await apiRequest.get(`/service-tree?per_page=500`)
-      const services = response?.data?.services || []
-      setServiceTreeData(transformServiceTree(services, 'service'))
-    } catch (error) {
-      console.error('Error fetching data:', error)
-    }
+    await apiRequest
+      .get(`/service-tree?per_page=500`)
+      .then(res => {
+        const services = res?.data?.services || []
+        setServiceTreeData(transformServiceTree(services, 'service'))
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.message, { variant: 'error' })
+      })
   }
 
   useEffect(() => {
@@ -1100,6 +1165,18 @@ export default function ServiceTreeComponent() {
                       </label>
                     </Box>
                   </Box>
+
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm'>
+                        <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                      </label>
+                      <RichTextEditor
+                        value={serviceFormData.name}
+                        onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
+                      />
+                    </Box>
+                  </Box>
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
@@ -1110,21 +1187,10 @@ export default function ServiceTreeComponent() {
                           name='order'
                           value={serviceFormData.order}
                           onChange={e => {
-                            handleChange(e, serviceFormData, setServiceFormData)
+                            handleTextChange(e, serviceFormData, setServiceFormData)
                           }}
                         />
                       </label>
-                    </Box>
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Name</span>
-                      </label>
-                      <RichTextEditor
-                        value={serviceFormData.name}
-                        onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
-                      />
                     </Box>
                   </Box>
                   <Box className='my-4 text-right'>
@@ -1179,22 +1245,7 @@ export default function ServiceTreeComponent() {
                       </label>
                     </Box>
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
-                        <input
-                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                          placeholder='Examples: 1'
-                          name='order'
-                          value={serviceGroupFormData.order}
-                          onChange={e => {
-                            handleChange(e, serviceGroupFormData, setServiceGroupFormData)
-                          }}
-                        />
-                      </label>
-                    </Box>
-                  </Box>
+
                   {serviceGroupEditDataId ? (
                     <>
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -1218,6 +1269,22 @@ export default function ServiceTreeComponent() {
                             })}
                         </Box>
                       </Box>
+                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                        <Box sx={{ width: '100%' }}>
+                          <label className='block text-sm'>
+                            <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                            <input
+                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                              placeholder='Examples: 1'
+                              name='order'
+                              value={serviceGroupFormData.order}
+                              onChange={e => {
+                                handleTextChange(e, serviceGroupFormData, setServiceGroupFormData)
+                              }}
+                            />
+                          </label>
+                        </Box>
+                      </Box>
                     </>
                   ) : (
                     <Box
@@ -1225,68 +1292,101 @@ export default function ServiceTreeComponent() {
                         display: 'flex',
                         gap: 5,
                         mb: 5,
-                        flexDirection: 'column',
-                        border: '2px solid #9333ea',
-                        padding: '24px',
-                        borderRadius: '5px'
+                        flexDirection: 'column'
                       }}
                     >
                       <>
-                        {serviceGroupFormData.names?.map((name, index) => (
-                          <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                        {serviceGroupFormData.groups?.map((group, index) => (
+                          <Box
+                            key={index}
+                            sx={{
+                              width: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              p: '20px',
+                              border: '2px solid #9333ea'
+                            }}
+                          >
                             <Box sx={{ width: '100%' }}>
-                              <label className='block text-sm'>
-                                <span className='text-gray-700 dark:text-gray-400'>Name</span>
-                              </label>
-                              <Box
-                                className='block text-sm'
-                                sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                              >
+                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                                 <Box sx={{ width: '100%' }}>
-                                  <RichTextEditor
-                                    value={name}
-                                    onBlur={newContent =>
-                                      handleMultipleNameReachText(
-                                        newContent,
-                                        'name',
-                                        index,
-                                        serviceGroupFormData,
-                                        setServiceGroupFormData
+                                  <label className='block text-sm'>
+                                    <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                                  </label>
+
+                                  <Box sx={{ width: '100%' }}>
+                                    <RichTextEditor
+                                      value={group.name}
+                                      onBlur={newContent =>
+                                        handleMultipleReachTextChange(
+                                          newContent,
+                                          'name',
+                                          index,
+                                          serviceGroupFormData,
+                                          setServiceGroupFormData,
+                                          'groups'
+                                        )
+                                      }
+                                    />
+                                  </Box>
+
+                                  {!!errorMessage?.[`names.${index}`] &&
+                                    errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
+                                      return (
+                                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                          {String(message).replaceAll('names.0', 'name')}
+                                        </span>
                                       )
-                                    }
-                                  />
+                                    })}
                                 </Box>
-                                <Button
-                                  type='button'
-                                  onClick={() => removeNameField(index, serviceGroupFormData, setServiceGroupFormData)}
-                                  className='mt-1 p-0 bg-red-500 text-white rounded-md'
-                                  sx={{
-                                    p: 0,
-                                    border: '1px solid #dc2626',
-                                    borderRadius: '50%',
-                                    minWidth: 'auto',
-                                    height: '35px',
-                                    width: '35px',
-                                    color: '#dc2626',
-                                    ml: 2,
-                                    '&:hover': {
-                                      background: '#dc2626',
-                                      color: '#fff'
-                                    }
-                                  }}
-                                >
-                                  <DeleteIcon />
-                                </Button>
                               </Box>
-                              {!!errorMessage?.[`names.${index}`] &&
-                                errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
-                                  return (
-                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                      {String(message).replaceAll('names.0', 'name')}
-                                    </span>
-                                  )
-                                })}
+                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                                <Box sx={{ width: '100%' }}>
+                                  <label className='block text-sm'>
+                                    <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                                    <input
+                                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                      placeholder='Examples: 1'
+                                      name='order'
+                                      value={group.order}
+                                      onChange={e => {
+                                        handleMultipleTextChange(
+                                          e,
+                                          serviceGroupFormData,
+                                          setServiceGroupFormData,
+                                          index,
+                                          'groups'
+                                        )
+                                      }}
+                                    />
+                                  </label>
+                                </Box>
+                              </Box>
                             </Box>
+                            <Button
+                              type='button'
+                              onClick={() =>
+                                removeNameField(index, serviceGroupFormData, setServiceGroupFormData, 'groups')
+                              }
+                              className='mt-1 p-0 bg-red-500 text-white rounded-md'
+                              sx={{
+                                p: 0,
+                                border: '1px solid #dc2626',
+                                borderRadius: '50%',
+                                minWidth: 'auto',
+                                height: '35px',
+                                width: '35px',
+                                color: '#dc2626',
+                                ml: 2,
+                                '&:hover': {
+                                  background: '#dc2626',
+                                  color: '#fff'
+                                }
+                              }}
+                            >
+                              <DeleteIcon />
+                            </Button>
                           </Box>
                         ))}
                       </>
@@ -1295,15 +1395,21 @@ export default function ServiceTreeComponent() {
                         <button
                           type='button'
                           onClick={() => {
-                            addNameField(serviceGroupFormData, setServiceGroupFormData)
+                            addSubField(
+                              serviceGroupFormData,
+                              setServiceGroupFormData,
+                              'groups',
+                              serviceGroupDefaultData.groups
+                            )
                           }}
                           className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
                         >
-                          <AddIcon /> Add Another Name
+                          <AddIcon /> Add Another Group
                         </button>
                       </Box>
                     </Box>
                   )}
+
                   <Box className='my-4 text-right'>
                     <button
                       onClick={onServiceGroupClear}
@@ -1356,22 +1462,7 @@ export default function ServiceTreeComponent() {
                       </label>
                     </Box>
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
-                        <input
-                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                          placeholder='Examples: 1'
-                          name='order'
-                          value={serviceSOWFormData.order}
-                          onChange={e => {
-                            handleChange(e, serviceSOWFormData, setServiceSOWFormData)
-                          }}
-                        />
-                      </label>
-                    </Box>
-                  </Box>
+
                   {serviceSOWEditDataId ? (
                     <>
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -1395,6 +1486,22 @@ export default function ServiceTreeComponent() {
                             })}
                         </Box>
                       </Box>
+                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                        <Box sx={{ width: '100%' }}>
+                          <label className='block text-sm'>
+                            <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                            <input
+                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                              placeholder='Examples: 1'
+                              name='order'
+                              value={serviceSOWFormData.order}
+                              onChange={e => {
+                                handleTextChange(e, serviceSOWFormData, setServiceSOWFormData)
+                              }}
+                            />
+                          </label>
+                        </Box>
+                      </Box>
                     </>
                   ) : (
                     <Box
@@ -1402,68 +1509,101 @@ export default function ServiceTreeComponent() {
                         display: 'flex',
                         gap: 5,
                         mb: 5,
-                        flexDirection: 'column',
-                        border: '2px solid #9333ea',
-                        padding: '24px',
-                        borderRadius: '5px'
+                        flexDirection: 'column'
                       }}
                     >
                       <>
-                        {serviceSOWFormData.names?.map((name, index) => (
-                          <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                        {serviceSOWFormData.scopes?.map((scope, index) => (
+                          <Box
+                            key={index}
+                            sx={{
+                              width: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              p: '20px',
+                              padding: '24px'
+                            }}
+                          >
                             <Box sx={{ width: '100%' }}>
-                              <label className='block text-sm'>
-                                <span className='text-gray-700 dark:text-gray-400'>Name</span>
-                              </label>
-                              <Box
-                                className='block text-sm'
-                                sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                              >
+                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                                 <Box sx={{ width: '100%' }}>
-                                  <RichTextEditor
-                                    value={name}
-                                    onBlur={newContent =>
-                                      handleMultipleNameReachText(
-                                        newContent,
-                                        'name',
-                                        index,
-                                        serviceSOWFormData,
-                                        setServiceSOWFormData
+                                  <label className='block text-sm'>
+                                    <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                                  </label>
+
+                                  <Box sx={{ width: '100%' }}>
+                                    <RichTextEditor
+                                      value={scope.name}
+                                      onBlur={newContent =>
+                                        handleMultipleReachTextChange(
+                                          newContent,
+                                          'name',
+                                          index,
+                                          serviceSOWFormData,
+                                          setServiceSOWFormData,
+                                          'scopes'
+                                        )
+                                      }
+                                    />
+                                  </Box>
+
+                                  {!!errorMessage?.[`names.${index}`] &&
+                                    errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
+                                      return (
+                                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                          {String(message).replaceAll('names.0', 'name')}
+                                        </span>
                                       )
-                                    }
-                                  />
+                                    })}
                                 </Box>
-                                <Button
-                                  type='button'
-                                  onClick={() => removeNameField(index, serviceSOWFormData, setServiceSOWFormData)}
-                                  className='mt-1 p-0 bg-red-500 text-white rounded-md'
-                                  sx={{
-                                    p: 0,
-                                    border: '1px solid #dc2626',
-                                    borderRadius: '50%',
-                                    minWidth: 'auto',
-                                    height: '35px',
-                                    width: '35px',
-                                    color: '#dc2626',
-                                    ml: 2,
-                                    '&:hover': {
-                                      background: '#dc2626',
-                                      color: '#fff'
-                                    }
-                                  }}
-                                >
-                                  <DeleteIcon />
-                                </Button>
                               </Box>
-                              {!!errorMessage?.[`names.${index}`] &&
-                                errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
-                                  return (
-                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                      {String(message).replaceAll('names.0', 'name')}
-                                    </span>
-                                  )
-                                })}
+                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                                <Box sx={{ width: '100%' }}>
+                                  <label className='block text-sm'>
+                                    <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                                    <input
+                                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                      placeholder='Examples: 1'
+                                      name='order'
+                                      value={scope.order}
+                                      onChange={e => {
+                                        handleMultipleTextChange(
+                                          e,
+                                          serviceSOWFormData,
+                                          setServiceSOWFormData,
+                                          index,
+                                          'scopes'
+                                        )
+                                      }}
+                                    />
+                                  </label>
+                                </Box>
+                              </Box>
                             </Box>
+                            <Button
+                              type='button'
+                              onClick={() =>
+                                removeNameField(index, serviceSOWFormData, setServiceSOWFormData, 'scopes')
+                              }
+                              className='mt-1 p-0 bg-red-500 text-white rounded-md'
+                              sx={{
+                                p: 0,
+                                border: '1px solid #dc2626',
+                                borderRadius: '50%',
+                                minWidth: 'auto',
+                                height: '35px',
+                                width: '35px',
+                                color: '#dc2626',
+                                ml: 2,
+                                '&:hover': {
+                                  background: '#dc2626',
+                                  color: '#fff'
+                                }
+                              }}
+                            >
+                              <DeleteIcon />
+                            </Button>
                           </Box>
                         ))}
                       </>
@@ -1472,11 +1612,11 @@ export default function ServiceTreeComponent() {
                         <button
                           type='button'
                           onClick={() => {
-                            addNameField(serviceSOWFormData, setServiceSOWFormData)
+                            addSubField(serviceSOWFormData, setServiceSOWFormData, 'scopes', serviceSOWFormData.scopes)
                           }}
                           className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
                         >
-                          <AddIcon /> Add Another Name
+                          <AddIcon /> Add Another Scope
                         </button>
                       </Box>
                     </Box>
@@ -1533,22 +1673,7 @@ export default function ServiceTreeComponent() {
                       </label>
                     </Box>
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
-                        <input
-                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                          placeholder='Examples: 1'
-                          name='order'
-                          value={serviceDeliverableFormData.order}
-                          onChange={e => {
-                            handleChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
-                          }}
-                        />
-                      </label>
-                    </Box>
-                  </Box>
+
                   {serviceDeliverableEditDataId ? (
                     <>
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -1577,6 +1702,22 @@ export default function ServiceTreeComponent() {
                             })}
                         </Box>
                       </Box>
+                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                        <Box sx={{ width: '100%' }}>
+                          <label className='block text-sm'>
+                            <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                            <input
+                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                              placeholder='Examples: 1'
+                              name='order'
+                              value={serviceDeliverableFormData.order}
+                              onChange={e => {
+                                handleTextChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
+                              }}
+                            />
+                          </label>
+                        </Box>
+                      </Box>
                     </>
                   ) : (
                     <Box
@@ -1584,70 +1725,106 @@ export default function ServiceTreeComponent() {
                         display: 'flex',
                         gap: 5,
                         mb: 5,
-                        flexDirection: 'column',
-                        border: '2px solid #9333ea',
-                        padding: '24px',
-                        borderRadius: '5px'
+                        flexDirection: 'column'
                       }}
                     >
                       <>
-                        {serviceDeliverableFormData.names?.map((name, index) => (
-                          <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                        {serviceDeliverableFormData.deliverables?.map((deliverable, index) => (
+                          <Box
+                            key={index}
+                            sx={{
+                              width: '100%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              p: '20px',
+                              borderRadius: '5px'
+                            }}
+                          >
                             <Box sx={{ width: '100%' }}>
-                              <label className='block text-sm'>
-                                <span className='text-gray-700 dark:text-gray-400'>Name</span>
-                              </label>
-                              <Box
-                                className='block text-sm'
-                                sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                              >
+                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                                 <Box sx={{ width: '100%' }}>
-                                  <RichTextEditor
-                                    value={name}
-                                    onBlur={newContent =>
-                                      handleMultipleNameReachText(
-                                        newContent,
-                                        'name',
-                                        index,
-                                        serviceDeliverableFormData,
-                                        setServiceDeliverableFormData
+                                  <label className='block text-sm'>
+                                    <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                                  </label>
+
+                                  <Box sx={{ width: '100%' }}>
+                                    <RichTextEditor
+                                      value={deliverable.name}
+                                      onBlur={newContent =>
+                                        handleMultipleReachTextChange(
+                                          newContent,
+                                          'name',
+                                          index,
+                                          serviceDeliverableFormData,
+                                          setServiceDeliverableFormData,
+                                          'deliverables'
+                                        )
+                                      }
+                                    />
+                                  </Box>
+
+                                  {!!errorMessage?.[`names.${index}`] &&
+                                    errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
+                                      return (
+                                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                          {String(message).replaceAll('names.0', 'name')}
+                                        </span>
                                       )
-                                    }
-                                  />
+                                    })}
                                 </Box>
-                                <Button
-                                  type='button'
-                                  onClick={() =>
-                                    removeNameField(index, serviceDeliverableFormData, setServiceDeliverableFormData)
-                                  }
-                                  className='mt-1 p-0 bg-red-500 text-white rounded-md'
-                                  sx={{
-                                    p: 0,
-                                    border: '1px solid #dc2626',
-                                    borderRadius: '50%',
-                                    minWidth: 'auto',
-                                    height: '35px',
-                                    width: '35px',
-                                    color: '#dc2626',
-                                    ml: 2,
-                                    '&:hover': {
-                                      background: '#dc2626',
-                                      color: '#fff'
-                                    }
-                                  }}
-                                >
-                                  <DeleteIcon />
-                                </Button>
                               </Box>
-                              {!!errorMessage?.[`names.${index}`] &&
-                                errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
-                                  return (
-                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                      {String(message).replaceAll('names.0', 'name')}
-                                    </span>
-                                  )
-                                })}
+                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                                <Box sx={{ width: '100%' }}>
+                                  <label className='block text-sm'>
+                                    <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                                    <input
+                                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                      placeholder='Examples: 1'
+                                      name='order'
+                                      value={deliverable.order}
+                                      onChange={e => {
+                                        handleMultipleTextChange(
+                                          e,
+                                          serviceDeliverableFormData,
+                                          setServiceDeliverableFormData,
+                                          index,
+                                          'deliverables'
+                                        )
+                                      }}
+                                    />
+                                  </label>
+                                </Box>
+                              </Box>
                             </Box>
+                            <Button
+                              type='button'
+                              onClick={() =>
+                                removeNameField(
+                                  index,
+                                  serviceDeliverableFormData,
+                                  setServiceDeliverableFormData,
+                                  'deliverables'
+                                )
+                              }
+                              className='mt-1 p-0 bg-red-500 text-white rounded-md'
+                              sx={{
+                                p: 0,
+                                border: '1px solid #dc2626',
+                                borderRadius: '50%',
+                                minWidth: 'auto',
+                                height: '35px',
+                                width: '35px',
+                                color: '#dc2626',
+                                ml: 2,
+                                '&:hover': {
+                                  background: '#dc2626',
+                                  color: '#fff'
+                                }
+                              }}
+                            >
+                              <DeleteIcon />
+                            </Button>
                           </Box>
                         ))}
                       </>
@@ -1656,11 +1833,16 @@ export default function ServiceTreeComponent() {
                         <button
                           type='button'
                           onClick={() => {
-                            addNameField(serviceDeliverableFormData, setServiceDeliverableFormData)
+                            addSubField(
+                              serviceDeliverableFormData,
+                              setServiceDeliverableFormData,
+                              'deliverables',
+                              serviceDeliverableFormData.deliverables
+                            )
                           }}
                           className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
                         >
-                          <AddIcon /> Add Another Name
+                          <AddIcon /> Add Another Deliverable
                         </button>
                       </Box>
                     </Box>
@@ -2033,22 +2215,7 @@ export default function ServiceTreeComponent() {
                             </Box>
                           )}
                         </Box>
-                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                          <Box sx={{ width: '100%' }}>
-                            <label className='block text-sm'>
-                              <span className='text-gray-700 dark:text-gray-400'>Order</span>
-                              <input
-                                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                placeholder='Examples: 1'
-                                name='order'
-                                value={serviceTaskFormData.order}
-                                onChange={e => {
-                                  handleChange(e, serviceTaskFormData, setServiceTaskFormData)
-                                }}
-                              />
-                            </label>
-                          </Box>
-                        </Box>
+
                         {serviceTaskEditDataId ? (
                           <>
                             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -2073,6 +2240,22 @@ export default function ServiceTreeComponent() {
                               </Box>
                             </Box>
                             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                              <Box sx={{ width: '100%' }}>
+                                <label className='block text-sm'>
+                                  <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                                  <input
+                                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                    placeholder='Examples: 1'
+                                    name='order'
+                                    value={serviceTaskFormData.order}
+                                    onChange={e => {
+                                      handleTextChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                    }}
+                                  />
+                                </label>
+                              </Box>
+                            </Box>
+                            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '50%' }}>
                                 <label className='block text-sm'>
                                   <span className='text-gray-700 dark:text-gray-400'>Hour</span>
@@ -2082,7 +2265,7 @@ export default function ServiceTreeComponent() {
                                     name='cost'
                                     value={serviceTaskFormData.cost}
                                     onChange={e => {
-                                      handleChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                      handleTextChange(e, serviceTaskFormData, setServiceTaskFormData)
                                     }}
                                   />
                                   {!!errorMessage?.['cost'] &&
@@ -2175,6 +2358,22 @@ export default function ServiceTreeComponent() {
                                             )}
                                         </Box>
                                         <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                                          <Box sx={{ width: '100%' }}>
+                                            <label className='block text-sm'>
+                                              <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                                              <input
+                                                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                placeholder='Examples: 1'
+                                                name='order'
+                                                value={task.order}
+                                                onChange={e => {
+                                                  handleMultipleTaskReachText(e.target.value, 'order', index)
+                                                }}
+                                              />
+                                            </label>
+                                          </Box>
+                                        </Box>
+                                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                                           <Box sx={{ width: '50%' }}>
                                             <label className='block text-sm'>
                                               <span className='text-gray-700 dark:text-gray-400'>Hour</span>
@@ -2264,7 +2463,7 @@ export default function ServiceTreeComponent() {
                                 onClick={addTaskFields}
                                 className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
                               >
-                                <AddIcon /> Add Another Name
+                                <AddIcon /> Add Another Task
                               </button>
                             </Box>
                           </Box>
