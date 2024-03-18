@@ -62,7 +62,8 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     setErrorMessage({})
     setPreload(true)
     if (router?.query['id']) {
-      formData['summaryText'] = formData['tldvLink'] ? null : summaryText
+
+      // formData['summaryText'] = formData['tldvLink'] ? null : summaryText
       apiRequest
         .put(`/meeting-summery/${router?.query['id']}`, formData)
         .then(res => {
@@ -130,7 +131,6 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         pushToClickUp: false
       })
       setSummeryText(res?.data?.['summaryText'])
-      setSummeryText('')
       setPreload(false)
     })
   }
