@@ -130,7 +130,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         pushToClickUp: false
       })
       setSummeryText(res?.data?.['meetingSummeryText'])
-      setSummeryText('')
+      // setSummeryText('')
       setPreload(false)
     })
   }
@@ -307,6 +307,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                     ref={summaryTextEditorRef}
                     modelValue={summaryText}
                     onChange={setSummeryText}
+                    name={summaryText}
                     language='en-US'
                   />
                   {!!errorMessage?.['summaryText'] &&
