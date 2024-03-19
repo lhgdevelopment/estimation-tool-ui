@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import UpdateLogComponent from 'src/views/update-log/UpdateLog.component'
+import UpdateLogComponent from 'src/views/settings/update-log/UpdateLog.component'
 
 const UpdateLog = () => {
   return <UpdateLogComponent></UpdateLogComponent>
