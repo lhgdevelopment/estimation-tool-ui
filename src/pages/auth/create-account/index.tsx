@@ -65,7 +65,7 @@ const CreateAccountPage = () => {
     showPassword: false
   })
 
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleTextChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value })
   }
   const handleClickShowPassword = () => {
@@ -151,7 +151,7 @@ const CreateAccountPage = () => {
                 label='Password'
                 value={values.password}
                 id='auth-register-password'
-                onChange={handleChange('password')}
+                onChange={handleTextChange('password')}
                 type={values.showPassword ? 'text' : 'password'}
                 endAdornment={
                   <InputAdornment position='end'>

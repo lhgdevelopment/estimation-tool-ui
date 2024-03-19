@@ -41,7 +41,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<any>, index = -1) => {
+  const handleTextChange = (e: React.ChangeEvent<any>, index = -1) => {
     const { name, value } = e.target
     if (index != -1) {
       const names = [...formData.names]
@@ -157,7 +157,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
               }}
             >
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service</span>
                 <Dropdown url={'services'} name='serviceId' value={formData.serviceId} onChange={handleSelectChange} />
                 {!!errorMessage?.['serviceId'] &&
                   errorMessage?.['serviceId']?.map((message: any, index: number) => {
@@ -175,7 +175,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
               <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                 <Box sx={{ width: '100%' }}>
                   <label className='block text-sm'>
-                    <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                   </label>
                   <RichTextEditor value={formData.name} onBlur={newContent => handleReachText(newContent, 'name')} />
                   {!!errorMessage?.['name'] &&
@@ -206,7 +206,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
                   <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                       </label>
                       <Box
                         className='block text-sm'

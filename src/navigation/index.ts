@@ -1,6 +1,7 @@
 // ** Icon imports
 import BiotechIcon from '@mui/icons-material/Biotech'
 import EngineeringIcon from '@mui/icons-material/Engineering'
+import EventRepeatIcon from '@mui/icons-material/EventRepeat'
 import GroupsIcon from '@mui/icons-material/Groups'
 import LeaderboardIcon from '@mui/icons-material/Leaderboard'
 import LinkIcon from '@mui/icons-material/Link'
@@ -123,6 +124,11 @@ const navigation: TNavigation[] = [
         title: 'Project Type',
         icon: SettingsEthernetIcon,
         path: '/settings/project-type'
+      },
+      {
+        title: 'Update Log',
+        icon: EventRepeatIcon,
+        path: '/settings/update-log'
       }
     ]
   },

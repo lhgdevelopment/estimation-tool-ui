@@ -84,7 +84,7 @@ export default function LeadsDetailsComponent() {
                 }}
               >
                 <Box sx={{ fontWeight: '600' }}>First Name: </Box>
-                <Box>{detailsData?.['lastName']}</Box>
+                <Box>{detailsData?.['firstName']}</Box>
               </Box>
               <Box
                 sx={{

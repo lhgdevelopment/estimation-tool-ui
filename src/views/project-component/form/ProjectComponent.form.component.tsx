@@ -18,7 +18,7 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
     components: ['']
   }
 
-  const handleChange = (e: SelectChangeEvent<any>) => {
+  const handleTextChange = (e: SelectChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -99,19 +99,19 @@ export default function ProjectComponentFormComponent(props: TProjectComponentCo
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Project</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project</span>
                 <Dropdown
                   url={'projects'}
                   name='project_id'
                   value={formData.project_id}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                   optionConfig={{ id: 'project_id', title: 'project_name' }}
                 />
               </label>
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Components</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Components</span>
                 <Dropdown
                   url={'components'}
                   name='components'

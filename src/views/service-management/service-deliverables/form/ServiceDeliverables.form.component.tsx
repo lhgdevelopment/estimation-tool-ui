@@ -43,7 +43,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<any>, index = -1) => {
+  const handleTextChange = (e: React.ChangeEvent<any>, index = -1) => {
     const { name, value } = e.target
     if (index != -1) {
       const names = [...formData.names]
@@ -161,7 +161,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
               }}
             >
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Service Scope</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Scope</span>
                 <ServiceDropdownTree
                   name='serviceScopeId'
                   value={formData.serviceScopeId}
@@ -184,7 +184,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
               <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                 <Box sx={{ width: '100%' }}>
                   <label className='block text-sm'>
-                    <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                   </label>
                   <RichTextEditor value={formData.name} onBlur={newContent => handleReachText(newContent, 'name')} />
                   {!!errorMessage?.['name'] &&
@@ -215,7 +215,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
                   <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                       </label>
                       <Box
                         className='block text-sm'

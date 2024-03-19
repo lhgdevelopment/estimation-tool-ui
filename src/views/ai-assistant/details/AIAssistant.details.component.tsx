@@ -56,7 +56,7 @@ export default function AIAssistantDetailsComponent() {
     })
   }
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setConversationFormData({
       ...conversationFormData,
       [e?.target?.name]: e.target.value
@@ -197,7 +197,7 @@ export default function AIAssistantDetailsComponent() {
           >
             <Box sx={{ width: '100%', mb: 2 }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Prompt</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Prompt</span>
                 <Dropdown
                   url={'prompts'}
                   name='prompt_id'
@@ -233,7 +233,7 @@ export default function AIAssistantDetailsComponent() {
                 placeholder='Chat Prompt...'
                 name='message_content'
                 value={conversationFormData.message_content}
-                onChange={handleChange}
+                onChange={handleTextChange}
                 onKeyDown={handleKeyDown}
                 sx={{
                   paddingBottom: '0.875rem',

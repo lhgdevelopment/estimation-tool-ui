@@ -26,7 +26,7 @@ const LoginPage = () => {
             <Box className='w-full'>
               <h1 className='mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200'>Forgot password</h1>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Email</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Email</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Jane Doe'

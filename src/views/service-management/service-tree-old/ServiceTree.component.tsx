@@ -138,7 +138,7 @@ export default function ServiceTreeComponent() {
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<any>, formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>, formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -959,7 +959,7 @@ export default function ServiceTreeComponent() {
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
                         <Dropdown
                           url={'project-type'}
                           name='projectTypeId'
@@ -972,14 +972,14 @@ export default function ServiceTreeComponent() {
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
                         <input
                           className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                           placeholder='Examples: 1'
                           name='order'
                           value={serviceFormData.order}
                           onChange={e => {
-                            handleChange(e, serviceFormData, setServiceFormData)
+                            handleTextChange(e, serviceFormData, setServiceFormData)
                           }}
                         />
                       </label>
@@ -988,7 +988,7 @@ export default function ServiceTreeComponent() {
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                       </label>
                       <RichTextEditor
                         value={serviceFormData.name}
@@ -1028,7 +1028,7 @@ export default function ServiceTreeComponent() {
                       }}
                     >
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Service</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service</span>
                         <Dropdown
                           url={'services'}
                           name='serviceId'
@@ -1051,14 +1051,14 @@ export default function ServiceTreeComponent() {
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
                         <input
                           className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                           placeholder='Examples: 1'
                           name='order'
                           value={serviceGroupFormData.order}
                           onChange={e => {
-                            handleChange(e, serviceGroupFormData, setServiceGroupFormData)
+                            handleTextChange(e, serviceGroupFormData, setServiceGroupFormData)
                           }}
                         />
                       </label>
@@ -1069,7 +1069,7 @@ export default function ServiceTreeComponent() {
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                         <Box sx={{ width: '100%' }}>
                           <label className='block text-sm'>
-                            <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                           </label>
                           <RichTextEditor
                             value={serviceGroupFormData.name}
@@ -1105,7 +1105,7 @@ export default function ServiceTreeComponent() {
                           <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                             <Box sx={{ width: '100%' }}>
                               <label className='block text-sm'>
-                                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                               </label>
                               <Box
                                 className='block text-sm'
@@ -1205,7 +1205,7 @@ export default function ServiceTreeComponent() {
                       }}
                     >
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Service Group</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Group</span>
                         <ServiceDropdownTree
                           name='serviceGroupId'
                           value={serviceSOWFormData.serviceGroupId}
@@ -1228,14 +1228,14 @@ export default function ServiceTreeComponent() {
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
                         <input
                           className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                           placeholder='Examples: 1'
                           name='order'
                           value={serviceSOWFormData.order}
                           onChange={e => {
-                            handleChange(e, serviceSOWFormData, setServiceSOWFormData)
+                            handleTextChange(e, serviceSOWFormData, setServiceSOWFormData)
                           }}
                         />
                       </label>
@@ -1246,7 +1246,7 @@ export default function ServiceTreeComponent() {
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                         <Box sx={{ width: '100%' }}>
                           <label className='block text-sm'>
-                            <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                           </label>
                           <RichTextEditor
                             value={serviceSOWFormData.name}
@@ -1282,7 +1282,7 @@ export default function ServiceTreeComponent() {
                           <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                             <Box sx={{ width: '100%' }}>
                               <label className='block text-sm'>
-                                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                               </label>
                               <Box
                                 className='block text-sm'
@@ -1382,7 +1382,7 @@ export default function ServiceTreeComponent() {
                       }}
                     >
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Service Scope</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Scope</span>
                         <ServiceDropdownTree
                           name='serviceScopeId'
                           value={serviceDeliverableFormData.serviceScopeId}
@@ -1405,14 +1405,14 @@ export default function ServiceTreeComponent() {
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
                         <input
                           className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                           placeholder='Examples: 1'
                           name='order'
                           value={serviceDeliverableFormData.order}
                           onChange={e => {
-                            handleChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
+                            handleTextChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
                           }}
                         />
                       </label>
@@ -1423,7 +1423,7 @@ export default function ServiceTreeComponent() {
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                         <Box sx={{ width: '100%' }}>
                           <label className='block text-sm'>
-                            <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                           </label>
                           <RichTextEditor
                             value={serviceDeliverableFormData.name}
@@ -1464,7 +1464,7 @@ export default function ServiceTreeComponent() {
                           <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                             <Box sx={{ width: '100%' }}>
                               <label className='block text-sm'>
-                                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                               </label>
                               <Box
                                 className='block text-sm'
@@ -1571,7 +1571,7 @@ export default function ServiceTreeComponent() {
                             setIsFatchFromClickUp(e.target.checked)
                           }}
                         />
-                        <span className='text-gray-700 dark:text-gray-400'>Fetch Task From Clickup</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Fetch Task From Clickup</span>
                       </label>
                     </Box>
                   </Box>
@@ -1582,7 +1582,7 @@ export default function ServiceTreeComponent() {
                         <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                           <Box sx={{ width: '100%' }}>
                             <label className='block text-sm'>
-                              <span className='text-gray-700 dark:text-gray-400'>Clickup Link</span>
+                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Clickup Link</span>
                               <input
                                 className={`block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                                   !!clickupTaskList?.length ? 'opacity-50' : ''
@@ -1704,7 +1704,9 @@ export default function ServiceTreeComponent() {
                                               <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                                                 <Box sx={{ width: '100%' }}>
                                                   <label className='block text-sm'>
-                                                    <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                      Name
+                                                    </span>
                                                   </label>
                                                   <Box
                                                     className='block text-sm'
@@ -1748,7 +1750,7 @@ export default function ServiceTreeComponent() {
                                                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                                                         <Box sx={{ width: '50%' }}>
                                                           <label className='block text-sm'>
-                                                            <span className='text-gray-700 dark:text-gray-400'>
+                                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
                                                               Hour
                                                             </span>
                                                             <input
@@ -1777,7 +1779,7 @@ export default function ServiceTreeComponent() {
                                                         </Box>
                                                         <Box sx={{ width: '50%' }}>
                                                           <label className='block text-sm'>
-                                                            <span className='text-gray-700 dark:text-gray-400'>
+                                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
                                                               Description
                                                             </span>
                                                             <input
@@ -1852,7 +1854,7 @@ export default function ServiceTreeComponent() {
                             }}
                           >
                             <label className='block text-sm'>
-                              <span className='text-gray-700 dark:text-gray-400'>Service Deliverable</span>
+                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Deliverable</span>
                               <ServiceDropdownTree
                                 name='serviceDeliverableId'
                                 value={serviceTaskFormData.serviceDeliverableId}
@@ -1880,7 +1882,7 @@ export default function ServiceTreeComponent() {
                             }}
                           >
                             <label className='block text-sm'>
-                              <span className='text-gray-700 dark:text-gray-400'>Parent Task</span>
+                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Parent Task</span>
                               <Dropdown
                                 url={`service-deliverable-tasks?serviceDeliverableId=${serviceTaskFormData.serviceDeliverableId}`}
                                 name='parentTaskId'
@@ -1903,14 +1905,14 @@ export default function ServiceTreeComponent() {
                         <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                           <Box sx={{ width: '100%' }}>
                             <label className='block text-sm'>
-                              <span className='text-gray-700 dark:text-gray-400'>Order</span>
+                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
                               <input
                                 className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                 placeholder='Examples: 1'
                                 name='order'
                                 value={serviceTaskFormData.order}
                                 onChange={e => {
-                                  handleChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                  handleTextChange(e, serviceTaskFormData, setServiceTaskFormData)
                                 }}
                               />
                             </label>
@@ -1921,7 +1923,7 @@ export default function ServiceTreeComponent() {
                             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '100%' }}>
                                 <label className='block text-sm'>
-                                  <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                                 </label>
                                 <RichTextEditor
                                   value={serviceTaskFormData.name}
@@ -1942,14 +1944,14 @@ export default function ServiceTreeComponent() {
                             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '50%' }}>
                                 <label className='block text-sm'>
-                                  <span className='text-gray-700 dark:text-gray-400'>Hour</span>
+                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hour</span>
                                   <input
                                     className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                     placeholder='Examples: 50.00'
                                     name='cost'
                                     value={serviceTaskFormData.cost}
                                     onChange={e => {
-                                      handleChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                      handleTextChange(e, serviceTaskFormData, setServiceTaskFormData)
                                     }}
                                   />
                                   {!!errorMessage?.['cost'] &&
@@ -1964,7 +1966,7 @@ export default function ServiceTreeComponent() {
                               </Box>
                               <Box sx={{ width: '50%' }}>
                                 <label className='block text-sm'>
-                                  <span className='text-gray-700 dark:text-gray-400'>Description</span>
+                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Description</span>
                                   <input
                                     className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                     placeholder='Examples: Company logo for header'
@@ -2003,7 +2005,7 @@ export default function ServiceTreeComponent() {
                                 <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                                   <Box sx={{ width: '100%' }}>
                                     <label className='block text-sm'>
-                                      <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                                     </label>
                                     <Box
                                       className='block text-sm'
@@ -2044,7 +2046,7 @@ export default function ServiceTreeComponent() {
                                         <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                                           <Box sx={{ width: '50%' }}>
                                             <label className='block text-sm'>
-                                              <span className='text-gray-700 dark:text-gray-400'>Hour</span>
+                                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hour</span>
                                               <input
                                                 className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                                 placeholder='Examples: 50.00'
@@ -2071,7 +2073,9 @@ export default function ServiceTreeComponent() {
                                           </Box>
                                           <Box sx={{ width: '50%' }}>
                                             <label className='block text-sm'>
-                                              <span className='text-gray-700 dark:text-gray-400'>Description</span>
+                                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                Description
+                                              </span>
                                               <input
                                                 className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                                 placeholder='Examples: Company logo for header'

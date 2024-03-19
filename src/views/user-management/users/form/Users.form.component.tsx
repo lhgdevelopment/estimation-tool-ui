@@ -25,7 +25,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
   const [formData, setUsersFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
     setUsersFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -111,13 +111,13 @@ export default function UsersFormComponent(props: TUsersComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Enter user name'
                   name='name'
                   value={formData.name}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['name'] &&
                   errorMessage?.['name']?.map((message: any, index: number) => {
@@ -133,7 +133,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Role</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Role</span>
                 <Dropdown
                   url={'roles'}
                   name='role'
@@ -145,13 +145,13 @@ export default function UsersFormComponent(props: TUsersComponent) {
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Email</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Email</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Enter user email'
                   name='email'
                   value={formData.email}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['name'] &&
                   errorMessage?.['name']?.map((message: any, index: number) => {
@@ -167,13 +167,13 @@ export default function UsersFormComponent(props: TUsersComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Password</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Password</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Enter user password'
                   name='password'
                   value={formData.password}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                   type='password'
                 />
                 {!!errorMessage?.['password'] &&
@@ -188,13 +188,13 @@ export default function UsersFormComponent(props: TUsersComponent) {
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Confirm Password</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Confirm Password</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Confirm Password'
                   name='password_confirmation'
                   value={formData.password_confirmation}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                   type='password'
                 />
                 {!!errorMessage?.['password_confirmation'] &&

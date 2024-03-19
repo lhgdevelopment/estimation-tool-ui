@@ -28,7 +28,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
   const [errorMessage, setErrorMessage] = useState<any>({})
   const [prelaod, setPreload] = useState(false)
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -125,7 +125,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: editDataId ? '100%' : '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['name'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -133,7 +133,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
                   placeholder='Enter Name Here...'
                   name='name'
                   value={formData.name}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['name'] &&
                   errorMessage?.['name']?.map((message: any, index: number) => {
@@ -148,7 +148,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
             {!editDataId && (
               <Box sx={{ width: '50%' }}>
                 <label className='block text-sm'>
-                  <span className='text-gray-700 dark:text-gray-400'>Prompt</span>
+                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Prompt</span>
                   <Dropdown
                     url={'prompts'}
                     name='prompt_id'
@@ -174,7 +174,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm'>
-                  <span className='text-gray-700 dark:text-gray-400'>Message</span>
+                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Message</span>
                 </label>
                 <RichTextEditor
                   value={formData.message_content}
