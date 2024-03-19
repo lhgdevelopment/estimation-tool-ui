@@ -5,6 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Button, Checkbox } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
@@ -14,6 +15,7 @@ import Swal from 'sweetalert2'
 import { TServiceDeliverableTasksComponent } from '../ServiceDeliverableTasks.decorator'
 
 export default function ServiceDeliverableTasksFormComponent(props: TServiceDeliverableTasksComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const [errorMessage, setErrorMessage] = useState<any>({})
@@ -118,6 +120,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
       })
       .catch(error => {
         setErrorMessage(error?.response?.data?.errors)
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
   }
 
@@ -148,6 +151,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -168,6 +172,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

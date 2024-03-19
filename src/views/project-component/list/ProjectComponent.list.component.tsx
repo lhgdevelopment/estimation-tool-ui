@@ -33,9 +33,12 @@ export default function ProjectComponentListComponent(props: TProjectComponentCo
   const onDelete = (i: string) => {
     Swal.fire({
       title: 'Are You sure?',
-      icon: 'error',
+      icon: 'question',
+      iconColor: '#dc2626',
       showConfirmButton: true,
       confirmButtonText: 'Yes',
+      confirmButtonColor: '#dc2626',
+      color: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No'
     }).then(res => {

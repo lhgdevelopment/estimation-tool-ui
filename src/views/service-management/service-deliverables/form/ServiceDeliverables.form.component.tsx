@@ -9,10 +9,12 @@ import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 
 import DeleteIcon from '@mui/icons-material/Delete'
+import { useSnackbar } from 'notistack'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import { TServiceDeliverablesComponent } from '../ServiceDeliverables.decorator'
 
 export default function ServiceDeliverablesFormComponent(props: TServiceDeliverablesComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const [errorMessage, setErrorMessage] = useState<any>({})
@@ -108,6 +110,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -125,6 +128,7 @@ export default function ServiceDeliverablesFormComponent(props: TServiceDelivera
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

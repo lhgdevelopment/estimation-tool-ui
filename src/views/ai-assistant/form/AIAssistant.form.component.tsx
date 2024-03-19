@@ -4,6 +4,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
 import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
@@ -13,6 +14,7 @@ import Swal from 'sweetalert2'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
 
 export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
   const router = useRouter()
 
@@ -96,6 +98,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

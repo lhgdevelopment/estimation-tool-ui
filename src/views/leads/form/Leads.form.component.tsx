@@ -7,6 +7,7 @@ import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
@@ -16,6 +17,7 @@ import Swal from 'sweetalert2'
 import { TLeadsComponent } from '../Leads.decorator'
 
 export default function LeadsFormComponent(props: TLeadsComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { listData, setListData, isEdit } = props
   const [preload, setPreload] = useState<boolean>(false)
   const router = useRouter()
@@ -91,6 +93,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -112,6 +115,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

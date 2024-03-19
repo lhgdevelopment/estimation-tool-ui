@@ -3,6 +3,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -10,6 +11,7 @@ import Swal from 'sweetalert2'
 import { TUsersComponent } from '../Users.decorator'
 
 export default function UsersFormComponent(props: TUsersComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
@@ -63,6 +65,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -80,6 +83,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

@@ -41,6 +41,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
       showConfirmButton: true,
       confirmButtonText: 'Yes',
       confirmButtonColor: '#dc2626',
+      color: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No'
     }).then(res => {

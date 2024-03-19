@@ -2,7 +2,6 @@
 import BiotechIcon from '@mui/icons-material/Biotech'
 import EngineeringIcon from '@mui/icons-material/Engineering'
 import GroupsIcon from '@mui/icons-material/Groups'
-import HiveIcon from '@mui/icons-material/Hive'
 import LeaderboardIcon from '@mui/icons-material/Leaderboard'
 import LinkIcon from '@mui/icons-material/Link'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -14,7 +13,7 @@ import { OverridableComponent } from '@mui/material/OverridableComponent'
 type TNavigation = {
   title: string
   icon?: OverridableComponent<SvgIconTypeMap>
-  path?: string
+  path: string
   subMenu?: TSubMenu[]
 }
 type TSubMenu = {
@@ -61,11 +60,12 @@ const navigation: TNavigation[] = [
     icon: LeaderboardIcon,
     path: '/leads'
   },
-  {
-    title: 'Hive AI',
-    icon: HiveIcon,
-    path: '/ai-assistant'
-  },
+
+  // {
+  //   title: 'Hive AI',
+  //   icon: HiveIcon,
+  //   path: '/ai-assistant'
+  // },
   {
     title: 'Service Management',
     icon: EngineeringIcon,
