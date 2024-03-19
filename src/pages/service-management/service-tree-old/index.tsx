@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import ServiceTreeComponent from 'src/views/service-management/service-tree-rnd/ServiceTree.component'
+import ServiceTreeComponent from 'src/views/service-management/service-tree/ServiceTree.component'
 
 const ServiceTree = () => {
   return <ServiceTreeComponent></ServiceTreeComponent>
