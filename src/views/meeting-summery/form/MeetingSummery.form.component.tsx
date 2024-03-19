@@ -7,6 +7,7 @@ import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
@@ -15,6 +16,7 @@ import Swal from 'sweetalert2'
 import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
 
 export default function MeetingSummeryFormComponent(props: TMeetingSummeryComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { listData, setListData, isEdit } = props
   const [preload, setPreload] = useState<boolean>(false)
   const router = useRouter()
@@ -62,7 +64,6 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     setErrorMessage({})
     setPreload(true)
     if (router?.query['id']) {
-
       // formData['summaryText'] = formData['tldvLink'] ? null : summaryText
       apiRequest
         .put(`/meeting-summery/${router?.query['id']}`, formData)
@@ -92,6 +93,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -113,6 +115,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

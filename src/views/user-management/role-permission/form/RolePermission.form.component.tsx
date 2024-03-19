@@ -2,12 +2,14 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import { Box } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TRolePermissionComponent } from '../RolePermission.decorator'
 
 export default function RolePermissionFormComponent(props: TRolePermissionComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData, roleModalClose, roleSorting } = props
 
   const defaultData = {
@@ -60,6 +62,7 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -78,6 +81,7 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

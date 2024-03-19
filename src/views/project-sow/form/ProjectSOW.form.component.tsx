@@ -8,6 +8,7 @@ import { useMask } from '@react-input/mask'
 import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import MdPreviewTitle from 'src/@core/components/md-preview-title'
@@ -19,6 +20,7 @@ import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
 const steps = ['Transcript', 'Summery', 'Problems & Goals', 'Project Overview', 'SOW', 'Deliverables']
 
 export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { listData, setListData, isEdit = false } = props
   const router = useRouter()
 
@@ -142,6 +144,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           .catch(error => {
             setPreload(false)
             setErrorMessage(error?.response?.data?.errors)
+            enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
           })
       } else {
         apiRequest
@@ -178,6 +181,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           .catch(error => {
             setPreload(false)
             setErrorMessage(error?.response?.data?.errors)
+            enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
           })
       }
     }
@@ -212,6 +216,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
     if (activeStep === 2) {
@@ -247,6 +252,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
     if (activeStep === 3) {
@@ -281,6 +287,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
 
@@ -317,6 +324,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
     if (activeStep === 5) {
@@ -347,6 +355,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

@@ -2,6 +2,7 @@ import NorthIcon from '@mui/icons-material/North'
 import { Box, Button, Modal, SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Dropdown } from 'src/@core/components/dropdown'
@@ -11,6 +12,7 @@ import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component
 import AIAssistantMessagesComponent from './AIAssistantMessages.component'
 
 export default function AIAssistantDetailsComponent() {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { user } = useSelector((state: any) => state.user)
   const conversationId = useRouter()?.query['id']
 
@@ -121,6 +123,7 @@ export default function AIAssistantDetailsComponent() {
       })
       .catch(error => {
         setErrorMessage(error?.response?.data?.errors)
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         setDetailsData((prevState: any) => ({
           ...prevState,
           messages: [...prevState.messages.filter((message: any) => message?.id)]
