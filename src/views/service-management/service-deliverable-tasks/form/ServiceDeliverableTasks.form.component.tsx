@@ -58,7 +58,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<any>, index = -1) => {
+  const handleTextChange = (e: React.ChangeEvent<any>, index = -1) => {
     const { name, value } = e.target
 
     if (index != -1) {
@@ -218,7 +218,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                   setIsFatchFromClickUp(e.target.checked)
                 }}
               />
-              <span className='text-gray-700 dark:text-gray-400'>Fetch Task From Clickup</span>
+              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Fetch Task From Clickup</span>
             </label>
           </Box>
         </Box>
@@ -229,7 +229,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
               <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                 <Box sx={{ width: '100%' }}>
                   <label className='block text-sm'>
-                    <span className='text-gray-700 dark:text-gray-400'>Clickup Link</span>
+                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Clickup Link</span>
                     <input
                       className={`block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                         !!clickupTaskList?.length ? 'opacity-50' : ''
@@ -339,7 +339,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                                     <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                                       <Box sx={{ width: '100%' }}>
                                         <label className='block text-sm'>
-                                          <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                                         </label>
                                         <Box
                                           className='block text-sm'
@@ -381,14 +381,16 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                                             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                                               <Box sx={{ width: '50%' }}>
                                                 <label className='block text-sm'>
-                                                  <span className='text-gray-700 dark:text-gray-400'>Hour</span>
+                                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                    Hour
+                                                  </span>
                                                   <input
                                                     className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                                     placeholder='Examples: 50.00'
                                                     name='cost'
                                                     value={subTask.cost}
                                                     onChange={e => {
-                                                      handleChange(e, index)
+                                                      handleTextChange(e, index)
                                                     }}
                                                   />
                                                   {!!errorMessage?.[`tasks.${index}.cost`] &&
@@ -408,14 +410,16 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                                               </Box>
                                               <Box sx={{ width: '50%' }}>
                                                 <label className='block text-sm'>
-                                                  <span className='text-gray-700 dark:text-gray-400'>Description</span>
+                                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                    Description
+                                                  </span>
                                                   <input
                                                     className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                                     placeholder='Examples: Company logo for header'
                                                     name='description'
                                                     value={subTask.description}
                                                     onChange={e => {
-                                                      handleChange(e, index)
+                                                      handleTextChange(e, index)
                                                     }}
                                                   />
                                                   {!!errorMessage?.[`tasks.${index}.description`] &&
@@ -481,7 +485,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                   }}
                 >
                   <label className='block text-sm'>
-                    <span className='text-gray-700 dark:text-gray-400'>Service Deliverable</span>
+                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Deliverable</span>
                     <ServiceDropdownTree
                       name='serviceDeliverableId'
                       value={formData.serviceDeliverableId}
@@ -507,7 +511,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                   }}
                 >
                   <label className='block text-sm'>
-                    <span className='text-gray-700 dark:text-gray-400'>Parent Task</span>
+                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Parent Task</span>
                     <Dropdown
                       url={`service-deliverable-tasks?serviceDeliverableId=${formData.serviceDeliverableId}`}
                       name='parentTaskId'
@@ -530,7 +534,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                       </label>
                       <RichTextEditor
                         value={formData.name}
@@ -549,14 +553,14 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '50%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Hour</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hour</span>
                         <input
                           className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                           placeholder='Examples: 50.00'
                           name='cost'
                           value={formData.cost}
                           onChange={e => {
-                            handleChange(e)
+                            handleTextChange(e)
                           }}
                         />
                         {!!errorMessage?.['cost'] &&
@@ -571,14 +575,14 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                     </Box>
                     <Box sx={{ width: '50%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Description</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Description</span>
                         <input
                           className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                           placeholder='Examples: Company logo for header'
                           name='description'
                           value={formData.description}
                           onChange={e => {
-                            handleChange(e)
+                            handleTextChange(e)
                           }}
                         />
                         {!!errorMessage?.['description'] &&
@@ -610,7 +614,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                       <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                         <Box sx={{ width: '100%' }}>
                           <label className='block text-sm'>
-                            <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                           </label>
                           <Box
                             className='block text-sm'
@@ -634,14 +638,14 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                               <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                                 <Box sx={{ width: '50%' }}>
                                   <label className='block text-sm'>
-                                    <span className='text-gray-700 dark:text-gray-400'>Hour</span>
+                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hour</span>
                                     <input
                                       className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                       placeholder='Examples: 50.00'
                                       name='cost'
                                       value={task.cost}
                                       onChange={e => {
-                                        handleChange(e, index)
+                                        handleTextChange(e, index)
                                       }}
                                     />
                                     {!!errorMessage?.[`tasks.${index}.cost`] &&
@@ -656,14 +660,14 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                                 </Box>
                                 <Box sx={{ width: '50%' }}>
                                   <label className='block text-sm'>
-                                    <span className='text-gray-700 dark:text-gray-400'>Description</span>
+                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Description</span>
                                     <input
                                       className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                       placeholder='Examples: Company logo for header'
                                       name='description'
                                       value={task.description}
                                       onChange={e => {
-                                        handleChange(e, index)
+                                        handleTextChange(e, index)
                                       }}
                                     />
                                     {!!errorMessage?.[`tasks.${index}.description`] &&

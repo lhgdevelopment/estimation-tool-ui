@@ -45,7 +45,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
     })
   }
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -157,7 +157,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>First Name</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>First Name</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['firstName'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -165,7 +165,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   placeholder='Enter First name'
                   name='firstName'
                   value={formData.firstName}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['firstName'] &&
                   errorMessage?.['firstName']?.map((message: any, index: number) => {
@@ -179,7 +179,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Last Name</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Last Name</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['lastName'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -187,7 +187,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   placeholder='Enter Last name'
                   name='lastName'
                   value={formData.lastName}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['lastName'] &&
                   errorMessage?.['lastName']?.map((message: any, index: number) => {
@@ -204,7 +204,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Company</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Company</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['company'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -212,7 +212,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   placeholder='Enter company name'
                   name='company'
                   value={formData.company}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['company'] &&
                   errorMessage?.['company']?.map((message: any, index: number) => {
@@ -226,7 +226,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Phone</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Phone</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['phone'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -234,7 +234,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   placeholder='Enter Phone'
                   name='phone'
                   value={formData.phone}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['phone'] &&
                   errorMessage?.['phone']?.map((message: any, index: number) => {
@@ -250,7 +250,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Email</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Email</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['email'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -258,7 +258,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   placeholder='Enter Email'
                   name='email'
                   value={formData.email}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['email'] &&
                   errorMessage?.['email']?.map((message: any, index: number) => {
@@ -272,7 +272,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
 
                 <Dropdown
                   url='project-type'
@@ -297,7 +297,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Description</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Description</span>
               </label>
               <RichTextEditor
                 value={formData.description}

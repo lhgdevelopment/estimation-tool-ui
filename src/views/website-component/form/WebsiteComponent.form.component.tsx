@@ -21,7 +21,7 @@ export default function WebsiteComponentFormComponent(props: TWebsiteComponentCo
 
   const [formData, setFormData] = useState(defaultData)
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -95,19 +95,19 @@ export default function WebsiteComponentFormComponent(props: TWebsiteComponentCo
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Examples: Logo'
                   name='component_name'
                   value={formData.component_name}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
               </label>
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Category</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Category</span>
                 <Dropdown
                   url={'categories'}
                   name='category_id'
@@ -121,25 +121,25 @@ export default function WebsiteComponentFormComponent(props: TWebsiteComponentCo
           <Box sx={{ display: 'flex', gap: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Cost</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Cost</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Examples: 50.00'
                   name='component_cost'
                   value={formData.component_cost}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
               </label>
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Description</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Description</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Examples: Company logo for header'
                   name='component_description'
                   value={formData.component_description}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
               </label>
             </Box>

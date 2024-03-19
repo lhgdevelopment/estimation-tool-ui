@@ -35,7 +35,7 @@ const LoginPage = () => {
 
   const [errorMessage, setErrorMessage] = useState('')
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -98,7 +98,7 @@ const LoginPage = () => {
             <Box className='w-full'>
               <h1 className='mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200'>Login</h1>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Email</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Email</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage ? 'border-red-600' : 'dark:border-gray-600 '
@@ -106,11 +106,11 @@ const LoginPage = () => {
                   placeholder='Jane Doe'
                   type='text'
                   name='email'
-                  onChange={e => handleChange(e)}
+                  onChange={e => handleTextChange(e)}
                 />
               </label>
               <label className='block mt-4 text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Password</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Password</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage ? 'border-red-600' : 'dark:border-gray-600 '
@@ -118,7 +118,7 @@ const LoginPage = () => {
                   placeholder='***************'
                   type='password'
                   name='password'
-                  onChange={e => handleChange(e)}
+                  onChange={e => handleTextChange(e)}
                 />
               </label>
 

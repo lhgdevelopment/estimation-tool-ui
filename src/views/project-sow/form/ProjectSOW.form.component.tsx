@@ -480,7 +480,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Transcript Text</span>
                         <textarea
                           className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                             errorMessage?.['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -508,7 +508,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '50%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
                         <Dropdown
                           url={'project-type'}
                           name='projectTypeId'
@@ -527,7 +527,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     </Box>
                     {/* <Box sx={{ width: '50%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
                         <Dropdown
                           url={'project-type'}
                           name='projectTypeId'
@@ -548,7 +548,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
                     <Box sx={{ width: '50%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Project Name</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Name</span>
                         <input
                           className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                             errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -572,7 +572,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '50%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Company</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Company</span>
                         <input
                           className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                             errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -594,7 +594,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     </Box>
                     <Box sx={{ width: '50%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Phone</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Phone</span>
                         <input
                           className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                             errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -619,7 +619,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '50%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Email</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Email</span>
                         <input
                           className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                             errorMessage?.['clientEmail'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -641,7 +641,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     </Box>
                     <Box sx={{ width: '50%' }}>
                       <label className='block text-sm'>
-                        <span className='text-gray-700 dark:text-gray-400'>Website</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Website</span>
                         <input
                           className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                             errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -669,7 +669,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#summaryText'}>
-                        <span className='text-gray-700 dark:text-gray-400'>Summary Text</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Summary Text</span>
                         <Box
                           sx={{
                             position: 'relative'
@@ -702,7 +702,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                        <span className='text-gray-700 dark:text-gray-400'>Problem Goal Text</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Problem Goal Text</span>
 
                         <Box
                           sx={{
@@ -735,7 +735,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                        <span className='text-gray-700 dark:text-gray-400'>Overview Text</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Overview Text</span>
                         <Box
                           sx={{
                             position: 'relative'
@@ -767,7 +767,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                        <span className='text-gray-700 dark:text-gray-400'>Scope of Work</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Scope of Work</span>
                         <Box
                           sx={{
                             position: 'relative'
@@ -799,7 +799,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#deliverablesText'}>
-                        <span className='text-gray-700 dark:text-gray-400'>Deliverable</span>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Deliverable</span>
                         <Box
                           sx={{
                             position: 'relative'

@@ -23,7 +23,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
   const [promptsPromptsFormData, setPromptsFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
     setPromptsFormData({
       ...promptsPromptsFormData,
       [e.target.name]: e.target.value
@@ -107,13 +107,13 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Enter prompt name'
                   name='name'
                   value={promptsPromptsFormData.name}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['name'] &&
                   errorMessage?.['name']?.map((message: any, index: number) => {
@@ -127,7 +127,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Type</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Type</span>
                 <Dropdown
                   isEnumField
                   enumList={promptsTypeList}
@@ -149,14 +149,14 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           <Box sx={{ display: 'flex', gap: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Prompt</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Prompt</span>
                 <textarea
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Examples: Prompt content'
                   name='prompt'
                   rows={10}
                   value={promptsPromptsFormData.prompt}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['prompt'] &&
                   errorMessage?.['prompt']?.map((message: any, index: number) => {

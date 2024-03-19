@@ -27,7 +27,7 @@ export default function ServiceFormComponent(props: TServiceComponent) {
     })
   }
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -99,7 +99,7 @@ export default function ServiceFormComponent(props: TServiceComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Project Type</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
                 <Dropdown
                   url={'project-type'}
                   name='projectTypeId'
@@ -112,7 +112,7 @@ export default function ServiceFormComponent(props: TServiceComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Name</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
               </label>
               <RichTextEditor value={formData.name} onBlur={newContent => handleReachText(newContent, 'name')} />
             </Box>

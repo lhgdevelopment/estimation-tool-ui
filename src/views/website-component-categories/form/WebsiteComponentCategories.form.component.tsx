@@ -17,7 +17,7 @@ export default function WebsiteComponentCategoriesFormComponent(props: TWebsiteC
 
   const [formData, setFormData] = useState(defaultData)
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -80,13 +80,13 @@ export default function WebsiteComponentCategoriesFormComponent(props: TWebsiteC
         <form onSubmit={onSubmit}>
           <Box>
             <label className='block text-sm'>
-              <span className='text-gray-700 dark:text-gray-400'>Name</span>
+              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
               <input
                 className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                 placeholder='Examples: Header, Footer, etc'
                 name='category_name'
                 value={formData.category_name}
-                onChange={handleChange}
+                onChange={handleTextChange}
               />
             </label>
           </Box>

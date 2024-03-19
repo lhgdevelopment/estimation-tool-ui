@@ -37,7 +37,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
   const [errorMessage, setErrorMessage] = useState<any>({})
   const [summaryText, setSummeryText] = useState<any>('')
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -156,7 +156,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Meeting Name</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Name</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['meetingName'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -164,7 +164,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   placeholder='Enter meeting name'
                   name='meetingName'
                   value={formData.meetingName}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['meetingName'] &&
                   errorMessage?.['meetingName']?.map((message: any, index: number) => {
@@ -178,7 +178,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Meeting Type</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Type</span>
 
                 <Dropdown
                   url='meeting-type'
@@ -204,7 +204,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>Clickup Link</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Clickup Link</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['clickupLink'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -212,7 +212,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   placeholder='Enter clickup task link'
                   name='clickupLink'
                   value={formData.clickupLink}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['clickupLink'] &&
                   errorMessage?.['clickupLink']?.map((message: any, index: number) => {
@@ -226,7 +226,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
-                <span className='text-gray-700 dark:text-gray-400'>TLDV Link</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>TLDV Link</span>
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['tldvLink'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -234,7 +234,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   placeholder='Enter tldv link'
                   name='tldvLink'
                   value={formData.tldvLink}
-                  onChange={handleChange}
+                  onChange={handleTextChange}
                 />
                 {!!errorMessage?.['tldvLink'] &&
                   errorMessage?.['tldvLink']?.map((message: any, index: number) => {
@@ -276,7 +276,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm'>
-                  <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
+                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Transcript Text</span>
                   <textarea
                     className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                       errorMessage?.['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -285,7 +285,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                     name='transcriptText'
                     rows={10}
                     value={formData.transcriptText}
-                    onChange={handleChange}
+                    onChange={handleTextChange}
                   />
                   {!!errorMessage?.['transcriptText'] &&
                     errorMessage?.['transcriptText']?.map((message: any, index: number) => {
@@ -304,7 +304,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             <Box sx={{ display: 'flex', gap: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm' htmlFor={'#summaryText'}>
-                  <span className='text-gray-700 dark:text-gray-400'>Meeting Summery Text</span>
+                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Summery Text</span>
 
                   <MdEditor
                     ref={summaryTextEditorRef}

@@ -18,7 +18,7 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
   const [errorMessage, setErrorMessage] = useState<any>({})
   const [prelaod, setPreload] = useState(false)
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -98,7 +98,7 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm'>
-                  <span className='text-gray-700 dark:text-gray-400'>Message</span>
+                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Message</span>
                 </label>
 
                 <RichTextEditor
