@@ -1,4 +1,5 @@
 // ** Icon imports
+import BadgeIcon from '@mui/icons-material/Badge'
 import BiotechIcon from '@mui/icons-material/Biotech'
 import EngineeringIcon from '@mui/icons-material/Engineering'
 import EventRepeatIcon from '@mui/icons-material/EventRepeat'
@@ -96,6 +97,11 @@ const navigation: TNavigation[] = [
         title: 'Tasks',
         icon: SettingsEthernetIcon,
         path: '/service-management/service-deliverable-tasks'
+      },
+      {
+        title: 'Employee Roles',
+        icon: BadgeIcon,
+        path: '/service-management/employee-roles'
       },
       {
         title: 'Service Tree',

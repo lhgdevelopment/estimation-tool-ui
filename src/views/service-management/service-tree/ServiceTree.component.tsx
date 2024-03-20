@@ -62,12 +62,14 @@ export default function ServiceTreeComponent() {
     tasks: [
       {
         name: '',
+        employeeRoleId: '',
         cost: '',
         description: '',
         order: ''
       }
     ],
     name: '',
+    employeeRoleId: '',
     order: '',
     cost: '',
     description: '',
@@ -126,7 +128,7 @@ export default function ServiceTreeComponent() {
     }
   }
 
-  const handleMultipleTaskReachText = (value: string, field: string, index = -1) => {
+  const handleMultipleTaskFieldChange = (value: any, field: string, index = -1) => {
     if (index !== -1) {
       const tasks: any = [...serviceTaskFormData.tasks]
       if (typeof tasks[index] === 'object') {
@@ -169,6 +171,31 @@ export default function ServiceTreeComponent() {
     }
   }
 
+  const handleMultipleSelectChange = (
+    e: any,
+    formData: any,
+    setFormData: Dispatch<SetStateAction<any>>,
+    index = -1,
+    subArr: string
+  ): void => {
+    const subArrData = [...formData[subArr]]
+
+    if (subArrData && subArrData[index]) {
+      subArrData[index][e.target.name] = e.target.value
+      setFormData((prevState: any) => ({
+        ...prevState,
+        [subArr]: [...subArrData]
+      }))
+    }
+  }
+
+  const handleSelectChange = (e: any, formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
+    setFormData((prevState: any) => ({
+      ...prevState,
+      [e?.target?.name]: e?.target?.value
+    }))
+  }
+
   const handleTaskMultipleTextChange = (e: React.ChangeEvent<any>, index = -1) => {
     const { name, value } = e.target
 
@@ -187,13 +214,6 @@ export default function ServiceTreeComponent() {
         [name]: value
       })
     }
-  }
-
-  const handleSelectChange = (e: any, formData: any, setFormData: Dispatch<SetStateAction<any>>) => {
-    setFormData((prevState: any) => ({
-      ...prevState,
-      [e?.target?.name]: e?.target?.value
-    }))
   }
 
   const addSubField = (formData: any, setFormData: Dispatch<SetStateAction<any>>, subArr: string, data: any) => {
@@ -291,6 +311,7 @@ export default function ServiceTreeComponent() {
       name: data?.name || '',
       order: data?.order,
       cost: data?.cost || '',
+      employeeRoleId: data?.employeeRoleId || '',
       description: data?.description || '',
       tasks: serviceTaskDefaultData.tasks
     })
@@ -305,23 +326,12 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/services/${serviceEditDataId}`, serviceFormData)
         .then(res => {
-          setServiceTreeData((prevState: []) => {
-            const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex(
-              (item: any) => item['_id'] === serviceEditDataId // Replace 'id' with the actual identifier of your item
-            )
-            if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res?.data
-            }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 500,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
-
-            return updatedList
+          Swal.fire({
+            title: 'Data Created Successfully!',
+            icon: 'success',
+            timer: 500,
+            timerProgressBar: true,
+            showConfirmButton: false
           })
           onServiceClear()
           handleServiceModalClose()
@@ -335,7 +345,6 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/services', serviceFormData)
         .then(res => {
-          setServiceTreeData((prevState: []) => [...prevState, res?.data])
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -363,23 +372,12 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData)
         .then(res => {
-          setServiceTreeData((prevState: []) => {
-            const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex(
-              (item: any) => item['_id'] === serviceGroupEditDataId // Replace 'id' with the actual identifier of your item
-            )
-            if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res?.data
-            }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 500,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
-
-            return updatedList
+          Swal.fire({
+            title: 'Data Created Successfully!',
+            icon: 'success',
+            timer: 500,
+            timerProgressBar: true,
+            showConfirmButton: false
           })
           onServiceGroupClear()
           handleServiceModalClose()
@@ -419,23 +417,12 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-scopes/${serviceSOWEditDataId}`, serviceSOWFormData)
         .then(res => {
-          setServiceTreeData((prevState: []) => {
-            const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex(
-              (item: any) => item['_id'] === serviceSOWEditDataId // Replace 'id' with the actual identifier of your item
-            )
-            if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res?.data
-            }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 500,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
-
-            return updatedList
+          Swal.fire({
+            title: 'Data Created Successfully!',
+            icon: 'success',
+            timer: 500,
+            timerProgressBar: true,
+            showConfirmButton: false
           })
           onServiceSOWClear()
           handleServiceModalClose()
@@ -449,7 +436,6 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-scopes', serviceSOWFormData)
         .then(res => {
-          setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -475,23 +461,12 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverables/${serviceDeliverableEditDataId}`, serviceDeliverableFormData)
         .then(res => {
-          setServiceTreeData((prevState: []) => {
-            const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex(
-              (item: any) => item['_id'] === serviceDeliverableEditDataId // Replace 'id' with the actual identifier of your item
-            )
-            if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res?.data
-            }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 500,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
-
-            return updatedList
+          Swal.fire({
+            title: 'Data Created Successfully!',
+            icon: 'success',
+            timer: 500,
+            timerProgressBar: true,
+            showConfirmButton: false
           })
           onServiceDeliverableClear()
           handleServiceModalClose()
@@ -505,7 +480,6 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-deliverables', serviceDeliverableFormData)
         .then(res => {
-          setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -570,25 +544,15 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverable-tasks/${serviceTaskEditDataId}`, serviceTaskFormData)
         .then(res => {
-          setServiceTreeData((prevState: []) => {
-            const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex(
-              (item: any) => item['_id'] === serviceTaskEditDataId // Replace 'id' with the actual identifier of your item
-            )
-            if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res?.data
-            }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 500,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
-
-            return updatedList
+          Swal.fire({
+            title: 'Data Created Successfully!',
+            icon: 'success',
+            timer: 500,
+            timerProgressBar: true,
+            showConfirmButton: false
           })
           onServiceTaskClear()
+          handleServiceModalClose()
           getList()
         })
         .catch(error => {
@@ -599,10 +563,6 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-deliverable-tasks', serviceTaskFormData)
         .then(res => {
-          apiRequest.get(`/service-deliverable-tasks?page=${1}`).then(res => {
-            setServiceTreeData(res?.data)
-          })
-
           Swal.fire({
             title: 'Data Created Successfully!',
             icon: 'success',
@@ -672,72 +632,6 @@ export default function ServiceTreeComponent() {
     // setExpandedKeys(info.expandedKeys)
   }
 
-  // const onDrop: TreeProps['onDrop'] = (info: any) => {
-  //   const dragNode = info.dragNode
-  //   const dropKey = info.node.key
-  //   const dragKey = info.dragNode.key
-  //   const dropPos = info.node.pos.split('-')
-  //   const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]) // the drop position relative to the drop node, inside 0, top -1, bottom 1
-  //   if (dragNode?.type === 'service') {
-  //     apiRequest
-  //       .put(`/services/${dragNode?.id}`, {
-  //         ...info?.dragNode,
-  //         projectTypeId: dragNode?.projectType?.id,
-  //         order: dropPosition == -1 ? dropPosition + 1 : 1
-  //       })
-  //       .then(res => {
-  //         getList()
-  //       })
-  //   }
-
-  //   const loop = (
-  //     data: TreeDataNode[],
-  //     key: React.Key,
-  //     callback: (node: TreeDataNode, i: number, data: TreeDataNode[]) => void
-  //   ) => {
-  //     for (let i = 0; i < data.length; i++) {
-  //       if (data[i].key === key) {
-  //         return callback(data[i], i, data)
-  //       }
-  //       if (data[i].children) {
-  //         loop(data[i].children!, key, callback)
-  //       }
-  //     }
-  //   }
-  //   const data = [...serviceTreeData]
-
-  //   // Find dragObject
-  //   let dragObj: TreeDataNode
-  //   loop(data, dragKey, (item, index, arr) => {
-  //     arr.splice(index, 1)
-  //     dragObj = item
-  //   })
-
-  //   if (!info.dropToGap) {
-  //     // Drop on the content
-  //     loop(data, dropKey, item => {
-  //       item.children = item.children || []
-
-  //       // where to insert. New item was inserted to the start of the array in this example, but can be anywhere
-  //       item.children.unshift(dragObj)
-  //     })
-  //   } else {
-  //     let ar: TreeDataNode[] = []
-  //     let i: number
-  //     loop(data, dropKey, (_item, index, arr) => {
-  //       ar = arr
-  //       i = index
-  //     })
-  //     if (dropPosition === -1) {
-  //       // Drop on the top of the drop node
-  //       ar.splice(i!, 0, dragObj!)
-  //     } else {
-  //       // Drop on the bottom of the drop node
-  //       ar.splice(i! + 1, 0, dragObj!)
-  //     }
-  //   }
-  //   setServiceTreeData(data)
-  // }
   const onDrop = (info: any) => {
     let position = info.dropPosition
     const { dragNode, node, dropToGap, dragNodesKeys } = info
@@ -865,6 +759,8 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverable-tasks/${dragNode.id}`, {
           ...dragNode,
+          serviceDeliverableId: dragNode.deliverableId,
+          parentTaskId: dragNode.taskId ? dragNode.taskId : '',
           order: position
         })
         .then(res => {
@@ -876,7 +772,7 @@ export default function ServiceTreeComponent() {
         })
     }
 
-    setDefaultExpandedKeys([dragNode.key])
+    // setDefaultExpandedKeys([dragNode.key])
   }
 
   return (
@@ -1969,7 +1865,7 @@ export default function ServiceTreeComponent() {
                                           <RichTextEditor
                                             value={clickupTask.name}
                                             onBlur={newContent =>
-                                              handleMultipleTaskReachText(newContent, 'name', index)
+                                              handleMultipleTaskFieldChange(newContent, 'name', index)
                                             }
                                           />
                                           {/* {!!errorMessage?.[`tasks.${index}.name`] &&
@@ -1985,7 +1881,7 @@ export default function ServiceTreeComponent() {
                                           <RichTextEditor
                                             value={clickupTask.name}
                                             onBlur={newContent =>
-                                              handleMultipleTaskReachText(newContent, 'name', index)
+                                              handleMultipleTaskFieldChange(newContent, 'name', index)
                                             }
                                           />
                                           {/* {!!errorMessage?.[`tasks.${index}.name`] &&
@@ -2043,7 +1939,7 @@ export default function ServiceTreeComponent() {
                                                         <RichTextEditor
                                                           value={subTask.name}
                                                           onBlur={newContent =>
-                                                            handleMultipleTaskReachText(newContent, 'name', index)
+                                                            handleMultipleTaskFieldChange(newContent, 'name', index)
                                                           }
                                                         />
                                                         {!!errorMessage?.[`tasks.${index}.name`] &&
@@ -2241,6 +2137,7 @@ export default function ServiceTreeComponent() {
                                   })}
                               </Box>
                             </Box>
+
                             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '100%' }}>
                                 <label className='block text-sm'>
@@ -2255,6 +2152,29 @@ export default function ServiceTreeComponent() {
                                     }}
                                   />
                                 </label>
+                              </Box>
+                            </Box>
+                            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                              <Box sx={{ width: '100%' }}>
+                                <label className='block text-sm'>
+                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Employee Role</span>
+                                </label>
+                                <Dropdown
+                                  url={`employee-roles`}
+                                  name='employeeRoleId'
+                                  value={serviceTaskFormData.employeeRoleId}
+                                  onChange={e => {
+                                    handleSelectChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                  }}
+                                />
+                                {!!errorMessage?.['employeeRoleId'] &&
+                                  errorMessage?.['employeeRoleId']?.map((message: any, index: number) => {
+                                    return (
+                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                        {message}
+                                      </span>
+                                    )
+                                  })}
                               </Box>
                             </Box>
                             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -2345,7 +2265,7 @@ export default function ServiceTreeComponent() {
                                           <RichTextEditor
                                             value={task.name}
                                             onBlur={newContent =>
-                                              handleMultipleTaskReachText(newContent, 'name', index)
+                                              handleMultipleTaskFieldChange(newContent, 'name', index)
                                             }
                                           />
                                           {!!errorMessage?.[`tasks.${index}.name`] &&
@@ -2369,10 +2289,27 @@ export default function ServiceTreeComponent() {
                                                 name='order'
                                                 value={task.order}
                                                 onChange={e => {
-                                                  handleMultipleTaskReachText(e.target.value, 'order', index)
+                                                  handleMultipleTaskFieldChange(e.target.value, 'order', index)
                                                 }}
                                               />
                                             </label>
+                                          </Box>
+                                        </Box>
+                                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                                          <Box sx={{ width: '100%' }}>
+                                            <label className='block text-sm'>
+                                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                Employee Role
+                                              </span>
+                                            </label>
+                                            <Dropdown
+                                              url={`employee-roles`}
+                                              name='employeeRoleId'
+                                              value={serviceTaskFormData.employeeRoleId}
+                                              onChange={e => {
+                                                handleMultipleTaskFieldChange(e.target.value, 'employeeRoleId', index)
+                                              }}
+                                            />
                                           </Box>
                                         </Box>
                                         <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
