@@ -724,11 +724,11 @@ export default function ServiceTreeComponent() {
           setServiceTreeData(initialServiceTreeData)
         })
     }
-    if (dragNode.type == 'scope') {
+    if (dragNode.type == 'sow') {
       apiRequest
         .put(`/service-scopes/${dragNode.id}`, {
           ...dragNode,
-
+          serviceGroupId: dragNode.groupId,
           order: position
         })
         .then(res => {
@@ -755,7 +755,7 @@ export default function ServiceTreeComponent() {
           setServiceTreeData(initialServiceTreeData)
         })
     }
-    if (dragNode.type == 'task') {
+    if (dragNode.type == 'task' || dragNode.type == 'sub_task') {
       apiRequest
         .put(`/service-deliverable-tasks/${dragNode.id}`, {
           ...dragNode,
