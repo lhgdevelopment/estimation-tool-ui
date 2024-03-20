@@ -87,7 +87,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
               timerProgressBar: true,
               showConfirmButton: false
             })
-            router.push('/update-log/')
+            router.push('/settings/update-log/')
 
             return updatedList
           })
@@ -202,7 +202,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
 
           <Box className='my-4 text-right'>
             {router?.query['id'] ? (
-              <Link href={`/update-log/`} passHref>
+              <Link href={`/settings/update-log/`} passHref>
                 <Box
                   sx={{ cursor: 'pointer' }}
                   component={'a'}

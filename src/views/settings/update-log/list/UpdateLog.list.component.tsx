@@ -135,7 +135,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
 
                       <TableCell className='px-4 py-3'>
                         <Box className='flex items-center justify-end space-x-4 text-sm'>
-                          <Link href={`/update-log/${data?.id}`} passHref>
+                          <Link href={`/settings/update-log/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
@@ -146,7 +146,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
                             </Box>
                           </Link>
 
-                          <Link href={`/update-log/edit/${data?.id}`} passHref>
+                          <Link href={`/settings/update-log/edit/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}

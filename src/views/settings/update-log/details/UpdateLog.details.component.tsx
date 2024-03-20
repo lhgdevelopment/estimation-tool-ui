@@ -54,7 +54,7 @@ export default function UpdateLogDetailsComponent() {
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               {!!UpdateLogId && (
-                <Link href={`/update-log/edit/${UpdateLogId}`} passHref>
+                <Link href={`/settings/update-log/edit/${UpdateLogId}`} passHref>
                   <Box
                     sx={{ cursor: 'pointer' }}
                     component={'a'}
@@ -101,7 +101,7 @@ export default function UpdateLogDetailsComponent() {
                     <MdPreview modelValue={detailsData?.['deployed']} />
                     <Box className='flex' sx={{ mt: 5 }}>
                       <CopyToClipboard textToCopy={detailsData?.['deployed']} />
-                      <Link href={`/update-log/edit/${UpdateLogId}`} passHref>
+                      <Link href={`/settings/update-log/edit/${UpdateLogId}`} passHref>
                         <Box
                           sx={{ cursor: 'pointer' }}
                           component={'a'}
@@ -129,7 +129,7 @@ export default function UpdateLogDetailsComponent() {
                     <MdPreview modelValue={detailsData?.['next']} />
                     <Box className='flex' sx={{ mt: 5 }}>
                       <CopyToClipboard textToCopy={detailsData?.['next']} />
-                      <Link href={`/update-log/edit/${UpdateLogId}`} passHref>
+                      <Link href={`/settings/update-log/edit/${UpdateLogId}`} passHref>
                         <Box
                           sx={{ cursor: 'pointer' }}
                           component={'a'}
