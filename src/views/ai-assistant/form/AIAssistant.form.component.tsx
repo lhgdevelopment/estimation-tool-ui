@@ -26,7 +26,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
-  const [prelaod, setPreload] = useState(false)
+  const [prelaod, setPreload] = useState<boolean>(false)
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({

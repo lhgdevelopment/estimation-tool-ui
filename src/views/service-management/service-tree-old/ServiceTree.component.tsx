@@ -26,7 +26,7 @@ enum EServiceFormType {
 }
 export default function ServiceTreeComponent() {
   const [listData, setListData] = useState<any>([])
-  const [serviceModalOpen, setServiceModalOpen] = useState(false)
+  const [serviceModalOpen, setServiceModalOpen] = useState<boolean>(false)
   const handleServiceModalOpen = () => setServiceModalOpen(true)
   const handleServiceModalClose = () => setServiceModalOpen(false)
   const [formType, setFormType] = useState<EServiceFormType>()
@@ -86,8 +86,8 @@ export default function ServiceTreeComponent() {
   const [serviceDeliverableFormData, setServiceDeliverableFormData] = useState(serviceDeliverableDefaultData)
   const [serviceTaskFormData, setServiceTaskFormData] = useState(serviceTaskDefaultData)
 
-  const [isPullingTaskFromClickup, setIsPullingTaskFromClickup] = useState(false)
-  const [isFatchFromClickUp, setIsFatchFromClickUp] = useState(false)
+  const [isPullingTaskFromClickup, setIsPullingTaskFromClickup] = useState<boolean>(false)
+  const [isFatchFromClickUp, setIsFatchFromClickUp] = useState<boolean>(false)
   const [clickupLink, setClickupLink] = useState('')
   const [clickupTaskList, setClickupTaskList] = useState<any[]>([])
 

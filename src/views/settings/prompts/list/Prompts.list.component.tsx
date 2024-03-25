@@ -8,8 +8,8 @@ import { TPromptsComponent, promptsTypeList } from '../Prompts.decorator'
 
 export default function PromptsListComponent(props: TPromptsComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(1)
   const [expendedRow, setExpended] = useState('')
   const handleRowExpendable = (id: any) => {
     setExpended(prevState => id)

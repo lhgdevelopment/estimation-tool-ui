@@ -11,8 +11,8 @@ export default function AppHeaderComponent() {
   const dispatch = useDispatch()
   const router = useRouter()
   const isDark = useSelector((state: RootState) => state.theme.isDark)
-  const [isOpenProfileDropdown, setIsOpenProfileDropdown] = useState(false)
-  const [isOpenNotificationDropdown, setIsOpenNotificationDropdown] = useState(false)
+  const [isOpenProfileDropdown, setIsOpenProfileDropdown] = useState<boolean>(false)
+  const [isOpenNotificationDropdown, setIsOpenNotificationDropdown] = useState<boolean>(false)
 
   const toggleTheme = () => {
     Cookies.set('isDark', (!isDark).toString())

@@ -26,7 +26,7 @@ import {
 export default function ServiceTreeComponent() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
-  const [serviceModalOpen, setServiceModalOpen] = useState(false)
+  const [serviceModalOpen, setServiceModalOpen] = useState<boolean>(false)
   const handleServiceModalOpen = () => setServiceModalOpen(true)
   const handleServiceModalClose = () => setServiceModalOpen(false)
   const [formType, setFormType] = useState<EServiceFormType>()
@@ -91,8 +91,8 @@ export default function ServiceTreeComponent() {
   const [serviceTaskEditDataId, setServiceTaskEditDataId] = useState<null | string>(null)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
-  const [isPullingTaskFromClickup, setIsPullingTaskFromClickup] = useState(false)
-  const [isFatchFromClickUp, setIsFatchFromClickUp] = useState(false)
+  const [isPullingTaskFromClickup, setIsPullingTaskFromClickup] = useState<boolean>(false)
+  const [isFatchFromClickUp, setIsFatchFromClickUp] = useState<boolean>(false)
   const [clickupLink, setClickupLink] = useState('')
   const [clickupTaskList, setClickupTaskList] = useState<any[]>([])
 

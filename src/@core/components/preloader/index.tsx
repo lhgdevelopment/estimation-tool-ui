@@ -10,7 +10,7 @@ const Preloader = (props: TPreloaderProps) => {
   const { close } = props
   const [progress, setProgress] = useState(0)
   const [counter, setCounter] = useState(0)
-  const [closing, setClosing] = useState(false)
+  const [closing, setClosing] = useState<boolean>(false)
 
   useEffect(() => {
     const duration = 20000

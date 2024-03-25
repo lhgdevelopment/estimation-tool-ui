@@ -19,8 +19,8 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const [errorMessage, setErrorMessage] = useState<any>({})
-  const [isPullingTaskFromClickup, setIsPullingTaskFromClickup] = useState(false)
-  const [isFatchFromClickUp, setIsFatchFromClickUp] = useState(false)
+  const [isPullingTaskFromClickup, setIsPullingTaskFromClickup] = useState<boolean>(false)
+  const [isFatchFromClickUp, setIsFatchFromClickUp] = useState<boolean>(false)
   const [clickupLink, setClickupLink] = useState('')
   const [clickupTaskList, setClickupTaskList] = useState<any[]>([])
 

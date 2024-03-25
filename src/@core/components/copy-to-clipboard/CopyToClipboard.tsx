@@ -7,7 +7,7 @@ type TCopyToClipboard = { textToCopy: string | undefined; sx?: SxProps; title?: 
 
 const CopyToClipboard = (props: TCopyToClipboard) => {
   const { sx, textToCopy = '', title = 'Copy to Clipboard', tooltipTitle } = props
-  const [isCopied, setIsCopied] = useState(false)
+  const [isCopied, setIsCopied] = useState<boolean>(false)
 
   const handleCopyClick = () => {
     navigator.clipboard

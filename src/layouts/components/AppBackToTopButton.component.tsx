@@ -3,7 +3,7 @@ import { Box } from '@mui/material'
 import { useEffect, useState } from 'react'
 
 export default function AppBackToTopButton() {
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState<boolean>(false)
 
   useEffect(() => {
     const handleScroll = () => {

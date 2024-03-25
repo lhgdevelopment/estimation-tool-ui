@@ -20,9 +20,9 @@ export default function AIAssistantDetailsComponent() {
   const [messagePreload, setMessagePreload] = useState<boolean>(false)
   const [detailsData, setDetailsData] = useState<any>({})
 
-  const [messageEditOpenModal, setMessageEditOpenModal] = useState(false)
+  const [messageEditOpenModal, setMessageEditOpenModal] = useState<boolean>(false)
   const handlemessageEditModalClose = () => setMessageEditOpenModal(false)
-  const [editData, setEditData] = useState(false)
+  const [editData, setEditData] = useState<boolean>(false)
 
   const defaultData = {
     conversation_id: conversationId,
