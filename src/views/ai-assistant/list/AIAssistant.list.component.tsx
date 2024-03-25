@@ -11,9 +11,9 @@ import { TAIAssistantComponent } from '../AIAssistant.decorator'
 export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
 
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [preloader, setPreloader] = useState(false)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(1)
+  const [preloader, setPreloader] = useState<boolean>(false)
 
   const getList = (page = 1) => {
     setPreloader(true)

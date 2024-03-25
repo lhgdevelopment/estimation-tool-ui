@@ -11,8 +11,8 @@ import { TProjectSOWListComponent } from '../ProjectSOW.decorator'
 
 export default function ProjectSOWListComponent(props: TProjectSOWListComponent) {
   const { listData, setListData } = props
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(1)
   const [expendedRow, setExpended] = useState('')
   const handleRowExpendable = (id: any) => {
     setExpended(prevState => id)

@@ -9,9 +9,9 @@ import { TServiceComponent } from '../Service.decorator'
 
 export default function ServiceListComponent(props: TServiceComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [preloader, setPreloader] = useState(false)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(1)
+  const [preloader, setPreloader] = useState<boolean>(false)
 
   const defaultData = {
     name: '',

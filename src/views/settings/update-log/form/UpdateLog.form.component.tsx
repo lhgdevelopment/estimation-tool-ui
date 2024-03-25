@@ -24,7 +24,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
   const router = useRouter()
 
   const defaultData = {
-    date: Date.now(),
+    date: dayjs(Date.now()).format('YYYY/MM/DD'),
     deployed: '',
     next: ''
   }

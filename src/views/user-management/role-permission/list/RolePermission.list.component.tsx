@@ -25,7 +25,7 @@ export default function RolePermissionListComponent() {
   const [editData, setEditData] = useState<any>({})
 
   const [permissionsList, setPermissionList] = useState<any>({})
-  const [permissionModalOpen, setRoleModalOpen] = useState(false)
+  const [permissionModalOpen, setRoleModalOpen] = useState<boolean>(false)
   const handleRoleModalOpen = () => setRoleModalOpen(true)
   const handleRoleModalClose = () => setRoleModalOpen(false)
 

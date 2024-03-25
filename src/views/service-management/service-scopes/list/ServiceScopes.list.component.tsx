@@ -7,8 +7,8 @@ import { TServiceScopesComponent } from '../ServiceScopes.decorator'
 
 export default function ServiceScopesListComponent(props: TServiceScopesComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
+  const [currentPage, setCurrentPage] = useState<number>(1)
+  const [totalPages, setTotalPages] = useState<number>(1)
 
   const getList = (page = 1) => {
     apiRequest.get(`/service-scopes?page=${page}`).then(res => {

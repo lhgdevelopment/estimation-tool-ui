@@ -16,7 +16,7 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
 
   const [formData, setFormData] = useState(editData)
   const [errorMessage, setErrorMessage] = useState<any>({})
-  const [prelaod, setPreload] = useState(false)
+  const [prelaod, setPreload] = useState<boolean>(false)
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
