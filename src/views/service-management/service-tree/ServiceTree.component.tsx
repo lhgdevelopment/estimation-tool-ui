@@ -17,6 +17,7 @@ import Swal from 'sweetalert2'
 import {
   EServiceFormType,
   addButtonSx,
+  deleteButtonSx,
   editButtonSx,
   transformServiceTree,
   treeButtonContainerSx,
@@ -498,6 +499,136 @@ export default function ServiceTreeComponent() {
     }
   }
 
+  const onServiceDelete = (id: string) => {
+    Swal.fire({
+      title: 'Are You sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showConfirmButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#dc2626',
+      showCancelButton: true,
+      cancelButtonText: 'No, cancel!'
+    }).then(res => {
+      if (res.isConfirmed) {
+        apiRequest.delete(`/services/${id}`).then(res => {
+          Swal.fire({
+            title: 'Data Deleted Successfully!',
+            icon: 'success',
+            timer: 1000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          })
+          getList()
+        })
+      }
+    })
+  }
+
+  const onServiceGroupDelete = (id: string) => {
+    Swal.fire({
+      title: 'Are You sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showConfirmButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#dc2626',
+      showCancelButton: true,
+      cancelButtonText: 'No, cancel!'
+    }).then(res => {
+      if (res.isConfirmed) {
+        apiRequest.delete(`/service-groups/${id}`).then(res => {
+          Swal.fire({
+            title: 'Data Deleted Successfully!',
+            icon: 'success',
+            timer: 1000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          })
+          getList()
+        })
+      }
+    })
+  }
+
+  const onServiceScopeDelete = (id: string) => {
+    Swal.fire({
+      title: 'Are You sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showConfirmButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#dc2626',
+      showCancelButton: true,
+      cancelButtonText: 'No, cancel!'
+    }).then(res => {
+      if (res.isConfirmed) {
+        apiRequest.delete(`/service-scopes/${id}`).then(res => {
+          Swal.fire({
+            title: 'Data Deleted Successfully!',
+            icon: 'success',
+            timer: 1000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          })
+          getList()
+        })
+      }
+    })
+  }
+
+  const onServiceDeliverableDelete = (id: string) => {
+    Swal.fire({
+      title: 'Are You sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showConfirmButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#dc2626',
+      showCancelButton: true,
+      cancelButtonText: 'No, cancel!'
+    }).then(res => {
+      if (res.isConfirmed) {
+        apiRequest.delete(`/service-deliverables/${id}`).then(res => {
+          Swal.fire({
+            title: 'Data Deleted Successfully!',
+            icon: 'success',
+            timer: 1000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          })
+          getList()
+        })
+      }
+    })
+  }
+
+  const onServiceDeliverableTaskDelete = (id: string) => {
+    Swal.fire({
+      title: 'Are You sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showConfirmButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#dc2626',
+      showCancelButton: true,
+      cancelButtonText: 'No, cancel!'
+    }).then(res => {
+      if (res.isConfirmed) {
+        apiRequest.delete(`/service-deliverable-tasks/${id}`).then(res => {
+          Swal.fire({
+            title: 'Data Deleted Successfully!',
+            icon: 'success',
+            timer: 1000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          })
+          getList()
+        })
+      }
+    })
+  }
+
   const addTaskFields = () => {
     if (serviceTaskFormData.tasks?.[0]) {
       setServiceTaskFormData({
@@ -862,6 +993,14 @@ export default function ServiceTreeComponent() {
                         </Button>
                         <Button
                           onClick={e => {
+                            onServiceDelete(node?.['id'])
+                          }}
+                          sx={deleteButtonSx}
+                        >
+                          <DeleteIcon sx={{ fontSize: '18px' }} />
+                        </Button>
+                        <Button
+                          onClick={e => {
                             e.preventDefault()
                             e.stopPropagation()
                             console.log(node)
@@ -889,6 +1028,14 @@ export default function ServiceTreeComponent() {
                           sx={editButtonSx}
                         >
                           <EditIcon sx={{ fontSize: '18px' }} />
+                        </Button>
+                        <Button
+                          onClick={e => {
+                            onServiceGroupDelete(node?.['id'])
+                          }}
+                          sx={deleteButtonSx}
+                        >
+                          <DeleteIcon sx={{ fontSize: '18px' }} />
                         </Button>
                         <Button
                           onClick={e => {
@@ -920,6 +1067,14 @@ export default function ServiceTreeComponent() {
                         </Button>
                         <Button
                           onClick={e => {
+                            onServiceScopeDelete(node?.['id'])
+                          }}
+                          sx={deleteButtonSx}
+                        >
+                          <DeleteIcon sx={{ fontSize: '18px' }} />
+                        </Button>
+                        <Button
+                          onClick={e => {
                             e.preventDefault()
                             e.stopPropagation()
                             handleServiceModalOpen()
@@ -945,6 +1100,14 @@ export default function ServiceTreeComponent() {
                           sx={editButtonSx}
                         >
                           <EditIcon sx={{ fontSize: '18px' }} />
+                        </Button>
+                        <Button
+                          onClick={e => {
+                            onServiceDeliverableDelete(node?.['id'])
+                          }}
+                          sx={deleteButtonSx}
+                        >
+                          <DeleteIcon sx={{ fontSize: '18px' }} />
                         </Button>
                         <Button
                           onClick={e => {
@@ -979,6 +1142,14 @@ export default function ServiceTreeComponent() {
                           <EditIcon sx={{ fontSize: '18px' }} />
                         </Button>
                       </Box>
+                      <Button
+                        onClick={e => {
+                          onServiceDeliverableTaskDelete(node?.['id'])
+                        }}
+                        sx={deleteButtonSx}
+                      >
+                        <DeleteIcon sx={{ fontSize: '18px' }} />
+                      </Button>
                       <Button
                         onClick={e => {
                           console.log(node)

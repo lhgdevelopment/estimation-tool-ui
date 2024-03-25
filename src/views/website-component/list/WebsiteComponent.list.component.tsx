@@ -19,27 +19,26 @@ export default function WebsiteComponentListComponent(props: TWebsiteComponentCo
     })
   }
 
-  const onEdit = (i: string) => {
-    setEditDataId(i)
+  const onEdit = (id: string) => {
+    setEditDataId(id)
 
-    const editData = listData.length ? listData?.filter((data: any) => data['component_id'] == i)[0] : {}
+    const editData = listData.length ? listData?.filter((data: any) => data['component_id'] == id)[0] : {}
     setEditData(editData)
   }
 
-  const onDelete = (i: string) => {
+  const onDelete = (id: string) => {
     Swal.fire({
       title: 'Are You sure?',
-      icon: 'question',
-      iconColor: '#dc2626',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
       showConfirmButton: true,
-      confirmButtonText: 'Yes',
+      confirmButtonText: 'Yes, delete it!',
       confirmButtonColor: '#dc2626',
-      color: '#dc2626',
       showCancelButton: true,
-      cancelButtonText: 'No'
+      cancelButtonText: 'No, cancel!'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/components/${i}`).then(res => {
+        apiRequest.delete(`/components/${id}`).then(res => {
           Swal.fire({
             title: 'Data Deleted Successfully!',
             icon: 'success',
