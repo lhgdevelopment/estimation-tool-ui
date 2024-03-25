@@ -82,7 +82,9 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                   <TableCell className='px-4 py-3'>Name</TableCell>
                   <TableCell className='px-4 py-3'>Type</TableCell>
                   <TableCell className='px-4 py-3'>Prompt</TableCell>
-                  <TableCell className='px-4 py-3 text-right'>Actions</TableCell>
+                  <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>

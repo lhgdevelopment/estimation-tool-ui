@@ -4,9 +4,9 @@ import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
+import dayjs from 'dayjs'
 import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
-import moment from 'moment'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
@@ -163,8 +163,8 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
                   }`}
                   sx={{ width: '100%' }}
                   name='date'
-                  value={moment(formData.date)}
-                  onChange={date => handleDateChange(moment(date).format('YYYY/MM/DD'), 'date')}
+                  value={dayjs(formData.date)}
+                  onChange={date => handleDateChange(dayjs(date).format('YYYY/MM/DD'), 'date')}
                   format='YYYY/MM/DD'
                 />
 
