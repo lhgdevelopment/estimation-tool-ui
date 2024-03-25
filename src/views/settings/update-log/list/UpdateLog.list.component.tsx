@@ -90,7 +90,9 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
                 <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                   <TableCell className='px-4 py-3'>Date</TableCell>
                   <TableCell className='px-4 py-3'>Created At</TableCell>
-                  <TableCell className='px-4 py-3 text-right'>Actions</TableCell>
+                  <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
