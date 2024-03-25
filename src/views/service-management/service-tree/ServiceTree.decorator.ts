@@ -67,6 +67,22 @@ export const editButtonSx: SxProps = {
   }
 }
 
+export const deleteButtonSx: SxProps = {
+  minWidth: 'auto',
+  fontSize: '12px',
+  textTransform: 'none',
+  p: '1px',
+  border: '1px solid #dc2626',
+  lineHeight: 'normal',
+  color: '#dc2626',
+  mx: '5px',
+  opacity: 0,
+  '&:hover': {
+    background: '#dc2626',
+    color: '#fff'
+  }
+}
+
 export const addButtonSx: SxProps = {
   minWidth: 'auto',
   fontSize: '12px',

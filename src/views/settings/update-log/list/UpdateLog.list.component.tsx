@@ -32,20 +32,19 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
     getList(newPage)
   }
 
-  const onDelete = (i: string) => {
+  const onDelete = (id: string) => {
     Swal.fire({
       title: 'Are You sure?',
-      icon: 'question',
-      iconColor: '#dc2626',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
       showConfirmButton: true,
-      confirmButtonText: 'Yes',
+      confirmButtonText: 'Yes, delete it!',
       confirmButtonColor: '#dc2626',
-      color: '#dc2626',
       showCancelButton: true,
-      cancelButtonText: 'No'
+      cancelButtonText: 'No, cancel!'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/update-logs/${i}`).then(res => {
+        apiRequest.delete(`/update-logs/${id}`).then(res => {
           Swal.fire({
             title: 'Data Deleted Successfully!',
             icon: 'success',
