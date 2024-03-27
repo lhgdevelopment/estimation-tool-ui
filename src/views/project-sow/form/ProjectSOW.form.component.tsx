@@ -10,7 +10,7 @@ import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { Dropdown } from 'src/@core/components/dropdown'
+import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import MdPreviewTitle from 'src/@core/components/md-preview-title'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -66,6 +66,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [overviewTextID, setOverviewTextID] = useState<any>(null)
   const [overviewText, setOverviewText] = useState<any>('')
   const [scopeTextID, setScopeTextID] = useState<any>(null)
+  const [taskId, setTaskId] = useState<any>(null)
   const [scopeText, setScopeText] = useState<any>('')
   const [deliverablesTextID, setDeliverablesTextID] = useState<any>(null)
   const [deliverablesText, setDeliverablesText] = useState<any>('')
@@ -764,7 +765,38 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
               {activeStep == 4 && (
                 <Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <Box
+                        sx={{
+                          width: '100%',
+                          '& .MuiInputBase-root': {
+                            border: errorMessage?.['taskId'] ? '1px solid #dc2626' : ''
+                          }
+                        }}
+                      >
+                        <label className='block text-sm'>
+                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Task</span>
+                          <ServiceDropdownTree
+                            name='taskId'
+                            value={taskId}
+                            onChange={e => {
+                              setTaskId(e.target.value)
+                            }}
+                            type='tasks'
+                            filter={`projectTypeId=${projectSOWFormData?.projectTypeId}`}
+                          />
+                          {!!errorMessage?.['taskId'] &&
+                            errorMessage?.['taskId']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
+                        </label>
+                      </Box>
+                    </Box>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#problemGoalText'}>
                         <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Scope of Work</span>
