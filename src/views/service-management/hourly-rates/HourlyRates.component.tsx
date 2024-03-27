@@ -1,9 +1,9 @@
 import { Box } from '@mui/material'
 import { useState } from 'react'
-import EmployeeRolesFormComponent from './form/EmployeeRoles.form.component'
-import EmployeeRolesListComponent from './list/EmployeeRoles.list.component'
+import HourlyRatesFormComponent from './form/HourlyRates.form.component'
+import HourlyRatesListComponent from './list/HourlyRates.list.component'
 
-export default function EmployeeRolesComponent() {
+export default function HourlyRatesComponent() {
   const [editDataId, setEditDataId] = useState<null | string>(null)
   const [listData, setListData] = useState<any>([])
   const [editData, setEditData] = useState<any>({})
@@ -12,9 +12,9 @@ export default function EmployeeRolesComponent() {
     <>
       <Box className='container px-6 mx-auto'>
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
-          Employee Roles
+          Hourly Rates
         </Box>
-        <EmployeeRolesFormComponent
+        <HourlyRatesFormComponent
           setEditDataId={setEditDataId}
           editDataId={editDataId}
           listData={listData}
@@ -22,7 +22,7 @@ export default function EmployeeRolesComponent() {
           editData={editData}
           setEditData={setEditData}
         />
-        <EmployeeRolesListComponent
+        <HourlyRatesListComponent
           setEditDataId={setEditDataId}
           editDataId={editDataId}
           listData={listData}

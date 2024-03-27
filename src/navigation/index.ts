@@ -116,7 +116,7 @@ const navigation: TNavigation[] = [
     path: 'settings',
     subMenu: [
       {
-        title: 'Prompts',
+        title: 'AI Prompts',
         icon: SettingsEthernetIcon,
         path: '/settings/prompts'
       },
