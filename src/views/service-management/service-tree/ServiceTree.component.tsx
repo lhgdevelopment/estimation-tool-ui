@@ -24,6 +24,7 @@ import {
   treeTitleSx
 } from './ServiceTree.decorator'
 
+const { DirectoryTree } = Tree
 export default function ServiceTreeComponent() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
@@ -937,16 +938,16 @@ export default function ServiceTreeComponent() {
         </Box>
         <Box>
           <Box sx={{ flexGrow: 1 }}>
-            <Tree
+            <DirectoryTree
               className='draggable-tree'
               draggable={true}
               blockNode
               onDragEnter={onDragEnter}
               onDrop={onDrop}
+              defaultExpandAll
               treeData={serviceTreeData}
+              multiple
               allowDrop={(options: any) => {
-                // console.log(options);
-
                 if (options?.dragNode?.type === options?.dropNode?.type) {
                   if (
                     options?.dropNode?.type == 'group' &&
@@ -1018,9 +1019,9 @@ export default function ServiceTreeComponent() {
                   )
                 } else if (node?.['type'] == 'group') {
                   return (
-                    <Box sx={treeTitleSx}>
-                      <Box dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
-                      <Box sx={treeButtonContainerSx}>
+                    <Box component={'span'} sx={treeTitleSx}>
+                      <Box component={'span'} dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box component={'span'} sx={treeButtonContainerSx}>
                         <Button
                           onClick={e => {
                             handleServiceGroupEditButton(e, node, node?.['id'])
@@ -1054,9 +1055,9 @@ export default function ServiceTreeComponent() {
                   )
                 } else if (node?.['type'] == 'sow') {
                   return (
-                    <Box sx={treeTitleSx}>
-                      <Box dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
-                      <Box sx={treeButtonContainerSx}>
+                    <Box component={'span'} sx={treeTitleSx}>
+                      <Box component={'span'} dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box component={'span'} sx={treeButtonContainerSx}>
                         <Button
                           onClick={e => {
                             handleServiceSOWEditButton(e, node, node?.['id'])
@@ -1090,9 +1091,9 @@ export default function ServiceTreeComponent() {
                   )
                 } else if (node?.['type'] == 'deliverable') {
                   return (
-                    <Box sx={treeTitleSx}>
-                      <Box dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
-                      <Box sx={treeButtonContainerSx}>
+                    <Box component={'span'} sx={treeTitleSx}>
+                      <Box component={'span'} dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box component={'span'} sx={treeButtonContainerSx}>
                         <Button
                           onClick={e => {
                             handleServiceDeliverableEditButton(e, node, node?.['id'])
@@ -1130,9 +1131,9 @@ export default function ServiceTreeComponent() {
                   )
                 } else if (node?.['type'] == 'task' || node?.['type'] == 'sub_task') {
                   return (
-                    <Box sx={treeTitleSx}>
-                      <Box dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
-                      <Box sx={treeButtonContainerSx}>
+                    <Box component={'span'} sx={treeTitleSx}>
+                      <Box component={'span'} dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box component={'span'} sx={treeButtonContainerSx}>
                         <Button
                           onClick={e => {
                             handleServiceTaskEditButton(e, node, node?.['id'])
@@ -1173,7 +1174,7 @@ export default function ServiceTreeComponent() {
                   )
                 }
 
-                return <Box>{node?.title}</Box>
+                return <Box component={'span'}>{node?.title}</Box>
               }}
             />
           </Box>

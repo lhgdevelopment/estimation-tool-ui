@@ -227,3 +227,10 @@ button:focus {
 .theme-dark .MuiAccordion-root {
   background: #24262d;
 }
+.ant-tree-node-content-wrapper {
+  display: flex;
+}
+/* :where(.css-dev-only-do-not-override-1drr2mu).ant-tree.ant-tree-directory .ant-tree-treenode-selected:hover::before,
+:where(.css-dev-only-do-not-override-1drr2mu).ant-tree.ant-tree-directory .ant-tree-treenode-selected::before {
+  background: #9333ea;
+} */
