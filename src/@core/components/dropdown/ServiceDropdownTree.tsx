@@ -1,5 +1,5 @@
 import SearchIcon from '@mui/icons-material/Search'
-import { InputAdornment, ListSubheader, TextField } from '@mui/material'
+import { Box, InputAdornment, ListSubheader, TextField } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
@@ -11,6 +11,7 @@ interface ISelectProps extends SelectProps {
   searchable?: boolean
   searchPlaceholder?: string
   type?: 'services' | 'groups' | 'sows' | 'deliverables' | 'tasks'
+  filter?: string
 }
 
 export function ServiceDropdownTree(props: ISelectProps) {
@@ -23,6 +24,7 @@ export function ServiceDropdownTree(props: ISelectProps) {
     onChange,
     id = 'service-dropdown-tree-select-label',
     type = 'tasks',
+    filter,
     ...otherProps
   } = props
 
@@ -32,7 +34,8 @@ export function ServiceDropdownTree(props: ISelectProps) {
   const [searchText, setSearchText] = useState('')
 
   const getList = () => {
-    apiRequest.get(`/service-tree?per_page=1000`).then(res => {
+    const url = filter ? `/service-tree?${filter}` : `/service-tree`
+    apiRequest.get(url).then(res => {
       setOptionItems(res?.data.services)
       setInitialOptionList(res?.data.services)
     })
@@ -150,13 +153,13 @@ export function ServiceDropdownTree(props: ISelectProps) {
           if (type === 'services') {
             return (
               <MenuItem sx={{ ...listSubHeaderSx, ...{ pl: '32px' } }} value={serviceOption.id} key={index}>
-                {serviceOption.name}
+                <Box component='span' dangerouslySetInnerHTML={{ __html: serviceOption.name }}></Box>
               </MenuItem>
             )
           } else if (type === 'groups') {
             return [
               <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '16px' } }} key={serviceOption.id}>
-                {serviceOption.name}
+                <Box component='span' dangerouslySetInnerHTML={{ __html: serviceOption.name }}></Box>
               </ListSubheader>,
               serviceOption?.groups?.map((groupsOption: any, groupsOptionIndex: number) => (
                 <MenuItem
@@ -164,19 +167,19 @@ export function ServiceDropdownTree(props: ISelectProps) {
                   value={groupsOption.id}
                   key={groupsOptionIndex}
                 >
-                  {groupsOption.name}
+                  <Box component='span' dangerouslySetInnerHTML={{ __html: groupsOption.name }}></Box>
                 </MenuItem>
               ))
             ]
           } else if (type === 'sows') {
             return [
               <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '16px' } }} key={serviceOption.id}>
-                {serviceOption.name}
+                <Box component='span' dangerouslySetInnerHTML={{ __html: serviceOption.name }}></Box>
               </ListSubheader>,
               serviceOption?.groups?.map((groupsOption: any, groupsOptionIndex: number) => {
                 return [
                   <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '32px' } }} key={groupsOptionIndex}>
-                    {groupsOption.name}
+                    <Box component='span' dangerouslySetInnerHTML={{ __html: groupsOption.name }}></Box>
                   </ListSubheader>,
                   groupsOption?.sows?.map((sowsOption: any, sowsOptionIndex: number) => (
                     <MenuItem
@@ -184,7 +187,7 @@ export function ServiceDropdownTree(props: ISelectProps) {
                       value={sowsOption.id}
                       key={sowsOptionIndex}
                     >
-                      {sowsOption.name}
+                      <Box component='span' dangerouslySetInnerHTML={{ __html: sowsOption.name }}></Box>
                     </MenuItem>
                   ))
                 ]
@@ -193,17 +196,17 @@ export function ServiceDropdownTree(props: ISelectProps) {
           } else if (type === 'deliverables') {
             return [
               <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '16px' } }} key={serviceOption.id}>
-                {serviceOption.name}
+                <Box component='span' dangerouslySetInnerHTML={{ __html: serviceOption.name }}></Box>
               </ListSubheader>,
               serviceOption?.groups?.map((groupsOption: any, groupsOptionIndex: number) => {
                 return [
                   <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '32px' } }} key={groupsOptionIndex}>
-                    {groupsOption.name}
+                    <Box component='span' dangerouslySetInnerHTML={{ __html: groupsOption.name }}></Box>
                   </ListSubheader>,
                   groupsOption?.sows?.map((sowsOption: any, sowsOptionIndex: number) => {
                     return [
                       <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '48px' } }} key={sowsOptionIndex}>
-                        {sowsOption.name}
+                        <Box component='span' dangerouslySetInnerHTML={{ __html: sowsOption.name }}></Box>
                       </ListSubheader>,
                       sowsOption?.deliverables?.map((deliverablesOption: any, deliverablesOptionIndex: number) => (
                         <MenuItem
@@ -211,7 +214,7 @@ export function ServiceDropdownTree(props: ISelectProps) {
                           value={deliverablesOption.id}
                           key={deliverablesOptionIndex}
                         >
-                          {deliverablesOption.name}
+                          <Box component='span' dangerouslySetInnerHTML={{ __html: deliverablesOption.name }}></Box>
                         </MenuItem>
                       ))
                     ]
@@ -222,22 +225,22 @@ export function ServiceDropdownTree(props: ISelectProps) {
           } else if (type === 'tasks') {
             return [
               <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '16px' } }} key={serviceOption.id}>
-                {serviceOption.name}
+                <Box component='span' dangerouslySetInnerHTML={{ __html: serviceOption.name }}></Box>
               </ListSubheader>,
               serviceOption?.groups?.map((groupsOption: any, groupsOptionIndex: number) => {
                 return [
                   <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '32px' } }} key={groupsOptionIndex}>
-                    {groupsOption.name}
+                    <Box component='span' dangerouslySetInnerHTML={{ __html: groupsOption.name }}></Box>
                   </ListSubheader>,
                   groupsOption?.sows?.map((sowsOption: any, sowsOptionIndex: number) => {
                     return [
                       <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '48px' } }} key={sowsOptionIndex}>
-                        {sowsOption.name}
+                        <Box component='span' dangerouslySetInnerHTML={{ __html: sowsOption.name }}></Box>
                       </ListSubheader>,
                       sowsOption?.deliverables?.map((deliverablesOption: any, deliverablesOptionIndex: number) => {
                         return [
                           <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '64px' } }} key={deliverablesOptionIndex}>
-                            {deliverablesOption.name}
+                            <Box component='span' dangerouslySetInnerHTML={{ __html: deliverablesOption.name }}></Box>
                           </ListSubheader>,
                           deliverablesOption?.tasks?.map((tasksOption: any, tasksOptionIndex: number) => (
                             <MenuItem
@@ -245,7 +248,7 @@ export function ServiceDropdownTree(props: ISelectProps) {
                               value={tasksOption.id}
                               key={tasksOptionIndex}
                             >
-                              {tasksOption.name}
+                              <Box component='span' dangerouslySetInnerHTML={{ __html: tasksOption.name }}></Box>
                             </MenuItem>
                           ))
                         ]

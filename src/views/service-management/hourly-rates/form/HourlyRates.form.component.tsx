@@ -7,9 +7,9 @@ import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TEmployeeRolesComponent } from '../EmployeeRoles.decorator'
+import { THourlyRatesComponent } from '../HourlyRates.decorator'
 
-export default function EmployeeRolesFormComponent(props: TEmployeeRolesComponent) {
+export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
@@ -50,9 +50,9 @@ export default function EmployeeRolesFormComponent(props: TEmployeeRolesComponen
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
-            const editedEmployeeRolesIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
-            if (editedEmployeeRolesIndex !== -1) {
-              updatedList[editedEmployeeRolesIndex] = res?.data
+            const editedHourlyRatesIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
+            if (editedHourlyRatesIndex !== -1) {
+              updatedList[editedHourlyRatesIndex] = res?.data
             }
             Swal.fire({
               title: 'Data Updated Successfully!',
@@ -113,10 +113,10 @@ export default function EmployeeRolesFormComponent(props: TEmployeeRolesComponen
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Role Name</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter user name'
+                  placeholder='Enter role name'
                   name='name'
                   value={formData.name}
                   onChange={handleTextChange}
@@ -133,10 +133,10 @@ export default function EmployeeRolesFormComponent(props: TEmployeeRolesComponen
             </Box>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Average Hourly</span>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hourly Rate</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter average hourly'
+                  placeholder='Enter hourly rate'
                   name='average_hourly'
                   value={formData.average_hourly}
                   onChange={handleTextChange}

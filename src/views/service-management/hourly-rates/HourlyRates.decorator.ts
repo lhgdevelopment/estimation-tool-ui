@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react'
 
-export type TEmployeeRolesComponent = {
+export type THourlyRatesComponent = {
   editDataId?: string | null
   setEditDataId: Dispatch<SetStateAction<string | null>>
   editData?: any

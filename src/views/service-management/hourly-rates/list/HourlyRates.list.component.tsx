@@ -4,9 +4,9 @@ import NoDataComponent from 'src/@core/components/no-data-component'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import { TEmployeeRolesComponent } from '../EmployeeRoles.decorator'
+import { THourlyRatesComponent } from '../HourlyRates.decorator'
 
-export default function EmployeeRolesListComponent(props: TEmployeeRolesComponent) {
+export default function HourlyRatesListComponent(props: THourlyRatesComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
@@ -99,10 +99,10 @@ export default function EmployeeRolesListComponent(props: TEmployeeRolesComponen
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <Box component={'th'} className='px-4 py-3'>
-                  Name
+                  Role Name
                 </Box>
                 <Box component={'th'} className='px-4 py-3' sx={{ width: '40%', textAlign: 'center' }}>
-                  Average Hourly
+                  Hourly Rate
                 </Box>
                 <Box component={'th'} className='px-4 py-3 text-right' sx={{ width: '100px' }}>
                   Actions
@@ -118,7 +118,7 @@ export default function EmployeeRolesListComponent(props: TEmployeeRolesComponen
                 <Box component={'td'}>
                   <input
                     className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                    placeholder='Enter name'
+                    placeholder='Enter role name'
                     name='name'
                     value={filterData.name}
                     onChange={handleFilterChange}
@@ -163,7 +163,7 @@ export default function EmployeeRolesListComponent(props: TEmployeeRolesComponen
                         {data?.name}
                       </Box>
                       <Box component={'td'} className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
-                        {data?.average_hourly}
+                        ${data?.average_hourly}
                       </Box>
 
                       <Box component={'td'} className='px-4 py-3'>
