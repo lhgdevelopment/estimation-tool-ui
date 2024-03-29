@@ -75,23 +75,10 @@ export default function MeetingSummeryDetailsComponent() {
               </Link>
             )}
           </Box>
-          <Box sx={sowBodySx}>
-            <Box
-              sx={{
-                padding: '15px',
-                background: '#fff',
-                gap: '5px',
-                display: 'flex',
-                flexDirection: 'column'
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: '5px'
-                }}
-              >
-                <Box sx={{ fontWeight: '600' }}>Clickup Link: </Box>
+          <Box className='flex flex-col gap-4' sx={sowBodySx}>
+            <Box className='flex flex-col gap-4 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800'>
+              <Box className='flex gap-4  '>
+                <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Clickup Link: </Box>
                 <Box>
                   {!!detailsData?.['clickupLink'] && (
                     <Box component={'a'} href={detailsData?.['clickupLink']} target='_blank'>
@@ -100,13 +87,8 @@ export default function MeetingSummeryDetailsComponent() {
                   )}
                 </Box>
               </Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: '5px'
-                }}
-              >
-                <Box sx={{ fontWeight: '600' }}>TLDV Link: </Box>
+              <Box className='flex gap-4 '>
+                <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>TLDV Link: </Box>
                 <Box>
                   {!!detailsData?.['tldvLink'] && (
                     <Box component={'a'} href={detailsData?.['tldvLink']} target='_blank'>
@@ -117,7 +99,7 @@ export default function MeetingSummeryDetailsComponent() {
               </Box>
             </Box>
             {!detailsData?.['tldvLink'] && (
-              <Accordion defaultExpanded={true}>
+              <Accordion defaultExpanded={false}>
                 <AccordionSummary
                   sx={{ borderBottom: '2px solid #f9fafb' }}
                   expandIcon={<ExpandMoreIcon />}
@@ -134,7 +116,7 @@ export default function MeetingSummeryDetailsComponent() {
               </Accordion>
             )}
 
-            <Accordion defaultExpanded={true}>
+            <Accordion defaultExpanded={false}>
               <AccordionSummary
                 sx={{ borderBottom: '2px solid #f9fafb' }}
                 expandIcon={<ExpandMoreIcon />}

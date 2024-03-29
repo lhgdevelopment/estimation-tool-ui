@@ -165,6 +165,7 @@ export default function AIAssistantDetailsComponent() {
           <Box
             sx={{
               height: 'calc(100% - 130px)',
+              pr: '24px',
               overflow: 'hidden',
               overflowY: 'auto'
             }}

@@ -34,11 +34,11 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
           {message?.role === 'system' ? '' : message?.user?.name ? message?.user?.name[0] : 'Y'}
         </Avatar>
       </Box>
-      <Box>
-        <Box sx={{ fontWeight: 600, color: '#000' }}>
+      <Box sx={{ width: '100%' }}>
+        <Box className='text-gray-600 dark:text-gray-400' sx={{ fontWeight: 600 }}>
           {message?.role === 'system' ? `Hive AI` : message?.user?.name ? message?.user?.name : 'You'}
         </Box>
-        <Box sx={{ lineHeight: 'normal' }}>
+        <Box sx={{ width: '100%', lineHeight: 'normal', mt: 2, borderRadius: 1, overflow: 'hidden' }}>
           {isWaiting ? (
             <Box
               sx={{
@@ -53,7 +53,12 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
           ) : message?.role === 'system' ? (
             <MdPreview modelValue={message?.message_content}></MdPreview>
           ) : (
-            message?.message_content
+            <Box
+              className='text-gray-600 dark:text-gray-400 bg-white rounded-lg shadow-xs dark:bg-gray-800'
+              sx={{ width: '100%', p: 4, lineHeight: 'normal' }}
+            >
+              {message?.message_content}
+            </Box>
           )}
         </Box>
         {message?.role === 'system' && (
