@@ -84,8 +84,8 @@ export default function ProjectSOWDetailsComponent() {
               </Box>
             </Link>
           </Box>
-          <Box ref={allTextRef}>
-            <Accordion defaultExpanded={true}>
+          <Box className='flex flex-col gap-4' ref={allTextRef}>
+            <Accordion defaultExpanded={false}>
               <AccordionSummary
                 sx={{ borderBottom: '2px solid #f9fafb' }}
                 expandIcon={<ExpandMoreIcon />}
@@ -119,7 +119,8 @@ export default function ProjectSOWDetailsComponent() {
                 </Box>
               </AccordionDetails>
             </Accordion>
-            <Accordion expanded={!!detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}>
+            {/* <Accordion expanded={!!detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}> */}
+            <Accordion defaultExpanded={false}>
               <AccordionSummary
                 sx={{ borderBottom: '2px solid #f9fafb' }}
                 expandIcon={<ExpandMoreIcon />}
@@ -151,11 +152,12 @@ export default function ProjectSOWDetailsComponent() {
                 </Box>
               </AccordionDetails>
             </Accordion>
-            <Accordion
+            {/*  <Accordion
               expanded={
                 !!detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']
               }
-            >
+            > */}{' '}
+            <Accordion defaultExpanded={false}>
               <AccordionSummary
                 sx={{ borderBottom: '2px solid #f9fafb' }}
                 expandIcon={<ExpandMoreIcon />}
@@ -191,9 +193,10 @@ export default function ProjectSOWDetailsComponent() {
                 </Box>
               </AccordionDetails>
             </Accordion>
-            <Accordion
+            {/* <Accordion
               expanded={!!detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']}
-            >
+            > */}
+            <Accordion defaultExpanded={false}>
               <AccordionSummary
                 sx={{ borderBottom: '2px solid #f9fafb' }}
                 expandIcon={<ExpandMoreIcon />}
@@ -227,13 +230,14 @@ export default function ProjectSOWDetailsComponent() {
                 </Box>
               </AccordionDetails>
             </Accordion>
-            <Accordion
+            {/* <Accordion
               expanded={
                 !!detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
                   'deliverablesText'
                 ]
               }
-            >
+            > */}
+            <Accordion defaultExpanded={false}>
               <AccordionSummary
                 sx={{ borderBottom: '2px solid #f9fafb' }}
                 expandIcon={<ExpandMoreIcon />}
