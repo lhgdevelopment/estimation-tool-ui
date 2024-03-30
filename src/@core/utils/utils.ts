@@ -40,3 +40,15 @@ export function formatDateToCustomFormat(date: Date): string {
 
   return formattedDate.replace(/\//g, '-')
 }
+
+export function addTargetBlankToMarkdownLinks(markdownText = '') {
+  // Regular expression to match Markdown links
+  const regex = /\[([^\]]+)\]\(([^)]+)\)/g
+
+  // Replace each Markdown link with the link including target="_blank"
+  const modifiedText = markdownText.replace(regex, function (match, text, url) {
+    return '<a href="' + url + '" target="_blank">' + text + '</a>'
+  })
+
+  return modifiedText
+}

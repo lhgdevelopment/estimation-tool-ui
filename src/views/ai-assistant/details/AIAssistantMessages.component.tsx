@@ -4,6 +4,7 @@ import { Avatar, Box, Tooltip } from '@mui/material'
 import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import CopyToClipboard from 'src/@core/components/copy-to-clipboard/CopyToClipboard'
+import { addTargetBlankToMarkdownLinks } from 'src/@core/utils/utils'
 
 type TAIAssistantMessagesComponentProps = {
   message: any
@@ -14,6 +15,8 @@ type TAIAssistantMessagesComponentProps = {
 }
 export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
   const { message, index, isWaiting = false, onRegenerate, onEdit } = props
+
+  console.log(addTargetBlankToMarkdownLinks(message?.message_content))
 
   return (
     <Box
@@ -51,7 +54,7 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
               }}
             ></Box>
           ) : (
-            <MdPreview modelValue={message?.message_content}></MdPreview>
+            <MdPreview modelValue={addTargetBlankToMarkdownLinks(message?.message_content)}></MdPreview>
           )}
         </Box>
         {message?.role === 'system' && (

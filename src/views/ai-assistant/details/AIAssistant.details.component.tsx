@@ -202,9 +202,10 @@ export default function AIAssistantDetailsComponent() {
               bottom: '0',
               left: '0',
               right: '0',
-              background: '#f9fafb',
+
               p: '24px'
             }}
+            className={'bg-gray-50 dark:bg-gray-900'}
           >
             <Box sx={{ width: '100%', mb: 2 }}>
               <label className='block text-sm'>

@@ -52,7 +52,7 @@ export default function AppNavbarComponent() {
             {navigation?.map((nav, index) =>
               nav.subMenu?.length ? (
                 <Box component={'li'} key={index} className='relative px-6 py-3'>
-                  {router.pathname.split('/')?.[1] == (nav?.subMenu?.[0]?.path || '').split('/')?.[1] && (
+                  {router.pathname.split('/').indexOf(nav.path.replaceAll('/', '')) != -1 && (
                     <Box
                       component={'span'}
                       className='absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg'
@@ -62,7 +62,9 @@ export default function AppNavbarComponent() {
 
                   <Box
                     component={'button'}
-                    className='inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200'
+                    className={`inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 ${
+                      router.pathname.split('/').indexOf(nav.path.replaceAll('/', '')) != -1 ? 'dark:text-gray-200' : ''
+                    }`}
                     aria-haspopup='true'
                     onClick={() => {
                       setDropdownOpen(prevState => (prevState == `submenu_${index}` ? '' : `submenu_${index}`))
@@ -91,7 +93,7 @@ export default function AppNavbarComponent() {
                           key={subIndex}
                           component={'li'}
                           className={`px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 ${
-                            router.pathname == subNav.path ? 'text-gray-800' : ''
+                            router.pathname == subNav.path ? 'text-gray-800 dark:text-gray-200' : ''
                           }`}
                         >
                           <Box
@@ -120,8 +122,11 @@ export default function AppNavbarComponent() {
                   <Box
                     component={'a'}
                     href={nav.path ? nav.path : ''}
-                    className={`inline-flex items-center w-full text-sm font-semibold  transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100 ${
-                      router.pathname == nav.path ? 'text-gray-800' : ''
+                    className={`inline-flex items-center w-full text-sm font-semibold  transition-colors duration-150 hover:text-gray-800 hover:text-gray-800 dark:hover:text-gray-200 ${
+                      router.pathname == nav.path ||
+                      router.pathname.split('/').indexOf(nav.path.replaceAll('/', '')) != -1
+                        ? 'text-gray-800 dark:text-gray-200'
+                        : ''
                     }`}
                   >
                     {React.createElement(nav.icon ? nav.icon : HomeOutline)}
