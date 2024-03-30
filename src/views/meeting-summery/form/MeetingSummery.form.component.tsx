@@ -28,7 +28,8 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     summaryText: '',
     clickupLink: '',
     tldvLink: '',
-    pushToClickUp: false
+    pushToClickUp: false,
+    is_private: false
   }
 
   const summaryTextEditorRef = useRef<ExposeParam>()
@@ -131,7 +132,8 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         summaryText: res?.data?.['meetingSummeryText'],
         clickupLink: res?.data?.['clickupLink'],
         tldvLink: res?.data?.['tldvLink'],
-        pushToClickUp: false
+        pushToClickUp: false,
+        is_private: res?.data?.['is_private']
       })
       setSummeryText(res?.data?.['summaryText'])
       setPreload(false)
@@ -324,6 +326,28 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               </Box>
             </Box>
           )}
+
+          <Box sx={{ display: 'flex', gap: 5, mt: 5 }}>
+            <Box sx={{ width: '100%' }}>
+              <label className='block text-sm' htmlFor='is_private'>
+                <span className='text-gray-700 dark:text-gray-400 mr-2'>Is private?</span>
+                <input
+                  id='is_private'
+                  type='checkbox'
+                  className='h-6 w-6 border-purple-600 text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray'
+                  name='is_private'
+                  checked={formData.is_private}
+                  onChange={handleCheckChange}
+                />
+                {!!errorMessage?.['is_private'] &&
+                  errorMessage?.['is_private']?.map((message: any, index: number) => (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  ))}
+              </label>
+            </Box>
+          </Box>
 
           <Box className='my-4 text-right'>
             {router?.query['id'] ? (

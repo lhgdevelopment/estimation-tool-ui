@@ -99,9 +99,9 @@ const navigation: TNavigation[] = [
         path: '/service-management/service-deliverable-tasks'
       },
       {
-        title: 'Employee Roles',
+        title: 'Hourly Rates',
         icon: BadgeIcon,
-        path: '/service-management/employee-roles'
+        path: '/service-management/hourly-rates'
       },
       {
         title: 'Service Tree',

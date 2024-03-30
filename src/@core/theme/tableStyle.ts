@@ -5,8 +5,8 @@ export const TableSx: SxProps = {
     color: 'inherit !important'
   },
   '& .expendable-row': {
-    width: '40%',
-    maxWidth: '500px',
+    width: '15%',
+    maxWidth: '200px',
     '& .expendable-row-inner': {
       display: 'flex',
       position: 'relative',
