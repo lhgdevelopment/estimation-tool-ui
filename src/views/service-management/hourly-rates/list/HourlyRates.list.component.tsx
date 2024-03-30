@@ -110,11 +110,7 @@ export default function HourlyRatesListComponent(props: THourlyRatesComponent) {
               </tr>
             </thead>
             <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
-              <Box
-                component={'tr'}
-                className='text-gray-700 dark:text-gray-400'
-                sx={{ '& td': { border: '1px solid rgb(246 246 246)', p: '10px 5px' } }}
-              >
+              <Box component={'tr'} className='text-gray-700 dark:text-gray-400' sx={{ '& td': { p: '5px 5px' } }}>
                 <Box component={'td'}>
                   <input
                     className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'

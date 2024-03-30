@@ -1,4 +1,4 @@
-import NorthIcon from '@mui/icons-material/North'
+import NorthEastIcon from '@mui/icons-material/North'
 import { Box, Button, Modal, SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
@@ -7,6 +7,7 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
 import AIAssistantMessagesComponent from './AIAssistantMessages.component'
@@ -60,6 +61,13 @@ export default function AIAssistantDetailsComponent() {
     setConversationFormData({
       ...conversationFormData,
       [e?.target?.name]: e.target.value
+    })
+  }
+
+  const handleReachText = (value: string, field: string) => {
+    setConversationFormData({
+      ...conversationFormData,
+      [field]: value
     })
   }
 
@@ -193,7 +201,9 @@ export default function AIAssistantDetailsComponent() {
               width: '100%',
               bottom: '0',
               left: '0',
-              right: '0'
+              right: '0',
+              background: '#f9fafb',
+              p: '24px'
             }}
           >
             <Box sx={{ width: '100%', mb: 2 }}>
@@ -219,14 +229,10 @@ export default function AIAssistantDetailsComponent() {
               sx={{
                 width: '100%',
                 mb: 2,
-                position: 'relative',
-                border: '1px solid rgba(0, 0, 0, .15)',
-                overflow: 'hidden',
-                background: '#fff',
-                borderRadius: '1rem'
+                position: 'relative'
               }}
             >
-              <Box
+              {/* <Box
                 component={'textarea'}
                 className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                   errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
@@ -246,35 +252,41 @@ export default function AIAssistantDetailsComponent() {
                   resize: 'none'
                 }}
                 disabled={messagePreload}
-              ></Box>
+              ></Box> */}
+              <RichTextEditor
+                value={conversationFormData.message_content}
+                onBlur={newContent => handleReachText(newContent, 'message_content')}
+                onChange={handleKeyDown}
+              />
 
-              <Button
-                onClick={() => {
-                  onSubmit()
-                }}
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  right: '9px',
-                  background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
-                  padding: '0',
-                  height: '30px',
-                  width: '30px',
-                  minWidth: 'auto',
-                  transform: 'translate(0%, -50%)',
-                  color: '#fff',
-                  border: '0',
-                  outline: '0',
-                  borderRadius: '0.5rem',
-                  zIndex: 1,
-                  '&:hover': {
-                    background: '#000'
-                  }
-                }}
-                disabled={!String(conversationFormData?.message_content).trim()}
-              >
-                <NorthIcon sx={{ fontSize: '16px' }} />
-              </Button>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Button
+                  onClick={() => {
+                    onSubmit()
+                  }}
+                  sx={{
+                    //background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
+                    mt: '16px',
+                    background: '#000',
+                    padding: '0',
+                    height: '30px',
+                    width: '30px',
+                    minWidth: 'auto',
+                    color: '#fff',
+                    border: '0',
+                    outline: '0',
+                    borderRadius: '0.5rem',
+                    zIndex: 1,
+                    '&:hover': {
+                      background: '#000'
+                    }
+                  }}
+
+                  // disabled={!String(conversationFormData?.message_content).trim()}
+                >
+                  <NorthEastIcon sx={{ fontSize: '16px' }} />
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Box>

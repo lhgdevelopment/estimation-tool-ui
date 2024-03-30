@@ -1,6 +1,20 @@
+import LockIcon from '@mui/icons-material/Lock'
+import LockOpenIcon from '@mui/icons-material/LockOpen'
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material'
 import Link from 'next/link'
+import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import { TableSx } from 'src/@core/theme/tableStyle'
@@ -12,9 +26,11 @@ import { MeetingTypeList, TMeetingSummeryComponent } from '../MeetingSummery.dec
 export default function MeetingSummeryListComponent(props: TMeetingSummeryComponent) {
   const { listData, setListData } = props
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [expendedRow, setExpended] = useState('')
+  const [statusPreload, setStatusPreload] = useState(null)
   const handleRowExpendable = (id: any) => {
     setExpended(prevState => id)
   }
@@ -30,6 +46,39 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)
+  }
+
+  const onStatusChange = (data: any) => {
+    setStatusPreload(data?.['id'])
+    data.is_private = !data.is_private
+    data.pushToClickUp = false
+    data.summaryText = data?.['meetingSummeryText']
+    apiRequest
+      .put(`/meeting-summery/${data?.['id']}`, data)
+      .then(res => {
+        setListData((prevState: []) => {
+          const updatedList: any = [...prevState]
+          const editedServiceIndex = updatedList.findIndex((item: any) => item['_id'] === data?.['id'])
+          if (editedServiceIndex !== -1) {
+            updatedList[editedServiceIndex] = res?.data
+          }
+          Swal.fire({
+            title: 'Data Updated Successfully!',
+            icon: 'success',
+            timer: 1000,
+            timerProgressBar: true,
+            showConfirmButton: false
+          })
+
+          return updatedList
+        })
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
+      .finally(() => {
+        setStatusPreload(null)
+      })
   }
 
   const onDelete = (id: string) => {
@@ -91,6 +140,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                   <TableCell className='px-4 py-3'>Meeting Type</TableCell>
                   <TableCell className='px-4 py-3'>Created By</TableCell>
                   <TableCell className='px-4 py-3'>Created At</TableCell>
+
                   <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
                     Actions
                   </TableCell>
@@ -163,6 +213,20 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                               </svg>
                             </Box>
                           </Link>
+                          <button
+                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                            onClick={() => {
+                              onStatusChange(data)
+                            }}
+                          >
+                            {statusPreload == data?.id ? (
+                              <CircularProgress size={'18px'} />
+                            ) : data.is_private ? (
+                              <LockIcon color='error' />
+                            ) : (
+                              <LockOpenIcon color='success' />
+                            )}
+                          </button>
                           <button
                             onClick={() => {
                               onDelete(data['id'])

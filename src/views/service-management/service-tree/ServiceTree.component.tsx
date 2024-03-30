@@ -1208,7 +1208,7 @@ export default function ServiceTreeComponent() {
               }}
             >
               <Box sx={{ mb: '20px' }}>
-                <h2 id='modal-title'>
+                <h2 className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
                   {formType === EServiceFormType.SERVICE && <>{serviceEditDataId ? 'Update' : 'Add'} Service</>}
                   {formType === EServiceFormType.GROUP && <>{serviceGroupEditDataId ? 'Update' : 'Add'} Group</>}
                   {formType === EServiceFormType.SOW && <>{serviceSOWEditDataId ? 'Update' : 'Add'} Scope</>}

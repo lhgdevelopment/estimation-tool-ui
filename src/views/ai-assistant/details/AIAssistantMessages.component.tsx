@@ -50,15 +50,8 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
                 mt: '5px'
               }}
             ></Box>
-          ) : message?.role === 'system' ? (
-            <MdPreview modelValue={message?.message_content}></MdPreview>
           ) : (
-            <Box
-              className='text-gray-600 dark:text-gray-400 bg-white rounded-lg shadow-xs dark:bg-gray-800'
-              sx={{ width: '100%', p: 4, lineHeight: 'normal' }}
-            >
-              {message?.message_content}
-            </Box>
+            <MdPreview modelValue={message?.message_content}></MdPreview>
           )}
         </Box>
         {message?.role === 'system' && (

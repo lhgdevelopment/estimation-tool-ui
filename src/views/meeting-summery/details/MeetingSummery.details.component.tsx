@@ -29,14 +29,6 @@ export default function MeetingSummeryDetailsComponent() {
     }
   }, [meetingId])
 
-  const sowHeadingSx = {
-    fontSize: '16x',
-    fontWeight: '600',
-    textAlign: 'center',
-
-    color: '#6c2bd9'
-  }
-
   const sowBodySx = { p: 2, my: 2 }
 
   if (preload) {
@@ -81,7 +73,12 @@ export default function MeetingSummeryDetailsComponent() {
                 <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Clickup Link: </Box>
                 <Box>
                   {!!detailsData?.['clickupLink'] && (
-                    <Box component={'a'} href={detailsData?.['clickupLink']} target='_blank'>
+                    <Box
+                      component={'a'}
+                      href={detailsData?.['clickupLink']}
+                      target='_blank'
+                      className='text-gray-700 dark:text-gray-400'
+                    >
                       {detailsData?.['clickupLink']}
                     </Box>
                   )}
@@ -91,7 +88,12 @@ export default function MeetingSummeryDetailsComponent() {
                 <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>TLDV Link: </Box>
                 <Box>
                   {!!detailsData?.['tldvLink'] && (
-                    <Box component={'a'} href={detailsData?.['tldvLink']} target='_blank'>
+                    <Box
+                      component={'a'}
+                      href={detailsData?.['tldvLink']}
+                      target='_blank'
+                      className='text-gray-700 dark:text-gray-400'
+                    >
                       {detailsData?.['tldvLink']}
                     </Box>
                   )}
@@ -99,14 +101,19 @@ export default function MeetingSummeryDetailsComponent() {
               </Box>
             </Box>
             {!detailsData?.['tldvLink'] && (
-              <Accordion defaultExpanded={false}>
+              <Accordion
+                defaultExpanded={false}
+                TransitionProps={{
+                  timeout: 0
+                }}
+              >
                 <AccordionSummary
                   sx={{ borderBottom: '2px solid #f9fafb' }}
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls='sow1-content'
                   id='sow1-header'
                 >
-                  <Box sx={sowHeadingSx}>Transcript Text</Box>
+                  <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Transcript Text</Box>
                 </AccordionSummary>
                 <AccordionDetails>
                   <Box sx={sowBodySx}>
@@ -123,7 +130,7 @@ export default function MeetingSummeryDetailsComponent() {
                 aria-controls='sow1-content'
                 id='sow1-header'
               >
-                <Box sx={sowHeadingSx}>Summery Text</Box>
+                <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Summery Text</Box>
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={sowBodySx}>
