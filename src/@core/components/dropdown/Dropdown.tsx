@@ -1,13 +1,17 @@
+import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
-import { InputAdornment, ListSubheader, SxProps, TextField } from '@mui/material'
+import { Box, InputAdornment, ListSubheader, SxProps, TextField } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
-import { useEffect, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import apiRequest from '../../utils/axios-config'
 
 type TOptionConfig = { title: string; id: string }
 
+export interface DropdownRef {
+  refreshList: () => void
+}
 interface ISelectProps {
   label?: string
   url?: string
@@ -17,11 +21,14 @@ interface ISelectProps {
   optionConfig?: TOptionConfig
   enumList?: { title: string; id: string | number }[]
   sx?: SxProps
+  isAddNewButton?: boolean
+  onAddNew?: () => void
+  syncOnOpen?: boolean
 }
 
 type SelectPropsWithISelectProps = SelectProps & ISelectProps
 
-export function Dropdown(props: SelectPropsWithISelectProps) {
+export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => {
   const {
     placeholder = 'Please Select',
     url,
@@ -34,9 +41,12 @@ export function Dropdown(props: SelectPropsWithISelectProps) {
     value,
     onChange,
     id = 'demo-simple-select-label',
+    isAddNewButton = false,
+    onAddNew,
+    syncOnOpen = false,
     ...otherProps
   } = props
-
+  const dropdownRef = useRef(null)
   const [optionItems, setOptionItems] = useState<Record<string | number, any>[]>([])
   const [initialOptionList, setInitialOptionList] = useState<Record<string | number, any>[]>([])
 
@@ -62,6 +72,13 @@ export function Dropdown(props: SelectPropsWithISelectProps) {
       setPreloader(false)
     }
   }
+  const refreshList = () => {
+    getList()
+  }
+
+  useImperativeHandle(ref, () => ({
+    refreshList: () => refreshList()
+  }))
 
   useEffect(() => {
     getList()
@@ -87,59 +104,75 @@ export function Dropdown(props: SelectPropsWithISelectProps) {
 
   return (
     <FormControl fullWidth>
-      <Select
-        {...otherProps}
-        value={multiple ? value || [] : value || ''}
-        onChange={onChange}
-        multiple={multiple}
-        sx={{ mt: 1, height: 38 }}
-        displayEmpty
-        fullWidth
-        onOpen={() => {
-          if (!optionItems.length) {
-            getList()
-          }
-        }}
-      >
-        {searchable && (
-          <ListSubheader
-            sx={{
-              pt: 1
+      <Box className='flex items-center'>
+        <Select
+          {...otherProps}
+          ref={ref}
+          value={multiple ? value || [] : value || ''}
+          onChange={onChange}
+          multiple={multiple}
+          sx={{ mt: 1, height: 38 }}
+          displayEmpty
+          fullWidth
+          onOpen={() => {
+            if (!optionItems.length || syncOnOpen) {
+              getList()
+            }
+          }}
+        >
+          {searchable && (
+            <ListSubheader
+              sx={{
+                pt: 1
+              }}
+            >
+              <TextField
+                size='small'
+                autoFocus
+                placeholder={searchPlaceholder}
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <SearchIcon />
+                    </InputAdornment>
+                  )
+                }}
+                onChange={e => setSearchText(() => e.target.value)}
+                onKeyDown={e => {
+                  if (e.key !== 'Escape') {
+                    e.stopPropagation()
+                  }
+                }}
+              />
+            </ListSubheader>
+          )}
+          {placeholder && (
+            <MenuItem value='' disabled>
+              {placeholder}
+            </MenuItem>
+          )}
+          {preloader && <MenuItem disabled>Loading...</MenuItem>}
+          {optionItems?.map((option: any, index: number) => (
+            <MenuItem value={option.id} key={index}>
+              {option.title}
+            </MenuItem>
+          ))}
+        </Select>
+        {isAddNewButton && (
+          <button
+            type='button'
+            className={
+              'flex items-center justify-center ml-2 h-9 w-9 text-sm font-medium leading-5 rounded-lg outline-none border border-solid border-purple-400 dark:border-gray-400 text-purple-600 dark:text-gray-400 hover:bg-purple-400 hover:text-white'
+            }
+            onClick={() => {
+              onAddNew && onAddNew()
             }}
           >
-            <TextField
-              size='small'
-              autoFocus
-              placeholder={searchPlaceholder}
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position='start'>
-                    <SearchIcon />
-                  </InputAdornment>
-                )
-              }}
-              onChange={e => setSearchText(() => e.target.value)}
-              onKeyDown={e => {
-                if (e.key !== 'Escape') {
-                  e.stopPropagation()
-                }
-              }}
-            />
-          </ListSubheader>
+            <AddIcon />
+          </button>
         )}
-        {placeholder && (
-          <MenuItem value='' disabled>
-            {placeholder}
-          </MenuItem>
-        )}
-        {preloader && <MenuItem disabled>Loading...</MenuItem>}
-        {optionItems?.map((option: any, index: number) => (
-          <MenuItem value={option.id} key={index}>
-            {option.title}
-          </MenuItem>
-        ))}
-      </Select>
+      </Box>
     </FormControl>
   )
-}
+})

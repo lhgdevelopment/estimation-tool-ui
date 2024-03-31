@@ -8,8 +8,8 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Button, Checkbox, Modal } from '@mui/material'
 import { Tree, TreeDataNode, type TreeProps } from 'antd'
 import { useSnackbar } from 'notistack'
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
+import { Dropdown, DropdownRef, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -31,6 +31,10 @@ export default function ServiceTreeComponent() {
   const [serviceModalOpen, setServiceModalOpen] = useState<boolean>(false)
   const handleServiceModalOpen = () => setServiceModalOpen(true)
   const handleServiceModalClose = () => setServiceModalOpen(false)
+  const [employeeRolesModalOpen, setEmployeeRolesModalOpen] = useState<boolean>(false)
+  const handleEmployeeRolesModalOpen = () => setEmployeeRolesModalOpen(true)
+  const handleEmployeeRolesModalClose = () => setEmployeeRolesModalOpen(false)
+  const employeeRolesDropdownRef = useRef<DropdownRef>(null)
   const [formType, setFormType] = useState<EServiceFormType>()
   const [defaultExpandedKeys, setDefaultExpandedKeys] = useState<string[]>(['Development_1050'])
 
@@ -79,18 +83,25 @@ export default function ServiceTreeComponent() {
     parentTaskId: ''
   }
 
+  const employeeRolesDefaultData = {
+    name: '',
+    average_hourly: ''
+  }
+
   const [serviceFormData, setServiceFormData] = useState(serviceDefaultData)
   const [serviceGroupFormData, setServiceGroupFormData] = useState(serviceGroupDefaultData)
   const [serviceSOWFormData, setServiceSOWFormData] = useState(serviceSOWDefaultData)
   const [serviceDeliverableFormData, setServiceDeliverableFormData] = useState(serviceDeliverableDefaultData)
   const [serviceTaskFormData, setServiceTaskFormData] = useState(serviceTaskDefaultData)
   const [isShowParentTaskField, setIsShowParentTaskField] = useState(true)
+  const [employeeRolesFor, setEmployeeRolesFor] = useState(0)
 
   const [serviceEditDataId, setServiceEditDataId] = useState<null | string>(null)
   const [serviceGroupEditDataId, setServiceGroupEditDataId] = useState<null | string>(null)
   const [serviceSOWEditDataId, setServiceSOWEditDataId] = useState<null | string>(null)
   const [serviceDeliverableEditDataId, setServiceDeliverableEditDataId] = useState<null | string>(null)
   const [serviceTaskEditDataId, setServiceTaskEditDataId] = useState<null | string>(null)
+  const [employeeRolesFormData, setEmployeeRolesFormData] = useState(employeeRolesDefaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const [isPullingTaskFromClickup, setIsPullingTaskFromClickup] = useState<boolean>(false)
@@ -754,6 +765,40 @@ export default function ServiceTreeComponent() {
       })
   }
 
+  const onEmployeeRolesSubmit = (e: React.FormEvent<any>) => {
+    e.preventDefault()
+    apiRequest
+      .post('/employee-roles', employeeRolesFormData)
+      .then(res => {
+        enqueueSnackbar('Successfully Created!', { variant: 'success' })
+        onEmployeeRolesClear()
+        const tasks = serviceTaskFormData.tasks
+        tasks[employeeRolesFor] = {
+          ...tasks[employeeRolesFor],
+          employeeRoleId: res.data.id
+        }
+        setServiceTaskFormData(prevState => ({
+          ...prevState,
+          ...tasks
+        }))
+        if (employeeRolesDropdownRef.current && typeof employeeRolesDropdownRef.current.refreshList === 'function') {
+          employeeRolesDropdownRef.current.refreshList()
+        } else {
+          console.warn('employeeRolesDropdownRef is not set or not a valid Dropdown instance.')
+        }
+      })
+      .catch(error => {
+        setErrorMessage(error?.response?.data?.errors)
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
+  }
+
+  const onEmployeeRolesClear = () => {
+    setEmployeeRolesFormData(employeeRolesDefaultData)
+    setErrorMessage({})
+    handleEmployeeRolesModalClose()
+  }
+
   useEffect(() => {
     getList()
   }, [])
@@ -1183,7 +1228,7 @@ export default function ServiceTreeComponent() {
         <Modal
           open={serviceModalOpen}
           onClose={handleServiceModalOpen}
-          aria-labelledby='modal-modal-title'
+          aria-labelledby='employee-roles-modal-title'
           aria-describedby='modal-modal-description'
         >
           <Box
@@ -2475,12 +2520,19 @@ export default function ServiceTreeComponent() {
                                               </span>
                                             </label>
                                             <Dropdown
+                                              ref={employeeRolesDropdownRef}
                                               url={`employee-roles`}
                                               name='employeeRoleId'
-                                              value={serviceTaskFormData.employeeRoleId}
+                                              value={task.employeeRoleId}
                                               onChange={e => {
                                                 handleMultipleTaskFieldChange(e.target.value, 'employeeRoleId', index)
                                               }}
+                                              isAddNewButton={true}
+                                              onAddNew={() => {
+                                                handleEmployeeRolesModalOpen()
+                                                setEmployeeRolesFor(index)
+                                              }}
+                                              syncOnOpen={true}
                                             />
                                           </Box>
                                         </Box>
@@ -2603,6 +2655,110 @@ export default function ServiceTreeComponent() {
                   )}
                 </Box>
               )}
+            </Box>
+          </Box>
+        </Modal>
+        <Modal
+          open={employeeRolesModalOpen}
+          onClose={handleEmployeeRolesModalClose}
+          aria-labelledby='employee-roles-modal-title'
+          aria-describedby='employee-roles-modal-description'
+        >
+          <Box
+            sx={{
+              width: '100%',
+              height: '100vh',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Box
+              className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '50%',
+                overflowY: 'auto',
+                p: '50px',
+                maxHeight: '100%',
+                '& form': { width: '100%', display: 'flex', flexDirection: 'column' }
+              }}
+            >
+              <Box sx={{ mb: '20px' }}>
+                <h2 className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>Add Employee Roles</h2>
+                <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+                  <form
+                    onSubmit={e => {
+                      onEmployeeRolesSubmit(e)
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                      <Box sx={{ width: '100%' }}>
+                        <label className='block text-sm'>
+                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Role Name</span>
+                          <input
+                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                            placeholder='Enter role name'
+                            name='name'
+                            value={employeeRolesFormData.name}
+                            onChange={e => {
+                              handleTextChange(e, employeeRolesFormData, setEmployeeRolesFormData)
+                            }}
+                          />
+                          {!!errorMessage?.['name'] &&
+                            errorMessage?.['name']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
+                        </label>
+                      </Box>
+                      <Box sx={{ width: '100%' }}>
+                        <label className='block text-sm'>
+                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hourly Rate</span>
+                          <input
+                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                            placeholder='Enter hourly rate'
+                            name='average_hourly'
+                            value={employeeRolesFormData.average_hourly}
+                            onChange={e => {
+                              handleTextChange(e, employeeRolesFormData, setEmployeeRolesFormData)
+                            }}
+                            type='number'
+                          />
+                          {!!errorMessage?.['average_hourly'] &&
+                            errorMessage?.['average_hourly']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
+                        </label>
+                      </Box>
+                    </Box>
+
+                    <Box className='my-4 text-right'>
+                      <button
+                        onClick={onEmployeeRolesClear}
+                        type='button'
+                        className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                      >
+                        Close <ClearIcon />
+                      </button>
+                      <button
+                        type='submit'
+                        className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                      >
+                        Save <AddIcon />
+                      </button>
+                    </Box>
+                  </form>
+                </Box>
+              </Box>
             </Box>
           </Box>
         </Modal>
