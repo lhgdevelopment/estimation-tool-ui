@@ -1022,8 +1022,6 @@ export default function ServiceTreeComponent() {
                 }
               }}
               titleRender={(node: any) => {
-                // console.log(node)
-
                 if (node?.['type'] == 'service') {
                   return (
                     <Box sx={treeTitleSx}>

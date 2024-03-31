@@ -155,7 +155,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
           {preloader && <MenuItem disabled>Loading...</MenuItem>}
           {optionItems?.map((option: any, index: number) => (
             <MenuItem value={option.id} key={index}>
-              {option.title}
+              <Box component='span' dangerouslySetInnerHTML={{ __html: option.title }}></Box>
             </MenuItem>
           ))}
         </Select>
