@@ -11,6 +11,7 @@ import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
@@ -42,6 +43,13 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
+    })
+  }
+
+  const handleReachText = (value: string, field: string) => {
+    setFormData({
+      ...formData,
+      [field]: value
     })
   }
 
@@ -279,15 +287,10 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm'>
                   <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Transcript Text</span>
-                  <textarea
-                    className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                      errorMessage?.['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
-                    }`}
-                    placeholder='Examples: Transcript Text'
-                    name='transcriptText'
-                    rows={10}
+
+                  <RichTextEditor
                     value={formData.transcriptText}
-                    onChange={handleTextChange}
+                    onBlur={newContent => handleReachText(newContent, 'transcriptText')}
                   />
                   {!!errorMessage?.['transcriptText'] &&
                     errorMessage?.['transcriptText']?.map((message: any, index: number) => {
