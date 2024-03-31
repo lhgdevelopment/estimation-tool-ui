@@ -1025,7 +1025,7 @@ export default function ServiceTreeComponent() {
                 if (node?.['type'] == 'service') {
                   return (
                     <Box sx={treeTitleSx}>
-                      <Box dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box title={''} dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
                       <Box sx={treeButtonContainerSx}>
                         <Button
                           onClick={e => {
