@@ -1225,865 +1225,859 @@ export default function ServiceTreeComponent() {
 
         <Modal
           open={serviceModalOpen}
-          onClose={handleServiceModalOpen}
-          aria-labelledby='employee-roles-modal-title'
-          aria-describedby='modal-modal-description'
+          onClose={handleServiceModalClose}
+          aria-labelledby='service-modal-title'
+          aria-describedby='service-modal-description'
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
         >
           <Box
+            className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
             sx={{
-              width: '100%',
-              height: '100vh',
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
+              flexDirection: 'column',
+              width: '50%',
+              overflowY: 'auto',
+              p: '50px',
+              maxHeight: '100%',
+              '& form': { width: '100%', display: 'flex', flexDirection: 'column' }
             }}
           >
-            <Box
-              className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
-              sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '50%',
-                overflowY: 'auto',
-                p: '50px',
-                maxHeight: '100%',
-                '& form': { width: '100%', display: 'flex', flexDirection: 'column' }
-              }}
-            >
-              <Box sx={{ mb: '20px' }}>
-                <h2 className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
-                  {formType === EServiceFormType.SERVICE && <>{serviceEditDataId ? 'Update' : 'Add'} Service</>}
-                  {formType === EServiceFormType.GROUP && <>{serviceGroupEditDataId ? 'Update' : 'Add'} Group</>}
-                  {formType === EServiceFormType.SOW && <>{serviceSOWEditDataId ? 'Update' : 'Add'} Scope</>}
-                  {formType === EServiceFormType.DELIVARABLE && (
-                    <>{serviceDeliverableEditDataId ? 'Update' : 'Add'} Deliverable</>
-                  )}
-                  {formType === EServiceFormType.TASK && <>{serviceTaskEditDataId ? 'Update' : 'Add'} Task</>}
-                </h2>
-              </Box>
-              {formType === EServiceFormType.SERVICE && (
-                <form onSubmit={onServiceSubmit}>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
-                        <Dropdown
-                          url={'project-type'}
-                          name='projectTypeId'
-                          value={serviceFormData.projectTypeId}
-                          onChange={e => handleSelectChange(e, serviceFormData, setServiceFormData)}
-                        />
-                      </label>
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                      </label>
-                      <RichTextEditor
-                        value={serviceFormData.name}
-                        onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
+            <Box sx={{ mb: '20px' }}>
+              <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
+                {formType === EServiceFormType.SERVICE && <>{serviceEditDataId ? 'Update' : 'Add'} Service</>}
+                {formType === EServiceFormType.GROUP && <>{serviceGroupEditDataId ? 'Update' : 'Add'} Group</>}
+                {formType === EServiceFormType.SOW && <>{serviceSOWEditDataId ? 'Update' : 'Add'} Scope</>}
+                {formType === EServiceFormType.DELIVARABLE && (
+                  <>{serviceDeliverableEditDataId ? 'Update' : 'Add'} Deliverable</>
+                )}
+                {formType === EServiceFormType.TASK && <>{serviceTaskEditDataId ? 'Update' : 'Add'} Task</>}
+              </h2>
+            </Box>
+            {formType === EServiceFormType.SERVICE && (
+              <form onSubmit={onServiceSubmit}>
+                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                  <Box sx={{ width: '100%' }}>
+                    <label className='block text-sm'>
+                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
+                      <Dropdown
+                        url={'project-type'}
+                        name='projectTypeId'
+                        value={serviceFormData.projectTypeId}
+                        onChange={e => handleSelectChange(e, serviceFormData, setServiceFormData)}
                       />
-                    </Box>
+                    </label>
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                        <input
-                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                          placeholder='Examples: 1'
-                          name='order'
-                          value={serviceFormData.order}
-                          onChange={e => {
-                            handleTextChange(e, serviceFormData, setServiceFormData)
-                          }}
-                        />
-                      </label>
-                    </Box>
-                  </Box>
-                  <Box className='my-4 text-right'>
-                    <button
-                      onClick={onServiceClear}
-                      type='button'
-                      className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-                    >
-                      Close <ClearIcon />
-                    </button>
-                    <button
-                      type='submit'
-                      className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-                    >
-                      {serviceEditDataId ? 'Update ' : 'Save '}
+                </Box>
 
-                      {serviceEditDataId ? <EditNoteIcon /> : <AddIcon />}
-                    </button>
+                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                  <Box sx={{ width: '100%' }}>
+                    <label className='block text-sm'>
+                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                    </label>
+                    <RichTextEditor
+                      value={serviceFormData.name}
+                      onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
+                    />
                   </Box>
-                </form>
-              )}
+                </Box>
+                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                  <Box sx={{ width: '100%' }}>
+                    <label className='block text-sm'>
+                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                      <input
+                        className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                        placeholder='Examples: 1'
+                        name='order'
+                        value={serviceFormData.order}
+                        onChange={e => {
+                          handleTextChange(e, serviceFormData, setServiceFormData)
+                        }}
+                      />
+                    </label>
+                  </Box>
+                </Box>
+                <Box className='my-4 text-right'>
+                  <button
+                    onClick={onServiceClear}
+                    type='button'
+                    className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                  >
+                    Close <ClearIcon />
+                  </button>
+                  <button
+                    type='submit'
+                    className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                  >
+                    {serviceEditDataId ? 'Update ' : 'Save '}
 
-              {formType === EServiceFormType.GROUP && (
-                <form onSubmit={onServiceGroupSubmit}>
-                  <Box sx={{ display: 'flex', width: '100%', gap: 5, mb: 5 }}>
-                    <Box
-                      sx={{
-                        width: '100%',
-                        '& .MuiInputBase-root': {
-                          border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
-                        }
-                      }}
-                    >
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service</span>
-                        <Dropdown
-                          url={'services'}
-                          name='serviceId'
-                          value={serviceGroupFormData.serviceId}
-                          onChange={e => {
-                            handleSelectChange(e, serviceGroupFormData, setServiceGroupFormData)
-                          }}
+                    {serviceEditDataId ? <EditNoteIcon /> : <AddIcon />}
+                  </button>
+                </Box>
+              </form>
+            )}
+
+            {formType === EServiceFormType.GROUP && (
+              <form onSubmit={onServiceGroupSubmit}>
+                <Box sx={{ display: 'flex', width: '100%', gap: 5, mb: 5 }}>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      '& .MuiInputBase-root': {
+                        border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
+                      }
+                    }}
+                  >
+                    <label className='block text-sm'>
+                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service</span>
+                      <Dropdown
+                        url={'services'}
+                        name='serviceId'
+                        value={serviceGroupFormData.serviceId}
+                        onChange={e => {
+                          handleSelectChange(e, serviceGroupFormData, setServiceGroupFormData)
+                        }}
+                      />
+                      {!!errorMessage?.['serviceId'] &&
+                        errorMessage?.['serviceId']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
+                    </label>
+                  </Box>
+                </Box>
+
+                {serviceGroupEditDataId ? (
+                  <>
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                      <Box sx={{ width: '100%' }}>
+                        <label className='block text-sm'>
+                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                        </label>
+                        <RichTextEditor
+                          value={serviceGroupFormData.name}
+                          onBlur={newContent =>
+                            handleReachText(newContent, 'name', serviceGroupFormData, setServiceGroupFormData)
+                          }
                         />
-                        {!!errorMessage?.['serviceId'] &&
-                          errorMessage?.['serviceId']?.map((message: any, index: number) => {
+                        {!!errorMessage?.['name'] &&
+                          errorMessage?.['name']?.map((message: any, index: number) => {
                             return (
                               <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                 {message}
                               </span>
                             )
                           })}
-                      </label>
+                      </Box>
                     </Box>
-                  </Box>
-
-                  {serviceGroupEditDataId ? (
-                    <>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '100%' }}>
-                          <label className='block text-sm'>
-                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                          </label>
-                          <RichTextEditor
-                            value={serviceGroupFormData.name}
-                            onBlur={newContent =>
-                              handleReachText(newContent, 'name', serviceGroupFormData, setServiceGroupFormData)
-                            }
-                          />
-                          {!!errorMessage?.['name'] &&
-                            errorMessage?.['name']?.map((message: any, index: number) => {
-                              return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                  {message}
-                                </span>
-                              )
-                            })}
-                        </Box>
-                      </Box>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '100%' }}>
-                          <label className='block text-sm'>
-                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                            <input
-                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                              placeholder='Examples: 1'
-                              name='order'
-                              value={serviceGroupFormData.order}
-                              onChange={e => {
-                                handleTextChange(e, serviceGroupFormData, setServiceGroupFormData)
-                              }}
-                            />
-                          </label>
-                        </Box>
-                      </Box>
-                    </>
-                  ) : (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        gap: 5,
-                        mb: 5,
-                        flexDirection: 'column'
-                      }}
-                    >
-                      <>
-                        {serviceGroupFormData.groups?.map((group, index) => (
-                          <Box
-                            key={index}
-                            sx={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              p: '20px',
-                              border: '2px solid #9333ea'
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                      <Box sx={{ width: '100%' }}>
+                        <label className='block text-sm'>
+                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                          <input
+                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                            placeholder='Examples: 1'
+                            name='order'
+                            value={serviceGroupFormData.order}
+                            onChange={e => {
+                              handleTextChange(e, serviceGroupFormData, setServiceGroupFormData)
                             }}
-                          >
-                            <Box sx={{ width: '100%' }}>
-                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                                <Box sx={{ width: '100%' }}>
-                                  <label className='block text-sm'>
-                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                                  </label>
-
-                                  <Box sx={{ width: '100%' }}>
-                                    <RichTextEditor
-                                      value={group.name}
-                                      onBlur={newContent =>
-                                        handleMultipleReachTextChange(
-                                          newContent,
-                                          'name',
-                                          index,
-                                          serviceGroupFormData,
-                                          setServiceGroupFormData,
-                                          'groups'
-                                        )
-                                      }
-                                    />
-                                  </Box>
-
-                                  {!!errorMessage?.[`names.${index}`] &&
-                                    errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
-                                      return (
-                                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                          {String(message).replaceAll('names.0', 'name')}
-                                        </span>
-                                      )
-                                    })}
-                                </Box>
-                              </Box>
-                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                                <Box sx={{ width: '100%' }}>
-                                  <label className='block text-sm'>
-                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                                    <input
-                                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                      placeholder='Examples: 1'
-                                      name='order'
-                                      value={group.order}
-                                      onChange={e => {
-                                        handleMultipleTextChange(
-                                          e,
-                                          serviceGroupFormData,
-                                          setServiceGroupFormData,
-                                          index,
-                                          'groups'
-                                        )
-                                      }}
-                                    />
-                                  </label>
-                                </Box>
-                              </Box>
-                            </Box>
-                            <Button
-                              type='button'
-                              onClick={() =>
-                                removeNameField(index, serviceGroupFormData, setServiceGroupFormData, 'groups')
-                              }
-                              className='mt-1 p-0 bg-red-500 text-white rounded-md'
-                              sx={{
-                                p: 0,
-                                border: '1px solid #dc2626',
-                                borderRadius: '50%',
-                                minWidth: 'auto',
-                                height: '35px',
-                                width: '35px',
-                                color: '#dc2626',
-                                ml: 2,
-                                '&:hover': {
-                                  background: '#dc2626',
-                                  color: '#fff'
-                                }
-                              }}
-                            >
-                              <DeleteIcon />
-                            </Button>
-                          </Box>
-                        ))}
-                      </>
-
-                      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <button
-                          type='button'
-                          onClick={() => {
-                            addSubField(
-                              serviceGroupFormData,
-                              setServiceGroupFormData,
-                              'groups',
-                              serviceGroupDefaultData.groups
-                            )
-                          }}
-                          className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
-                        >
-                          <AddIcon /> Add Another Group
-                        </button>
-                      </Box>
-                    </Box>
-                  )}
-
-                  <Box className='my-4 text-right'>
-                    <button
-                      onClick={onServiceGroupClear}
-                      type='button'
-                      className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-                    >
-                      Close <ClearIcon />
-                    </button>
-                    <button
-                      type='submit'
-                      className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-                    >
-                      {serviceGroupEditDataId ? 'Update ' : 'Save '}
-
-                      {serviceGroupEditDataId ? <EditNoteIcon /> : <AddIcon />}
-                    </button>
-                  </Box>
-                </form>
-              )}
-
-              {formType === EServiceFormType.SOW && (
-                <form onSubmit={onServiceSOWSubmit}>
-                  <Box sx={{ display: 'flex', width: '100%', gap: 5, mb: 5 }}>
-                    <Box
-                      sx={{
-                        width: '100%',
-                        '& .MuiInputBase-root': {
-                          border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
-                        }
-                      }}
-                    >
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Group</span>
-                        <ServiceDropdownTree
-                          name='serviceGroupId'
-                          value={serviceSOWFormData.serviceGroupId}
-                          onChange={e => {
-                            handleSelectChange(e, serviceSOWFormData, setServiceSOWFormData)
-                          }}
-                          type='groups'
-                        />
-                        {!!errorMessage?.['serviceGroupId'] &&
-                          errorMessage?.['serviceGroupId']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                  </Box>
-
-                  {serviceSOWEditDataId ? (
-                    <>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '100%' }}>
-                          <label className='block text-sm'>
-                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                          </label>
-                          <RichTextEditor
-                            value={serviceSOWFormData.name}
-                            onBlur={newContent =>
-                              handleReachText(newContent, 'name', serviceSOWFormData, setServiceSOWFormData)
-                            }
                           />
-                          {!!errorMessage?.['name'] &&
-                            errorMessage?.['name']?.map((message: any, index: number) => {
-                              return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                  {message}
-                                </span>
-                              )
-                            })}
-                        </Box>
-                      </Box>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '100%' }}>
-                          <label className='block text-sm'>
-                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                            <input
-                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                              placeholder='Examples: 1'
-                              name='order'
-                              value={serviceSOWFormData.order}
-                              onChange={e => {
-                                handleTextChange(e, serviceSOWFormData, setServiceSOWFormData)
-                              }}
-                            />
-                          </label>
-                        </Box>
-                      </Box>
-                    </>
-                  ) : (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        gap: 5,
-                        mb: 5,
-                        flexDirection: 'column'
-                      }}
-                    >
-                      <>
-                        {serviceSOWFormData.scopes?.map((scope, index) => (
-                          <Box
-                            key={index}
-                            sx={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              p: '20px',
-                              padding: '24px'
-                            }}
-                          >
-                            <Box sx={{ width: '100%' }}>
-                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                                <Box sx={{ width: '100%' }}>
-                                  <label className='block text-sm'>
-                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                                  </label>
-
-                                  <Box sx={{ width: '100%' }}>
-                                    <RichTextEditor
-                                      value={scope.name}
-                                      onBlur={newContent =>
-                                        handleMultipleReachTextChange(
-                                          newContent,
-                                          'name',
-                                          index,
-                                          serviceSOWFormData,
-                                          setServiceSOWFormData,
-                                          'scopes'
-                                        )
-                                      }
-                                    />
-                                  </Box>
-
-                                  {!!errorMessage?.[`names.${index}`] &&
-                                    errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
-                                      return (
-                                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                          {String(message).replaceAll('names.0', 'name')}
-                                        </span>
-                                      )
-                                    })}
-                                </Box>
-                              </Box>
-                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                                <Box sx={{ width: '100%' }}>
-                                  <label className='block text-sm'>
-                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                                    <input
-                                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                      placeholder='Examples: 1'
-                                      name='order'
-                                      value={scope.order}
-                                      onChange={e => {
-                                        handleMultipleTextChange(
-                                          e,
-                                          serviceSOWFormData,
-                                          setServiceSOWFormData,
-                                          index,
-                                          'scopes'
-                                        )
-                                      }}
-                                    />
-                                  </label>
-                                </Box>
-                              </Box>
-                            </Box>
-                            <Button
-                              type='button'
-                              onClick={() =>
-                                removeNameField(index, serviceSOWFormData, setServiceSOWFormData, 'scopes')
-                              }
-                              className='mt-1 p-0 bg-red-500 text-white rounded-md'
-                              sx={{
-                                p: 0,
-                                border: '1px solid #dc2626',
-                                borderRadius: '50%',
-                                minWidth: 'auto',
-                                height: '35px',
-                                width: '35px',
-                                color: '#dc2626',
-                                ml: 2,
-                                '&:hover': {
-                                  background: '#dc2626',
-                                  color: '#fff'
-                                }
-                              }}
-                            >
-                              <DeleteIcon />
-                            </Button>
-                          </Box>
-                        ))}
-                      </>
-
-                      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <button
-                          type='button'
-                          onClick={() => {
-                            addSubField(serviceSOWFormData, setServiceSOWFormData, 'scopes', serviceSOWFormData.scopes)
-                          }}
-                          className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
-                        >
-                          <AddIcon /> Add Another Scope
-                        </button>
+                        </label>
                       </Box>
                     </Box>
-                  )}
-                  <Box className='my-4 text-right'>
-                    <button
-                      onClick={onServiceSOWClear}
-                      type='button'
-                      className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-                    >
-                      Close <ClearIcon />
-                    </button>
-                    <button
-                      type='submit'
-                      className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-                    >
-                      {serviceSOWEditDataId ? 'Update ' : 'Save '}
-
-                      {serviceSOWEditDataId ? <EditNoteIcon /> : <AddIcon />}
-                    </button>
-                  </Box>
-                </form>
-              )}
-
-              {formType === EServiceFormType.DELIVARABLE && (
-                <form onSubmit={onServiceDeliverableSubmit}>
-                  <Box sx={{ display: 'flex', width: '100%', gap: 5, mb: 5 }}>
-                    <Box
-                      sx={{
-                        width: '100%',
-                        '& .MuiInputBase-root': {
-                          border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
-                        }
-                      }}
-                    >
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Scope</span>
-                        <ServiceDropdownTree
-                          name='serviceScopeId'
-                          value={serviceDeliverableFormData.serviceScopeId}
-                          onChange={e => {
-                            handleSelectChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
-                          }}
-                          type='sows'
-                        />
-                        {!!errorMessage?.['serviceScopeId'] &&
-                          errorMessage?.['serviceScopeId']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                  </Box>
-
-                  {serviceDeliverableEditDataId ? (
+                  </>
+                ) : (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 5,
+                      mb: 5,
+                      flexDirection: 'column'
+                    }}
+                  >
                     <>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '100%' }}>
-                          <label className='block text-sm'>
-                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                          </label>
-                          <RichTextEditor
-                            value={serviceDeliverableFormData.name}
-                            onBlur={newContent =>
-                              handleReachText(
-                                newContent,
-                                'name',
-                                serviceDeliverableFormData,
-                                setServiceDeliverableFormData
-                              )
-                            }
-                          />
-                          {!!errorMessage?.['name'] &&
-                            errorMessage?.['name']?.map((message: any, index: number) => {
-                              return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                  {message}
-                                </span>
-                              )
-                            })}
-                        </Box>
-                      </Box>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '100%' }}>
-                          <label className='block text-sm'>
-                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                            <input
-                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                              placeholder='Examples: 1'
-                              name='order'
-                              value={serviceDeliverableFormData.order}
-                              onChange={e => {
-                                handleTextChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
-                              }}
-                            />
-                          </label>
-                        </Box>
-                      </Box>
-                    </>
-                  ) : (
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        gap: 5,
-                        mb: 5,
-                        flexDirection: 'column'
-                      }}
-                    >
-                      <>
-                        {serviceDeliverableFormData.deliverables?.map((deliverable, index) => (
-                          <Box
-                            key={index}
-                            sx={{
-                              width: '100%',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              p: '20px',
-                              borderRadius: '5px'
-                            }}
-                          >
-                            <Box sx={{ width: '100%' }}>
-                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                                <Box sx={{ width: '100%' }}>
-                                  <label className='block text-sm'>
-                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                                  </label>
-
-                                  <Box sx={{ width: '100%' }}>
-                                    <RichTextEditor
-                                      value={deliverable.name}
-                                      onBlur={newContent =>
-                                        handleMultipleReachTextChange(
-                                          newContent,
-                                          'name',
-                                          index,
-                                          serviceDeliverableFormData,
-                                          setServiceDeliverableFormData,
-                                          'deliverables'
-                                        )
-                                      }
-                                    />
-                                  </Box>
-
-                                  {!!errorMessage?.[`names.${index}`] &&
-                                    errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
-                                      return (
-                                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                          {String(message).replaceAll('names.0', 'name')}
-                                        </span>
-                                      )
-                                    })}
-                                </Box>
-                              </Box>
-                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                                <Box sx={{ width: '100%' }}>
-                                  <label className='block text-sm'>
-                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                                    <input
-                                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                      placeholder='Examples: 1'
-                                      name='order'
-                                      value={deliverable.order}
-                                      onChange={e => {
-                                        handleMultipleTextChange(
-                                          e,
-                                          serviceDeliverableFormData,
-                                          setServiceDeliverableFormData,
-                                          index,
-                                          'deliverables'
-                                        )
-                                      }}
-                                    />
-                                  </label>
-                                </Box>
-                              </Box>
-                            </Box>
-                            <Button
-                              type='button'
-                              onClick={() =>
-                                removeNameField(
-                                  index,
-                                  serviceDeliverableFormData,
-                                  setServiceDeliverableFormData,
-                                  'deliverables'
-                                )
-                              }
-                              className='mt-1 p-0 bg-red-500 text-white rounded-md'
-                              sx={{
-                                p: 0,
-                                border: '1px solid #dc2626',
-                                borderRadius: '50%',
-                                minWidth: 'auto',
-                                height: '35px',
-                                width: '35px',
-                                color: '#dc2626',
-                                ml: 2,
-                                '&:hover': {
-                                  background: '#dc2626',
-                                  color: '#fff'
-                                }
-                              }}
-                            >
-                              <DeleteIcon />
-                            </Button>
-                          </Box>
-                        ))}
-                      </>
-
-                      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <button
-                          type='button'
-                          onClick={() => {
-                            addSubField(
-                              serviceDeliverableFormData,
-                              setServiceDeliverableFormData,
-                              'deliverables',
-                              serviceDeliverableFormData.deliverables
-                            )
+                      {serviceGroupFormData.groups?.map((group, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            p: '20px',
+                            border: '2px solid #9333ea'
                           }}
-                          className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
                         >
-                          <AddIcon /> Add Another Deliverable
-                        </button>
-                      </Box>
-                    </Box>
-                  )}
-                  <Box className='my-4 text-right'>
-                    <button
-                      onClick={onServiceDeliverableClear}
-                      type='button'
-                      className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-                    >
-                      Close <ClearIcon />
-                    </button>
-                    <button
-                      type='submit'
-                      className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-                    >
-                      {serviceDeliverableEditDataId ? 'Update ' : 'Save '}
-
-                      {serviceDeliverableEditDataId ? <EditNoteIcon /> : <AddIcon />}
-                    </button>
-                  </Box>
-                </form>
-              )}
-              {formType === EServiceFormType.TASK && (
-                <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box
-                      sx={{
-                        width: '100%',
-                        '& .MuiInputBase-root': {
-                          border: errorMessage?.['serviceDeliverableId'] ? '1px solid #dc2626' : ''
-                        }
-                      }}
-                    >
-                      <label className='block text-sm'>
-                        <Checkbox
-                          value={isFatchFromClickUp}
-                          onChange={e => {
-                            setIsFatchFromClickUp(e.target.checked)
-                          }}
-                        />
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Fetch Task From Clickup</span>
-                      </label>
-                    </Box>
-                  </Box>
-                  {isFatchFromClickUp ? (
-                    <>
-                      {!!isPullingTaskFromClickup && <Preloader close={!!clickupTaskList?.length} />}
-                      <Box>
-                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                           <Box sx={{ width: '100%' }}>
-                            <label className='block text-sm'>
-                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Clickup Link</span>
-                              <input
-                                className={`block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                                  !!clickupTaskList?.length ? 'opacity-50' : ''
-                                }`}
-                                placeholder='Enter clickup task link'
-                                name='clickupLink'
-                                value={clickupLink}
-                                onChange={e => {
-                                  setClickupLink(e.target.value)
-                                }}
-                                disabled={!!clickupTaskList?.length}
-                              />
-                              {!!errorMessage?.['clickupLink'] &&
-                                errorMessage?.['clickupLink']?.map((message: any, index: number) => {
-                                  return (
-                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                      {message}
-                                    </span>
-                                  )
-                                })}
-                            </label>
+                            <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                              <Box sx={{ width: '100%' }}>
+                                <label className='block text-sm'>
+                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                                </label>
+
+                                <Box sx={{ width: '100%' }}>
+                                  <RichTextEditor
+                                    value={group.name}
+                                    onBlur={newContent =>
+                                      handleMultipleReachTextChange(
+                                        newContent,
+                                        'name',
+                                        index,
+                                        serviceGroupFormData,
+                                        setServiceGroupFormData,
+                                        'groups'
+                                      )
+                                    }
+                                  />
+                                </Box>
+
+                                {!!errorMessage?.[`names.${index}`] &&
+                                  errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
+                                    return (
+                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                        {String(message).replaceAll('names.0', 'name')}
+                                      </span>
+                                    )
+                                  })}
+                              </Box>
+                            </Box>
+                            <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                              <Box sx={{ width: '100%' }}>
+                                <label className='block text-sm'>
+                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                                  <input
+                                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                    placeholder='Examples: 1'
+                                    name='order'
+                                    value={group.order}
+                                    onChange={e => {
+                                      handleMultipleTextChange(
+                                        e,
+                                        serviceGroupFormData,
+                                        setServiceGroupFormData,
+                                        index,
+                                        'groups'
+                                      )
+                                    }}
+                                  />
+                                </label>
+                              </Box>
+                            </Box>
                           </Box>
+                          <Button
+                            type='button'
+                            onClick={() =>
+                              removeNameField(index, serviceGroupFormData, setServiceGroupFormData, 'groups')
+                            }
+                            className='mt-1 p-0 bg-red-500 text-white rounded-md'
+                            sx={{
+                              p: 0,
+                              border: '1px solid #dc2626',
+                              borderRadius: '50%',
+                              minWidth: 'auto',
+                              height: '35px',
+                              width: '35px',
+                              color: '#dc2626',
+                              ml: 2,
+                              '&:hover': {
+                                background: '#dc2626',
+                                color: '#fff'
+                              }
+                            }}
+                          >
+                            <DeleteIcon />
+                          </Button>
                         </Box>
-                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                          <Box sx={{ width: '100%', textAlign: 'right' }}>
-                            <button
-                              type='button'
-                              className={`px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green ${
+                      ))}
+                    </>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          addSubField(
+                            serviceGroupFormData,
+                            setServiceGroupFormData,
+                            'groups',
+                            serviceGroupDefaultData.groups
+                          )
+                        }}
+                        className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
+                      >
+                        <AddIcon /> Add Another Group
+                      </button>
+                    </Box>
+                  </Box>
+                )}
+
+                <Box className='my-4 text-right'>
+                  <button
+                    onClick={onServiceGroupClear}
+                    type='button'
+                    className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                  >
+                    Close <ClearIcon />
+                  </button>
+                  <button
+                    type='submit'
+                    className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                  >
+                    {serviceGroupEditDataId ? 'Update ' : 'Save '}
+
+                    {serviceGroupEditDataId ? <EditNoteIcon /> : <AddIcon />}
+                  </button>
+                </Box>
+              </form>
+            )}
+
+            {formType === EServiceFormType.SOW && (
+              <form onSubmit={onServiceSOWSubmit}>
+                <Box sx={{ display: 'flex', width: '100%', gap: 5, mb: 5 }}>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      '& .MuiInputBase-root': {
+                        border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
+                      }
+                    }}
+                  >
+                    <label className='block text-sm'>
+                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Group</span>
+                      <ServiceDropdownTree
+                        name='serviceGroupId'
+                        value={serviceSOWFormData.serviceGroupId}
+                        onChange={e => {
+                          handleSelectChange(e, serviceSOWFormData, setServiceSOWFormData)
+                        }}
+                        type='groups'
+                      />
+                      {!!errorMessage?.['serviceGroupId'] &&
+                        errorMessage?.['serviceGroupId']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
+                    </label>
+                  </Box>
+                </Box>
+
+                {serviceSOWEditDataId ? (
+                  <>
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                      <Box sx={{ width: '100%' }}>
+                        <label className='block text-sm'>
+                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                        </label>
+                        <RichTextEditor
+                          value={serviceSOWFormData.name}
+                          onBlur={newContent =>
+                            handleReachText(newContent, 'name', serviceSOWFormData, setServiceSOWFormData)
+                          }
+                        />
+                        {!!errorMessage?.['name'] &&
+                          errorMessage?.['name']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                      <Box sx={{ width: '100%' }}>
+                        <label className='block text-sm'>
+                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                          <input
+                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                            placeholder='Examples: 1'
+                            name='order'
+                            value={serviceSOWFormData.order}
+                            onChange={e => {
+                              handleTextChange(e, serviceSOWFormData, setServiceSOWFormData)
+                            }}
+                          />
+                        </label>
+                      </Box>
+                    </Box>
+                  </>
+                ) : (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 5,
+                      mb: 5,
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <>
+                      {serviceSOWFormData.scopes?.map((scope, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            p: '20px',
+                            padding: '24px'
+                          }}
+                        >
+                          <Box sx={{ width: '100%' }}>
+                            <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                              <Box sx={{ width: '100%' }}>
+                                <label className='block text-sm'>
+                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                                </label>
+
+                                <Box sx={{ width: '100%' }}>
+                                  <RichTextEditor
+                                    value={scope.name}
+                                    onBlur={newContent =>
+                                      handleMultipleReachTextChange(
+                                        newContent,
+                                        'name',
+                                        index,
+                                        serviceSOWFormData,
+                                        setServiceSOWFormData,
+                                        'scopes'
+                                      )
+                                    }
+                                  />
+                                </Box>
+
+                                {!!errorMessage?.[`names.${index}`] &&
+                                  errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
+                                    return (
+                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                        {String(message).replaceAll('names.0', 'name')}
+                                      </span>
+                                    )
+                                  })}
+                              </Box>
+                            </Box>
+                            <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                              <Box sx={{ width: '100%' }}>
+                                <label className='block text-sm'>
+                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                                  <input
+                                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                    placeholder='Examples: 1'
+                                    name='order'
+                                    value={scope.order}
+                                    onChange={e => {
+                                      handleMultipleTextChange(
+                                        e,
+                                        serviceSOWFormData,
+                                        setServiceSOWFormData,
+                                        index,
+                                        'scopes'
+                                      )
+                                    }}
+                                  />
+                                </label>
+                              </Box>
+                            </Box>
+                          </Box>
+                          <Button
+                            type='button'
+                            onClick={() => removeNameField(index, serviceSOWFormData, setServiceSOWFormData, 'scopes')}
+                            className='mt-1 p-0 bg-red-500 text-white rounded-md'
+                            sx={{
+                              p: 0,
+                              border: '1px solid #dc2626',
+                              borderRadius: '50%',
+                              minWidth: 'auto',
+                              height: '35px',
+                              width: '35px',
+                              color: '#dc2626',
+                              ml: 2,
+                              '&:hover': {
+                                background: '#dc2626',
+                                color: '#fff'
+                              }
+                            }}
+                          >
+                            <DeleteIcon />
+                          </Button>
+                        </Box>
+                      ))}
+                    </>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          addSubField(serviceSOWFormData, setServiceSOWFormData, 'scopes', serviceSOWFormData.scopes)
+                        }}
+                        className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
+                      >
+                        <AddIcon /> Add Another Scope
+                      </button>
+                    </Box>
+                  </Box>
+                )}
+                <Box className='my-4 text-right'>
+                  <button
+                    onClick={onServiceSOWClear}
+                    type='button'
+                    className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                  >
+                    Close <ClearIcon />
+                  </button>
+                  <button
+                    type='submit'
+                    className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                  >
+                    {serviceSOWEditDataId ? 'Update ' : 'Save '}
+
+                    {serviceSOWEditDataId ? <EditNoteIcon /> : <AddIcon />}
+                  </button>
+                </Box>
+              </form>
+            )}
+
+            {formType === EServiceFormType.DELIVARABLE && (
+              <form onSubmit={onServiceDeliverableSubmit}>
+                <Box sx={{ display: 'flex', width: '100%', gap: 5, mb: 5 }}>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      '& .MuiInputBase-root': {
+                        border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
+                      }
+                    }}
+                  >
+                    <label className='block text-sm'>
+                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Scope</span>
+                      <ServiceDropdownTree
+                        name='serviceScopeId'
+                        value={serviceDeliverableFormData.serviceScopeId}
+                        onChange={e => {
+                          handleSelectChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
+                        }}
+                        type='sows'
+                      />
+                      {!!errorMessage?.['serviceScopeId'] &&
+                        errorMessage?.['serviceScopeId']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
+                    </label>
+                  </Box>
+                </Box>
+
+                {serviceDeliverableEditDataId ? (
+                  <>
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                      <Box sx={{ width: '100%' }}>
+                        <label className='block text-sm'>
+                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                        </label>
+                        <RichTextEditor
+                          value={serviceDeliverableFormData.name}
+                          onBlur={newContent =>
+                            handleReachText(
+                              newContent,
+                              'name',
+                              serviceDeliverableFormData,
+                              setServiceDeliverableFormData
+                            )
+                          }
+                        />
+                        {!!errorMessage?.['name'] &&
+                          errorMessage?.['name']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                      <Box sx={{ width: '100%' }}>
+                        <label className='block text-sm'>
+                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                          <input
+                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                            placeholder='Examples: 1'
+                            name='order'
+                            value={serviceDeliverableFormData.order}
+                            onChange={e => {
+                              handleTextChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
+                            }}
+                          />
+                        </label>
+                      </Box>
+                    </Box>
+                  </>
+                ) : (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 5,
+                      mb: 5,
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <>
+                      {serviceDeliverableFormData.deliverables?.map((deliverable, index) => (
+                        <Box
+                          key={index}
+                          sx={{
+                            width: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            p: '20px',
+                            borderRadius: '5px'
+                          }}
+                        >
+                          <Box sx={{ width: '100%' }}>
+                            <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                              <Box sx={{ width: '100%' }}>
+                                <label className='block text-sm'>
+                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                                </label>
+
+                                <Box sx={{ width: '100%' }}>
+                                  <RichTextEditor
+                                    value={deliverable.name}
+                                    onBlur={newContent =>
+                                      handleMultipleReachTextChange(
+                                        newContent,
+                                        'name',
+                                        index,
+                                        serviceDeliverableFormData,
+                                        setServiceDeliverableFormData,
+                                        'deliverables'
+                                      )
+                                    }
+                                  />
+                                </Box>
+
+                                {!!errorMessage?.[`names.${index}`] &&
+                                  errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
+                                    return (
+                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                        {String(message).replaceAll('names.0', 'name')}
+                                      </span>
+                                    )
+                                  })}
+                              </Box>
+                            </Box>
+                            <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                              <Box sx={{ width: '100%' }}>
+                                <label className='block text-sm'>
+                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                                  <input
+                                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                    placeholder='Examples: 1'
+                                    name='order'
+                                    value={deliverable.order}
+                                    onChange={e => {
+                                      handleMultipleTextChange(
+                                        e,
+                                        serviceDeliverableFormData,
+                                        setServiceDeliverableFormData,
+                                        index,
+                                        'deliverables'
+                                      )
+                                    }}
+                                  />
+                                </label>
+                              </Box>
+                            </Box>
+                          </Box>
+                          <Button
+                            type='button'
+                            onClick={() =>
+                              removeNameField(
+                                index,
+                                serviceDeliverableFormData,
+                                setServiceDeliverableFormData,
+                                'deliverables'
+                              )
+                            }
+                            className='mt-1 p-0 bg-red-500 text-white rounded-md'
+                            sx={{
+                              p: 0,
+                              border: '1px solid #dc2626',
+                              borderRadius: '50%',
+                              minWidth: 'auto',
+                              height: '35px',
+                              width: '35px',
+                              color: '#dc2626',
+                              ml: 2,
+                              '&:hover': {
+                                background: '#dc2626',
+                                color: '#fff'
+                              }
+                            }}
+                          >
+                            <DeleteIcon />
+                          </Button>
+                        </Box>
+                      ))}
+                    </>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          addSubField(
+                            serviceDeliverableFormData,
+                            setServiceDeliverableFormData,
+                            'deliverables',
+                            serviceDeliverableFormData.deliverables
+                          )
+                        }}
+                        className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
+                      >
+                        <AddIcon /> Add Another Deliverable
+                      </button>
+                    </Box>
+                  </Box>
+                )}
+                <Box className='my-4 text-right'>
+                  <button
+                    onClick={onServiceDeliverableClear}
+                    type='button'
+                    className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                  >
+                    Close <ClearIcon />
+                  </button>
+                  <button
+                    type='submit'
+                    className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                  >
+                    {serviceDeliverableEditDataId ? 'Update ' : 'Save '}
+
+                    {serviceDeliverableEditDataId ? <EditNoteIcon /> : <AddIcon />}
+                  </button>
+                </Box>
+              </form>
+            )}
+            {formType === EServiceFormType.TASK && (
+              <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+                <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      '& .MuiInputBase-root': {
+                        border: errorMessage?.['serviceDeliverableId'] ? '1px solid #dc2626' : ''
+                      }
+                    }}
+                  >
+                    <label className='block text-sm'>
+                      <Checkbox
+                        value={isFatchFromClickUp}
+                        onChange={e => {
+                          setIsFatchFromClickUp(e.target.checked)
+                        }}
+                      />
+                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Fetch Task From Clickup</span>
+                    </label>
+                  </Box>
+                </Box>
+                {isFatchFromClickUp ? (
+                  <>
+                    {!!isPullingTaskFromClickup && <Preloader close={!!clickupTaskList?.length} />}
+                    <Box>
+                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                        <Box sx={{ width: '100%' }}>
+                          <label className='block text-sm'>
+                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Clickup Link</span>
+                            <input
+                              className={`block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                                 !!clickupTaskList?.length ? 'opacity-50' : ''
                               }`}
-                              onClick={() => {
-                                handleFetchTaskFromClickup()
+                              placeholder='Enter clickup task link'
+                              name='clickupLink'
+                              value={clickupLink}
+                              onChange={e => {
+                                setClickupLink(e.target.value)
                               }}
                               disabled={!!clickupTaskList?.length}
-                            >
-                              Click Here Fetch Task From Clickup
-                              <BrowserUpdatedIcon sx={{ ml: 2 }} />
-                            </button>
-                          </Box>
+                            />
+                            {!!errorMessage?.['clickupLink'] &&
+                              errorMessage?.['clickupLink']?.map((message: any, index: number) => {
+                                return (
+                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                    {message}
+                                  </span>
+                                )
+                              })}
+                          </label>
                         </Box>
                       </Box>
+                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                        <Box sx={{ width: '100%', textAlign: 'right' }}>
+                          <button
+                            type='button'
+                            className={`px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green ${
+                              !!clickupTaskList?.length ? 'opacity-50' : ''
+                            }`}
+                            onClick={() => {
+                              handleFetchTaskFromClickup()
+                            }}
+                            disabled={!!clickupTaskList?.length}
+                          >
+                            Click Here Fetch Task From Clickup
+                            <BrowserUpdatedIcon sx={{ ml: 2 }} />
+                          </button>
+                        </Box>
+                      </Box>
+                    </Box>
 
-                      {!!clickupTaskList?.length && (
-                        <Box>
-                          <form onSubmit={onServiceTaskSubmit}>
-                            {clickupTaskList.map((clickupTask: any, index: number) => {
-                              return (
-                                <>
-                                  <Box>
+                    {!!clickupTaskList?.length && (
+                      <Box>
+                        <form onSubmit={onServiceTaskSubmit}>
+                          {clickupTaskList.map((clickupTask: any, index: number) => {
+                            return (
+                              <>
+                                <Box>
+                                  <Box
+                                    sx={{
+                                      display: 'flex',
+                                      gap: 5,
+                                      mb: 5,
+                                      flexDirection: 'column',
+                                      border: '2px solid #9333ea',
+                                      padding: '24px',
+                                      borderRadius: '5px'
+                                    }}
+                                  >
                                     <Box
                                       sx={{
+                                        width: '100%',
                                         display: 'flex',
-                                        gap: 5,
-                                        mb: 5,
                                         flexDirection: 'column',
-                                        border: '2px solid #9333ea',
-                                        padding: '24px',
-                                        borderRadius: '5px'
+                                        gap: 5,
+                                        mb: 5
                                       }}
                                     >
-                                      <Box
-                                        sx={{
-                                          width: '100%',
-                                          display: 'flex',
-                                          flexDirection: 'column',
-                                          gap: 5,
-                                          mb: 5
-                                        }}
-                                      >
-                                        <Box sx={{ width: '100%' }}>
-                                          <RichTextEditor
-                                            value={clickupTask.name}
-                                            onBlur={newContent =>
-                                              handleMultipleTaskFieldChange(newContent, 'name', index)
-                                            }
-                                          />
-                                          {/* {!!errorMessage?.[`tasks.${index}.name`] &&
+                                      <Box sx={{ width: '100%' }}>
+                                        <RichTextEditor
+                                          value={clickupTask.name}
+                                          onBlur={newContent =>
+                                            handleMultipleTaskFieldChange(newContent, 'name', index)
+                                          }
+                                        />
+                                        {/* {!!errorMessage?.[`tasks.${index}.name`] &&
                                   errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {
                                     return (
                                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
@@ -2091,204 +2085,233 @@ export default function ServiceTreeComponent() {
                                       </span>
                                     )
                                   })} */}
-                                        </Box>
-                                        <Box sx={{ width: '100%' }}>
-                                          <RichTextEditor
-                                            value={clickupTask.name}
-                                            onBlur={newContent =>
-                                              handleMultipleTaskFieldChange(newContent, 'name', index)
-                                            }
-                                          />
-                                          {/* {!!errorMessage?.[`tasks.${index}.name`] &&
-                                  errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {
-                                    return (
-                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                        {String(message).replaceAll('tasks.0.', '')}
-                                      </span>
-                                    )
-                                  })} */}
-                                        </Box>
                                       </Box>
+                                      <Box sx={{ width: '100%' }}>
+                                        <RichTextEditor
+                                          value={clickupTask.name}
+                                          onBlur={newContent =>
+                                            handleMultipleTaskFieldChange(newContent, 'name', index)
+                                          }
+                                        />
+                                        {/* {!!errorMessage?.[`tasks.${index}.name`] &&
+                                  errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {
+                                    return (
+                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                        {String(message).replaceAll('tasks.0.', '')}
+                                      </span>
+                                    )
+                                  })} */}
+                                      </Box>
+                                    </Box>
 
-                                      {!!clickupTask?.subTasks?.length &&
-                                        clickupTask?.subTasks?.map((subTask: any, subTasksIndex: number) => {
-                                          return (
-                                            <Box
-                                              sx={{
-                                                display: 'flex',
-                                                gap: 5,
-                                                mb: 5,
-                                                flexDirection: 'column',
-                                                border: '2px solid #9333ea',
-                                                padding: '24px',
-                                                borderRadius: '5px'
-                                              }}
-                                              key={subTasksIndex}
-                                            >
-                                              <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                                                <Box sx={{ width: '100%' }}>
-                                                  <label className='block text-sm'>
-                                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
-                                                      Name
-                                                    </span>
-                                                  </label>
+                                    {!!clickupTask?.subTasks?.length &&
+                                      clickupTask?.subTasks?.map((subTask: any, subTasksIndex: number) => {
+                                        return (
+                                          <Box
+                                            sx={{
+                                              display: 'flex',
+                                              gap: 5,
+                                              mb: 5,
+                                              flexDirection: 'column',
+                                              border: '2px solid #9333ea',
+                                              padding: '24px',
+                                              borderRadius: '5px'
+                                            }}
+                                            key={subTasksIndex}
+                                          >
+                                            <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                                              <Box sx={{ width: '100%' }}>
+                                                <label className='block text-sm'>
+                                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                    Name
+                                                  </span>
+                                                </label>
+                                                <Box
+                                                  className='block text-sm'
+                                                  sx={{
+                                                    width: '100%',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center'
+                                                  }}
+                                                >
                                                   <Box
-                                                    className='block text-sm'
                                                     sx={{
                                                       width: '100%',
                                                       display: 'flex',
-                                                      alignItems: 'center',
-                                                      justifyContent: 'center'
+                                                      flexDirection: 'column',
+                                                      gap: 5,
+                                                      mb: 5
                                                     }}
                                                   >
-                                                    <Box
-                                                      sx={{
-                                                        width: '100%',
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        gap: 5,
-                                                        mb: 5
-                                                      }}
-                                                    >
-                                                      <Box sx={{ width: '100%' }}>
-                                                        <RichTextEditor
-                                                          value={subTask.name}
-                                                          onBlur={newContent =>
-                                                            handleMultipleTaskFieldChange(newContent, 'name', index)
+                                                    <Box sx={{ width: '100%' }}>
+                                                      <RichTextEditor
+                                                        value={subTask.name}
+                                                        onBlur={newContent =>
+                                                          handleMultipleTaskFieldChange(newContent, 'name', index)
+                                                        }
+                                                      />
+                                                      {!!errorMessage?.[`tasks.${index}.name`] &&
+                                                        errorMessage?.[`tasks.${index}.name`]?.map(
+                                                          (message: any, index: number) => {
+                                                            return (
+                                                              <span
+                                                                key={index}
+                                                                className='text-xs text-red-600 dark:text-red-400'
+                                                              >
+                                                                {String(message).replaceAll('tasks.0.', '')}
+                                                              </span>
+                                                            )
                                                           }
-                                                        />
-                                                        {!!errorMessage?.[`tasks.${index}.name`] &&
-                                                          errorMessage?.[`tasks.${index}.name`]?.map(
-                                                            (message: any, index: number) => {
-                                                              return (
-                                                                <span
-                                                                  key={index}
-                                                                  className='text-xs text-red-600 dark:text-red-400'
-                                                                >
-                                                                  {String(message).replaceAll('tasks.0.', '')}
-                                                                </span>
-                                                              )
-                                                            }
-                                                          )}
+                                                        )}
+                                                    </Box>
+                                                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                                                      <Box sx={{ width: '50%' }}>
+                                                        <label className='block text-sm'>
+                                                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                            Hour
+                                                          </span>
+                                                          <input
+                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                            placeholder='Examples: 50.00'
+                                                            name='cost'
+                                                            value={subTask.cost}
+                                                            onChange={e => {
+                                                              handleTaskMultipleTextChange(e, index)
+                                                            }}
+                                                          />
+                                                          {!!errorMessage?.[`tasks.${index}.cost`] &&
+                                                            errorMessage?.[`tasks.${index}.cost`]?.map(
+                                                              (message: any, index: number) => {
+                                                                return (
+                                                                  <span
+                                                                    key={index}
+                                                                    className='text-xs text-red-600 dark:text-red-400'
+                                                                  >
+                                                                    {String(message).replaceAll('tasks.0.', '')}
+                                                                  </span>
+                                                                )
+                                                              }
+                                                            )}
+                                                        </label>
                                                       </Box>
-                                                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                                                        <Box sx={{ width: '50%' }}>
-                                                          <label className='block text-sm'>
-                                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
-                                                              Hour
-                                                            </span>
-                                                            <input
-                                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                              placeholder='Examples: 50.00'
-                                                              name='cost'
-                                                              value={subTask.cost}
-                                                              onChange={e => {
-                                                                handleTaskMultipleTextChange(e, index)
-                                                              }}
-                                                            />
-                                                            {!!errorMessage?.[`tasks.${index}.cost`] &&
-                                                              errorMessage?.[`tasks.${index}.cost`]?.map(
-                                                                (message: any, index: number) => {
-                                                                  return (
-                                                                    <span
-                                                                      key={index}
-                                                                      className='text-xs text-red-600 dark:text-red-400'
-                                                                    >
-                                                                      {String(message).replaceAll('tasks.0.', '')}
-                                                                    </span>
-                                                                  )
-                                                                }
-                                                              )}
-                                                          </label>
-                                                        </Box>
-                                                        <Box sx={{ width: '50%' }}>
-                                                          <label className='block text-sm'>
-                                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
-                                                              Description
-                                                            </span>
-                                                            <input
-                                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                              placeholder='Examples: Company logo for header'
-                                                              name='description'
-                                                              value={subTask.description}
-                                                              onChange={e => {
-                                                                handleTaskMultipleTextChange(e, index)
-                                                              }}
-                                                            />
-                                                            {!!errorMessage?.[`tasks.${index}.description`] &&
-                                                              errorMessage?.[`tasks.${index}.description`]?.map(
-                                                                (message: any, index: number) => {
-                                                                  return (
-                                                                    <span
-                                                                      key={index}
-                                                                      className='text-xs text-red-600 dark:text-red-400'
-                                                                    >
-                                                                      {String(message).replaceAll('tasks.0.', '')}
-                                                                    </span>
-                                                                  )
-                                                                }
-                                                              )}
-                                                          </label>
-                                                        </Box>
+                                                      <Box sx={{ width: '50%' }}>
+                                                        <label className='block text-sm'>
+                                                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                            Description
+                                                          </span>
+                                                          <input
+                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                            placeholder='Examples: Company logo for header'
+                                                            name='description'
+                                                            value={subTask.description}
+                                                            onChange={e => {
+                                                              handleTaskMultipleTextChange(e, index)
+                                                            }}
+                                                          />
+                                                          {!!errorMessage?.[`tasks.${index}.description`] &&
+                                                            errorMessage?.[`tasks.${index}.description`]?.map(
+                                                              (message: any, index: number) => {
+                                                                return (
+                                                                  <span
+                                                                    key={index}
+                                                                    className='text-xs text-red-600 dark:text-red-400'
+                                                                  >
+                                                                    {String(message).replaceAll('tasks.0.', '')}
+                                                                  </span>
+                                                                )
+                                                              }
+                                                            )}
+                                                        </label>
                                                       </Box>
                                                     </Box>
                                                   </Box>
                                                 </Box>
                                               </Box>
                                             </Box>
-                                          )
-                                        })}
-                                    </Box>
+                                          </Box>
+                                        )
+                                      })}
                                   </Box>
-                                </>
-                              )
-                            })}
+                                </Box>
+                              </>
+                            )
+                          })}
 
-                            <Box className='my-4 text-right'>
-                              <button
-                                onClick={onServiceTaskClear}
-                                type='button'
-                                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-                              >
-                                {serviceTaskEditDataId ? 'Cancel ' : 'Clear '}
-                                {serviceTaskEditDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
-                              </button>
-                              <button
-                                type='submit'
-                                className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-                              >
-                                {serviceTaskEditDataId ? 'Update ' : 'Save '}
-                                {serviceTaskEditDataId ? <EditNoteIcon /> : <AddIcon />}
-                              </button>
-                            </Box>
-                          </form>
+                          <Box className='my-4 text-right'>
+                            <button
+                              onClick={onServiceTaskClear}
+                              type='button'
+                              className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                            >
+                              {serviceTaskEditDataId ? 'Cancel ' : 'Clear '}
+                              {serviceTaskEditDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
+                            </button>
+                            <button
+                              type='submit'
+                              className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                            >
+                              {serviceTaskEditDataId ? 'Update ' : 'Save '}
+                              {serviceTaskEditDataId ? <EditNoteIcon /> : <AddIcon />}
+                            </button>
+                          </Box>
+                        </form>
+                      </Box>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <form onSubmit={onServiceTaskSubmit}>
+                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                        <Box
+                          sx={{
+                            width: '50%',
+                            '& .MuiInputBase-root': {
+                              border: errorMessage?.['serviceDeliverableId'] ? '1px solid #dc2626' : ''
+                            }
+                          }}
+                        >
+                          <label className='block text-sm'>
+                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Deliverable</span>
+                            <ServiceDropdownTree
+                              name='serviceDeliverableId'
+                              value={serviceTaskFormData.serviceDeliverableId}
+                              onChange={e => {
+                                handleSelectChange(e, serviceTaskFormData, setServiceTaskFormData)
+                              }}
+                              type='deliverables'
+                            />
+                            {!!errorMessage?.['serviceDeliverableId'] &&
+                              errorMessage?.['serviceDeliverableId']?.map((message: any, index: number) => {
+                                return (
+                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                    {message}
+                                  </span>
+                                )
+                              })}
+                          </label>
                         </Box>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <form onSubmit={onServiceTaskSubmit}>
-                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                        {isShowParentTaskField && (
                           <Box
                             sx={{
                               width: '50%',
                               '& .MuiInputBase-root': {
-                                border: errorMessage?.['serviceDeliverableId'] ? '1px solid #dc2626' : ''
+                                border: errorMessage?.['parentTaskId'] ? '1px solid #dc2626' : ''
                               }
                             }}
                           >
                             <label className='block text-sm'>
-                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Deliverable</span>
-                              <ServiceDropdownTree
-                                name='serviceDeliverableId'
-                                value={serviceTaskFormData.serviceDeliverableId}
+                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Parent Task</span>
+                              <Dropdown
+                                url={`service-deliverable-tasks?serviceDeliverableId=${serviceTaskFormData.serviceDeliverableId}`}
+                                name='parentTaskId'
+                                value={serviceTaskFormData.parentTaskId}
                                 onChange={e => {
                                   handleSelectChange(e, serviceTaskFormData, setServiceTaskFormData)
                                 }}
-                                type='deliverables'
                               />
-                              {!!errorMessage?.['serviceDeliverableId'] &&
-                                errorMessage?.['serviceDeliverableId']?.map((message: any, index: number) => {
+                              {!!errorMessage?.['parentTaskId'] &&
+                                errorMessage?.['parentTaskId']?.map((message: any, index: number) => {
                                   return (
                                     <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                       {message}
@@ -2297,27 +2320,87 @@ export default function ServiceTreeComponent() {
                                 })}
                             </label>
                           </Box>
-                          {isShowParentTaskField && (
-                            <Box
-                              sx={{
-                                width: '50%',
-                                '& .MuiInputBase-root': {
-                                  border: errorMessage?.['parentTaskId'] ? '1px solid #dc2626' : ''
-                                }
-                              }}
-                            >
+                        )}
+                      </Box>
+
+                      {serviceTaskEditDataId ? (
+                        <>
+                          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                            <Box sx={{ width: '100%' }}>
                               <label className='block text-sm'>
-                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Parent Task</span>
-                                <Dropdown
-                                  url={`service-deliverable-tasks?serviceDeliverableId=${serviceTaskFormData.serviceDeliverableId}`}
-                                  name='parentTaskId'
-                                  value={serviceTaskFormData.parentTaskId}
+                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                              </label>
+                              <RichTextEditor
+                                value={serviceTaskFormData.name}
+                                onBlur={newContent =>
+                                  handleReachText(newContent, 'name', serviceTaskFormData, setServiceTaskFormData)
+                                }
+                              />
+                              {!!errorMessage?.['name'] &&
+                                errorMessage?.['name']?.map((message: any, index: number) => {
+                                  return (
+                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                      {message}
+                                    </span>
+                                  )
+                                })}
+                            </Box>
+                          </Box>
+
+                          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                            <Box sx={{ width: '100%' }}>
+                              <label className='block text-sm'>
+                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                                <input
+                                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                  placeholder='Examples: 1'
+                                  name='order'
+                                  value={serviceTaskFormData.order}
                                   onChange={e => {
-                                    handleSelectChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                    handleTextChange(e, serviceTaskFormData, setServiceTaskFormData)
                                   }}
                                 />
-                                {!!errorMessage?.['parentTaskId'] &&
-                                  errorMessage?.['parentTaskId']?.map((message: any, index: number) => {
+                              </label>
+                            </Box>
+                          </Box>
+                          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                            <Box sx={{ width: '100%' }}>
+                              <label className='block text-sm'>
+                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Employee Role</span>
+                              </label>
+                              <Dropdown
+                                url={`employee-roles`}
+                                name='employeeRoleId'
+                                value={serviceTaskFormData.employeeRoleId}
+                                onChange={e => {
+                                  handleSelectChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                }}
+                              />
+                              {!!errorMessage?.['employeeRoleId'] &&
+                                errorMessage?.['employeeRoleId']?.map((message: any, index: number) => {
+                                  return (
+                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                      {message}
+                                    </span>
+                                  )
+                                })}
+                            </Box>
+                          </Box>
+                          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                            <Box sx={{ width: '50%' }}>
+                              <label className='block text-sm'>
+                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hour</span>
+                                <input
+                                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                  placeholder='Examples: 50.00'
+                                  name='cost'
+                                  value={serviceTaskFormData.cost}
+                                  onChange={e => {
+                                    handleTextChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                  }}
+                                />
+                                {!!errorMessage?.['cost'] &&
+                                  errorMessage?.['cost']?.map((message: any, index: number) => {
                                     return (
                                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                         {message}
@@ -2326,334 +2409,242 @@ export default function ServiceTreeComponent() {
                                   })}
                               </label>
                             </Box>
-                          )}
-                        </Box>
-
-                        {serviceTaskEditDataId ? (
-                          <>
-                            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                              <Box sx={{ width: '100%' }}>
-                                <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                                </label>
-                                <RichTextEditor
-                                  value={serviceTaskFormData.name}
-                                  onBlur={newContent =>
-                                    handleReachText(newContent, 'name', serviceTaskFormData, setServiceTaskFormData)
-                                  }
-                                />
-                                {!!errorMessage?.['name'] &&
-                                  errorMessage?.['name']?.map((message: any, index: number) => {
-                                    return (
-                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                        {message}
-                                      </span>
-                                    )
-                                  })}
-                              </Box>
-                            </Box>
-
-                            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                              <Box sx={{ width: '100%' }}>
-                                <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                                  <input
-                                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                    placeholder='Examples: 1'
-                                    name='order'
-                                    value={serviceTaskFormData.order}
-                                    onChange={e => {
-                                      handleTextChange(e, serviceTaskFormData, setServiceTaskFormData)
-                                    }}
-                                  />
-                                </label>
-                              </Box>
-                            </Box>
-                            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                              <Box sx={{ width: '100%' }}>
-                                <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Employee Role</span>
-                                </label>
-                                <Dropdown
-                                  url={`employee-roles`}
-                                  name='employeeRoleId'
-                                  value={serviceTaskFormData.employeeRoleId}
+                            <Box sx={{ width: '50%' }}>
+                              <label className='block text-sm'>
+                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Description</span>
+                                <input
+                                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                  placeholder='Examples: Company logo for header'
+                                  name='description'
+                                  value={serviceTaskFormData.description}
                                   onChange={e => {
-                                    handleSelectChange(e, serviceTaskFormData, setServiceTaskFormData)
+                                    handleTaskMultipleTextChange(e)
                                   }}
                                 />
-                                {!!errorMessage?.['employeeRoleId'] &&
-                                  errorMessage?.['employeeRoleId']?.map((message: any, index: number) => {
+                                {!!errorMessage?.['description'] &&
+                                  errorMessage?.['description']?.map((message: any, index: number) => {
                                     return (
                                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                         {message}
                                       </span>
                                     )
                                   })}
-                              </Box>
+                              </label>
                             </Box>
-                            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                              <Box sx={{ width: '50%' }}>
-                                <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hour</span>
-                                  <input
-                                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                    placeholder='Examples: 50.00'
-                                    name='cost'
-                                    value={serviceTaskFormData.cost}
-                                    onChange={e => {
-                                      handleTextChange(e, serviceTaskFormData, setServiceTaskFormData)
+                          </Box>
+                        </>
+                      ) : (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            gap: 5,
+                            mb: 5,
+                            flexDirection: 'column',
+                            border: '2px solid #9333ea',
+                            padding: '24px',
+                            borderRadius: '5px'
+                          }}
+                        >
+                          <>
+                            {serviceTaskFormData.tasks?.map((task: any, index: number) => (
+                              <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
+                                <Box sx={{ width: '100%' }}>
+                                  <label className='block text-sm'>
+                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                                  </label>
+                                  <Box
+                                    className='block text-sm'
+                                    sx={{
+                                      width: '100%',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center'
                                     }}
-                                  />
-                                  {!!errorMessage?.['cost'] &&
-                                    errorMessage?.['cost']?.map((message: any, index: number) => {
-                                      return (
-                                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                          {message}
-                                        </span>
-                                      )
-                                    })}
-                                </label>
-                              </Box>
-                              <Box sx={{ width: '50%' }}>
-                                <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Description</span>
-                                  <input
-                                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                    placeholder='Examples: Company logo for header'
-                                    name='description'
-                                    value={serviceTaskFormData.description}
-                                    onChange={e => {
-                                      handleTaskMultipleTextChange(e)
-                                    }}
-                                  />
-                                  {!!errorMessage?.['description'] &&
-                                    errorMessage?.['description']?.map((message: any, index: number) => {
-                                      return (
-                                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                          {message}
-                                        </span>
-                                      )
-                                    })}
-                                </label>
-                              </Box>
-                            </Box>
-                          </>
-                        ) : (
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              gap: 5,
-                              mb: 5,
-                              flexDirection: 'column',
-                              border: '2px solid #9333ea',
-                              padding: '24px',
-                              borderRadius: '5px'
-                            }}
-                          >
-                            <>
-                              {serviceTaskFormData.tasks?.map((task: any, index: number) => (
-                                <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                                  <Box sx={{ width: '100%' }}>
-                                    <label className='block text-sm'>
-                                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                                    </label>
+                                  >
                                     <Box
-                                      className='block text-sm'
                                       sx={{
                                         width: '100%',
                                         display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center'
+                                        flexDirection: 'column',
+                                        gap: 5,
+                                        mb: 5
                                       }}
                                     >
-                                      <Box
-                                        sx={{
-                                          width: '100%',
-                                          display: 'flex',
-                                          flexDirection: 'column',
-                                          gap: 5,
-                                          mb: 5
-                                        }}
-                                      >
+                                      <Box sx={{ width: '100%' }}>
+                                        <RichTextEditor
+                                          value={task.name}
+                                          onBlur={newContent =>
+                                            handleMultipleTaskFieldChange(newContent, 'name', index)
+                                          }
+                                        />
+                                        {!!errorMessage?.[`tasks.${index}.name`] &&
+                                          errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {
+                                            return (
+                                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                                {String(message).replaceAll('tasks.0.', '')}
+                                              </span>
+                                            )
+                                          })}
+                                      </Box>
+                                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                                         <Box sx={{ width: '100%' }}>
-                                          <RichTextEditor
-                                            value={task.name}
-                                            onBlur={newContent =>
-                                              handleMultipleTaskFieldChange(newContent, 'name', index)
-                                            }
-                                          />
-                                          {!!errorMessage?.[`tasks.${index}.name`] &&
-                                            errorMessage?.[`tasks.${index}.name`]?.map(
-                                              (message: any, index: number) => {
-                                                return (
-                                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                                    {String(message).replaceAll('tasks.0.', '')}
-                                                  </span>
-                                                )
-                                              }
-                                            )}
-                                        </Box>
-                                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                                          <Box sx={{ width: '100%' }}>
-                                            <label className='block text-sm'>
-                                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                                              <input
-                                                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                placeholder='Examples: 1'
-                                                name='order'
-                                                value={task.order}
-                                                onChange={e => {
-                                                  handleMultipleTaskFieldChange(e.target.value, 'order', index)
-                                                }}
-                                              />
-                                            </label>
-                                          </Box>
-                                        </Box>
-                                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                                          <Box sx={{ width: '100%' }}>
-                                            <label className='block text-sm'>
-                                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
-                                                Employee Role
-                                              </span>
-                                            </label>
-                                            <Dropdown
-                                              ref={employeeRolesDropdownRef}
-                                              url={`employee-roles`}
-                                              name='employeeRoleId'
-                                              value={task.employeeRoleId}
+                                          <label className='block text-sm'>
+                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                                            <input
+                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                              placeholder='Examples: 1'
+                                              name='order'
+                                              value={task.order}
                                               onChange={e => {
-                                                handleMultipleTaskFieldChange(e.target.value, 'employeeRoleId', index)
+                                                handleMultipleTaskFieldChange(e.target.value, 'order', index)
                                               }}
-                                              isAddNewButton={true}
-                                              onAddNew={() => {
-                                                handleEmployeeRolesModalOpen()
-                                                setEmployeeRolesFor(index)
-                                              }}
-                                              syncOnOpen={true}
                                             />
-                                          </Box>
-                                        </Box>
-                                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                                          <Box sx={{ width: '50%' }}>
-                                            <label className='block text-sm'>
-                                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hour</span>
-                                              <input
-                                                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                placeholder='Examples: 50.00'
-                                                name='cost'
-                                                value={task.cost}
-                                                onChange={e => {
-                                                  handleTaskMultipleTextChange(e, index)
-                                                }}
-                                              />
-                                              {!!errorMessage?.[`tasks.${index}.cost`] &&
-                                                errorMessage?.[`tasks.${index}.cost`]?.map(
-                                                  (message: any, index: number) => {
-                                                    return (
-                                                      <span
-                                                        key={index}
-                                                        className='text-xs text-red-600 dark:text-red-400'
-                                                      >
-                                                        {String(message).replaceAll('tasks.0.', '')}
-                                                      </span>
-                                                    )
-                                                  }
-                                                )}
-                                            </label>
-                                          </Box>
-                                          <Box sx={{ width: '50%' }}>
-                                            <label className='block text-sm'>
-                                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
-                                                Description
-                                              </span>
-                                              <input
-                                                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                placeholder='Examples: Company logo for header'
-                                                name='description'
-                                                value={task.description}
-                                                onChange={e => {
-                                                  handleTaskMultipleTextChange(e, index)
-                                                }}
-                                              />
-                                              {!!errorMessage?.[`tasks.${index}.description`] &&
-                                                errorMessage?.[`tasks.${index}.description`]?.map(
-                                                  (message: any, index: number) => {
-                                                    return (
-                                                      <span
-                                                        key={index}
-                                                        className='text-xs text-red-600 dark:text-red-400'
-                                                      >
-                                                        {String(message).replaceAll('tasks.0.', '')}
-                                                      </span>
-                                                    )
-                                                  }
-                                                )}
-                                            </label>
-                                          </Box>
+                                          </label>
                                         </Box>
                                       </Box>
-                                      <Button
-                                        type='button'
-                                        onClick={() => removeTasksFields(index)}
-                                        className='mt-1 p-0 bg-red-500 text-white rounded-md'
-                                        sx={{
-                                          p: 0,
-                                          border: '1px solid #dc2626',
-                                          borderRadius: '50%',
-                                          minWidth: 'auto',
-                                          height: '35px',
-                                          width: '35px',
-                                          color: '#dc2626',
-                                          ml: 2,
-                                          '&:hover': {
-                                            background: '#dc2626',
-                                            color: '#fff'
-                                          }
-                                        }}
-                                      >
-                                        <DeleteIcon />
-                                      </Button>
+                                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                                        <Box sx={{ width: '100%' }}>
+                                          <label className='block text-sm'>
+                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                              Employee Role
+                                            </span>
+                                          </label>
+                                          <Dropdown
+                                            ref={employeeRolesDropdownRef}
+                                            url={`employee-roles`}
+                                            name='employeeRoleId'
+                                            value={task.employeeRoleId}
+                                            onChange={e => {
+                                              handleMultipleTaskFieldChange(e.target.value, 'employeeRoleId', index)
+                                            }}
+                                            isAddNewButton={true}
+                                            onAddNew={() => {
+                                              handleEmployeeRolesModalOpen()
+                                              setEmployeeRolesFor(index)
+                                            }}
+                                            syncOnOpen={true}
+                                          />
+                                        </Box>
+                                      </Box>
+                                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                                        <Box sx={{ width: '50%' }}>
+                                          <label className='block text-sm'>
+                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hour</span>
+                                            <input
+                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                              placeholder='Examples: 50.00'
+                                              name='cost'
+                                              value={task.cost}
+                                              onChange={e => {
+                                                handleTaskMultipleTextChange(e, index)
+                                              }}
+                                            />
+                                            {!!errorMessage?.[`tasks.${index}.cost`] &&
+                                              errorMessage?.[`tasks.${index}.cost`]?.map(
+                                                (message: any, index: number) => {
+                                                  return (
+                                                    <span
+                                                      key={index}
+                                                      className='text-xs text-red-600 dark:text-red-400'
+                                                    >
+                                                      {String(message).replaceAll('tasks.0.', '')}
+                                                    </span>
+                                                  )
+                                                }
+                                              )}
+                                          </label>
+                                        </Box>
+                                        <Box sx={{ width: '50%' }}>
+                                          <label className='block text-sm'>
+                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                              Description
+                                            </span>
+                                            <input
+                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                              placeholder='Examples: Company logo for header'
+                                              name='description'
+                                              value={task.description}
+                                              onChange={e => {
+                                                handleTaskMultipleTextChange(e, index)
+                                              }}
+                                            />
+                                            {!!errorMessage?.[`tasks.${index}.description`] &&
+                                              errorMessage?.[`tasks.${index}.description`]?.map(
+                                                (message: any, index: number) => {
+                                                  return (
+                                                    <span
+                                                      key={index}
+                                                      className='text-xs text-red-600 dark:text-red-400'
+                                                    >
+                                                      {String(message).replaceAll('tasks.0.', '')}
+                                                    </span>
+                                                  )
+                                                }
+                                              )}
+                                          </label>
+                                        </Box>
+                                      </Box>
                                     </Box>
+                                    <Button
+                                      type='button'
+                                      onClick={() => removeTasksFields(index)}
+                                      className='mt-1 p-0 bg-red-500 text-white rounded-md'
+                                      sx={{
+                                        p: 0,
+                                        border: '1px solid #dc2626',
+                                        borderRadius: '50%',
+                                        minWidth: 'auto',
+                                        height: '35px',
+                                        width: '35px',
+                                        color: '#dc2626',
+                                        ml: 2,
+                                        '&:hover': {
+                                          background: '#dc2626',
+                                          color: '#fff'
+                                        }
+                                      }}
+                                    >
+                                      <DeleteIcon />
+                                    </Button>
                                   </Box>
                                 </Box>
-                              ))}
-                            </>
+                              </Box>
+                            ))}
+                          </>
 
-                            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                              <button
-                                type='button'
-                                onClick={addTaskFields}
-                                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
-                              >
-                                <AddIcon /> Add Another Task
-                              </button>
-                            </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <button
+                              type='button'
+                              onClick={addTaskFields}
+                              className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
+                            >
+                              <AddIcon /> Add Another Task
+                            </button>
                           </Box>
-                        )}
-                        <Box className='my-4 text-right'>
-                          <button
-                            onClick={onServiceTaskClear}
-                            type='button'
-                            className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-                          >
-                            Close <ClearIcon />
-                          </button>
-                          <button
-                            type='submit'
-                            className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-                          >
-                            {serviceTaskEditDataId ? 'Update ' : 'Save '}
-
-                            {serviceTaskEditDataId ? <EditNoteIcon /> : <AddIcon />}
-                          </button>
                         </Box>
-                      </form>
-                    </>
-                  )}
-                </Box>
-              )}
-            </Box>
+                      )}
+                      <Box className='my-4 text-right'>
+                        <button
+                          onClick={onServiceTaskClear}
+                          type='button'
+                          className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                        >
+                          Close <ClearIcon />
+                        </button>
+                        <button
+                          type='submit'
+                          className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                        >
+                          {serviceTaskEditDataId ? 'Update ' : 'Save '}
+
+                          {serviceTaskEditDataId ? <EditNoteIcon /> : <AddIcon />}
+                        </button>
+                      </Box>
+                    </form>
+                  </>
+                )}
+              </Box>
+            )}
           </Box>
         </Modal>
         <Modal
@@ -2661,11 +2652,17 @@ export default function ServiceTreeComponent() {
           onClose={handleEmployeeRolesModalClose}
           aria-labelledby='employee-roles-modal-title'
           aria-describedby='employee-roles-modal-description'
+          sx={{
+            width: '100%',
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
         >
           <Box
             sx={{
-              width: '100%',
-              height: '100vh',
+              width: '50%',
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center'
@@ -2676,7 +2673,7 @@ export default function ServiceTreeComponent() {
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                width: '50%',
+                width: '100%',
                 overflowY: 'auto',
                 p: '50px',
                 maxHeight: '100%',
