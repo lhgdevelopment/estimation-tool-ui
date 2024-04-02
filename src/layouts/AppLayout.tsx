@@ -31,6 +31,15 @@ const AppLayout = ({ children }: Props) => {
   }, [isDark])
 
   useEffect(() => {
+    const storedTheme = Cookies.get('isDark')
+    const isDarkFromRedux = isDark
+    if (storedTheme !== undefined) {
+      dispatch(isDarkTheme(storedTheme === 'true'))
+    } else {
+      dispatch(isDarkTheme(isDarkFromRedux))
+    }
+  }, [dispatch, isDark, token])
+  useEffect(() => {
     const fetchData = async () => {
       try {
         if (!token) {
@@ -43,18 +52,10 @@ const AppLayout = ({ children }: Props) => {
         Cookies.remove('accessToken')
         router.push('/auth/login')
       }
-
-      const storedTheme = Cookies.get('isDark')
-      const isDarkFromRedux = isDark
-      if (storedTheme !== undefined) {
-        dispatch(isDarkTheme(storedTheme === 'true'))
-      } else {
-        dispatch(isDarkTheme(isDarkFromRedux))
-      }
     }
 
     fetchData()
-  }, [dispatch, isDark, router, token])
+  }, [router])
 
   if (!token) {
     return <></>
