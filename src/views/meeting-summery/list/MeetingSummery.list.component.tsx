@@ -130,7 +130,9 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
                 <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                  <TableCell className='px-4 py-3'>Meeting Name</TableCell>
+                  <TableCell className='px-4 py-3' sx={{ width: '200px' }}>
+                    Meeting Name
+                  </TableCell>
                   <TableCell className='px-4 py-3'>Meeting Type</TableCell>
                   <TableCell className='px-4 py-3'>Created By</TableCell>
                   <TableCell className='px-4 py-3'>Created At</TableCell>
