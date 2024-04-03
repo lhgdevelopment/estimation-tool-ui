@@ -504,7 +504,7 @@ export default function ServiceTreeComponent() {
       if (res.isConfirmed) {
         apiRequest.delete(`/services/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -530,7 +530,7 @@ export default function ServiceTreeComponent() {
       if (res.isConfirmed) {
         apiRequest.delete(`/service-groups/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -556,7 +556,7 @@ export default function ServiceTreeComponent() {
       if (res.isConfirmed) {
         apiRequest.delete(`/service-scopes/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -582,7 +582,7 @@ export default function ServiceTreeComponent() {
       if (res.isConfirmed) {
         apiRequest.delete(`/service-deliverables/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -608,7 +608,7 @@ export default function ServiceTreeComponent() {
       if (res.isConfirmed) {
         apiRequest.delete(`/service-deliverable-tasks/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,

@@ -41,7 +41,7 @@ export default function UsersListComponent(props: TUsersComponent) {
       if (res.isConfirmed) {
         apiRequest.delete(`/users/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,

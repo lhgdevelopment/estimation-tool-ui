@@ -89,7 +89,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
       if (res.isConfirmed) {
         apiRequest.delete(`/meeting-summery/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
