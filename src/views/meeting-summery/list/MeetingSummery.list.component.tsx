@@ -62,13 +62,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
           if (editedServiceIndex !== -1) {
             updatedList[editedServiceIndex] = res?.data
           }
-          Swal.fire({
-            title: 'Data Updated Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
 
           return updatedList
         })

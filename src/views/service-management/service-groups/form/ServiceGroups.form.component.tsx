@@ -6,7 +6,6 @@ import { Box, Button } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TServiceGroupsComponent } from '../ServiceGroups.decorator'
 
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -94,13 +93,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 1000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
+            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
 
             return updatedList
           })
@@ -114,13 +107,7 @@ export default function ServiceGroupsFormComponent(props: TServiceGroupsComponen
         .post('/service-groups', formData)
         .then(res => {
           setListData((prevState: []) => [...prevState, ...res?.data])
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
         .catch(error => {

@@ -14,7 +14,6 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import Preloader from 'src/@core/components/preloader'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TUpdateLogComponent } from '../UpdateLog.decorator'
 
 export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
@@ -80,13 +79,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 1000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
+            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
             router.push('/settings/update-log/')
 
             return updatedList
@@ -104,13 +97,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
           apiRequest.get(`/update-logs`).then(res => {
             setListData(res?.data)
           })
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
           setPreload(false)
         })

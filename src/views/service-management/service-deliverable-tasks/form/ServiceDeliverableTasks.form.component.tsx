@@ -11,7 +11,6 @@ import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TServiceDeliverableTasksComponent } from '../ServiceDeliverableTasks.decorator'
 
 export default function ServiceDeliverableTasksFormComponent(props: TServiceDeliverableTasksComponent) {
@@ -137,13 +136,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 1000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
+            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
 
             return updatedList
           })
@@ -161,13 +154,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
             setListData(res?.data)
           })
 
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
         .catch(error => {

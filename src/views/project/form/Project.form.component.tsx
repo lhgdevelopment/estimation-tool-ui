@@ -3,12 +3,13 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TProjectComponent } from '../Project.decorator'
 
 export default function ProjectFormComponent(props: TProjectComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
@@ -36,13 +37,7 @@ export default function ProjectFormComponent(props: TProjectComponent) {
           if (editedServiceIndex !== -1) {
             updatedList[editedServiceIndex] = res?.data
           }
-          Swal.fire({
-            title: 'Data Updated Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onClear()
 
           return updatedList
@@ -51,13 +46,7 @@ export default function ProjectFormComponent(props: TProjectComponent) {
     } else {
       apiRequest.post('/projects', formData).then(res => {
         setListData((prevState: []) => [...prevState, res?.data])
-        Swal.fire({
-          title: 'Data Created Successfully!',
-          icon: 'success',
-          timer: 1000,
-          timerProgressBar: true,
-          showConfirmButton: false
-        })
+        enqueueSnackbar('Created Successfully!', { variant: 'success' })
         onClear()
       })
     }

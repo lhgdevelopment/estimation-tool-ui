@@ -6,10 +6,10 @@ import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TWebsiteComponentComponent } from '../WebsiteComponent.decorator'
 
 export default function WebsiteComponentFormComponent(props: TWebsiteComponentComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
@@ -45,13 +45,7 @@ export default function WebsiteComponentFormComponent(props: TWebsiteComponentCo
           if (editedServiceIndex !== -1) {
             updatedList[editedServiceIndex] = res?.data
           }
-          Swal.fire({
-            title: 'Data Updated Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
 
           onClear()
 
@@ -61,13 +55,9 @@ export default function WebsiteComponentFormComponent(props: TWebsiteComponentCo
     } else {
       apiRequest.post('/components', formData).then(res => {
         setListData((prevState: []) => [...prevState, res?.data])
-        Swal.fire({
-          title: 'Data Created Successfully!',
-          icon: 'success',
-          timer: 1000,
-          timerProgressBar: true,
-          showConfirmButton: false
-        })
+
+        enqueueSnackbar('Created Successfully!', { variant: 'success' })
+
         onClear()
       })
     }

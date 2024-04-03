@@ -352,7 +352,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/services/${serviceEditDataId}`, serviceFormData)
         .then(res => {
-          enqueueSnackbar('Data Updated Successfully!', { variant: 'success' })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceClear()
           handleServiceModalClose()
           console.log(res)
@@ -369,13 +369,13 @@ export default function ServiceTreeComponent() {
         .post('/services', serviceFormData)
         .then(res => {
           // Swal.fire({
-          //   title: 'Data Created Successfully!',
+          //   title: 'Created Successfully!',
           //   icon: 'success',
           //   timer: 500,
           //   timerProgressBar: true,
           //   showConfirmButton: false
           // })
-          enqueueSnackbar('Data Created Successfully!', { variant: 'success' })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceClear()
           handleServiceModalClose()
           console.log(res)
@@ -400,7 +400,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData)
         .then(res => {
-          enqueueSnackbar('Data Updated Successfully!', { variant: 'success' })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceGroupClear()
           handleServiceModalClose()
           getList()
@@ -414,7 +414,7 @@ export default function ServiceTreeComponent() {
         .post('/service-groups', serviceGroupFormData)
         .then(res => {
           setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
-          enqueueSnackbar('Data Created Successfully!', { variant: 'success' })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceGroupClear()
           handleServiceModalClose()
           getList()
@@ -433,7 +433,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-scopes/${serviceSOWEditDataId}`, serviceSOWFormData)
         .then(res => {
-          enqueueSnackbar('Data Updated Successfully!', { variant: 'success' })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceSOWClear()
           handleServiceModalClose()
           getList()
@@ -446,7 +446,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-scopes', serviceSOWFormData)
         .then(res => {
-          enqueueSnackbar('Data Created Successfully!', { variant: 'success' })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceSOWClear()
           handleServiceModalClose()
           getList()
@@ -465,7 +465,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverables/${serviceDeliverableEditDataId}`, serviceDeliverableFormData)
         .then(res => {
-          enqueueSnackbar('Data Updated Successfully!', { variant: 'success' })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceDeliverableClear()
           handleServiceModalClose()
           getList()
@@ -478,7 +478,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-deliverables', serviceDeliverableFormData)
         .then(res => {
-          enqueueSnackbar('Data Created Successfully!', { variant: 'success' })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceDeliverableClear()
           handleServiceModalClose()
           getList()
@@ -666,7 +666,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverable-tasks/${serviceTaskEditDataId}`, serviceTaskFormData)
         .then(res => {
-          enqueueSnackbar('Data Updated Successfully!', { variant: 'success' })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceTaskClear()
           handleServiceModalClose()
           getList()
@@ -675,11 +675,11 @@ export default function ServiceTreeComponent() {
           setErrorMessage(error?.response?.data?.errors)
           enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
-    } else { 
+    } else {
       apiRequest
         .post('/service-deliverable-tasks', serviceTaskFormData)
         .then(res => {
-          enqueueSnackbar('Data Created Successfully!', { variant: 'success' })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceTaskClear()
           getList()
         })

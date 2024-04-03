@@ -1,10 +1,10 @@
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import { Dispatch, useState } from 'react'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 
 type TAIAssistantMessagesEditComponentProps = {
   editData: any
@@ -12,6 +12,7 @@ type TAIAssistantMessagesEditComponentProps = {
   setDetailsData: Dispatch<any>
 }
 export default function AIAssistantMessagesEditComponent(props: TAIAssistantMessagesEditComponentProps) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { modalClose, editData, setDetailsData } = props
 
   const [formData, setFormData] = useState(editData)
@@ -47,13 +48,7 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 1000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
+            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
             onClear()
 
             return {

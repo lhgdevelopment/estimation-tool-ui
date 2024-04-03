@@ -57,7 +57,7 @@ export default function RolePermissionListComponent() {
   const onUpdateRolePermission = (roleId: number, permissions: any) => {
     apiRequest.put(`/roles/${roleId}`, { permissions }).then(res => {
       Swal.fire({
-        title: 'Data Created Successfully!',
+        title: 'Created Successfully!',
         icon: 'success',
         timer: 1000,
         timerProgressBar: true,

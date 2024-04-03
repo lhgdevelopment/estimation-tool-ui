@@ -7,7 +7,6 @@ import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TServiceComponent } from '../Service.decorator'
 
 export default function ServiceFormComponent(props: TServiceComponent) {
@@ -51,13 +50,7 @@ export default function ServiceFormComponent(props: TServiceComponent) {
           if (editedServiceIndex !== -1) {
             updatedList[editedServiceIndex] = res?.data
           }
-          Swal.fire({
-            title: 'Data Updated Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
 
           onClear()
 
@@ -67,13 +60,7 @@ export default function ServiceFormComponent(props: TServiceComponent) {
     } else {
       apiRequest.post('/services', formData).then(res => {
         setListData((prevState: []) => [...prevState, res?.data])
-        Swal.fire({
-          title: 'Data Created Successfully!',
-          icon: 'success',
-          timer: 1000,
-          timerProgressBar: true,
-          showConfirmButton: false
-        })
+        enqueueSnackbar('Created Successfully!', { variant: 'success' })
         onClear()
       })
     }
