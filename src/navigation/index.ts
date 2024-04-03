@@ -73,38 +73,38 @@ const navigation: TNavigation[] = [
     icon: EngineeringIcon,
     path: 'service-management',
     subMenu: [
-      {
-        title: 'Service',
-        icon: SettingsEthernetIcon,
-        path: '/service-management/service'
-      },
-      {
-        title: 'Groups',
-        icon: SettingsEthernetIcon,
-        path: '/service-management/service-groups'
-      },
-      {
-        title: 'SOWs',
-        icon: SettingsEthernetIcon,
-        path: '/service-management/service-scopes'
-      },
-      {
-        title: 'Deliverables',
-        icon: SettingsEthernetIcon,
-        path: '/service-management/service-deliverables'
-      },
-      {
-        title: 'Tasks',
-        icon: SettingsEthernetIcon,
-        path: '/service-management/service-deliverable-tasks'
-      },
+      // {
+      //   title: 'Service',
+      //   icon: SettingsEthernetIcon,
+      //   path: '/service-management/service'
+      // },
+      // {
+      //   title: 'Groups',
+      //   icon: SettingsEthernetIcon,
+      //   path: '/service-management/service-groups'
+      // },
+      // {
+      //   title: 'SOWs',
+      //   icon: SettingsEthernetIcon,
+      //   path: '/service-management/service-scopes'
+      // },
+      // {
+      //   title: 'Deliverables',
+      //   icon: SettingsEthernetIcon,
+      //   path: '/service-management/service-deliverables'
+      // },
+      // {
+      //   title: 'Tasks',
+      //   icon: SettingsEthernetIcon,
+      //   path: '/service-management/service-deliverable-tasks'
+      // },
       {
         title: 'Hourly Rates',
         icon: BadgeIcon,
         path: '/service-management/hourly-rates'
       },
       {
-        title: 'Service Tree',
+        title: 'Services',
         icon: SettingsEthernetIcon,
         path: '/service-management/service-tree'
       }

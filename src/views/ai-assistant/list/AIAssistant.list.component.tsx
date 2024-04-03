@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
-import { formatDateToCustomFormat } from 'src/@core/utils/utils'
+import { formatDateTime } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
 
@@ -92,9 +92,9 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                   <tr key={index} className='text-gray-700 dark:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.name}</td>
                     <td className='px-4 py-3 text-sm'>{data?.user?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.created_at)}</td>
+                    <td className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</td>
                     <td className='px-4 py-3 text-sm'>{data?.user?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.updated_at)}</td>
+                    <td className='px-4 py-3 text-sm'>{formatDateTime(data?.updated_at)}</td>
 
                     <td className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-4 text-sm'>

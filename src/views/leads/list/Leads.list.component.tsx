@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import { TableSx } from 'src/@core/theme/tableStyle'
 import apiRequest from 'src/@core/utils/axios-config'
-import { formatDateToCustomFormat } from 'src/@core/utils/utils'
+import { formatDateTime } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
 import { TLeadsComponent } from '../Leads.decorator'
 
@@ -143,7 +143,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                         </Box>
                       </TableCell> */}
 
-                      <TableCell className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.created_at)}</TableCell>
+                      <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</TableCell>
 
                       <TableCell className='px-4 py-3'>
                         <Box className='flex items-center justify-end space-x-4 text-sm'>

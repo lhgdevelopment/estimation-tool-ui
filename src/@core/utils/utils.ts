@@ -18,7 +18,7 @@ export const handleURLQueries = (router: NextRouter, path: string | undefined): 
   return false
 }
 
-// export function formatDateToCustomFormat(date: Date): string {
+// export function formatDateTime(date: Date): string {
 //   date = new Date(date)
 //   const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' }
 //   const formattedDate = date.toLocaleDateString('en-GB', options)
@@ -26,9 +26,14 @@ export const handleURLQueries = (router: NextRouter, path: string | undefined): 
 //   return formattedDate.replace(/\//g, '-')
 // }
 
-export function formatDateToCustomFormat(date: Date): string {
-  date = new Date(date)
-  const options: Intl.DateTimeFormatOptions = {
+export const dateDefaultFormat: Intl.DateTimeFormatOptions = {
+  month: '2-digit',
+  day: '2-digit',
+  year: 'numeric'
+}
+export function formatDateTime(
+  date: Date,
+  options: Intl.DateTimeFormatOptions = {
     month: '2-digit',
     day: '2-digit',
     year: 'numeric',
@@ -36,7 +41,8 @@ export function formatDateToCustomFormat(date: Date): string {
     minute: '2-digit',
     hour12: true
   }
-  const formattedDate = date.toLocaleDateString('en-US', options)
+): string {
+  const formattedDate = new Date(date).toLocaleDateString('en-US', options)
 
   return formattedDate.replace(/\//g, '-')
 }
