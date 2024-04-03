@@ -11,7 +11,6 @@ import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
-import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
 
@@ -274,11 +273,14 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm'>
-                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Transcript Text</span>
-
-                  <RichTextEditor
+                  <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
+                  <textarea
+                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                    placeholder='Examples: Transcript Text'
+                    name='transcriptText'
+                    rows={10}
                     value={formData.transcriptText}
-                    onBlur={newContent => handleReachText(newContent, 'transcriptText')}
+                    onChange={handleTextChange}
                   />
                   {!!errorMessage?.['transcriptText'] &&
                     errorMessage?.['transcriptText']?.map((message: any, index: number) => {
