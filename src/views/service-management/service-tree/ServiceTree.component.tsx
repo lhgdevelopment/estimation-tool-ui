@@ -29,11 +29,24 @@ export default function ServiceTreeComponent() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [serviceModalOpen, setServiceModalOpen] = useState<boolean>(false)
-  const handleServiceModalOpen = () => setServiceModalOpen(true)
-  const handleServiceModalClose = () => setServiceModalOpen(false)
+  const [expendendKeys, setExpandedKeys] = useState<any>([])
+  const handleServiceModalOpen = () => {
+    setServiceModalOpen(true)
+    setErrorMessage({})
+  }
+  const handleServiceModalClose = () => {
+    setServiceModalOpen(false)
+    setErrorMessage({})
+  }
   const [employeeRolesModalOpen, setEmployeeRolesModalOpen] = useState<boolean>(false)
-  const handleEmployeeRolesModalOpen = () => setEmployeeRolesModalOpen(true)
-  const handleEmployeeRolesModalClose = () => setEmployeeRolesModalOpen(false)
+  const handleEmployeeRolesModalOpen = () => {
+    setEmployeeRolesModalOpen(true)
+    setErrorMessage({})
+  }
+  const handleEmployeeRolesModalClose = () => {
+    setEmployeeRolesModalOpen(false)
+    setErrorMessage({})
+  }
   const employeeRolesDropdownRef = useRef<DropdownRef>(null)
   const [formType, setFormType] = useState<EServiceFormType>()
   const [defaultExpandedKeys, setDefaultExpandedKeys] = useState<string[]>(['Development_1050'])
@@ -348,31 +361,39 @@ export default function ServiceTreeComponent() {
           })
           onServiceClear()
           handleServiceModalClose()
-          getList()
+          console.log(res)
+
+          // getList()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+
           enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/services', serviceFormData)
         .then(res => {
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          // Swal.fire({
+          //   title: 'Data Created Successfully!',
+          //   icon: 'success',
+          //   timer: 500,
+          //   timerProgressBar: true,
+          //   showConfirmButton: false
+          // })
+          enqueueSnackbar('Data Created Successfully!', { variant: 'success' })
           onServiceClear()
           handleServiceModalClose()
+          console.log(res)
+
+          // setServiceTreeData((prevState: []) => transformServiceTree([...prevState, { ...res?.data }], 'service'))
+
           getList()
         })
         .catch(error => {
           console.log(error)
-
-          setErrorMessage(error?.response?.data?.message)
+          console.log(errorMessage)
+          setErrorMessage(error?.response?.data?.errors)
           enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
@@ -951,6 +972,8 @@ export default function ServiceTreeComponent() {
 
     // setDefaultExpandedKeys([dragNode.key])
   }
+  console.log(serviceTreeData)
+  console.log(expendendKeys)
 
   return (
     <>
@@ -992,6 +1015,10 @@ export default function ServiceTreeComponent() {
               defaultExpandAll
               treeData={serviceTreeData}
               multiple
+              expandedKeys={expendendKeys}
+              onExpand={expanded => {
+                setExpandedKeys([...expanded])
+              }}
               allowDrop={(options: any) => {
                 if (options?.dragNode?.type === options?.dropNode?.type) {
                   if (
@@ -1269,6 +1296,14 @@ export default function ServiceTreeComponent() {
                         value={serviceFormData.projectTypeId}
                         onChange={e => handleSelectChange(e, serviceFormData, setServiceFormData)}
                       />
+                      {!!errorMessage?.['projectTypeId'] &&
+                        errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                 </Box>
@@ -1277,11 +1312,20 @@ export default function ServiceTreeComponent() {
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
                       <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+
+                      <RichTextEditor
+                        value={serviceFormData.name}
+                        onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
+                      />
+                      {!!errorMessage?.['name'] &&
+                        errorMessage?.['name']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
-                    <RichTextEditor
-                      value={serviceFormData.name}
-                      onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
-                    />
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -1297,6 +1341,14 @@ export default function ServiceTreeComponent() {
                           handleTextChange(e, serviceFormData, setServiceFormData)
                         }}
                       />
+                      {!!errorMessage?.['order'] &&
+                        errorMessage?.['order']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                 </Box>
@@ -1359,21 +1411,22 @@ export default function ServiceTreeComponent() {
                       <Box sx={{ width: '100%' }}>
                         <label className='block text-sm'>
                           <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+
+                          <RichTextEditor
+                            value={serviceGroupFormData.name}
+                            onBlur={newContent =>
+                              handleReachText(newContent, 'name', serviceGroupFormData, setServiceGroupFormData)
+                            }
+                          />
+                          {!!errorMessage?.['name'] &&
+                            errorMessage?.['name']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
                         </label>
-                        <RichTextEditor
-                          value={serviceGroupFormData.name}
-                          onBlur={newContent =>
-                            handleReachText(newContent, 'name', serviceGroupFormData, setServiceGroupFormData)
-                          }
-                        />
-                        {!!errorMessage?.['name'] &&
-                          errorMessage?.['name']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
                       </Box>
                     </Box>
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -1389,6 +1442,14 @@ export default function ServiceTreeComponent() {
                               handleTextChange(e, serviceGroupFormData, setServiceGroupFormData)
                             }}
                           />
+                          {!!errorMessage?.['order'] &&
+                            errorMessage?.['order']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
                         </label>
                       </Box>
                     </Box>
@@ -1606,6 +1667,14 @@ export default function ServiceTreeComponent() {
                               handleTextChange(e, serviceSOWFormData, setServiceSOWFormData)
                             }}
                           />
+                          {!!errorMessage?.['order'] &&
+                            errorMessage?.['order']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
                         </label>
                       </Box>
                     </Box>
@@ -1820,6 +1889,14 @@ export default function ServiceTreeComponent() {
                               handleTextChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
                             }}
                           />
+                          {!!errorMessage?.['order'] &&
+                            errorMessage?.['order']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
                         </label>
                       </Box>
                     </Box>
@@ -2360,6 +2437,14 @@ export default function ServiceTreeComponent() {
                                     handleTextChange(e, serviceTaskFormData, setServiceTaskFormData)
                                   }}
                                 />
+                                {!!errorMessage?.['order'] &&
+                                  errorMessage?.['order']?.map((message: any, index: number) => {
+                                    return (
+                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                        {message}
+                                      </span>
+                                    )
+                                  })}
                               </label>
                             </Box>
                           </Box>

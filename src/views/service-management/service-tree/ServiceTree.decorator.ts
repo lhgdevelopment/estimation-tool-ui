@@ -14,7 +14,7 @@ export const transformServiceTree = (data: any, type: string) => {
       ...item,
       title: item.name,
       type: type,
-      key: item.label ? item.label : `${item.name}_${keyCounter++}`
+      key: item.label ? item.label : `${type}_${item?.id}`
     }
     if (item.groups) {
       newItem.children = transformServiceTree(item.groups, 'group')
