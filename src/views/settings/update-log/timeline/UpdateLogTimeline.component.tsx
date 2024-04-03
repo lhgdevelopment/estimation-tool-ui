@@ -12,6 +12,7 @@ import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useEffect, useRef, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
+import { dateDefaultFormat, formatDateTime } from 'src/@core/utils/utils'
 
 export default function UpdateLogTimelineComponent() {
   const [updateLogData, setUpdateLogData] = useState<any>([])
@@ -80,7 +81,7 @@ export default function UpdateLogTimelineComponent() {
                 variant='body2'
                 color='text.secondary'
               >
-                {updateLog.date}
+                {formatDateTime(updateLog.date, dateDefaultFormat)}
               </TimelineOppositeContent>
               <TimelineSeparator>
                 <TimelineConnector />

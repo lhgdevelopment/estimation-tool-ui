@@ -19,7 +19,7 @@ import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import { TableSx } from 'src/@core/theme/tableStyle'
 import apiRequest from 'src/@core/utils/axios-config'
-import { formatDateToCustomFormat } from 'src/@core/utils/utils'
+import { formatDateTime } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
 import { MeetingTypeList, TMeetingSummeryComponent } from '../MeetingSummery.decorator'
 
@@ -180,7 +180,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm'>{meetingType?.title}</TableCell>
                       <TableCell className='px-4 py-3 text-sm'>{data.created_by?.name}</TableCell>
-                      <TableCell className='px-4 py-3 text-sm'>{formatDateToCustomFormat(data?.created_at)}</TableCell>
+                      <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</TableCell>
 
                       <TableCell className='px-4 py-3'>
                         <Box className='flex items-center justify-end space-x-4 text-sm'>
