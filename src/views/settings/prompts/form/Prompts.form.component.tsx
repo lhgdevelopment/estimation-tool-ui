@@ -7,7 +7,6 @@ import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TPromptsComponent, promptsTypeList } from '../Prompts.decorator'
 
 export default function PromptsFormComponent(props: TPromptsComponent) {
@@ -49,13 +48,8 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 1000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
+            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+
             onClear()
 
             return updatedList
@@ -70,13 +64,8 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
         .post('/prompts', promptsPromptsFormData)
         .then(res => {
           setListData((prevState: []) => [...prevState, res?.data])
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+
           onClear()
         })
         .catch(error => {

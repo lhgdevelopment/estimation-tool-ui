@@ -29,11 +29,24 @@ export default function ServiceTreeComponent() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [serviceModalOpen, setServiceModalOpen] = useState<boolean>(false)
-  const handleServiceModalOpen = () => setServiceModalOpen(true)
-  const handleServiceModalClose = () => setServiceModalOpen(false)
+  const [expendendKeys, setExpandedKeys] = useState<any>([])
+  const handleServiceModalOpen = () => {
+    setServiceModalOpen(true)
+    setErrorMessage({})
+  }
+  const handleServiceModalClose = () => {
+    setServiceModalOpen(false)
+    setErrorMessage({})
+  }
   const [employeeRolesModalOpen, setEmployeeRolesModalOpen] = useState<boolean>(false)
-  const handleEmployeeRolesModalOpen = () => setEmployeeRolesModalOpen(true)
-  const handleEmployeeRolesModalClose = () => setEmployeeRolesModalOpen(false)
+  const handleEmployeeRolesModalOpen = () => {
+    setEmployeeRolesModalOpen(true)
+    setErrorMessage({})
+  }
+  const handleEmployeeRolesModalClose = () => {
+    setEmployeeRolesModalOpen(false)
+    setErrorMessage({})
+  }
   const employeeRolesDropdownRef = useRef<DropdownRef>(null)
   const [formType, setFormType] = useState<EServiceFormType>()
   const [defaultExpandedKeys, setDefaultExpandedKeys] = useState<string[]>(['Development_1050'])
@@ -339,40 +352,42 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/services/${serviceEditDataId}`, serviceFormData)
         .then(res => {
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceClear()
           handleServiceModalClose()
-          getList()
+          console.log(res)
+
+          // getList()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
+
           enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/services', serviceFormData)
         .then(res => {
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          // Swal.fire({
+          //   title: 'Created Successfully!',
+          //   icon: 'success',
+          //   timer: 500,
+          //   timerProgressBar: true,
+          //   showConfirmButton: false
+          // })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceClear()
           handleServiceModalClose()
+          console.log(res)
+
+          // setServiceTreeData((prevState: []) => transformServiceTree([...prevState, { ...res?.data }], 'service'))
+
           getList()
         })
         .catch(error => {
           console.log(error)
-
-          setErrorMessage(error?.response?.data?.message)
+          console.log(errorMessage)
+          setErrorMessage(error?.response?.data?.errors)
           enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
@@ -385,13 +400,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData)
         .then(res => {
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceGroupClear()
           handleServiceModalClose()
           getList()
@@ -405,13 +414,7 @@ export default function ServiceTreeComponent() {
         .post('/service-groups', serviceGroupFormData)
         .then(res => {
           setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceGroupClear()
           handleServiceModalClose()
           getList()
@@ -430,13 +433,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-scopes/${serviceSOWEditDataId}`, serviceSOWFormData)
         .then(res => {
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceSOWClear()
           handleServiceModalClose()
           getList()
@@ -449,13 +446,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-scopes', serviceSOWFormData)
         .then(res => {
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceSOWClear()
           handleServiceModalClose()
           getList()
@@ -474,13 +465,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverables/${serviceDeliverableEditDataId}`, serviceDeliverableFormData)
         .then(res => {
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceDeliverableClear()
           handleServiceModalClose()
           getList()
@@ -493,13 +478,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-deliverables', serviceDeliverableFormData)
         .then(res => {
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceDeliverableClear()
           handleServiceModalClose()
           getList()
@@ -525,7 +504,7 @@ export default function ServiceTreeComponent() {
       if (res.isConfirmed) {
         apiRequest.delete(`/services/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -551,7 +530,7 @@ export default function ServiceTreeComponent() {
       if (res.isConfirmed) {
         apiRequest.delete(`/service-groups/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -577,7 +556,7 @@ export default function ServiceTreeComponent() {
       if (res.isConfirmed) {
         apiRequest.delete(`/service-scopes/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -603,7 +582,7 @@ export default function ServiceTreeComponent() {
       if (res.isConfirmed) {
         apiRequest.delete(`/service-deliverables/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -629,7 +608,7 @@ export default function ServiceTreeComponent() {
       if (res.isConfirmed) {
         apiRequest.delete(`/service-deliverable-tasks/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -687,13 +666,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverable-tasks/${serviceTaskEditDataId}`, serviceTaskFormData)
         .then(res => {
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceTaskClear()
           handleServiceModalClose()
           getList()
@@ -706,13 +679,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .post('/service-deliverable-tasks', serviceTaskFormData)
         .then(res => {
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 500,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceTaskClear()
           getList()
         })
@@ -822,7 +789,6 @@ export default function ServiceTreeComponent() {
         position = position + 1
       }
     }
-    console.log(info)
 
     if (position == dragNode.order) {
       return
@@ -890,7 +856,6 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-groups/${dragNode.id}`, {
           ...dragNode,
-
           order: position
         })
         .then(res => {
@@ -951,6 +916,8 @@ export default function ServiceTreeComponent() {
 
     // setDefaultExpandedKeys([dragNode.key])
   }
+  console.log(serviceTreeData)
+  console.log(expendendKeys)
 
   return (
     <>
@@ -992,6 +959,10 @@ export default function ServiceTreeComponent() {
               defaultExpandAll
               treeData={serviceTreeData}
               multiple
+              expandedKeys={expendendKeys}
+              onExpand={(expanded: any) => {
+                setExpandedKeys([...expanded])
+              }}
               allowDrop={(options: any) => {
                 if (options?.dragNode?.type === options?.dropNode?.type) {
                   if (
@@ -1269,6 +1240,14 @@ export default function ServiceTreeComponent() {
                         value={serviceFormData.projectTypeId}
                         onChange={e => handleSelectChange(e, serviceFormData, setServiceFormData)}
                       />
+                      {!!errorMessage?.['projectTypeId'] &&
+                        errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                 </Box>
@@ -1277,11 +1256,20 @@ export default function ServiceTreeComponent() {
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
                       <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+
+                      <RichTextEditor
+                        value={serviceFormData.name}
+                        onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
+                      />
+                      {!!errorMessage?.['name'] &&
+                        errorMessage?.['name']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
-                    <RichTextEditor
-                      value={serviceFormData.name}
-                      onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
-                    />
                   </Box>
                 </Box>
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -1297,6 +1285,14 @@ export default function ServiceTreeComponent() {
                           handleTextChange(e, serviceFormData, setServiceFormData)
                         }}
                       />
+                      {!!errorMessage?.['order'] &&
+                        errorMessage?.['order']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
                     </label>
                   </Box>
                 </Box>
@@ -1359,21 +1355,22 @@ export default function ServiceTreeComponent() {
                       <Box sx={{ width: '100%' }}>
                         <label className='block text-sm'>
                           <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+
+                          <RichTextEditor
+                            value={serviceGroupFormData.name}
+                            onBlur={newContent =>
+                              handleReachText(newContent, 'name', serviceGroupFormData, setServiceGroupFormData)
+                            }
+                          />
+                          {!!errorMessage?.['name'] &&
+                            errorMessage?.['name']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
                         </label>
-                        <RichTextEditor
-                          value={serviceGroupFormData.name}
-                          onBlur={newContent =>
-                            handleReachText(newContent, 'name', serviceGroupFormData, setServiceGroupFormData)
-                          }
-                        />
-                        {!!errorMessage?.['name'] &&
-                          errorMessage?.['name']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
                       </Box>
                     </Box>
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -1389,6 +1386,14 @@ export default function ServiceTreeComponent() {
                               handleTextChange(e, serviceGroupFormData, setServiceGroupFormData)
                             }}
                           />
+                          {!!errorMessage?.['order'] &&
+                            errorMessage?.['order']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
                         </label>
                       </Box>
                     </Box>
@@ -1606,6 +1611,14 @@ export default function ServiceTreeComponent() {
                               handleTextChange(e, serviceSOWFormData, setServiceSOWFormData)
                             }}
                           />
+                          {!!errorMessage?.['order'] &&
+                            errorMessage?.['order']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
                         </label>
                       </Box>
                     </Box>
@@ -1820,6 +1833,14 @@ export default function ServiceTreeComponent() {
                               handleTextChange(e, serviceDeliverableFormData, setServiceDeliverableFormData)
                             }}
                           />
+                          {!!errorMessage?.['order'] &&
+                            errorMessage?.['order']?.map((message: any, index: number) => {
+                              return (
+                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  {message}
+                                </span>
+                              )
+                            })}
                         </label>
                       </Box>
                     </Box>
@@ -2360,6 +2381,14 @@ export default function ServiceTreeComponent() {
                                     handleTextChange(e, serviceTaskFormData, setServiceTaskFormData)
                                   }}
                                 />
+                                {!!errorMessage?.['order'] &&
+                                  errorMessage?.['order']?.map((message: any, index: number) => {
+                                    return (
+                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                        {message}
+                                      </span>
+                                    )
+                                  })}
                               </label>
                             </Box>
                           </Box>

@@ -47,7 +47,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
       if (res.isConfirmed) {
         apiRequest.delete(`/conversations/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,

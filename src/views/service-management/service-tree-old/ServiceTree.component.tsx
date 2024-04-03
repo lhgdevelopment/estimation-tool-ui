@@ -280,7 +280,7 @@ export default function ServiceTreeComponent() {
             updatedList[editedServiceIndex] = res?.data
           }
           Swal.fire({
-            title: 'Data Updated Successfully!',
+            title: 'Updated Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -296,7 +296,7 @@ export default function ServiceTreeComponent() {
       apiRequest.post('/services', serviceFormData).then(res => {
         setListData((prevState: []) => [...prevState, res?.data])
         Swal.fire({
-          title: 'Data Created Successfully!',
+          title: 'Created Successfully!',
           icon: 'success',
           timer: 1000,
           timerProgressBar: true,
@@ -324,7 +324,7 @@ export default function ServiceTreeComponent() {
               updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
-              title: 'Data Updated Successfully!',
+              title: 'Updated Successfully!',
               icon: 'success',
               timer: 1000,
               timerProgressBar: true,
@@ -344,7 +344,7 @@ export default function ServiceTreeComponent() {
         .then(res => {
           setListData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
-            title: 'Data Created Successfully!',
+            title: 'Created Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -374,7 +374,7 @@ export default function ServiceTreeComponent() {
               updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
-              title: 'Data Updated Successfully!',
+              title: 'Updated Successfully!',
               icon: 'success',
               timer: 1000,
               timerProgressBar: true,
@@ -394,7 +394,7 @@ export default function ServiceTreeComponent() {
         .then(res => {
           setListData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
-            title: 'Data Created Successfully!',
+            title: 'Created Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -424,7 +424,7 @@ export default function ServiceTreeComponent() {
               updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
-              title: 'Data Updated Successfully!',
+              title: 'Updated Successfully!',
               icon: 'success',
               timer: 1000,
               timerProgressBar: true,
@@ -444,7 +444,7 @@ export default function ServiceTreeComponent() {
         .then(res => {
           setListData((prevState: []) => [...prevState, ...res?.data])
           Swal.fire({
-            title: 'Data Created Successfully!',
+            title: 'Created Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,
@@ -512,7 +512,7 @@ export default function ServiceTreeComponent() {
               updatedList[editedServiceIndex] = res?.data
             }
             Swal.fire({
-              title: 'Data Updated Successfully!',
+              title: 'Updated Successfully!',
               icon: 'success',
               timer: 1000,
               timerProgressBar: true,
@@ -535,7 +535,7 @@ export default function ServiceTreeComponent() {
           })
 
           Swal.fire({
-            title: 'Data Created Successfully!',
+            title: 'Created Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,

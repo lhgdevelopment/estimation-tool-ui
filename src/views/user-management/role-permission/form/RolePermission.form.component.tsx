@@ -5,7 +5,6 @@ import { Box } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TRolePermissionComponent } from '../RolePermission.decorator'
 
 export default function RolePermissionFormComponent(props: TRolePermissionComponent) {
@@ -47,13 +46,7 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
               updatedList[editedServiceIndex] = res?.data
             }
             roleModalClose()
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 1000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
+            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
 
             return updatedList
           })
@@ -70,13 +63,7 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
         .then(res => {
           setListData((prevState: []) => roleSorting([res?.data, ...prevState]))
           roleModalClose()
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
         .catch(error => {

@@ -13,7 +13,6 @@ import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
 
 export default function MeetingSummeryFormComponent(props: TMeetingSummeryComponent) {
@@ -85,13 +84,8 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 1000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
+            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+
             onClear()
             setPreload(false)
 
@@ -111,13 +105,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           apiRequest.get(`/meeting-summery`).then(res => {
             setListData(res?.data)
           })
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
           setPreload(false)
         })

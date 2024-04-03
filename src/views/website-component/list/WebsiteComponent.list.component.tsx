@@ -40,7 +40,7 @@ export default function WebsiteComponentListComponent(props: TWebsiteComponentCo
       if (res.isConfirmed) {
         apiRequest.delete(`/components/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,

@@ -14,7 +14,6 @@ import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import MdPreviewTitle from 'src/@core/components/md-preview-title'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
 
 const steps = ['Transcript', 'Summery', 'Problems & Goals', 'Project Overview', 'SOW', 'Deliverables']
@@ -192,13 +191,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .then(res => {
           if (res?.data?.meeting_transcript && type == 'NEXT') {
             apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id }).then(res2 => {
-              Swal.fire({
-                title: 'Data Created Successfully!',
-                icon: 'success',
-                timer: 1000,
-                timerProgressBar: true,
-                showConfirmButton: false
-              })
+              enqueueSnackbar('Created Successfully!', { variant: 'success' })
 
               setProblemGoalID(res2?.data?.id)
               setProblemGoalText(res2?.data?.problemGoalText)
@@ -227,13 +220,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           console.log(res)
           if (res?.data && type == 'NEXT') {
             apiRequest.post('/project-overview', { problemGoalID }).then(res2 => {
-              Swal.fire({
-                title: 'Data Created Successfully!',
-                icon: 'success',
-                timer: 1000,
-                timerProgressBar: true,
-                showConfirmButton: false
-              })
+              enqueueSnackbar('Created Successfully!', { variant: 'success' })
               setOverviewTextID(res2?.data?.id)
               setOverviewText(res2?.data?.overviewText)
               setTimeout(() => {
@@ -262,13 +249,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .then(res => {
           if (res?.data && type == 'NEXT') {
             apiRequest.post('/scope-of-work', { problemGoalID }).then(res2 => {
-              Swal.fire({
-                title: 'Data Created Successfully!',
-                icon: 'success',
-                timer: 1000,
-                timerProgressBar: true,
-                showConfirmButton: false
-              })
+              enqueueSnackbar('Created Successfully!', { variant: 'success' })
               setScopeTextID(res2?.data?.id)
               setScopeText(res2?.data?.scopeText)
               setTimeout(() => {
@@ -299,13 +280,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           console.log(res)
           if (res?.data && type == 'NEXT') {
             apiRequest.post('/deliverables', { scopeOfWorkId: scopeTextID }).then(res2 => {
-              Swal.fire({
-                title: 'Data Created Successfully!',
-                icon: 'success',
-                timer: 1000,
-                timerProgressBar: true,
-                showConfirmButton: false
-              })
+              enqueueSnackbar('Created Successfully!', { variant: 'success' })
               setDeliverablesTextID(res2?.data?.id)
               setDeliverablesText(res2?.data?.deliverablesText)
               setTimeout(() => {
@@ -338,13 +313,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             }
           })
 
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
 
           setTimeout(() => {
             setActiveStep(0)

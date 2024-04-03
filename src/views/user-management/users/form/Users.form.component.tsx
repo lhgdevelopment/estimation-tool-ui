@@ -7,7 +7,6 @@ import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { TUsersComponent } from '../Users.decorator'
 
 export default function UsersFormComponent(props: TUsersComponent) {
@@ -51,13 +50,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 1000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
+            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
 
             return updatedList
           })
@@ -72,13 +65,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
         .post('/users', formData)
         .then(res => {
           setListData((prevState: []) => [...prevState, res?.data])
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
         .catch(error => {

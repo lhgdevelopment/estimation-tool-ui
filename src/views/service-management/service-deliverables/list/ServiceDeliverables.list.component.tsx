@@ -41,7 +41,7 @@ export default function ServiceDeliverablesListComponent(props: TServiceDelivera
       if (res.isConfirmed) {
         apiRequest.delete(`/service-deliverables/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,

@@ -46,7 +46,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
       if (res.isConfirmed) {
         apiRequest.delete(`/leads/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,

@@ -41,7 +41,7 @@ export default function WebsiteComponentCategoriesListComponent(props: TWebsiteC
       if (res.isConfirmed) {
         apiRequest.delete(`/categories/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,

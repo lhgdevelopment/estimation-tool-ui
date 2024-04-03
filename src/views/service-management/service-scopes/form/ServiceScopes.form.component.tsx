@@ -6,13 +6,14 @@ import { Box, Button } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import { ServiceDropdownTree } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 
 import DeleteIcon from '@mui/icons-material/Delete'
+import { useSnackbar } from 'notistack'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import { TServiceScopesComponent } from '../ServiceScopes.decorator'
 
 export default function ServiceScopesFormComponent(props: TServiceScopesComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const [errorMessage, setErrorMessage] = useState<any>({})
@@ -94,13 +95,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 1000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
+            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
 
             return updatedList
           })
@@ -114,13 +109,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
         .post('/service-scopes', formData)
         .then(res => {
           setListData((prevState: []) => [...prevState, ...res?.data])
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
         .catch(error => {

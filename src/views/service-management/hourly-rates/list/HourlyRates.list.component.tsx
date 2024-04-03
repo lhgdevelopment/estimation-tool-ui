@@ -75,7 +75,7 @@ export default function HourlyRatesListComponent(props: THourlyRatesComponent) {
       if (res.isConfirmed) {
         apiRequest.delete(`/employee-roles/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,

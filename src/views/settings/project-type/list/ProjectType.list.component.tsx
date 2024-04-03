@@ -42,7 +42,7 @@ export default function ProjectTypeListComponent(props: TProjectTypeComponent) {
       if (res.isConfirmed) {
         apiRequest.delete(`/project-type/${id}`).then(res => {
           Swal.fire({
-            title: 'Data Deleted Successfully!',
+            title: 'Deleted Successfully!',
             icon: 'success',
             timer: 1000,
             timerProgressBar: true,

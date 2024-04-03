@@ -6,7 +6,6 @@ import { Box } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
-import Swal from 'sweetalert2'
 import { THourlyRatesComponent } from '../HourlyRates.decorator'
 
 export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
@@ -54,13 +53,7 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
             if (editedHourlyRatesIndex !== -1) {
               updatedList[editedHourlyRatesIndex] = res?.data
             }
-            Swal.fire({
-              title: 'Data Updated Successfully!',
-              icon: 'success',
-              timer: 1000,
-              timerProgressBar: true,
-              showConfirmButton: false
-            })
+            enqueueSnackbar('Created Successfully!', { variant: 'success' })
 
             onClear()
 
@@ -76,13 +69,7 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
         .post('/employee-roles', formData)
         .then(res => {
           setListData((prevState: []) => [...prevState, res?.data])
-          Swal.fire({
-            title: 'Data Created Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
         .catch(error => {
