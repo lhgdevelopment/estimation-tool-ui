@@ -9,9 +9,11 @@ import apiRequest from 'src/@core/utils/axios-config'
 import { TServiceGroupsComponent } from '../ServiceGroups.decorator'
 
 import DeleteIcon from '@mui/icons-material/Delete'
+import { useSnackbar } from 'notistack'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 
 export default function ServiceGroupsFormComponent(props: TServiceGroupsComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const [errorMessage, setErrorMessage] = useState<any>({})

@@ -8,10 +8,12 @@ import { ServiceDropdownTree } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
 
 import DeleteIcon from '@mui/icons-material/Delete'
+import { useSnackbar } from 'notistack'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import { TServiceScopesComponent } from '../ServiceScopes.decorator'
 
 export default function ServiceScopesFormComponent(props: TServiceScopesComponent) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const [errorMessage, setErrorMessage] = useState<any>({})
