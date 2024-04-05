@@ -100,30 +100,7 @@ export default function MeetingSummeryDetailsComponent() {
                 </Box>
               </Box>
             </Box>
-            {!detailsData?.['tldvLink'] && (
-              <Accordion
-                defaultExpanded={false}
-                TransitionProps={{
-                  timeout: 0
-                }}
-              >
-                <AccordionSummary
-                  sx={{ borderBottom: '2px solid #f9fafb' }}
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls='sow1-content'
-                  id='sow1-header'
-                >
-                  <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Transcript Text</Box>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Box sx={sowBodySx}>
-                    <MdPreview modelValue={detailsData?.['transcriptText']} />
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
-            )}
-
-            <Accordion defaultExpanded={false}>
+            <Accordion defaultExpanded={true}>
               <AccordionSummary
                 sx={{ borderBottom: '2px solid #f9fafb' }}
                 expandIcon={<ExpandMoreIcon />}
@@ -148,6 +125,26 @@ export default function MeetingSummeryDetailsComponent() {
                       </Box>
                     </Link>
                   </Box>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              defaultExpanded={false}
+              TransitionProps={{
+                timeout: 0
+              }}
+            >
+              <AccordionSummary
+                sx={{ borderBottom: '2px solid #f9fafb' }}
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls='sow1-content'
+                id='sow1-header'
+              >
+                <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Transcript Text</Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={sowBodySx}>
+                  <MdPreview modelValue={detailsData?.['transcriptText']} />
                 </Box>
               </AccordionDetails>
             </Accordion>
