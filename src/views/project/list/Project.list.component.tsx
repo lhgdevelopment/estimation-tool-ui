@@ -92,7 +92,7 @@ export default function ProjectListComponent(props: TProjectComponent) {
                           onClick={() => {
                             onEdit(data['project_id'])
                           }}
-                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray hover:text-white hover:bg-purple-600'
+                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                           aria-label='Edit'
                         >
                           <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -103,7 +103,7 @@ export default function ProjectListComponent(props: TProjectComponent) {
                           onClick={() => {
                             onDelete(data['project_id'])
                           }}
-                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray hover:text-white hover:bg-purple-600'
+                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                           aria-label='Delete'
                         >
                           <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
