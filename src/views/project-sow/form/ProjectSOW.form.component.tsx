@@ -16,7 +16,15 @@ import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
 
-const steps = ['Transcript', 'Summery', 'Problems & Goals', 'Project Overview', 'SOW', 'Deliverables']
+const steps = [
+  'Transcript',
+  'Summery',
+  'Problems & Goals',
+  'Project Overview',
+  'SOW',
+  'Service Deliverables',
+  'Deliverables'
+]
 
 export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -796,6 +804,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 </Box>
               )}
               {activeStep == 5 && (
+                <Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}></Box>
+                  </Box>
+                </Box>
+              )}
+              {activeStep == 6 && (
                 <Box>
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>

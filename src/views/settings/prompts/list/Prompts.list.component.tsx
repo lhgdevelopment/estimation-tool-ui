@@ -80,7 +80,9 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                 <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                   <TableCell className='px-4 py-3'>Name</TableCell>
                   <TableCell className='px-4 py-3'>Type</TableCell>
-                  <TableCell className='px-4 py-3'>Prompt</TableCell>
+                  <TableCell className='px-4 py-3' sx={{ width: '100%' }}>
+                    Prompt
+                  </TableCell>
                   <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
                     Actions
                   </TableCell>
@@ -129,12 +131,12 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                       </TableCell>
 
                       <TableCell className='px-4 py-3'>
-                        <Box className='flex items-center justify-end space-x-4 text-sm'>
+                        <Box className='flex items-center justify-end space-x-1 text-sm'>
                           <button
                             onClick={() => {
                               onEdit(data['id'])
                             }}
-                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                             aria-label='Edit'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -145,7 +147,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                             onClick={() => {
                               onDelete(data['id'])
                             }}
-                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-red-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-red-600'
                             aria-label='Delete'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>

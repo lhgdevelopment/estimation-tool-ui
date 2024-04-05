@@ -130,14 +130,20 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
                 <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                  <TableCell className='px-4 py-3' sx={{ width: '200px' }}>
+                  <TableCell className='px-4 py-3' sx={{ width: '100%' }}>
                     Meeting Name
                   </TableCell>
-                  <TableCell className='px-4 py-3'>Meeting Type</TableCell>
-                  <TableCell className='px-4 py-3'>Created By</TableCell>
-                  <TableCell className='px-4 py-3'>Created At</TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center', width: '140px' }}>
+                    Meeting Type
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center', width: '140px' }}>
+                    Created By
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center', width: '190px' }}>
+                    Created At
+                  </TableCell>
 
-                  <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
+                  <TableCell className='px-4 py-3 ' sx={{ textAlign: 'center', width: '240px' }}>
                     Actions
                   </TableCell>
                 </TableRow>
@@ -148,14 +154,14 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
 
                   return (
                     <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
-                      <TableCell className='px-4 py-3 text-sm w-200 expendable-row'>
+                      <TableCell className='px-4 py-3 text-sm  expendable-row'>
                         <Box className='expendable-row-inner'>
                           {expendedRow == `row-${index}` ? (
                             <Box className='expended-row-box'>{data?.meetingName}</Box>
                           ) : (
                             <Box className='expendable-row-box'>{data?.meetingName}</Box>
                           )}
-                          {String(data?.meetingName).length > 75 ? (
+                          {String(data?.meetingName).length > 100 ? (
                             expendedRow == `row-${index}` ? (
                               <Button
                                 onClick={() => {
@@ -180,17 +186,23 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                           )}
                         </Box>
                       </TableCell>
-                      <TableCell className='px-4 py-3 text-sm'>{meetingType?.title}</TableCell>
-                      <TableCell className='px-4 py-3 text-sm'>{data.created_by?.name}</TableCell>
-                      <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {meetingType?.title}
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {data.created_by?.name}
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {formatDateTime(data?.created_at)}
+                      </TableCell>
 
                       <TableCell className='px-4 py-3'>
-                        <Box className='flex items-center justify-end space-x-4 text-sm'>
+                        <Box className='flex items-center justify-end space-x-1 text-sm'>
                           <Link href={`/meeting-summery/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
-                              className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                              className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                               aria-label='View'
                             >
                               <VisibilityIcon />
@@ -201,7 +213,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
-                              className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                              className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                               aria-label='View'
                             >
                               <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -210,7 +222,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                             </Box>
                           </Link>
                           <button
-                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                             onClick={() => {
                               onStatusChange(data)
                             }}
@@ -227,7 +239,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                             onClick={() => {
                               onDelete(data['id'])
                             }}
-                            className='flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-gray'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-red-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-red-600'
                             aria-label='Delete'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
