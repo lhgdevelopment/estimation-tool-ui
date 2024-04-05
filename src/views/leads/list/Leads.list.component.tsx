@@ -1,5 +1,5 @@
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
@@ -14,22 +14,49 @@ export default function LeadsListComponent(props: TLeadsComponent) {
 
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
+  const [preloader, setPreloader] = useState<boolean>(false)
   const [expendedRow, setExpended] = useState('')
   const handleRowExpendable = (id: any) => {
     setExpended(prevState => id)
   }
 
-  const getList = (page = 1) => {
-    apiRequest.get(`/leads?page=${page}`).then(res => {
-      const paginationData: any = res
-      setListData(res?.data)
-      setCurrentPage(paginationData?.['current_page'])
-      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+  const defaultData = {
+    firstName: '',
+    lastName: '',
+    company: '',
+    phone: '',
+    email: ''
+  }
+
+  const [filterData, setFilterData] = useState(defaultData)
+
+  const handleFilterChange = (e: React.ChangeEvent<any>) => {
+    setFilterData({
+      ...filterData,
+      [e.target.name]: e.target.value
     })
+  }
+
+  const onFilterClear = () => {
+    setFilterData(prevState => ({ ...defaultData }))
   }
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)
+  }
+
+  const getList = (page = 1) => {
+    apiRequest
+      .get(
+        `/leads?page=${page}&firstName=${filterData?.firstName}&lastName=${filterData?.lastName}&company=${filterData?.company}&phone=${filterData?.phone}&email=${filterData?.email}`
+      )
+      .then(res => {
+        const paginationData: any = res
+        setListData(res?.data)
+        setCurrentPage(paginationData?.['current_page'])
+        setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+        setPreloader(false)
+      })
   }
 
   const onDelete = (id: string) => {
@@ -60,7 +87,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
 
   useEffect(() => {
     getList()
-  }, [])
+  }, [filterData])
 
   const style = {
     position: 'absolute' as const,
@@ -75,7 +102,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
     boxShadow: 24,
     p: 4
   }
-  if (!listData?.length) {
+  if (preloader) {
     return <UiSkeleton />
   }
 
@@ -101,6 +128,81 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                 </TableRow>
               </TableHead>
               <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
+                <Box component={'tr'} className='text-gray-700 dark:text-gray-400' sx={{ '& td': { p: '5px 5px' } }}>
+                  <Box component={'td'}>
+                    <input
+                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      placeholder='Enter first Name'
+                      name='firstName'
+                      value={filterData.firstName}
+                      onChange={handleFilterChange}
+                    />
+                  </Box>
+                  <Box component={'td'}>
+                    <input
+                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      placeholder='Enter last name'
+                      name='lastName'
+                      value={filterData.lastName}
+                      onChange={handleFilterChange}
+                    />
+                  </Box>
+                  <Box component={'td'}>
+                    <input
+                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      placeholder='Enter company'
+                      name='company'
+                      value={filterData.company}
+                      onChange={handleFilterChange}
+                    />
+                  </Box>
+                  <Box component={'td'}>
+                    <input
+                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      placeholder='Enter phone'
+                      name='phone'
+                      value={filterData.phone}
+                      onChange={handleFilterChange}
+                    />
+                  </Box>
+                  <Box component={'td'}>
+                    <input
+                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      placeholder='Enter email'
+                      name='email'
+                      value={filterData.email}
+                      onChange={handleFilterChange}
+                    />
+                  </Box>
+
+                  <Box component={'td'} sx={{ textAlign: 'center' }}>
+                    --
+                  </Box>
+                  <Box component={'td'} sx={{ textAlign: 'center' }}>
+                    --
+                  </Box>
+                  <Box component={'td'}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Button
+                        onClick={onFilterClear}
+                        sx={{
+                          border: '1px solid #9333ea',
+                          padding: '3px 10px',
+                          fontSize: '14px',
+                          borderRadius: '5px',
+                          color: '#9333ea',
+                          '&:hover': {
+                            background: '#9333ea',
+                            color: '#fff'
+                          }
+                        }}
+                      >
+                        Clear
+                      </Button>
+                    </Box>
+                  </Box>
+                </Box>
+
                 {listData?.map((data: any, index: number) => {
                   return (
                     <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
@@ -110,38 +212,6 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                       <TableCell className='px-4 py-3 text-sm'>{data?.phone}</TableCell>
                       <TableCell className='px-4 py-3 text-sm'>{data?.email}</TableCell>
                       <TableCell className='px-4 py-3 text-sm'>{data?.project_type?.name}</TableCell>
-                      {/* <TableCell className='px-4 py-3 text-sm w-200 expendable-row'>
-                        <Box className='expendable-row-inner'>
-                          {expendedRow == `row-${index}` ? (
-                            <Box className='expended-row-box'>{data?.description}</Box>
-                          ) : (
-                            <Box className='expendable-row-box'>{data?.description}</Box>
-                          )}
-                          {String(data?.description).length > 75 ? (
-                            expendedRow == `row-${index}` ? (
-                              <Button
-                                onClick={() => {
-                                  handleRowExpendable('')
-                                }}
-                                className='see-more-btn'
-                              >
-                                Show Less
-                              </Button>
-                            ) : (
-                              <Button
-                                onClick={() => {
-                                  handleRowExpendable(`row-${index}`)
-                                }}
-                                className='see-more-btn'
-                              >
-                                See More...
-                              </Button>
-                            )
-                          ) : (
-                            <></>
-                          )}
-                        </Box>
-                      </TableCell> */}
 
                       <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</TableCell>
 

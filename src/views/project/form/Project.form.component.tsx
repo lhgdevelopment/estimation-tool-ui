@@ -76,7 +76,7 @@ export default function ProjectFormComponent(props: TProjectComponent) {
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Name</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Examples: Header, Footer, etc'
+                  placeholder='Enter Project Name'
                   name='project_name'
                   value={formData.project_name}
                   onChange={handleTextChange}
@@ -88,7 +88,7 @@ export default function ProjectFormComponent(props: TProjectComponent) {
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Description</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Examples: Header, Footer, etc'
+                  placeholder='Enter Project Description'
                   name='project_description'
                   value={formData.project_description}
                   onChange={handleTextChange}
@@ -100,7 +100,7 @@ export default function ProjectFormComponent(props: TProjectComponent) {
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Total Cost</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Examples: Header, Footer, etc'
+                  placeholder='Enter Total Cost'
                   name='total_cost'
                   value={formData.total_cost}
                   onChange={handleTextChange}

@@ -69,10 +69,10 @@ export default function MeetingTypeFormComponent(props: TMeetingTypeComponent) {
         <form onSubmit={onSubmit}>
           <Box>
             <label className='block text-sm'>
-              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Type</span>
               <input
                 className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                placeholder='Examples: Header, Footer, etc'
+                placeholder='Enter Meeting Type'
                 name='name'
                 value={formData.name}
                 onChange={handleTextChange}
