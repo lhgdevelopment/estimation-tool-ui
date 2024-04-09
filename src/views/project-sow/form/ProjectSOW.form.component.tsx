@@ -116,9 +116,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     return activeStep === totalSteps() - 1
   }
 
-  // const allStepsCompleted = () => {
-  //   return completedSteps() === totalSteps()
-  // }
+  const allStepsCompleted = () => {
+    return completedSteps() === totalSteps()
+  }
 
   const handleNext = (type: 'SAVE' | 'NEXT' = 'NEXT') => {
     setPreload(true)
