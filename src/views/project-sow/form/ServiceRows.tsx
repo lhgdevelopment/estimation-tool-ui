@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
+import { Dropdown } from 'src/@core/components/dropdown'
 
 export default function ServiceRow(props: { service: any }) {
   const { service } = props
@@ -43,7 +44,7 @@ export default function ServiceRow(props: { service: any }) {
   return (
     <React.Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell>
+        <TableCell sx={{ width: '50px' }}>
           {!!service.groups.length && (
             <IconButton
               aria-label='expand row'
@@ -57,61 +58,23 @@ export default function ServiceRow(props: { service: any }) {
           )}
         </TableCell>
 
-        <TableCell component='th' scope='row' dangerouslySetInnerHTML={{ __html: service.name }}></TableCell>
-        <TableCell>
-          <input
-            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-            placeholder=''
-            name='name'
-          />
-        </TableCell>
-        <TableCell>
-          <input
-            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-            placeholder=''
-            name='name'
-          />
-        </TableCell>
-        <TableCell>
-          <input
-            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-            placeholder=''
-            name='name'
-          />
-        </TableCell>
-        <TableCell>
-          <input
-            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-            placeholder=''
-            name='name'
-          />
-        </TableCell>
-        <TableCell>
-          <input
-            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-            placeholder=''
-            name='name'
-          />
-        </TableCell>
-        <TableCell>
-          <input
-            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-            placeholder=''
-            name='name'
-          />
-        </TableCell>
-        <TableCell>
-          <input
-            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-            placeholder=''
-            name='name'
-          />
-        </TableCell>
+        <TableCell
+          component='th'
+          scope='row'
+          dangerouslySetInnerHTML={{ __html: service.name }}
+          sx={{ width: '200px' }}
+        ></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
           <Collapse in={!!(serviceOpen == service.id)} timeout='auto' unmountOnExit>
-            <Box sx={{ margin: 1 }}>
+            <Box sx={{ margin: 1, mt: 4 }}>
               <Typography variant='h6' gutterBottom component='div'>
                 Groups
               </Typography>
@@ -119,7 +82,6 @@ export default function ServiceRow(props: { service: any }) {
                 <TableHead>
                   <TableRow>
                     <TableCell></TableCell>
-                    <TableCell>Name</TableCell>
                     <TableCell>Deliverable & Timeline</TableCell>
                     <TableCell>Team Member</TableCell>
                     <TableCell>Hours</TableCell>
@@ -133,7 +95,7 @@ export default function ServiceRow(props: { service: any }) {
                   {service.groups.map((group: any) => (
                     <>
                       <TableRow key={group.id}>
-                        <TableCell>
+                        <TableCell sx={{ width: '50px' }}>
                           {!!group.sows.length && (
                             <IconButton
                               aria-label='expand row'
@@ -154,61 +116,20 @@ export default function ServiceRow(props: { service: any }) {
                           component='th'
                           scope='row'
                           dangerouslySetInnerHTML={{ __html: group.name }}
+                          sx={{ width: '200px' }}
                         ></TableCell>
-                        <TableCell>
-                          <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                            placeholder=''
-                            name='name'
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                            placeholder=''
-                            name='name'
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                            placeholder=''
-                            name='name'
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                            placeholder=''
-                            name='name'
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                            placeholder=''
-                            name='name'
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                            placeholder=''
-                            name='name'
-                          />
-                        </TableCell>
-                        <TableCell>
-                          <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                            placeholder=''
-                            name='name'
-                          />
-                        </TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
                           <Collapse in={!!(groupOpen == 'grp' + service.id + group.id)} timeout='auto' unmountOnExit>
-                            <Box sx={{ margin: 1 }}>
+                            <Box sx={{ margin: 1, mt: 4 }}>
                               <Typography variant='h6' gutterBottom component='div'>
                                 SOWs
                               </Typography>
@@ -216,7 +137,6 @@ export default function ServiceRow(props: { service: any }) {
                                 <TableHead>
                                   <TableRow>
                                     <TableCell></TableCell>
-                                    <TableCell>Name</TableCell>
                                     <TableCell>Deliverable & Timeline</TableCell>
                                     <TableCell>Team Member</TableCell>
                                     <TableCell>Hours</TableCell>
@@ -230,7 +150,7 @@ export default function ServiceRow(props: { service: any }) {
                                   {group.sows.map((sow: any) => (
                                     <>
                                       <TableRow key={sow.id}>
-                                        <TableCell>
+                                        <TableCell sx={{ width: '50px' }}>
                                           {!!sow.deliverables.length && (
                                             <IconButton
                                               aria-label='expand row'
@@ -251,56 +171,15 @@ export default function ServiceRow(props: { service: any }) {
                                           component='th'
                                           scope='row'
                                           dangerouslySetInnerHTML={{ __html: sow.name }}
+                                          sx={{ width: '200px' }}
                                         ></TableCell>
-                                        <TableCell>
-                                          <input
-                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                            placeholder=''
-                                            name='name'
-                                          />
-                                        </TableCell>
-                                        <TableCell>
-                                          <input
-                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                            placeholder=''
-                                            name='name'
-                                          />
-                                        </TableCell>
-                                        <TableCell>
-                                          <input
-                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                            placeholder=''
-                                            name='name'
-                                          />
-                                        </TableCell>
-                                        <TableCell>
-                                          <input
-                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                            placeholder=''
-                                            name='name'
-                                          />
-                                        </TableCell>
-                                        <TableCell>
-                                          <input
-                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                            placeholder=''
-                                            name='name'
-                                          />
-                                        </TableCell>
-                                        <TableCell>
-                                          <input
-                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                            placeholder=''
-                                            name='name'
-                                          />
-                                        </TableCell>
-                                        <TableCell>
-                                          <input
-                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                            placeholder=''
-                                            name='name'
-                                          />
-                                        </TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
                                       </TableRow>
                                       <TableRow>
                                         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={9}>
@@ -309,14 +188,14 @@ export default function ServiceRow(props: { service: any }) {
                                             timeout='auto'
                                             unmountOnExit
                                           >
-                                            <Box sx={{ margin: 1 }}>
+                                            <Box sx={{ margin: 1, mt: 4 }}>
                                               <Typography variant='h6' gutterBottom component='div'>
                                                 Deliverables
                                               </Typography>
                                               <Table size='small' aria-label='group'>
                                                 <TableHead>
                                                   <TableRow>
-                                                    <TableCell>Name</TableCell>
+                                                    <TableCell></TableCell>
                                                     <TableCell>Deliverable & Timeline</TableCell>
                                                     <TableCell>Team Member</TableCell>
                                                     <TableCell>Hours</TableCell>
@@ -328,62 +207,296 @@ export default function ServiceRow(props: { service: any }) {
                                                 </TableHead>
                                                 <TableBody>
                                                   {sow.deliverables.map((deliverable: any) => (
-                                                    <TableRow key={deliverable.id}>
-                                                      <TableCell
-                                                        component='th'
-                                                        scope='row'
-                                                        dangerouslySetInnerHTML={{ __html: deliverable.name }}
-                                                      ></TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                    </TableRow>
+                                                    <>
+                                                      <TableRow key={deliverable.id}>
+                                                        <TableCell sx={{ width: '50px' }}>
+                                                          {!!deliverable.tasks.length && (
+                                                            <IconButton
+                                                              aria-label='expand row'
+                                                              size='small'
+                                                              onClick={() => {
+                                                                handleDeliverableOnclick(
+                                                                  'deliverable' +
+                                                                    service.id +
+                                                                    group.id +
+                                                                    sow.id +
+                                                                    deliverable.id
+                                                                )
+                                                              }}
+                                                            >
+                                                              {!!(
+                                                                openDeliverable ==
+                                                                'deliverable' +
+                                                                  service.id +
+                                                                  group.id +
+                                                                  sow.id +
+                                                                  deliverable.id
+                                                              ) ? (
+                                                                <KeyboardArrowUpIcon />
+                                                              ) : (
+                                                                <KeyboardArrowDownIcon />
+                                                              )}
+                                                            </IconButton>
+                                                          )}
+                                                        </TableCell>
+                                                        <TableCell
+                                                          component='th'
+                                                          scope='row'
+                                                          dangerouslySetInnerHTML={{ __html: deliverable.name }}
+                                                          sx={{ width: '200px' }}
+                                                        ></TableCell>
+                                                        <TableCell></TableCell>
+                                                        <TableCell></TableCell>
+                                                        <TableCell></TableCell>
+                                                        <TableCell></TableCell>
+                                                        <TableCell></TableCell>
+                                                        <TableCell></TableCell>
+                                                      </TableRow>
+                                                      <TableRow>
+                                                        <TableCell
+                                                          style={{ paddingBottom: 0, paddingTop: 0 }}
+                                                          colSpan={9}
+                                                        >
+                                                          <Collapse
+                                                            in={
+                                                              !!(
+                                                                openDeliverable ==
+                                                                'deliverable' +
+                                                                  service.id +
+                                                                  group.id +
+                                                                  sow.id +
+                                                                  deliverable.id
+                                                              )
+                                                            }
+                                                            timeout='auto'
+                                                            unmountOnExit
+                                                          >
+                                                            <Box sx={{ margin: 1, mt: 4 }}>
+                                                              <Typography variant='h6' gutterBottom component='div'>
+                                                                Tasks
+                                                              </Typography>
+                                                              <Table size='small' aria-label='group'>
+                                                                <TableHead>
+                                                                  <TableRow>
+                                                                    <TableCell></TableCell>
+                                                                    <TableCell>Deliverable & Timeline</TableCell>
+                                                                    <TableCell>Team Member</TableCell>
+                                                                    <TableCell>Hours</TableCell>
+                                                                    <TableCell>Timeline</TableCell>
+                                                                    <TableCell>Internal</TableCell>
+                                                                    <TableCell>Retail</TableCell>
+                                                                    <TableCell>Josh</TableCell>
+                                                                  </TableRow>
+                                                                </TableHead>
+                                                                <TableBody>
+                                                                  {deliverable.tasks.map((task: any) => (
+                                                                    <>
+                                                                      <TableRow key={task.id}>
+                                                                        <TableCell sx={{ width: '50px' }}>
+                                                                          {!!task.sub_tasks.length && (
+                                                                            <IconButton
+                                                                              aria-label='expand row'
+                                                                              size='small'
+                                                                              onClick={() => {
+                                                                                handleTaskOnclick(
+                                                                                  'task' +
+                                                                                    service.id +
+                                                                                    group.id +
+                                                                                    sow.id +
+                                                                                    deliverable.id +
+                                                                                    task.id
+                                                                                )
+                                                                              }}
+                                                                            >
+                                                                              {!!(
+                                                                                openTask ==
+                                                                                'task' +
+                                                                                  service.id +
+                                                                                  group.id +
+                                                                                  sow.id +
+                                                                                  deliverable.id +
+                                                                                  task.id
+                                                                              ) ? (
+                                                                                <KeyboardArrowUpIcon />
+                                                                              ) : (
+                                                                                <KeyboardArrowDownIcon />
+                                                                              )}
+                                                                            </IconButton>
+                                                                          )}
+                                                                        </TableCell>
+                                                                        <TableCell
+                                                                          component='th'
+                                                                          scope='row'
+                                                                          dangerouslySetInnerHTML={{
+                                                                            __html: task.name
+                                                                          }}
+                                                                          sx={{ width: '200px' }}
+                                                                        ></TableCell>
+                                                                        <TableCell>
+                                                                          <Dropdown url='users' />
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                          <input
+                                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                            placeholder=''
+                                                                            name='name'
+                                                                          />
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                          <input
+                                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                            placeholder=''
+                                                                            name='name'
+                                                                          />
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                          <input
+                                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                            placeholder=''
+                                                                            name='name'
+                                                                          />
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                          <input
+                                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                            placeholder=''
+                                                                            name='name'
+                                                                          />
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                          <input
+                                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                            placeholder=''
+                                                                            name='name'
+                                                                          />
+                                                                        </TableCell>
+                                                                        <TableCell>
+                                                                          <input
+                                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                            placeholder=''
+                                                                            name='name'
+                                                                          />
+                                                                        </TableCell>
+                                                                      </TableRow>
+                                                                      <TableRow>
+                                                                        <TableCell
+                                                                          style={{ paddingBottom: 0, paddingTop: 0 }}
+                                                                          colSpan={9}
+                                                                        >
+                                                                          <Collapse
+                                                                            in={
+                                                                              !!(
+                                                                                openTask ==
+                                                                                'task' +
+                                                                                  service.id +
+                                                                                  group.id +
+                                                                                  sow.id +
+                                                                                  deliverable.id +
+                                                                                  task.id
+                                                                              )
+                                                                            }
+                                                                            timeout='auto'
+                                                                            unmountOnExit
+                                                                          >
+                                                                            <Box sx={{ margin: 1, mt: 4 }}>
+                                                                              <Typography
+                                                                                variant='h6'
+                                                                                gutterBottom
+                                                                                component='div'
+                                                                              >
+                                                                                Sub Tasks
+                                                                              </Typography>
+                                                                              <Table size='small' aria-label='subTask'>
+                                                                                <TableHead>
+                                                                                  <TableRow>
+                                                                                    <TableCell>
+                                                                                      Deliverable & Timeline
+                                                                                    </TableCell>
+                                                                                    <TableCell>Team Member</TableCell>
+                                                                                    <TableCell>Hours</TableCell>
+                                                                                    <TableCell>Timeline</TableCell>
+                                                                                    <TableCell>Internal</TableCell>
+                                                                                    <TableCell>Retail</TableCell>
+                                                                                    <TableCell>Josh</TableCell>
+                                                                                  </TableRow>
+                                                                                </TableHead>
+                                                                                <TableBody>
+                                                                                  {task.sub_tasks.map(
+                                                                                    (subTask: any) => (
+                                                                                      <>
+                                                                                        <TableRow key={subTask.id}>
+                                                                                          <TableCell
+                                                                                            component='th'
+                                                                                            scope='row'
+                                                                                            dangerouslySetInnerHTML={{
+                                                                                              __html: subTask.name
+                                                                                            }}
+                                                                                            sx={{ width: '200px' }}
+                                                                                          ></TableCell>
+                                                                                          <TableCell>
+                                                                                            <Dropdown url='users' />
+                                                                                          </TableCell>
+                                                                                          <TableCell>
+                                                                                            <input
+                                                                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                                              placeholder=''
+                                                                                              name='name'
+                                                                                            />
+                                                                                          </TableCell>
+                                                                                          <TableCell>
+                                                                                            <input
+                                                                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                                              placeholder=''
+                                                                                              name='name'
+                                                                                            />
+                                                                                          </TableCell>
+                                                                                          <TableCell>
+                                                                                            <input
+                                                                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                                              placeholder=''
+                                                                                              name='name'
+                                                                                            />
+                                                                                          </TableCell>
+                                                                                          <TableCell>
+                                                                                            <input
+                                                                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                                              placeholder=''
+                                                                                              name='name'
+                                                                                            />
+                                                                                          </TableCell>
+                                                                                          <TableCell>
+                                                                                            <input
+                                                                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                                              placeholder=''
+                                                                                              name='name'
+                                                                                            />
+                                                                                          </TableCell>
+                                                                                          <TableCell>
+                                                                                            <input
+                                                                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                                                              placeholder=''
+                                                                                              name='name'
+                                                                                            />
+                                                                                          </TableCell>
+                                                                                        </TableRow>
+                                                                                      </>
+                                                                                    )
+                                                                                  )}
+                                                                                </TableBody>
+                                                                              </Table>
+                                                                            </Box>
+                                                                          </Collapse>
+                                                                        </TableCell>
+                                                                      </TableRow>
+                                                                    </>
+                                                                  ))}
+                                                                </TableBody>
+                                                              </Table>
+                                                            </Box>
+                                                          </Collapse>
+                                                        </TableCell>
+                                                      </TableRow>
+                                                    </>
                                                   ))}
                                                 </TableBody>
                                               </Table>

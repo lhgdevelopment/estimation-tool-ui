@@ -55,20 +55,29 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
 
   const getList = () => {
     setPreloader(true)
-    if (!isEnumField && url !== '') {
-      apiRequest.get(`/${url}?per_page=1000`).then(res => {
-        const fetchedOptions =
-          res?.data?.map((item: any) => ({
-            title: item?.[optionConfig?.title],
-            id: item?.[optionConfig?.id]
-          })) || []
-        setOptionItems(fetchedOptions)
-        setInitialOptionList(fetchedOptions)
-        setPreloader(false)
-      })
+    if (!isEnumField && url) {
+      apiRequest
+        .get(`/${url}?per_page=1000`)
+        .then(res => {
+          const fetchedOptions =
+            res?.data?.map((item: any) => ({
+              title: item?.[optionConfig?.title],
+              id: item?.[optionConfig?.id]
+            })) || []
+          setOptionItems(fetchedOptions)
+          setInitialOptionList(fetchedOptions)
+          setPreloader(false)
+        })
+        .catch(() => {
+          getList()
+        })
     } else if (enumList) {
       setOptionItems([...enumList])
       setInitialOptionList([...enumList])
+      setPreloader(false)
+    } else {
+      setOptionItems([])
+      setInitialOptionList([])
       setPreloader(false)
     }
   }

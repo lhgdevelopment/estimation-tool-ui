@@ -831,7 +831,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <TableHead>
                             <TableRow>
                               <TableCell />
-                              <TableCell>Name</TableCell>
                               <TableCell>Deliverable & Timeline</TableCell>
                               <TableCell>Team Member</TableCell>
                               <TableCell>Hours</TableCell>
