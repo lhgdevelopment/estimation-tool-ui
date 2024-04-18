@@ -357,7 +357,7 @@ export default function ServiceTreeComponent() {
           handleServiceModalClose()
           console.log(res)
 
-          // getList()
+          // getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -382,7 +382,7 @@ export default function ServiceTreeComponent() {
 
           // setServiceTreeData((prevState: []) => transformServiceTree([...prevState, { ...res?.data }], 'service'))
 
-          getList()
+          getTree()
         })
         .catch(error => {
           console.log(error)
@@ -403,7 +403,7 @@ export default function ServiceTreeComponent() {
           enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceGroupClear()
           handleServiceModalClose()
-          getList()
+          getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -417,7 +417,7 @@ export default function ServiceTreeComponent() {
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceGroupClear()
           handleServiceModalClose()
-          getList()
+          getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -436,7 +436,7 @@ export default function ServiceTreeComponent() {
           enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceSOWClear()
           handleServiceModalClose()
-          getList()
+          getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -449,7 +449,7 @@ export default function ServiceTreeComponent() {
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceSOWClear()
           handleServiceModalClose()
-          getList()
+          getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -468,7 +468,7 @@ export default function ServiceTreeComponent() {
           enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceDeliverableClear()
           handleServiceModalClose()
-          getList()
+          getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -481,7 +481,7 @@ export default function ServiceTreeComponent() {
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceDeliverableClear()
           handleServiceModalClose()
-          getList()
+          getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -510,7 +510,7 @@ export default function ServiceTreeComponent() {
             timerProgressBar: true,
             showConfirmButton: false
           })
-          getList()
+          getTree()
         })
       }
     })
@@ -536,7 +536,7 @@ export default function ServiceTreeComponent() {
             timerProgressBar: true,
             showConfirmButton: false
           })
-          getList()
+          getTree()
         })
       }
     })
@@ -562,7 +562,7 @@ export default function ServiceTreeComponent() {
             timerProgressBar: true,
             showConfirmButton: false
           })
-          getList()
+          getTree()
         })
       }
     })
@@ -588,7 +588,7 @@ export default function ServiceTreeComponent() {
             timerProgressBar: true,
             showConfirmButton: false
           })
-          getList()
+          getTree()
         })
       }
     })
@@ -614,7 +614,7 @@ export default function ServiceTreeComponent() {
             timerProgressBar: true,
             showConfirmButton: false
           })
-          getList()
+          getTree()
         })
       }
     })
@@ -669,7 +669,7 @@ export default function ServiceTreeComponent() {
           enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceTaskClear()
           handleServiceModalClose()
-          getList()
+          getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -681,7 +681,7 @@ export default function ServiceTreeComponent() {
         .then(res => {
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
           onServiceTaskClear()
-          getList()
+          getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -720,7 +720,7 @@ export default function ServiceTreeComponent() {
     handleServiceModalClose()
   }
 
-  const getList = async () => {
+  const getTree = async () => {
     await apiRequest
       .get(`/service-tree?per_page=500`)
       .then(res => {
@@ -767,7 +767,7 @@ export default function ServiceTreeComponent() {
   }
 
   useEffect(() => {
-    getList()
+    getTree()
   }, [])
 
   const onDragEnter: TreeProps['onDragEnter'] = info => {

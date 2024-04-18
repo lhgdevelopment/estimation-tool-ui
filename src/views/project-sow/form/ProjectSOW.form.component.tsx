@@ -3,18 +3,32 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
+import {
+  Box,
+  Paper,
+  SelectChangeEvent,
+  Step,
+  StepButton,
+  Stepper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material'
 import { useMask } from '@react-input/mask'
 import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
+import { Dropdown } from 'src/@core/components/dropdown'
 import MdPreviewTitle from 'src/@core/components/md-preview-title'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
+import ServiceRow from './ServiceRows'
 
 const steps = [
   'Transcript',
@@ -27,9 +41,11 @@ const steps = [
 ]
 
 export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
+  const router = useRouter()
+  const id = router?.query['id']
+  const step = router?.query?.['step']
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { listData, setListData, isEdit = false } = props
-  const router = useRouter()
 
   const phoneInputRef = useMask({
     mask: '(___) ___-____',
@@ -73,8 +89,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [overviewTextID, setOverviewTextID] = useState<any>(null)
   const [overviewText, setOverviewText] = useState<any>('')
   const [scopeTextID, setScopeTextID] = useState<any>(null)
-  const [taskId, setTaskId] = useState<any>(null)
   const [scopeText, setScopeText] = useState<any>('')
+
+  const [serviceTreeData, setServiceTreeData] = useState<any>([])
+
   const [deliverablesTextID, setDeliverablesTextID] = useState<any>(null)
   const [deliverablesText, setDeliverablesText] = useState<any>('')
 
@@ -282,28 +300,37 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     }
 
     if (activeStep === 4) {
-      apiRequest
-        .post(`/scope-of-work/${scopeTextID}`, { scopeText })
-        .then(res => {
-          console.log(res)
-          if (res?.data && type == 'NEXT') {
-            apiRequest.post('/deliverables', { scopeOfWorkId: scopeTextID }).then(res2 => {
-              enqueueSnackbar('Created Successfully!', { variant: 'success' })
-              setDeliverablesTextID(res2?.data?.id)
-              setDeliverablesText(res2?.data?.deliverablesText)
-              setTimeout(() => {
-                if (type == 'NEXT') {
-                  setActiveStep(newActiveStep)
-                  if (enabledStep < newActiveStep) {
-                    setEnabledStep(newActiveStep)
-                  }
-                }
-                setPreload(false)
-              }, 1000)
-            })
-          } else {
-            setPreload(false)
+      setTimeout(() => {
+        if (type == 'NEXT') {
+          setActiveStep(newActiveStep)
+          if (enabledStep < newActiveStep) {
+            setEnabledStep(newActiveStep)
           }
+        }
+        setPreload(false)
+      }, 1000)
+    }
+    if (activeStep === 5) {
+      apiRequest
+        .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
+        .then(res => {
+          apiRequest.get(`/project-summery?page=1`).then(res => {
+            if (setListData) {
+              setListData(res?.data)
+            }
+          })
+
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+
+          setTimeout(() => {
+            if (type == 'NEXT') {
+              setActiveStep(newActiveStep)
+              if (enabledStep < newActiveStep) {
+                setEnabledStep(newActiveStep)
+              }
+            }
+            setPreload(false)
+          }, 1000)
         })
         .catch(error => {
           setPreload(false)
@@ -311,7 +338,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
-    if (activeStep === 5) {
+    if (activeStep === 6) {
       apiRequest
         .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
         .then(res => {
@@ -344,11 +371,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const getDetails = (id: string | null | undefined) => {
     if (!id) return
+    let getEnableStep = 0
 
     setPreload(true)
     apiRequest.get(`/project-summery/${id}`).then((res: any) => {
-      setActiveStep(0)
-
       setProjectSOWFormData({
         transcriptId: res?.data?.id,
         transcriptText: res?.data?.['meeting_transcript']?.['transcriptText'],
@@ -362,11 +388,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
       setProjectSOWID(id)
       setSummaryText(res?.data?.['summaryText'])
-      setEnabledStep(1)
+      getEnableStep = 1
       if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['id']) {
         setProblemGoalID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['id'])
         setProblemGoalText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText'])
-        setEnabledStep(2)
+        getEnableStep = 2
       }
 
       if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['id']) {
@@ -374,13 +400,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         setOverviewText(
           res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']
         )
-        setEnabledStep(3)
+        getEnableStep = 3
       }
 
       if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id']) {
         setScopeTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id'])
         setScopeText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText'])
-        setEnabledStep(4)
+        getEnableStep = 4
       }
 
       if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['id']) {
@@ -392,11 +418,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             'deliverablesText'
           ]
         )
-        setEnabledStep(5)
+        getEnableStep = 5
       }
-
+      setEnabledStep(getEnableStep)
       setPreload(false)
     })
+  }
+
+  const getTree = async () => {
+    await apiRequest
+      .get(`/service-tree?per_page=500`)
+      .then(res => {
+        setServiceTreeData(res?.data?.services)
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.message, { variant: 'error' })
+      })
   }
 
   useEffect(() => {
@@ -406,14 +443,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }, [])
 
   useEffect(() => {
-    getDetails(router?.query['id'] as string)
-  }, [router?.query['id']])
+    getDetails(id as string)
+  }, [id])
 
   useEffect(() => {
-    if (isEdit && router?.query?.['step'] && Number(router?.query?.['step']) <= enabledStep) {
-      setActiveStep(Number(router?.query?.['step']))
+    if (isEdit && step && Number(step) <= enabledStep) {
+      setActiveStep(Number(step))
     }
-  }, [enabledStep])
+  }, [enabledStep, isEdit, id, step])
+
+  useEffect(() => {
+    if (activeStep === 5) {
+      getTree()
+    }
+
+    if (activeStep) {
+      const currentPath = router.asPath.split('?')?.[0]
+      const updatedPath = `${currentPath}?step=${activeStep}`
+      router.replace(updatedPath)
+    }
+  }, [activeStep])
 
   const onClear = () => {
     setProjectSOWFormData(prevState => ({ ...projectSOWDefaultData }))
@@ -436,6 +485,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setActiveStep(0)
     setEnabledStep(0)
   }
+  console.log(serviceTreeData)
 
   return (
     <Box>
@@ -744,37 +794,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 <Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
-                      <Box
-                        sx={{
-                          width: '100%',
-                          '& .MuiInputBase-root': {
-                            border: errorMessage?.['taskId'] ? '1px solid #dc2626' : ''
-                          }
-                        }}
-                      >
-                        <label className='block text-sm'>
-                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Task</span>
-                          <ServiceDropdownTree
-                            name='taskId'
-                            value={taskId}
-                            onChange={e => {
-                              setTaskId(e.target.value)
-                            }}
-                            type='tasks'
-                            filter={`projectTypeId=${projectSOWFormData?.projectTypeId}`}
-                          />
-                          {!!errorMessage?.['taskId'] &&
-                            errorMessage?.['taskId']?.map((message: any, index: number) => {
-                              return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                  {message}
-                                </span>
-                              )
-                            })}
-                        </label>
-                      </Box>
-                    </Box>
-                    <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#problemGoalText'}>
                         <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Scope of Work</span>
                         <Box
@@ -806,7 +825,32 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               {activeStep == 5 && (
                 <Box>
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}></Box>
+                    <Box sx={{ width: '100%' }}>
+                      <TableContainer component={Paper}>
+                        <Table aria-label='collapsible table'>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell />
+                              <TableCell>Deliverable & Timeline</TableCell>
+                              <TableCell>Team Member</TableCell>
+                              <TableCell>Hours</TableCell>
+                              <TableCell>Timeline</TableCell>
+                              <TableCell>Internal</TableCell>
+                              <TableCell>Retail</TableCell>
+                              <TableCell>Josh</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {serviceTreeData?.map((service: any, index: number) => {
+                              return <ServiceRow key={service?.id} service={service} />
+                            })}
+                            {/* {rows.map(row => (
+                              <Row key={row.name} row={row} />
+                            ))} */}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Box>
                   </Box>
                 </Box>
               )}
@@ -846,7 +890,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
               <Box className='my-4 text-right'>
-                {!router?.query['id'] && (
+                {!id && (
                   <button
                     onClick={onClear}
                     type='button'
@@ -864,9 +908,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   >
                     {activeStep != totalSteps() && (
                       <>
-                        {router?.query['id'] ? 'Update ' : 'Save '}
+                        {id ? 'Update ' : 'Save '}
 
-                        {router?.query['id'] ? <EditNoteIcon /> : <AddIcon />}
+                        {id ? <EditNoteIcon /> : <AddIcon />}
                       </>
                     )}
                     {activeStep == totalSteps() && (
