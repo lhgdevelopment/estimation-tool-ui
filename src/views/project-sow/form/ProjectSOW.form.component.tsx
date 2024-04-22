@@ -5,6 +5,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import {
   Box,
+  Chip,
   Paper,
   SelectChangeEvent,
   Step,
@@ -28,7 +29,6 @@ import MdPreviewTitle from 'src/@core/components/md-preview-title'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
-import ServiceRow from './ServiceRows'
 
 const steps = [
   'Transcript',
@@ -427,7 +427,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const getTree = async () => {
     await apiRequest
-      .get(`/service-tree?per_page=500`)
+
+      // .get(`/service-tree?per_page=500&projectTypeId=${projectSOWFormData.projectTypeId}`)
+      .get(`/service-tree?per_page=500&projectTypeId=${4}`)
       .then(res => {
         setServiceTreeData(res?.data?.services)
       })
@@ -827,7 +829,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <TableContainer component={Paper}>
-                        <Table aria-label='collapsible table'>
+                        <Table aria-label='table'>
                           <TableHead>
                             <TableRow>
                               <TableCell />
@@ -842,11 +844,191 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           </TableHead>
                           <TableBody>
                             {serviceTreeData?.map((service: any, index: number) => {
-                              return <ServiceRow key={service?.id} service={service} />
+                              return (
+                                <>
+                                  <TableRow key={index}>
+                                    <TableCell sx={{ width: '70px' }}>
+                                      <Chip
+                                        label='Service'
+                                        sx={{ width: '100%', px: 2, background: '#0a53a8', color: '#fff' }}
+                                      />
+                                    </TableCell>
+                                    <TableCell
+                                      component='th'
+                                      scope='row'
+                                      dangerouslySetInnerHTML={{ __html: service.name }}
+                                      sx={{ width: '400px' }}
+                                    />
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                  </TableRow>
+                                  {service.groups.map((group: any) => (
+                                    <>
+                                      <TableRow key={index}>
+                                        <TableCell sx={{ width: '70px' }}>
+                                          <Chip
+                                            label='Group'
+                                            sx={{ width: '100%', px: 2, background: '#bfe1f6', color: '#000' }}
+                                          />
+                                        </TableCell>
+                                        <TableCell
+                                          component='th'
+                                          scope='row'
+                                          dangerouslySetInnerHTML={{ __html: group.name }}
+                                          sx={{ width: '400px' }}
+                                        />
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                      </TableRow>
+                                      {group.sows.map((sow: any) => (
+                                        <>
+                                          <TableRow key={index}>
+                                            <TableCell sx={{ width: '70px' }}>
+                                              <Chip
+                                                label='SOW'
+                                                sx={{ width: '100%', px: 2, background: '#215a6c', color: '#fff' }}
+                                              />
+                                            </TableCell>
+                                            <TableCell
+                                              component='th'
+                                              scope='row'
+                                              dangerouslySetInnerHTML={{ __html: sow.name }}
+                                              sx={{ width: '400px' }}
+                                            />
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                          </TableRow>
+                                          {sow.deliverables.map((deliverable: any) => (
+                                            <>
+                                              <TableRow key={index}>
+                                                <TableCell sx={{ width: '70px' }}>
+                                                  <Chip
+                                                    label='Deliverable'
+                                                    sx={{ width: '100%', px: 2, background: '#c6dbe1', color: '#000' }}
+                                                  />
+                                                </TableCell>
+                                                <TableCell
+                                                  component='th'
+                                                  scope='row'
+                                                  dangerouslySetInnerHTML={{ __html: deliverable.name }}
+                                                  sx={{ width: '400px' }}
+                                                />
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                              </TableRow>
+                                              {deliverable.tasks.map((task: any) => (
+                                                <>
+                                                  <TableRow key={index}>
+                                                    <TableCell sx={{ width: '70px' }}>
+                                                      <Chip
+                                                        label='Task'
+                                                        sx={{
+                                                          width: '100%',
+                                                          px: 2,
+                                                          background: '#ffc8aa',
+                                                          color: '#000'
+                                                        }}
+                                                      />
+                                                    </TableCell>
+                                                    <TableCell
+                                                      component='th'
+                                                      scope='row'
+                                                      dangerouslySetInnerHTML={{ __html: task.name }}
+                                                      sx={{ width: '400px' }}
+                                                    />
+                                                    <TableCell></TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell></TableCell>
+                                                  </TableRow>
+                                                  {task.sub_tasks.map((subTask: any) => (
+                                                    <TableRow key={index}>
+                                                      <TableCell sx={{ width: '70px' }}>
+                                                        <Chip
+                                                          label='Subtask'
+                                                          sx={{
+                                                            width: '100%',
+                                                            px: 2,
+                                                            background: '#ffe5a0',
+                                                            color: '#000'
+                                                          }}
+                                                        />
+                                                      </TableCell>
+                                                      <TableCell
+                                                        component='th'
+                                                        scope='row'
+                                                        dangerouslySetInnerHTML={{ __html: subTask.name }}
+                                                        sx={{ width: '400px' }}
+                                                      />
+                                                      <TableCell>
+                                                        <Dropdown url='users' />
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        <input
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          placeholder=''
+                                                          name='name'
+                                                        />
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        <input
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          placeholder=''
+                                                          name='name'
+                                                        />
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        <input
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          placeholder=''
+                                                          name='name'
+                                                        />
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        <input
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          placeholder=''
+                                                          name='name'
+                                                        />
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        <input
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          placeholder=''
+                                                          name='name'
+                                                        />
+                                                      </TableCell>
+                                                    </TableRow>
+                                                  ))}
+                                                </>
+                                              ))}
+                                            </>
+                                          ))}
+                                        </>
+                                      ))}
+                                    </>
+                                  ))}
+                                </>
+                              )
                             })}
-                            {/* {rows.map(row => (
-                              <Row key={row.name} row={row} />
-                            ))} */}
                           </TableBody>
                         </Table>
                       </TableContainer>
