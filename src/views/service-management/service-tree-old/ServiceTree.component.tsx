@@ -992,7 +992,9 @@ export default function ServiceTreeComponent() {
                       </label>
                       <RichTextEditor
                         value={serviceFormData.name}
-                        onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
+                        onChangeonBluronBlur={newContent =>
+                          handleReachText(newContent, 'name', serviceFormData, setServiceFormData)
+                        }
                       />
                     </Box>
                   </Box>

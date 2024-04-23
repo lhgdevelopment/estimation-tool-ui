@@ -172,7 +172,10 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
                   <label className='block text-sm'>
                     <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                   </label>
-                  <RichTextEditor value={formData.name} onBlur={newContent => handleReachText(newContent, 'name')} />
+                  <RichTextEditor
+                    value={formData.name}
+                    onChangeonBluronBlur={newContent => handleReachText(newContent, 'name')}
+                  />
                   {!!errorMessage?.['name'] &&
                     errorMessage?.['name']?.map((message: any, index: number) => {
                       return (
@@ -210,7 +213,7 @@ export default function ServiceScopesFormComponent(props: TServiceScopesComponen
                         <Box sx={{ width: '100%' }}>
                           <RichTextEditor
                             value={name}
-                            onBlur={newContent => handleReachText(newContent, 'name', index)}
+                            onChangeonBluronBlur={newContent => handleReachText(newContent, 'name', index)}
                           />
                         </Box>
                         <Button

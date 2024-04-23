@@ -281,7 +281,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                               <Box sx={{ width: '100%' }}>
                                 <RichTextEditor
                                   value={clickupTask.name}
-                                  onBlur={newContent => handleReachText(newContent, 'name', index)}
+                                  onChangeonBluronBlur={newContent => handleReachText(newContent, 'name', index)}
                                 />
                                 {/* {!!errorMessage?.[`tasks.${index}.name`] &&
                                   errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {
@@ -295,7 +295,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                               <Box sx={{ width: '100%' }}>
                                 <RichTextEditor
                                   value={clickupTask.name}
-                                  onBlur={newContent => handleReachText(newContent, 'name', index)}
+                                  onChangeonBluronBlur={newContent => handleReachText(newContent, 'name', index)}
                                 />
                                 {/* {!!errorMessage?.[`tasks.${index}.name`] &&
                                   errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {
@@ -349,7 +349,9 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                                             <Box sx={{ width: '100%' }}>
                                               <RichTextEditor
                                                 value={subTask.name}
-                                                onBlur={newContent => handleReachText(newContent, 'name', index)}
+                                                onChangeonBluronBlur={newContent =>
+                                                  handleReachText(newContent, 'name', index)
+                                                }
                                               />
                                               {!!errorMessage?.[`tasks.${index}.name`] &&
                                                 errorMessage?.[`tasks.${index}.name`]?.map(
@@ -525,7 +527,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                       </label>
                       <RichTextEditor
                         value={formData.name}
-                        onBlur={newContent => handleReachText(newContent, 'name')}
+                        onChangeonBluronBlur={newContent => handleReachText(newContent, 'name')}
                       />
                       {!!errorMessage?.['name'] &&
                         errorMessage?.['name']?.map((message: any, index: number) => {
@@ -611,7 +613,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                               <Box sx={{ width: '100%' }}>
                                 <RichTextEditor
                                   value={task.name}
-                                  onBlur={newContent => handleReachText(newContent, 'name', index)}
+                                  onChangeonBluronBlur={newContent => handleReachText(newContent, 'name', index)}
                                 />
                                 {!!errorMessage?.[`tasks.${index}.name`] &&
                                   errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {

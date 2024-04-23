@@ -165,7 +165,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
                 </label>
                 <RichTextEditor
                   value={formData.message_content}
-                  onBlur={newContent => handleReachText(newContent, 'message_content')}
+                  onChangeonBluronBlur={newContent => handleReachText(newContent, 'message_content')}
                 />
                 {!!errorMessage?.['message_content'] &&
                   errorMessage?.['message_content']?.map((message: any, index: number) => {

@@ -173,7 +173,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
               </label>
               <RichTextEditor
                 value={formData.deployed}
-                onBlur={newContent => handleReachText(newContent, 'deployed')}
+                onChangeonBluronBlur={newContent => handleReachText(newContent, 'deployed')}
               />
             </Box>
           </Box>
@@ -183,7 +183,10 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
               <label className='block text-sm'>
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Next</span>
               </label>
-              <RichTextEditor value={formData.next} onBlur={newContent => handleReachText(newContent, 'next')} />
+              <RichTextEditor
+                value={formData.next}
+                onChangeonBluronBlur={newContent => handleReachText(newContent, 'next')}
+              />
             </Box>
           </Box>
 

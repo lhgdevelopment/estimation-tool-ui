@@ -289,7 +289,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
               </label>
               <RichTextEditor
                 value={formData.description}
-                onBlur={newContent => handleReachText(newContent, 'description')}
+                onChangeonBluronBlur={newContent => handleReachText(newContent, 'description')}
               />
             </Box>
           </Box>
