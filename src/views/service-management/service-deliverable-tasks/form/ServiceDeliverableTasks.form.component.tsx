@@ -349,9 +349,7 @@ export default function ServiceDeliverableTasksFormComponent(props: TServiceDeli
                                             <Box sx={{ width: '100%' }}>
                                               <RichTextEditor
                                                 value={subTask.name}
-                                                onChangeonBluronBlur={newContent =>
-                                                  handleReachText(newContent, 'name', index)
-                                                }
+                                                onBlur={newContent => handleReachText(newContent, 'name', index)}
                                               />
                                               {!!errorMessage?.[`tasks.${index}.name`] &&
                                                 errorMessage?.[`tasks.${index}.name`]?.map(

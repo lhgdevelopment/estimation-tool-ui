@@ -1259,9 +1259,7 @@ export default function ServiceTreeComponent() {
 
                       <RichTextEditor
                         value={serviceFormData.name}
-                        onChangeonBluronBlur={newContent =>
-                          handleReachText(newContent, 'name', serviceFormData, setServiceFormData)
-                        }
+                        onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
                       />
                       {!!errorMessage?.['name'] &&
                         errorMessage?.['name']?.map((message: any, index: number) => {
