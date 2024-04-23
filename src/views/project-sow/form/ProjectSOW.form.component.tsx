@@ -3,7 +3,21 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box, SelectChangeEvent, Step, StepButton, Stepper } from '@mui/material'
+import {
+  Box,
+  Chip,
+  Paper,
+  SelectChangeEvent,
+  Step,
+  StepButton,
+  Stepper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material'
 import { useMask } from '@react-input/mask'
 import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
@@ -799,6 +813,250 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         </Box>
                         {!!errorMessage?.['scopeText'] &&
                           errorMessage?.['scopeText']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {activeStep == 5 && (
+                <Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <TableContainer component={Paper}>
+                        <Table aria-label='table'>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell />
+                              <TableCell>Deliverable & Timeline</TableCell>
+                              <TableCell>Team Member</TableCell>
+                              <TableCell>Hours</TableCell>
+                              <TableCell>Timeline</TableCell>
+                              <TableCell>Internal</TableCell>
+                              <TableCell>Retail</TableCell>
+                              <TableCell>Josh</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {serviceTreeData?.map((service: any, index: number) => {
+                              return (
+                                <>
+                                  <TableRow key={index}>
+                                    <TableCell sx={{ width: '70px' }}>
+                                      <Chip
+                                        label='Service'
+                                        sx={{ width: '100%', px: 2, background: '#0a53a8', color: '#fff' }}
+                                      />
+                                    </TableCell>
+                                    <TableCell
+                                      component='th'
+                                      scope='row'
+                                      dangerouslySetInnerHTML={{ __html: service.name }}
+                                      sx={{ width: '400px' }}
+                                    />
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                    <TableCell></TableCell>
+                                  </TableRow>
+                                  {service.groups.map((group: any) => (
+                                    <>
+                                      <TableRow key={index}>
+                                        <TableCell sx={{ width: '70px' }}>
+                                          <Chip
+                                            label='Group'
+                                            sx={{ width: '100%', px: 2, background: '#bfe1f6', color: '#000' }}
+                                          />
+                                        </TableCell>
+                                        <TableCell
+                                          component='th'
+                                          scope='row'
+                                          dangerouslySetInnerHTML={{ __html: group.name }}
+                                          sx={{ width: '400px' }}
+                                        />
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                        <TableCell></TableCell>
+                                      </TableRow>
+                                      {group.sows.map((sow: any) => (
+                                        <>
+                                          <TableRow key={index}>
+                                            <TableCell sx={{ width: '70px' }}>
+                                              <Chip
+                                                label='SOW'
+                                                sx={{ width: '100%', px: 2, background: '#215a6c', color: '#fff' }}
+                                              />
+                                            </TableCell>
+                                            <TableCell
+                                              component='th'
+                                              scope='row'
+                                              dangerouslySetInnerHTML={{ __html: sow.name }}
+                                              sx={{ width: '400px' }}
+                                            />
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell></TableCell>
+                                          </TableRow>
+                                          {sow.deliverables.map((deliverable: any) => (
+                                            <>
+                                              <TableRow key={index}>
+                                                <TableCell sx={{ width: '70px' }}>
+                                                  <Chip
+                                                    label='Deliverable'
+                                                    sx={{ width: '100%', px: 2, background: '#c6dbe1', color: '#000' }}
+                                                  />
+                                                </TableCell>
+                                                <TableCell
+                                                  component='th'
+                                                  scope='row'
+                                                  dangerouslySetInnerHTML={{ __html: deliverable.name }}
+                                                  sx={{ width: '400px' }}
+                                                />
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                                <TableCell></TableCell>
+                                              </TableRow>
+                                              {deliverable.tasks.map((task: any) => (
+                                                <>
+                                                  <TableRow key={index}>
+                                                    <TableCell sx={{ width: '70px' }}>
+                                                      <Chip
+                                                        label='Task'
+                                                        sx={{
+                                                          width: '100%',
+                                                          px: 2,
+                                                          background: '#ffc8aa',
+                                                          color: '#000'
+                                                        }}
+                                                      />
+                                                    </TableCell>
+                                                    <TableCell
+                                                      component='th'
+                                                      scope='row'
+                                                      dangerouslySetInnerHTML={{ __html: task.name }}
+                                                      sx={{ width: '400px' }}
+                                                    />
+                                                    <TableCell></TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell></TableCell>
+                                                  </TableRow>
+                                                  {task.sub_tasks.map((subTask: any) => (
+                                                    <TableRow key={index}>
+                                                      <TableCell sx={{ width: '70px' }}>
+                                                        <Chip
+                                                          label='Subtask'
+                                                          sx={{
+                                                            width: '100%',
+                                                            px: 2,
+                                                            background: '#ffe5a0',
+                                                            color: '#000'
+                                                          }}
+                                                        />
+                                                      </TableCell>
+                                                      <TableCell
+                                                        component='th'
+                                                        scope='row'
+                                                        dangerouslySetInnerHTML={{ __html: subTask.name }}
+                                                        sx={{ width: '400px' }}
+                                                      />
+                                                      <TableCell>
+                                                        <Dropdown url='users' />
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        <input
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          placeholder=''
+                                                          name='name'
+                                                        />
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        <input
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          placeholder=''
+                                                          name='name'
+                                                        />
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        <input
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          placeholder=''
+                                                          name='name'
+                                                        />
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        <input
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          placeholder=''
+                                                          name='name'
+                                                        />
+                                                      </TableCell>
+                                                      <TableCell>
+                                                        <input
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          placeholder=''
+                                                          name='name'
+                                                        />
+                                                      </TableCell>
+                                                    </TableRow>
+                                                  ))}
+                                                </>
+                                              ))}
+                                            </>
+                                          ))}
+                                        </>
+                                      ))}
+                                    </>
+                                  ))}
+                                </>
+                              )
+                            })}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {activeStep == 6 && (
+                <Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm' htmlFor={'#deliverablesText'}>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Deliverable</span>
+                        <Box
+                          sx={{
+                            position: 'relative'
+                          }}
+                        >
+                          <MdPreviewTitle />
+                          <MdEditor
+                            language='en-US'
+                            ref={deliverablesTextEditorRef}
+                            modelValue={deliverablesText}
+                            onChange={setDeliverablesText}
+                          />
+                        </Box>
+                        {!!errorMessage?.['deliverablesText'] &&
+                          errorMessage?.['deliverablesText']?.map((message: any, index: number) => {
                             return (
                               <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                 {message}
