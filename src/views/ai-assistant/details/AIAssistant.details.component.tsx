@@ -256,7 +256,7 @@ export default function AIAssistantDetailsComponent() {
               ></Box> */}
               <RichTextEditor
                 value={conversationFormData.message_content}
-                onChangeonBluronBlur={newContent => handleReachText(newContent, 'message_content')}
+                onBlur={newContent => handleReachText(newContent, 'message_content')}
                 onChange={handleKeyDown}
               />
 
