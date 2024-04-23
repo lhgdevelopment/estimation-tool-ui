@@ -6,9 +6,8 @@ import { RootState } from 'src/@core/store/reducers'
 
 type TRichTextEditorProps = IJoditEditorProps
 
+const JoditEditor = dynamic(() => import('jodit-react').then(mod => mod.default), { ssr: false })
 export function RichTextEditor(props: TRichTextEditorProps) {
-  const JoditEditor = dynamic(() => import('jodit-react').then(mod => mod.default), { ssr: false })
-
   const isDark = useSelector((state: RootState) => state.theme.isDark)
   const editorRef: RefObject<Jodit> = useRef<Jodit>(null)
   const config: any = {
