@@ -116,22 +116,37 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [errorMessage, setErrorMessage] = useState<any>({})
 
-  function countTotalTaskHours(hoursObject) {
+  interface ITaskHours {
+    [key: string]: {
+      hours: number
+    }
+  }
+  function countTotalTaskHours(taskHours: ITaskHours = {}): number {
     let totalHours = 0
 
-    for (const key in hoursObject) {
-      totalHours += hoursObject[key].hours
+    for (const key in taskHours) {
+      if (taskHours.hasOwnProperty(key)) {
+        totalHours += taskHours[key].hours
+      }
     }
 
     return totalHours
   }
 
-  function countTotalDeliverableHours(hoursObject) {
+  interface IDeliverableHours {
+    [key: string]: {
+      [key: string]: {
+        hours: number
+      }
+    }
+  }
+
+  function countTotalDeliverableHours(deliverableHours: IDeliverableHours = {}) {
     let totalHours = 0
 
-    for (const key1 in hoursObject) {
-      for (const key2 in hoursObject[key1]) {
-        totalHours += hoursObject[key1][key2].hours
+    for (const key1 in deliverableHours) {
+      for (const key2 in deliverableHours[key1]) {
+        totalHours += deliverableHours[key1][key2].hours
       }
     }
 
@@ -169,7 +184,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     }
     console.log(serviceDeliverables)
 
-    setServiceDeliverablesFormData(prevState => serviceDeliverables)
+    setServiceDeliverablesFormData((prevState: any) => {
+      return { ...prevState, ...serviceDeliverables }
+    })
   }
 
   const handleProjectSOWChange = (e: SelectChangeEvent<any>) => {
@@ -1188,7 +1205,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                       </TableCell>
                                                       <TableCell align='center'>
                                                         <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input  text-center'
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input text-center'
                                                           type='number'
                                                           placeholder=''
                                                           name='hours'
