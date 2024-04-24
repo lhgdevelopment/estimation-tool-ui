@@ -116,6 +116,62 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [errorMessage, setErrorMessage] = useState<any>({})
 
+  function countTotalTaskHours(hoursObject) {
+    let totalHours = 0
+
+    for (const key in hoursObject) {
+      totalHours += hoursObject[key].hours
+    }
+
+    return totalHours
+  }
+
+  function countTotalDeliverableHours(hoursObject) {
+    let totalHours = 0
+
+    for (const key1 in hoursObject) {
+      for (const key2 in hoursObject[key1]) {
+        totalHours += hoursObject[key1][key2].hours
+      }
+    }
+
+    return totalHours
+  }
+
+  const handleTaskTextChange = (
+    value = '',
+    field = '',
+    serviceId = '',
+    groupId = '',
+    sowId = '',
+    deliverableId = '',
+    taskId = '',
+    subTaskId = null
+  ) => {
+    const serviceDeliverables = { ...serviceDeliverablesFormData }
+
+    if (
+      serviceDeliverables &&
+      serviceDeliverables[serviceId] &&
+      serviceDeliverables[serviceId][groupId] &&
+      serviceDeliverables[serviceId][groupId][sowId] &&
+      serviceDeliverables[serviceId][groupId][sowId][deliverableId] &&
+      serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId]
+    ) {
+      console.log(value)
+
+      if (subTaskId) {
+        serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][subTaskId][field] = Number(value)
+        console.log(serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][subTaskId])
+      } else {
+        serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][field] = Number(value)
+      }
+    }
+    console.log(serviceDeliverables)
+
+    setServiceDeliverablesFormData(prevState => serviceDeliverables)
+  }
+
   const handleProjectSOWChange = (e: SelectChangeEvent<any>) => {
     setProjectSOWFormData({
       ...projectSOWFormData,
@@ -450,7 +506,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       .get(`/service-tree?per_page=500&projectTypeId=${4}`)
       .then(res => {
         setServiceTreeData(res?.data?.services)
-        const data = res?.data?.services.map((service: any) => {
+        const transformServiceTree = res?.data?.services.map((service: any) => {
           const serviceObj = {
             [service.id]: Object.fromEntries(
               service?.groups?.map((group: any) => {
@@ -462,16 +518,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           deliverable?.tasks?.map((task: any) => {
                             if (task?.sub_tasks?.length) {
                               const taskObj = Object.fromEntries(
-                                task?.sub_tasks?.map((sub_task: any) => {
-                                  return sub_task
+                                (task?.sub_tasks || []).map((sub_task: any) => {
+                                  return [
+                                    [sub_task.id],
+                                    {
+                                      hours: null
+                                    }
+                                  ]
                                 })
                               )
-                              console.log(taskObj)
 
-                              return [task.id, task]
+                              return [task.id, taskObj]
                             }
 
-                            return [task.id, task]
+                            return {
+                              hours: null
+                            }
                           })
                         )
 
@@ -490,8 +552,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
           return serviceObj
         })[0]
-        setServiceDeliverablesFormData(data)
-        console.log(data)
+        console.log(transformServiceTree)
+        setServiceDeliverablesFormData(transformServiceTree)
 
         // setServiceDeliverablesFormData()
       })
@@ -987,7 +1049,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                   sx={{ width: '400px' }}
                                                 />
                                                 <TableCell></TableCell>
-                                                <TableCell></TableCell>
+                                                <TableCell align='center'>
+                                                  {countTotalDeliverableHours(
+                                                    serviceDeliverablesFormData?.[service.id]?.[group.id]?.[sow.id]?.[
+                                                      deliverable.id
+                                                    ]
+                                                  )}
+                                                </TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>
@@ -1013,12 +1081,88 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                       dangerouslySetInnerHTML={{ __html: task.name }}
                                                       sx={{ width: '400px' }}
                                                     />
-                                                    <TableCell></TableCell>
-                                                    <TableCell></TableCell>
-                                                    <TableCell></TableCell>
-                                                    <TableCell></TableCell>
-                                                    <TableCell></TableCell>
-                                                    <TableCell></TableCell>
+                                                    {!task?.sub_tasks?.length ? (
+                                                      <>
+                                                        <TableCell>
+                                                          <Dropdown url='' />
+                                                        </TableCell>
+                                                        <TableCell align='center'>
+                                                          <input
+                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input text-center'
+                                                            type='number'
+                                                            placeholder=''
+                                                            name='hours'
+                                                            value={
+                                                              serviceDeliverablesFormData?.[service.id]?.[group.id]?.[
+                                                                sow.id
+                                                              ]?.[deliverable.id]?.[task.id]?.hours
+                                                            }
+                                                            onChange={e => {
+                                                              handleTaskTextChange(
+                                                                e.target.value,
+                                                                'hours',
+                                                                service.id,
+                                                                group.id,
+                                                                sow.id,
+                                                                deliverable.id,
+                                                                task.id
+                                                              )
+                                                            }}
+                                                          />
+                                                        </TableCell>
+                                                        <TableCell>
+                                                          <input
+                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                            placeholder=''
+                                                            name='name'
+                                                          />
+                                                        </TableCell>
+                                                        <TableCell>
+                                                          <input
+                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                            placeholder=''
+                                                            name='name'
+                                                          />
+                                                        </TableCell>
+                                                        <TableCell>
+                                                          <input
+                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                            placeholder=''
+                                                            name='name'
+                                                          />
+                                                        </TableCell>
+                                                        <TableCell>
+                                                          <input
+                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                            placeholder=''
+                                                            name='name'
+                                                          />
+                                                        </TableCell>
+                                                      </>
+                                                    ) : (
+                                                      <>
+                                                        <TableCell></TableCell>
+                                                        <TableCell align='center'>
+                                                          {/* {console.log(
+                                                            serviceDeliverablesFormData?.[service.id]?.[group.id]?.[
+                                                              sow.id
+                                                            ]?.[deliverable.id]?.[task.id]?.reduce(
+                                                              (total, sub_task) => total + Number(sub_task?.hours),
+                                                              0
+                                                            )
+                                                          )} */}
+                                                          {countTotalTaskHours(
+                                                            serviceDeliverablesFormData?.[service.id]?.[group.id]?.[
+                                                              sow.id
+                                                            ]?.[deliverable.id]?.[task.id]
+                                                          )}
+                                                        </TableCell>
+                                                        <TableCell></TableCell>
+                                                        <TableCell></TableCell>
+                                                        <TableCell></TableCell>
+                                                        <TableCell></TableCell>
+                                                      </>
+                                                    )}
                                                   </TableRow>
                                                   {task.sub_tasks.map((subTask: any) => (
                                                     <TableRow key={`sub_task-${subTask.id}`}>
@@ -1040,18 +1184,31 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                         sx={{ width: '400px' }}
                                                       />
                                                       <TableCell>
-                                                        <Dropdown url='users' />
+                                                        <Dropdown url='' />
                                                       </TableCell>
-                                                      <TableCell>
+                                                      <TableCell align='center'>
                                                         <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input  text-center'
+                                                          type='number'
                                                           placeholder=''
-                                                          name='name'
+                                                          name='hours'
                                                           value={
                                                             serviceDeliverablesFormData?.[service.id]?.[group.id]?.[
                                                               sow.id
-                                                            ]?.[deliverable.id]?.[task.id]?.[subTask.id]?.cost
+                                                            ]?.[deliverable.id]?.[task.id]?.[subTask.id]?.hours
                                                           }
+                                                          onChange={e => {
+                                                            handleTaskTextChange(
+                                                              e.target.value,
+                                                              'hours',
+                                                              service.id,
+                                                              group.id,
+                                                              sow.id,
+                                                              deliverable.id,
+                                                              task.id,
+                                                              subTask.id
+                                                            )
+                                                          }}
                                                         />
                                                       </TableCell>
                                                       <TableCell>
