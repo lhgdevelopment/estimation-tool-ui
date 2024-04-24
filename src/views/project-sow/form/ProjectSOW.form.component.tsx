@@ -93,6 +93,24 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
 
+  type TServiceDeliverablesForm = {
+    teamMember: string
+    hours: number
+    timeline: string
+    internal: string
+    retail: string
+    josh: string
+  }
+  const serviceDeliverablesFormDefaultData = {
+    teamMember: '',
+    hours: 0,
+    timeline: '',
+    internal: '',
+    retail: '',
+    josh: ''
+  }
+  const [serviceDeliverablesFormData, setServiceDeliverablesFormData] = useState<any>({})
+
   const [deliverablesTextID, setDeliverablesTextID] = useState<any>(null)
   const [deliverablesText, setDeliverablesText] = useState<any>('')
 
@@ -432,6 +450,50 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       .get(`/service-tree?per_page=500&projectTypeId=${4}`)
       .then(res => {
         setServiceTreeData(res?.data?.services)
+        const data = res?.data?.services.map((service: any) => {
+          const serviceObj = {
+            [service.id]: Object.fromEntries(
+              service?.groups?.map((group: any) => {
+                const groupObj = Object.fromEntries(
+                  group?.sows?.map((sow: any) => {
+                    const sowObj = Object.fromEntries(
+                      sow?.deliverables?.map((deliverable: any) => {
+                        const deliverableObj = Object.fromEntries(
+                          deliverable?.tasks?.map((task: any) => {
+                            if (task?.sub_tasks?.length) {
+                              const taskObj = Object.fromEntries(
+                                task?.sub_tasks?.map((sub_task: any) => {
+                                  return sub_task
+                                })
+                              )
+                              console.log(taskObj)
+
+                              return [task.id, task]
+                            }
+
+                            return [task.id, task]
+                          })
+                        )
+
+                        return [deliverable.id, deliverableObj]
+                      })
+                    )
+
+                    return [sow.id, sowObj]
+                  })
+                )
+
+                return [group.id, groupObj]
+              })
+            )
+          }
+
+          return serviceObj
+        })[0]
+        setServiceDeliverablesFormData(data)
+        console.log(data)
+
+        // setServiceDeliverablesFormData()
       })
       .catch(error => {
         enqueueSnackbar(error?.message, { variant: 'error' })
@@ -487,7 +549,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setActiveStep(0)
     setEnabledStep(0)
   }
-  console.log(serviceTreeData)
 
   return (
     <Box>
@@ -846,7 +907,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             {serviceTreeData?.map((service: any, index: number) => {
                               return (
                                 <>
-                                  <TableRow key={index}>
+                                  <TableRow key={`service-${service.id}`}>
                                     <TableCell sx={{ width: '70px' }}>
                                       <Chip
                                         label='Service'
@@ -868,7 +929,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   </TableRow>
                                   {service.groups.map((group: any) => (
                                     <>
-                                      <TableRow key={index}>
+                                      <TableRow key={`group-${group.id}`}>
                                         <TableCell sx={{ width: '70px' }}>
                                           <Chip
                                             label='Group'
@@ -890,7 +951,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                       </TableRow>
                                       {group.sows.map((sow: any) => (
                                         <>
-                                          <TableRow key={index}>
+                                          <TableRow key={`sow-${sow.id}`}>
                                             <TableCell sx={{ width: '70px' }}>
                                               <Chip
                                                 label='SOW'
@@ -912,7 +973,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                           </TableRow>
                                           {sow.deliverables.map((deliverable: any) => (
                                             <>
-                                              <TableRow key={index}>
+                                              <TableRow key={`deliverable-${deliverable.id}`}>
                                                 <TableCell sx={{ width: '70px' }}>
                                                   <Chip
                                                     label='Deliverable'
@@ -934,7 +995,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                               </TableRow>
                                               {deliverable.tasks.map((task: any) => (
                                                 <>
-                                                  <TableRow key={index}>
+                                                  <TableRow key={`task-${task.id}`}>
                                                     <TableCell sx={{ width: '70px' }}>
                                                       <Chip
                                                         label='Task'
@@ -960,7 +1021,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                     <TableCell></TableCell>
                                                   </TableRow>
                                                   {task.sub_tasks.map((subTask: any) => (
-                                                    <TableRow key={index}>
+                                                    <TableRow key={`sub_task-${subTask.id}`}>
                                                       <TableCell sx={{ width: '70px' }}>
                                                         <Chip
                                                           label='Subtask'
@@ -986,6 +1047,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                           className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                                                           placeholder=''
                                                           name='name'
+                                                          value={
+                                                            serviceDeliverablesFormData?.[service.id]?.[group.id]?.[
+                                                              sow.id
+                                                            ]?.[deliverable.id]?.[task.id]?.[subTask.id]?.cost
+                                                          }
                                                         />
                                                       </TableCell>
                                                       <TableCell>
