@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles'
 
 import { Box } from '@mui/material'
 import axios from 'axios'
+import { useRouter } from 'next/router'
 import BlankLayout from 'src/layouts/BlankLayout'
 
 // ** Styled Components
@@ -28,6 +29,7 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const LoginPage = () => {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -56,7 +58,10 @@ const LoginPage = () => {
         Cookies.set('accessToken', token)
 
         // Redirect to the desired page (e.g., /dashboard)
-        window.location.href = '/'
+        //  window.location.href = '/'
+        //console.log(router)
+
+        router.back()
       })
       .catch(error => {
         console.error('Login failed:', error)

@@ -36,8 +36,8 @@ const steps = [
   'Problems & Goals',
   'Project Overview',
   'SOW',
-  'Service Deliverables',
-  'Deliverables'
+  'Deliverables',
+  'Combined Deliverables'
 ]
 
 export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
@@ -116,23 +116,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [errorMessage, setErrorMessage] = useState<any>({})
 
-  interface ITaskHours {
-    [key: string]: {
-      hours: number
-    }
-  }
-  function countTotalTaskHours(taskHours: ITaskHours = {}): number {
-    let totalHours = 0
-
-    for (const key in taskHours) {
-      if (taskHours.hasOwnProperty(key)) {
-        totalHours += taskHours[key].hours
-      }
-    }
-
-    return totalHours
-  }
-
   interface IDeliverableHours {
     [key: string]: {
       [key: string]: {
@@ -147,6 +130,23 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     for (const key1 in deliverableHours) {
       for (const key2 in deliverableHours[key1]) {
         totalHours += deliverableHours[key1][key2].hours
+      }
+    }
+
+    return totalHours
+  }
+
+  interface ITaskHours {
+    [key: string]: {
+      hours: number
+    }
+  }
+  function countTotalTaskHours(taskHours: ITaskHours = {}): number {
+    let totalHours = 0
+
+    for (const key in taskHours) {
+      if (taskHours.hasOwnProperty(key)) {
+        totalHours += taskHours[key].hours
       }
     }
 
@@ -391,17 +391,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     }
 
     if (activeStep === 4) {
-      setTimeout(() => {
-        if (type == 'NEXT') {
-          setActiveStep(newActiveStep)
-          if (enabledStep < newActiveStep) {
-            setEnabledStep(newActiveStep)
-          }
-        }
-        setPreload(false)
-      }, 1000)
-    }
-    if (activeStep === 5) {
       apiRequest
         .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
         .then(res => {
@@ -428,6 +417,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           setErrorMessage(error?.response?.data?.errors)
           enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
+    }
+    if (activeStep === 5) {
+      setTimeout(() => {
+        if (type == 'NEXT') {
+          setActiveStep(newActiveStep)
+          if (enabledStep < newActiveStep) {
+            setEnabledStep(newActiveStep)
+          }
+        }
+        setPreload(false)
+      }, 1000)
     }
     if (activeStep === 6) {
       apiRequest
@@ -509,7 +509,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             'deliverablesText'
           ]
         )
-        getEnableStep = 5
+        getEnableStep = 6
       }
       setEnabledStep(getEnableStep)
       setPreload(false)
@@ -596,7 +596,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }, [enabledStep, isEdit, id, step])
 
   useEffect(() => {
-    if (activeStep === 5) {
+    if (activeStep === 6) {
       getTree()
     }
 
@@ -964,7 +964,40 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   </Box>
                 </Box>
               )}
+
               {activeStep == 5 && (
+                <Box>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm' htmlFor={'#deliverablesText'}>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Deliverable</span>
+                        <Box
+                          sx={{
+                            position: 'relative'
+                          }}
+                        >
+                          <MdPreviewTitle />
+                          <MdEditor
+                            language='en-US'
+                            ref={deliverablesTextEditorRef}
+                            modelValue={deliverablesText}
+                            onChange={setDeliverablesText}
+                          />
+                        </Box>
+                        {!!errorMessage?.['deliverablesText'] &&
+                          errorMessage?.['deliverablesText']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {activeStep == 6 && (
                 <Box>
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
@@ -1272,38 +1305,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           </TableBody>
                         </Table>
                       </TableContainer>
-                    </Box>
-                  </Box>
-                </Box>
-              )}
-              {activeStep == 6 && (
-                <Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm' htmlFor={'#deliverablesText'}>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Deliverable</span>
-                        <Box
-                          sx={{
-                            position: 'relative'
-                          }}
-                        >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={deliverablesTextEditorRef}
-                            modelValue={deliverablesText}
-                            onChange={setDeliverablesText}
-                          />
-                        </Box>
-                        {!!errorMessage?.['deliverablesText'] &&
-                          errorMessage?.['deliverablesText']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
                     </Box>
                   </Box>
                 </Box>
