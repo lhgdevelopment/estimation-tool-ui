@@ -1,4 +1,4 @@
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck'
 import { Box, SxProps, Tooltip } from '@mui/material'
 import { useState } from 'react'
@@ -31,7 +31,7 @@ const CopyToClipboard = (props: TCopyToClipboard) => {
         className='flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
         sx={sx}
       >
-        {isCopied ? <LibraryAddCheckIcon sx={{ mr: 2 }} /> : <ContentCopyIcon sx={{ mr: 2 }} />}
+        {isCopied ? <LibraryAddCheckIcon sx={{ mr: 2 }} /> : <ContentCopyRoundedIcon sx={{ mr: 2 }} />}
         {title ? (isCopied ? 'Copied!' : title) : ''}
       </Box>
     </Tooltip>

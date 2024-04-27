@@ -1,4 +1,4 @@
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded'
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import { Box } from '@mui/material'
@@ -42,7 +42,8 @@ export function MarkdownEditor(props: TMarkdownEditorProps) {
             '& .preview-buttons': {
               display: 'flex',
               alignItems: 'center',
-              padding: '3px 10px',
+              p: '5px 8px',
+              mx: 1,
               lineHeight: 'normal',
               background: '#9333ea',
               color: '#fff',
@@ -53,11 +54,17 @@ export function MarkdownEditor(props: TMarkdownEditorProps) {
             }
           }}
         >
-          <Box className='preview-buttons' onClick={handleCopyClick} disabled={isCopied}>
+          <Box
+            className='preview-buttons'
+            onClick={() => {
+              handleCopyClick()
+            }}
+            disabled={isCopied}
+          >
             {isCopied ? (
               <LibraryAddCheckIcon sx={{ fontSize: '16px' }} />
             ) : (
-              <ContentCopyIcon sx={{ fontSize: '16px' }} />
+              <ContentCopyRoundedIcon sx={{ fontSize: '16px' }} />
             )}
           </Box>
           <Box

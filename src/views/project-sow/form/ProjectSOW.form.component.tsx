@@ -392,25 +392,27 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
     if (activeStep === 4) {
       apiRequest
-        .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
+        .post(`/scope-of-work/${scopeTextID}`, { scopeText })
         .then(res => {
-          apiRequest.get(`/project-summery?page=1`).then(res => {
-            if (setListData) {
-              setListData(res?.data)
-            }
-          })
-
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
-
-          setTimeout(() => {
-            if (type == 'NEXT') {
-              setActiveStep(newActiveStep)
-              if (enabledStep < newActiveStep) {
-                setEnabledStep(newActiveStep)
-              }
-            }
+          console.log(res)
+          if (res?.data && type == 'NEXT') {
+            apiRequest.post('/deliverables', { scopeOfWorkId: scopeTextID }).then(res2 => {
+              enqueueSnackbar('Created Successfully!', { variant: 'success' })
+              setDeliverablesTextID(res2?.data?.id)
+              setDeliverablesText(res2?.data?.deliverablesText)
+              setTimeout(() => {
+                if (type == 'NEXT') {
+                  setActiveStep(newActiveStep)
+                  if (enabledStep < newActiveStep) {
+                    setEnabledStep(newActiveStep)
+                  }
+                }
+                setPreload(false)
+              }, 1000)
+            })
+          } else {
             setPreload(false)
-          }, 1000)
+          }
         })
         .catch(error => {
           setPreload(false)
@@ -419,17 +421,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         })
     }
     if (activeStep === 5) {
-      setTimeout(() => {
-        if (type == 'NEXT') {
-          setActiveStep(newActiveStep)
-          if (enabledStep < newActiveStep) {
-            setEnabledStep(newActiveStep)
-          }
-        }
-        setPreload(false)
-      }, 1000)
-    }
-    if (activeStep === 6) {
       apiRequest
         .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
         .then(res => {
@@ -440,13 +431,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           })
 
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
-
           setTimeout(() => {
-            setActiveStep(0)
+            if (type == 'NEXT') {
+              setActiveStep(newActiveStep)
+              if (enabledStep < newActiveStep) {
+                setEnabledStep(newActiveStep)
+              }
+            }
             setPreload(false)
-
-            // setListData(res)
           }, 1000)
+
+          // setTimeout(() => {
+          //   setActiveStep(0)
+          //   setPreload(false)
+
+          //   // setListData(res)
+          // }, 1000)
         })
         .catch(error => {
           setPreload(false)
