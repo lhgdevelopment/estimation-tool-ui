@@ -40,10 +40,9 @@ const Preloader = (props: TPreloaderProps) => {
     const animationFrame = requestAnimationFrame(updateProgress)
 
     return () => {
-      cancelAnimationFrame(animationFrame)
+      cancelAnimationFrame(animationFrame) // Clean up animation frame on unmount
     }
   }, [close, closing])
-
   const gradientOffset = 625 - (625 * counter) / 100
 
   return (

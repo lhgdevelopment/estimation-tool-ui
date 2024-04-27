@@ -19,13 +19,13 @@ import {
   TableRow
 } from '@mui/material'
 import { useMask } from '@react-input/mask'
-import { ExposeParam, MdEditor } from 'md-editor-rt'
+import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
-import MdPreviewTitle from 'src/@core/components/md-preview-title'
+import { MarkdownEditor } from 'src/@core/components/markdownEditor'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
@@ -466,16 +466,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
     setPreload(true)
     apiRequest.get(`/project-summery/${id}`).then((res: any) => {
+      const transcriptId = res?.data?.id || ''
+      const transcriptText = res?.data?.['meeting_transcript']?.['transcriptText'] || ''
+      const projectTypeId = res?.data?.['meeting_transcript']?.['projectTypeId'] || ''
+      const projectName = res?.data?.['meeting_transcript']?.['projectName'] || ''
+      const company = res?.data?.['meeting_transcript']?.['company'] || ''
+      const clientEmail = res?.data?.['meeting_transcript']?.['clientEmail'] || ''
+      const clientPhone = res?.data?.['meeting_transcript']?.['clientPhone'] || ''
+      const clientWebsite = res?.data?.['meeting_transcript']?.['clientWebsite'] || ''
+      const summaryText = res?.data?.['summaryText'] || ''
+
       setProjectSOWFormData({
-        transcriptId: res?.data?.id,
-        transcriptText: res?.data?.['meeting_transcript']?.['transcriptText'],
-        projectTypeId: res?.data?.['meeting_transcript']?.['projectTypeId'],
-        projectName: res?.data?.['meeting_transcript']?.['projectName'],
-        company: res?.data?.['meeting_transcript']?.['company'],
-        clientEmail: res?.data?.['meeting_transcript']?.['clientEmail'],
-        clientPhone: res?.data?.['meeting_transcript']?.['clientPhone'],
-        clientWebsite: res?.data?.['meeting_transcript']?.['clientWebsite'],
-        summaryText: res?.data?.['summaryText']
+        transcriptId,
+        transcriptText,
+        projectTypeId,
+        projectName,
+        company,
+        clientEmail,
+        clientPhone,
+        clientWebsite,
+        summaryText
       })
       setProjectSOWID(id)
       setSummaryText(res?.data?.['summaryText'])
@@ -509,7 +519,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             'deliverablesText'
           ]
         )
-        getEnableStep = 6
+        getEnableStep = 5
       }
       setEnabledStep(getEnableStep)
       setPreload(false)
@@ -845,13 +855,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             position: 'relative'
                           }}
                         >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={summaryTextEditorRef}
-                            modelValue={summaryText}
-                            onChange={setSummaryText}
-                          />
+                          <MarkdownEditor modelValue={summaryText} onChange={setSummaryText} />
                         </Box>
 
                         {!!errorMessage?.['summaryText'] &&
@@ -879,13 +883,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             position: 'relative'
                           }}
                         >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={problemGoalTextEditorRef}
-                            modelValue={problemGoalText}
-                            onChange={setProblemGoalText}
-                          />
+                          <MarkdownEditor modelValue={problemGoalText} onChange={setProblemGoalText} />
                         </Box>
                         {!!errorMessage?.['problemGoalText'] &&
                           errorMessage?.['problemGoalText']?.map((message: any, index: number) => {
@@ -911,13 +909,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             position: 'relative'
                           }}
                         >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={overviewTextEditorRef}
-                            modelValue={overviewText}
-                            onChange={setOverviewText}
-                          />
+                          <MarkdownEditor modelValue={overviewText} onChange={setOverviewText} />
                         </Box>
                         {!!errorMessage?.['overviewText'] &&
                           errorMessage?.['overviewText']?.map((message: any, index: number) => {
@@ -943,13 +935,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             position: 'relative'
                           }}
                         >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={scopeTextEditorRef}
-                            modelValue={scopeText}
-                            onChange={setScopeText}
-                          />
+                          <MarkdownEditor modelValue={scopeText} onChange={setScopeText} />
                         </Box>
                         {!!errorMessage?.['scopeText'] &&
                           errorMessage?.['scopeText']?.map((message: any, index: number) => {
@@ -976,13 +962,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             position: 'relative'
                           }}
                         >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={deliverablesTextEditorRef}
-                            modelValue={deliverablesText}
-                            onChange={setDeliverablesText}
-                          />
+                          <MarkdownEditor modelValue={deliverablesText} onChange={setDeliverablesText} />
                         </Box>
                         {!!errorMessage?.['deliverablesText'] &&
                           errorMessage?.['deliverablesText']?.map((message: any, index: number) => {

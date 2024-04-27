@@ -9,7 +9,7 @@ import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
-import CopyToClipboard from 'src/@core/components/copy-to-clipboard/CopyToClipboard'
+import CopyToClipboard from 'src/@core/components/copy-to-clipboard'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 
