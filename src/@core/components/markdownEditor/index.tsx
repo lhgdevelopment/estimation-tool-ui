@@ -38,34 +38,8 @@ export function MarkdownEditor(props: TMarkdownEditorProps) {
             top: '40px',
             right: '10px',
             zIndex: '9',
-            display: 'flex'
-          }}
-        >
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              padding: '5px 7px',
-              lineHeight: 'normal',
-              background: '#9333ea',
-              color: '#fff',
-              borderRadius: '5px',
-              fontSize: '12px',
-              mr: 2,
-              cursor: 'pointer',
-              opacity: 0.5
-            }}
-            onClick={handleCopyClick}
-            disabled={isCopied}
-          >
-            {isCopied ? (
-              <LibraryAddCheckIcon sx={{ fontSize: '16px' }} />
-            ) : (
-              <ContentCopyIcon sx={{ fontSize: '16px' }} />
-            )}
-          </Box>
-          <Box
-            sx={{
+            display: 'flex',
+            '& .preview-buttons': {
               display: 'flex',
               alignItems: 'center',
               padding: '3px 10px',
@@ -76,7 +50,18 @@ export function MarkdownEditor(props: TMarkdownEditorProps) {
               fontSize: '12px',
               cursor: 'pointer',
               opacity: 0.5
-            }}
+            }
+          }}
+        >
+          <Box className='preview-buttons' onClick={handleCopyClick} disabled={isCopied}>
+            {isCopied ? (
+              <LibraryAddCheckIcon sx={{ fontSize: '16px' }} />
+            ) : (
+              <ContentCopyIcon sx={{ fontSize: '16px' }} />
+            )}
+          </Box>
+          <Box
+            className='preview-buttons'
             onClick={() => {
               mdEditorRef?.current?.togglePreview()
             }}
