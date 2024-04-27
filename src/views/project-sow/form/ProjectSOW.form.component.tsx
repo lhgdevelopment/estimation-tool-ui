@@ -431,22 +431,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           })
 
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
+
           setTimeout(() => {
-            if (type == 'NEXT') {
-              setActiveStep(newActiveStep)
-              if (enabledStep < newActiveStep) {
-                setEnabledStep(newActiveStep)
-              }
-            }
+            setActiveStep(6)
             setPreload(false)
+
+            // setListData(res)
           }, 1000)
-
-          // setTimeout(() => {
-          //   setActiveStep(0)
-          //   setPreload(false)
-
-          //   // setListData(res)
-          // }, 1000)
         })
         .catch(error => {
           setPreload(false)
@@ -1042,7 +1033,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <TableCell></TableCell>
                                       </TableRow>
                                       {group.sows.map((sow: any) => (
-                                        <>
+                                        <React.Fragment key={`sow-${sow.id}`}>
                                           <TableRow key={`sow-${sow.id}`}>
                                             <TableCell sx={{ width: '70px' }}>
                                               <Chip
@@ -1064,7 +1055,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                             <TableCell></TableCell>
                                           </TableRow>
                                           {sow.deliverables.map((deliverable: any) => (
-                                            <>
+                                            <React.Fragment key={`deliverable-${deliverable.id}`}>
                                               <TableRow key={`deliverable-${deliverable.id}`}>
                                                 <TableCell sx={{ width: '70px' }}>
                                                   <Chip
@@ -1273,9 +1264,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                   ))}
                                                 </>
                                               ))}
-                                            </>
+                                            </React.Fragment>
                                           ))}
-                                        </>
+                                        </React.Fragment>
                                       ))}
                                     </>
                                   ))}
