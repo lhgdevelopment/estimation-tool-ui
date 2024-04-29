@@ -1021,7 +1021,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
               {activeStep == 5 && (
                 <Box>
-                  {/* <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#deliverablesText'}>
                         <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Deliverable</span>
@@ -1042,7 +1042,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           })}
                       </label>
                     </Box>
-                  </Box> */}
+                  </Box>
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Grid container spacing={2} justifyContent='center' alignItems='center'>
                       <Grid sx={{ width: 'calc(50% - 50px)' }} item>
