@@ -5,7 +5,14 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import {
   Box,
+  Button,
+  Checkbox,
   Chip,
+  Grid,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Paper,
   SelectChangeEvent,
   Step,
@@ -39,6 +46,13 @@ const steps = [
   'Deliverables',
   'Combined Deliverables'
 ]
+function not(a: any[], b: any[]) {
+  return a.filter(value => b.indexOf(value) === -1)
+}
+
+function intersection(a: any[], b: any[]) {
+  return a.filter(value => b.indexOf(value) !== -1)
+}
 
 export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
   const router = useRouter()
@@ -46,6 +60,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const step = router?.query?.['step']
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { listData, setListData, isEdit = false } = props
+  const [serviceDeliverablesChecked, setServiceDeliverablesChecked] = React.useState<any[]>([])
+  const [serviceDeliverableLeftList, setServiceDeliverableLeftList] = React.useState<any[]>([])
+  const [serviceDeliverableRightList, setServiceDeliverableRightList] = React.useState<any[]>([])
 
   const phoneInputRef = useMask({
     mask: '(___) ___-____',
@@ -173,16 +190,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       serviceDeliverables[serviceId][groupId][sowId][deliverableId] &&
       serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId]
     ) {
-      console.log(value)
-
       if (subTaskId) {
         serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][subTaskId][field] = Number(value)
-        console.log(serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][subTaskId])
       } else {
         serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][field] = Number(value)
       }
     }
-    console.log(serviceDeliverables)
 
     setServiceDeliverablesFormData((prevState: any) => {
       return { ...prevState, ...serviceDeliverables }
@@ -334,7 +347,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       apiRequest
         .post(`/problems-and-goals/${problemGoalID}`, { problemGoalText })
         .then(res => {
-          console.log(res)
           if (res?.data && type == 'NEXT') {
             apiRequest.post('/project-overview', { problemGoalID }).then(res2 => {
               enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -394,7 +406,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       apiRequest
         .post(`/scope-of-work/${scopeTextID}`, { scopeText })
         .then(res => {
-          console.log(res)
           if (res?.data && type == 'NEXT') {
             apiRequest.post('/deliverables', { scopeOfWorkId: scopeTextID }).then(res2 => {
               enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -517,13 +528,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     })
   }
 
-  const getTree = async () => {
+  const getServiceTree = async () => {
     await apiRequest
 
       // .get(`/service-tree?per_page=500&projectTypeId=${projectSOWFormData.projectTypeId}`)
       .get(`/service-tree?per_page=500&projectTypeId=${4}`)
       .then(res => {
         setServiceTreeData(res?.data?.services)
+        setServiceDeliverableLeftList(res?.data?.services?.[0]?.groups)
         const transformServiceTree = res?.data?.services.map((service: any) => {
           const serviceObj = {
             [service.id]: Object.fromEntries(
@@ -570,7 +582,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
           return serviceObj
         })[0]
-        console.log(transformServiceTree)
         setServiceDeliverablesFormData(transformServiceTree)
 
         // setServiceDeliverablesFormData()
@@ -597,8 +608,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }, [enabledStep, isEdit, id, step])
 
   useEffect(() => {
-    if (activeStep === 6) {
-      getTree()
+    if (activeStep === 5 || activeStep === 6) {
+      getServiceTree()
     }
 
     if (activeStep) {
@@ -629,6 +640,73 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setActiveStep(0)
     setEnabledStep(0)
   }
+
+  const leftChecked: any = intersection(
+    serviceDeliverablesChecked,
+    serviceDeliverableLeftList.map(serviceDeliverable => serviceDeliverable.id)
+  )
+
+  const rightChecked: any = intersection(
+    serviceDeliverablesChecked,
+    serviceDeliverableRightList.map(serviceDeliverable => serviceDeliverable.id)
+  )
+
+  const handleToggle = (item: any) => () => {
+    const currentIndex = serviceDeliverablesChecked.indexOf(item.id)
+    const newChecked = [...serviceDeliverablesChecked]
+
+    if (currentIndex === -1) {
+      newChecked.push(item.id)
+    } else {
+      newChecked.splice(currentIndex, 1)
+    }
+
+    setServiceDeliverablesChecked(newChecked)
+  }
+
+  const handleCheckedLeftToRight = () => {
+    const itemsToAdd = serviceDeliverableLeftList.filter(e => serviceDeliverablesChecked.indexOf(e.id) !== -1)
+    setServiceDeliverableRightList(serviceDeliverableRightList.concat(itemsToAdd))
+    setServiceDeliverableLeftList(
+      serviceDeliverableLeftList.filter(e => serviceDeliverablesChecked.indexOf(e.id) === -1)
+    )
+    setServiceDeliverablesChecked([])
+  }
+
+  const handleCheckedRightToLeft = () => {
+    const itemsToAdd = serviceDeliverableRightList.filter(e => serviceDeliverablesChecked.indexOf(e.id) !== -1)
+    setServiceDeliverableLeftList(serviceDeliverableLeftList.concat(itemsToAdd))
+    setServiceDeliverableRightList(
+      serviceDeliverableRightList.filter(e => serviceDeliverablesChecked.indexOf(e.id) === -1)
+    )
+    setServiceDeliverablesChecked([])
+  }
+
+  const serviceTreeList = (items: any[], handleToggle: (item: any) => void, checkedItems: any[]) => (
+    <Paper sx={{ width: '100%', height: '500px', overflow: 'auto' }}>
+      <List dense component='div' role='list'>
+        {items?.map((item: any) => {
+          const labelId = `transfer-list-item-${item.id}-label`
+
+          return (
+            <ListItemButton key={item.id} role='listitem' onClick={handleToggle(item)}>
+              <ListItemIcon>
+                <Checkbox
+                  checked={checkedItems.indexOf(item.id) !== -1}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{
+                    'aria-labelledby': labelId
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText id={labelId} primary={<div dangerouslySetInnerHTML={{ __html: item.name as string }} />} />
+            </ListItemButton>
+          )
+        })}
+      </List>
+    </Paper>
+  )
 
   return (
     <Box>
@@ -944,7 +1022,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
               {activeStep == 5 && (
                 <Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                  {/* <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#deliverablesText'}>
                         <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Deliverable</span>
@@ -965,6 +1043,40 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           })}
                       </label>
                     </Box>
+                  </Box> */}
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Grid container spacing={2} justifyContent='center' alignItems='center'>
+                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
+                        {serviceTreeList(serviceDeliverableLeftList, handleToggle, serviceDeliverablesChecked)}
+                      </Grid>
+                      <Grid sx={{ width: '100px' }} item>
+                        <Grid container direction='column' alignItems='center'>
+                          <Button
+                            sx={{ my: 0.5 }}
+                            variant='outlined'
+                            size='small'
+                            onClick={handleCheckedLeftToRight}
+                            disabled={serviceDeliverablesChecked.length === 0}
+                            aria-label='move selected right'
+                          >
+                            &gt;
+                          </Button>
+                          <Button
+                            sx={{ my: 0.5 }}
+                            variant='outlined'
+                            size='small'
+                            onClick={handleCheckedRightToLeft}
+                            disabled={serviceDeliverablesChecked.length === 0}
+                            aria-label='move selected left'
+                          >
+                            &lt;
+                          </Button>
+                        </Grid>
+                      </Grid>
+                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
+                        {serviceTreeList(serviceDeliverableRightList, handleToggle, serviceDeliverablesChecked)}
+                      </Grid>
+                    </Grid>
                   </Box>
                 </Box>
               )}
