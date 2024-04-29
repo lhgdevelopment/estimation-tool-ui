@@ -59,7 +59,7 @@ export function MarkdownEditor(props: TMarkdownEditorProps) {
             onClick={() => {
               handleCopyClick()
             }}
-            disabled={isCopied}
+            component={'div'}
           >
             {isCopied ? (
               <LibraryAddCheckIcon sx={{ fontSize: '16px' }} />

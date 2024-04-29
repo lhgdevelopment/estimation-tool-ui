@@ -32,7 +32,7 @@ import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
-import { MarkdownEditor } from 'src/@core/components/markdownEditor'
+import { MarkdownEditor } from 'src/@core/components/markdown-editor'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
@@ -651,19 +651,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     serviceDeliverableRightList.map(serviceDeliverable => serviceDeliverable.id)
   )
 
-  const handleToggle = (item: any) => () => {
-    const currentIndex = serviceDeliverablesChecked.indexOf(item.id)
-    const newChecked = [...serviceDeliverablesChecked]
-
-    if (currentIndex === -1) {
-      newChecked.push(item.id)
-    } else {
-      newChecked.splice(currentIndex, 1)
-    }
-
-    setServiceDeliverablesChecked(newChecked)
-  }
-
   const handleCheckedLeftToRight = () => {
     const itemsToAdd = serviceDeliverableLeftList.filter(e => serviceDeliverablesChecked.indexOf(e.id) !== -1)
     setServiceDeliverableRightList(serviceDeliverableRightList.concat(itemsToAdd))
@@ -682,14 +669,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setServiceDeliverablesChecked([])
   }
 
-  const serviceTreeList = (items: any[], handleToggle: (item: any) => void, checkedItems: any[]) => (
+  const serviceTreeList = (items: any[], checkedItems: any[]) => (
     <Paper sx={{ width: '100%', height: '500px', overflow: 'auto' }}>
       <List dense component='div' role='list'>
         {items?.map((item: any) => {
           const labelId = `transfer-list-item-${item.id}-label`
+          const handleCheckedToggle = (e: any) => {
+            const currentIndex = serviceDeliverablesChecked.indexOf(item.id)
+            const newChecked = [...serviceDeliverablesChecked]
+
+            if (currentIndex === -1) {
+              newChecked.push(item.id)
+            } else {
+              newChecked.splice(currentIndex, 1)
+            }
+
+            setServiceDeliverablesChecked(newChecked)
+          }
 
           return (
-            <ListItemButton key={item.id} role='listitem' onClick={handleToggle(item)}>
+            <ListItemButton key={item.id} role='listitem' onClick={handleCheckedToggle}>
               <ListItemIcon>
                 <Checkbox
                   checked={checkedItems.indexOf(item.id) !== -1}
@@ -1047,7 +1046,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Grid container spacing={2} justifyContent='center' alignItems='center'>
                       <Grid sx={{ width: 'calc(50% - 50px)' }} item>
-                        {serviceTreeList(serviceDeliverableLeftList, handleToggle, serviceDeliverablesChecked)}
+                        {serviceTreeList(serviceDeliverableLeftList, serviceDeliverablesChecked)}
                       </Grid>
                       <Grid sx={{ width: '100px' }} item>
                         <Grid container direction='column' alignItems='center'>
@@ -1074,7 +1073,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         </Grid>
                       </Grid>
                       <Grid sx={{ width: 'calc(50% - 50px)' }} item>
-                        {serviceTreeList(serviceDeliverableRightList, handleToggle, serviceDeliverablesChecked)}
+                        {serviceTreeList(serviceDeliverableRightList, serviceDeliverablesChecked)}
                       </Grid>
                     </Grid>
                   </Box>
