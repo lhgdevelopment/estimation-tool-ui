@@ -26,7 +26,11 @@ export default function AppHeaderComponent() {
 
   return (
     <Fragment>
-      <Box component={'header'} className='z-10 py-4 bg-white shadow-md dark:bg-gray-800'>
+      <Box
+        component={'header'}
+        className='z-10 py-4 bg-white shadow-md dark:bg-gray-800'
+        sx={{ width: 'calc(100% - 280px)', position: 'fixed', top: 0, left: '280px', right: 0 }}
+      >
         <Box className='container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300'>
           {/* <!-- Mobile hamburger --> */}
           <Box component={'button'} className='p-1 -ml-1 mr-5 rounded-md md:hidden' aria-label='Menu'>

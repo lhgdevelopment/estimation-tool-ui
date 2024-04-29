@@ -67,7 +67,7 @@ const AppLayout = ({ children }: Props) => {
       <AppNavbarComponent />
       <Box className='flex flex-col flex-1' sx={{ marginLeft: '280px', width: 'calc(100% - 280px)' }}>
         <AppHeaderComponent />
-        <Box component={'main'} className='h-full'>
+        <Box sx={{ mt: '60px' }} component={'main'} className='h-full'>
           {children}
         </Box>
         <AppBackToTopButton />

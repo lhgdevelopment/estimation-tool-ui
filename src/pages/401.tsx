@@ -5,6 +5,7 @@ import { ReactNode } from 'react'
 import Link from 'next/link'
 
 // ** MUI Components
+import ErrorIcon from '@mui/icons-material/Error'
 import Box, { BoxProps } from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
@@ -43,7 +44,9 @@ const Error401 = () => {
           </Typography>
           <Typography variant='body2'>You don&prime;t have permission to access this page. Go Home!</Typography>
         </BoxWrapper>
-        <Img height='487' alt='error-illustration' src='/images/pages/401.png' />
+        <Box sx={{ my: 5 }}>
+          <ErrorIcon color='error' sx={{ fontSize: 50 }} />
+        </Box>
         <Link passHref href='/'>
           <Button component='a' variant='contained' sx={{ px: 5.5 }}>
             Back to Home

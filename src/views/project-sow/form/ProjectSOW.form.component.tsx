@@ -5,7 +5,14 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import {
   Box,
+  Button,
+  Checkbox,
   Chip,
+  Grid,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
   Paper,
   SelectChangeEvent,
   Step,
@@ -19,13 +26,13 @@ import {
   TableRow
 } from '@mui/material'
 import { useMask } from '@react-input/mask'
-import { ExposeParam, MdEditor } from 'md-editor-rt'
+import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
-import MdPreviewTitle from 'src/@core/components/md-preview-title'
+import { MarkdownEditor } from 'src/@core/components/markdownEditor'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
@@ -36,9 +43,16 @@ const steps = [
   'Problems & Goals',
   'Project Overview',
   'SOW',
-  'Service Deliverables',
-  'Deliverables'
+  'Deliverables',
+  'Combined Deliverables'
 ]
+function not(a: any[], b: any[]) {
+  return a.filter(value => b.indexOf(value) === -1)
+}
+
+function intersection(a: any[], b: any[]) {
+  return a.filter(value => b.indexOf(value) !== -1)
+}
 
 export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent) {
   const router = useRouter()
@@ -46,6 +60,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const step = router?.query?.['step']
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { listData, setListData, isEdit = false } = props
+  const [serviceDeliverablesChecked, setServiceDeliverablesChecked] = React.useState<any[]>([])
+  const [serviceDeliverableLeftList, setServiceDeliverableLeftList] = React.useState<any[]>([])
+  const [serviceDeliverableRightList, setServiceDeliverableRightList] = React.useState<any[]>([])
 
   const phoneInputRef = useMask({
     mask: '(___) ___-____',
@@ -116,23 +133,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [errorMessage, setErrorMessage] = useState<any>({})
 
-  interface ITaskHours {
-    [key: string]: {
-      hours: number
-    }
-  }
-  function countTotalTaskHours(taskHours: ITaskHours = {}): number {
-    let totalHours = 0
-
-    for (const key in taskHours) {
-      if (taskHours.hasOwnProperty(key)) {
-        totalHours += taskHours[key].hours
-      }
-    }
-
-    return totalHours
-  }
-
   interface IDeliverableHours {
     [key: string]: {
       [key: string]: {
@@ -147,6 +147,23 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     for (const key1 in deliverableHours) {
       for (const key2 in deliverableHours[key1]) {
         totalHours += deliverableHours[key1][key2].hours
+      }
+    }
+
+    return totalHours
+  }
+
+  interface ITaskHours {
+    [key: string]: {
+      hours: number
+    }
+  }
+  function countTotalTaskHours(taskHours: ITaskHours = {}): number {
+    let totalHours = 0
+
+    for (const key in taskHours) {
+      if (taskHours.hasOwnProperty(key)) {
+        totalHours += taskHours[key].hours
       }
     }
 
@@ -173,16 +190,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       serviceDeliverables[serviceId][groupId][sowId][deliverableId] &&
       serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId]
     ) {
-      console.log(value)
-
       if (subTaskId) {
         serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][subTaskId][field] = Number(value)
-        console.log(serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][subTaskId])
       } else {
         serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][field] = Number(value)
       }
     }
-    console.log(serviceDeliverables)
 
     setServiceDeliverablesFormData((prevState: any) => {
       return { ...prevState, ...serviceDeliverables }
@@ -334,7 +347,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       apiRequest
         .post(`/problems-and-goals/${problemGoalID}`, { problemGoalText })
         .then(res => {
-          console.log(res)
           if (res?.data && type == 'NEXT') {
             apiRequest.post('/project-overview', { problemGoalID }).then(res2 => {
               enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -391,15 +403,33 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     }
 
     if (activeStep === 4) {
-      setTimeout(() => {
-        if (type == 'NEXT') {
-          setActiveStep(newActiveStep)
-          if (enabledStep < newActiveStep) {
-            setEnabledStep(newActiveStep)
+      apiRequest
+        .post(`/scope-of-work/${scopeTextID}`, { scopeText })
+        .then(res => {
+          if (res?.data && type == 'NEXT') {
+            apiRequest.post('/deliverables', { scopeOfWorkId: scopeTextID }).then(res2 => {
+              enqueueSnackbar('Created Successfully!', { variant: 'success' })
+              setDeliverablesTextID(res2?.data?.id)
+              setDeliverablesText(res2?.data?.deliverablesText)
+              setTimeout(() => {
+                if (type == 'NEXT') {
+                  setActiveStep(newActiveStep)
+                  if (enabledStep < newActiveStep) {
+                    setEnabledStep(newActiveStep)
+                  }
+                }
+                setPreload(false)
+              }, 1000)
+            })
+          } else {
+            setPreload(false)
           }
-        }
-        setPreload(false)
-      }, 1000)
+        })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        })
     }
     if (activeStep === 5) {
       apiRequest
@@ -414,35 +444,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
 
           setTimeout(() => {
-            if (type == 'NEXT') {
-              setActiveStep(newActiveStep)
-              if (enabledStep < newActiveStep) {
-                setEnabledStep(newActiveStep)
-              }
-            }
-            setPreload(false)
-          }, 1000)
-        })
-        .catch(error => {
-          setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
-        })
-    }
-    if (activeStep === 6) {
-      apiRequest
-        .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
-        .then(res => {
-          apiRequest.get(`/project-summery?page=1`).then(res => {
-            if (setListData) {
-              setListData(res?.data)
-            }
-          })
-
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
-
-          setTimeout(() => {
-            setActiveStep(0)
+            setActiveStep(6)
             setPreload(false)
 
             // setListData(res)
@@ -466,16 +468,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
     setPreload(true)
     apiRequest.get(`/project-summery/${id}`).then((res: any) => {
+      const transcriptId = res?.data?.id || ''
+      const transcriptText = res?.data?.['meeting_transcript']?.['transcriptText'] || ''
+      const projectTypeId = res?.data?.['meeting_transcript']?.['projectTypeId'] || ''
+      const projectName = res?.data?.['meeting_transcript']?.['projectName'] || ''
+      const company = res?.data?.['meeting_transcript']?.['company'] || ''
+      const clientEmail = res?.data?.['meeting_transcript']?.['clientEmail'] || ''
+      const clientPhone = res?.data?.['meeting_transcript']?.['clientPhone'] || ''
+      const clientWebsite = res?.data?.['meeting_transcript']?.['clientWebsite'] || ''
+      const summaryText = res?.data?.['summaryText'] || ''
+
       setProjectSOWFormData({
-        transcriptId: res?.data?.id,
-        transcriptText: res?.data?.['meeting_transcript']?.['transcriptText'],
-        projectTypeId: res?.data?.['meeting_transcript']?.['projectTypeId'],
-        projectName: res?.data?.['meeting_transcript']?.['projectName'],
-        company: res?.data?.['meeting_transcript']?.['company'],
-        clientEmail: res?.data?.['meeting_transcript']?.['clientEmail'],
-        clientPhone: res?.data?.['meeting_transcript']?.['clientPhone'],
-        clientWebsite: res?.data?.['meeting_transcript']?.['clientWebsite'],
-        summaryText: res?.data?.['summaryText']
+        transcriptId,
+        transcriptText,
+        projectTypeId,
+        projectName,
+        company,
+        clientEmail,
+        clientPhone,
+        clientWebsite,
+        summaryText
       })
       setProjectSOWID(id)
       setSummaryText(res?.data?.['summaryText'])
@@ -516,13 +528,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     })
   }
 
-  const getTree = async () => {
+  const getServiceTree = async () => {
     await apiRequest
 
       // .get(`/service-tree?per_page=500&projectTypeId=${projectSOWFormData.projectTypeId}`)
       .get(`/service-tree?per_page=500&projectTypeId=${4}`)
       .then(res => {
         setServiceTreeData(res?.data?.services)
+        setServiceDeliverableLeftList(res?.data?.services?.[0]?.groups)
         const transformServiceTree = res?.data?.services.map((service: any) => {
           const serviceObj = {
             [service.id]: Object.fromEntries(
@@ -569,7 +582,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
           return serviceObj
         })[0]
-        console.log(transformServiceTree)
         setServiceDeliverablesFormData(transformServiceTree)
 
         // setServiceDeliverablesFormData()
@@ -596,8 +608,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }, [enabledStep, isEdit, id, step])
 
   useEffect(() => {
-    if (activeStep === 5) {
-      getTree()
+    if (activeStep === 5 || activeStep === 6) {
+      getServiceTree()
     }
 
     if (activeStep) {
@@ -628,6 +640,73 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setActiveStep(0)
     setEnabledStep(0)
   }
+
+  const leftChecked: any = intersection(
+    serviceDeliverablesChecked,
+    serviceDeliverableLeftList.map(serviceDeliverable => serviceDeliverable.id)
+  )
+
+  const rightChecked: any = intersection(
+    serviceDeliverablesChecked,
+    serviceDeliverableRightList.map(serviceDeliverable => serviceDeliverable.id)
+  )
+
+  const handleToggle = (item: any) => () => {
+    const currentIndex = serviceDeliverablesChecked.indexOf(item.id)
+    const newChecked = [...serviceDeliverablesChecked]
+
+    if (currentIndex === -1) {
+      newChecked.push(item.id)
+    } else {
+      newChecked.splice(currentIndex, 1)
+    }
+
+    setServiceDeliverablesChecked(newChecked)
+  }
+
+  const handleCheckedLeftToRight = () => {
+    const itemsToAdd = serviceDeliverableLeftList.filter(e => serviceDeliverablesChecked.indexOf(e.id) !== -1)
+    setServiceDeliverableRightList(serviceDeliverableRightList.concat(itemsToAdd))
+    setServiceDeliverableLeftList(
+      serviceDeliverableLeftList.filter(e => serviceDeliverablesChecked.indexOf(e.id) === -1)
+    )
+    setServiceDeliverablesChecked([])
+  }
+
+  const handleCheckedRightToLeft = () => {
+    const itemsToAdd = serviceDeliverableRightList.filter(e => serviceDeliverablesChecked.indexOf(e.id) !== -1)
+    setServiceDeliverableLeftList(serviceDeliverableLeftList.concat(itemsToAdd))
+    setServiceDeliverableRightList(
+      serviceDeliverableRightList.filter(e => serviceDeliverablesChecked.indexOf(e.id) === -1)
+    )
+    setServiceDeliverablesChecked([])
+  }
+
+  const serviceTreeList = (items: any[], handleToggle: (item: any) => void, checkedItems: any[]) => (
+    <Paper sx={{ width: '100%', height: '500px', overflow: 'auto' }}>
+      <List dense component='div' role='list'>
+        {items?.map((item: any) => {
+          const labelId = `transfer-list-item-${item.id}-label`
+
+          return (
+            <ListItemButton key={item.id} role='listitem' onClick={handleToggle(item)}>
+              <ListItemIcon>
+                <Checkbox
+                  checked={checkedItems.indexOf(item.id) !== -1}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{
+                    'aria-labelledby': labelId
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText id={labelId} primary={<div dangerouslySetInnerHTML={{ __html: item.name as string }} />} />
+            </ListItemButton>
+          )
+        })}
+      </List>
+    </Paper>
+  )
 
   return (
     <Box>
@@ -845,13 +924,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             position: 'relative'
                           }}
                         >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={summaryTextEditorRef}
-                            modelValue={summaryText}
-                            onChange={setSummaryText}
-                          />
+                          <MarkdownEditor modelValue={summaryText} onChange={setSummaryText} />
                         </Box>
 
                         {!!errorMessage?.['summaryText'] &&
@@ -879,13 +952,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             position: 'relative'
                           }}
                         >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={problemGoalTextEditorRef}
-                            modelValue={problemGoalText}
-                            onChange={setProblemGoalText}
-                          />
+                          <MarkdownEditor modelValue={problemGoalText} onChange={setProblemGoalText} />
                         </Box>
                         {!!errorMessage?.['problemGoalText'] &&
                           errorMessage?.['problemGoalText']?.map((message: any, index: number) => {
@@ -911,13 +978,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             position: 'relative'
                           }}
                         >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={overviewTextEditorRef}
-                            modelValue={overviewText}
-                            onChange={setOverviewText}
-                          />
+                          <MarkdownEditor modelValue={overviewText} onChange={setOverviewText} />
                         </Box>
                         {!!errorMessage?.['overviewText'] &&
                           errorMessage?.['overviewText']?.map((message: any, index: number) => {
@@ -943,13 +1004,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             position: 'relative'
                           }}
                         >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={scopeTextEditorRef}
-                            modelValue={scopeText}
-                            onChange={setScopeText}
-                          />
+                          <MarkdownEditor modelValue={scopeText} onChange={setScopeText} />
                         </Box>
                         {!!errorMessage?.['scopeText'] &&
                           errorMessage?.['scopeText']?.map((message: any, index: number) => {
@@ -964,7 +1019,68 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   </Box>
                 </Box>
               )}
+
               {activeStep == 5 && (
+                <Box>
+                  {/* <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Box sx={{ width: '100%' }}>
+                      <label className='block text-sm' htmlFor={'#deliverablesText'}>
+                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Deliverable</span>
+                        <Box
+                          sx={{
+                            position: 'relative'
+                          }}
+                        >
+                          <MarkdownEditor modelValue={deliverablesText} onChange={setDeliverablesText} />
+                        </Box>
+                        {!!errorMessage?.['deliverablesText'] &&
+                          errorMessage?.['deliverablesText']?.map((message: any, index: number) => {
+                            return (
+                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                {message}
+                              </span>
+                            )
+                          })}
+                      </label>
+                    </Box>
+                  </Box> */}
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Grid container spacing={2} justifyContent='center' alignItems='center'>
+                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
+                        {serviceTreeList(serviceDeliverableLeftList, handleToggle, serviceDeliverablesChecked)}
+                      </Grid>
+                      <Grid sx={{ width: '100px' }} item>
+                        <Grid container direction='column' alignItems='center'>
+                          <Button
+                            sx={{ my: 0.5 }}
+                            variant='outlined'
+                            size='small'
+                            onClick={handleCheckedLeftToRight}
+                            disabled={serviceDeliverablesChecked.length === 0}
+                            aria-label='move selected right'
+                          >
+                            &gt;
+                          </Button>
+                          <Button
+                            sx={{ my: 0.5 }}
+                            variant='outlined'
+                            size='small'
+                            onClick={handleCheckedRightToLeft}
+                            disabled={serviceDeliverablesChecked.length === 0}
+                            aria-label='move selected left'
+                          >
+                            &lt;
+                          </Button>
+                        </Grid>
+                      </Grid>
+                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
+                        {serviceTreeList(serviceDeliverableRightList, handleToggle, serviceDeliverablesChecked)}
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Box>
+              )}
+              {activeStep == 6 && (
                 <Box>
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
@@ -1029,7 +1145,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <TableCell></TableCell>
                                       </TableRow>
                                       {group.sows.map((sow: any) => (
-                                        <>
+                                        <React.Fragment key={`sow-${sow.id}`}>
                                           <TableRow key={`sow-${sow.id}`}>
                                             <TableCell sx={{ width: '70px' }}>
                                               <Chip
@@ -1051,7 +1167,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                             <TableCell></TableCell>
                                           </TableRow>
                                           {sow.deliverables.map((deliverable: any) => (
-                                            <>
+                                            <React.Fragment key={`deliverable-${deliverable.id}`}>
                                               <TableRow key={`deliverable-${deliverable.id}`}>
                                                 <TableCell sx={{ width: '70px' }}>
                                                   <Chip
@@ -1260,9 +1376,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                   ))}
                                                 </>
                                               ))}
-                                            </>
+                                            </React.Fragment>
                                           ))}
-                                        </>
+                                        </React.Fragment>
                                       ))}
                                     </>
                                   ))}
@@ -1272,38 +1388,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           </TableBody>
                         </Table>
                       </TableContainer>
-                    </Box>
-                  </Box>
-                </Box>
-              )}
-              {activeStep == 6 && (
-                <Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm' htmlFor={'#deliverablesText'}>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Deliverable</span>
-                        <Box
-                          sx={{
-                            position: 'relative'
-                          }}
-                        >
-                          <MdPreviewTitle />
-                          <MdEditor
-                            language='en-US'
-                            ref={deliverablesTextEditorRef}
-                            modelValue={deliverablesText}
-                            onChange={setDeliverablesText}
-                          />
-                        </Box>
-                        {!!errorMessage?.['deliverablesText'] &&
-                          errorMessage?.['deliverablesText']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
                     </Box>
                   </Box>
                 </Box>
