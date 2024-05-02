@@ -229,7 +229,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                 </Box>
 
                 {listData?.map((data: any, index: number) => {
-                  const meetingType = MeetingTypeList.find(type => type.id === data?.meetingType)
+                  // const meetingType = MeetingTypeList.find(type => type.id === data?.meetingType)
 
                   return (
                     <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
@@ -266,7 +266,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                         </Box>
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
-                        {meetingType?.title}
+                        {data?.meeting_type?.name}
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
                         {data.created_by?.name}
