@@ -41,15 +41,21 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
 
   const [filterData, setFilterData] = useState(defaultData)
 
-  const handleFilterChange = (e: React.ChangeEvent<any>) => {
+  const handleFilterChange = () => {
+    getList();
+  }
+  const setFilterValues = (e: React.ChangeEvent<any>) => {
     setFilterData({
       ...filterData,
       [e.target.name]: e.target.value
     })
   }
 
+  
+
   const onFilterClear = () => {
-    setFilterData(prevState => ({ ...defaultData }))
+    filterData.meetingName = ''
+    getList();
   }
 
   const getList = (page = 1) => {
@@ -120,7 +126,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
 
   useEffect(() => {
     getList()
-  }, [filterData])
+  }, [])
 
   const style = {
     position: 'absolute' as const,
@@ -134,9 +140,6 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
     border: '2px solid #000',
     boxShadow: 24,
     p: 4
-  }
-  if (!listData?.length) {
-    return <UiSkeleton />
   }
 
   return (
@@ -174,7 +177,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                       placeholder='Enter meeting name'
                       name='meetingName'
                       value={filterData.meetingName}
-                      onChange={handleFilterChange}
+                      onChange={setFilterValues}
                     />
                   </Box> 
                   <Box component={'td'}>
@@ -184,11 +187,27 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                   <Box component={'td'} sx={{ textAlign: 'center' }}>
                     --
                   </Box>
-                  <Box component={'td'} sx={{ textAlign: 'center' }}>
+                  <Box component={'td'}>
                     --
                   </Box>
                   <Box component={'td'}>
                     <Box sx={{ textAlign: 'center' }}>
+                    <Button
+                        onClick={handleFilterChange}
+                        sx={{
+                          border: '1px solid #9333ea',
+                          padding: '3px 10px',
+                          fontSize: '14px',
+                          borderRadius: '5px',
+                          color: '#9333ea',
+                          '&:hover': {
+                            background: '#9333ea',
+                            color: '#fff'
+                          }
+                        }}
+                      >
+                        Filter
+                      </Button>
                       <Button
                         onClick={onFilterClear}
                         sx={{
@@ -207,6 +226,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                       </Button>
                     </Box>
                   </Box>
+                  
                 </Box>
 
                 {listData?.map((data: any, index: number) => {
