@@ -184,31 +184,30 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                     --
                   </Box>
 
+                  <Box component={'td'}>
+                    --
+                  </Box>
+
                   <Box component={'td'} sx={{ textAlign: 'center' }}>
-                    --
-                  </Box>
+                  <Button
+                      onClick={handleFilterChange}
+                      sx={{
+                        border: '1px solid #9333ea',
+                        padding: '3px 10px',
+                        fontSize: '14px',
+                        borderRadius: '5px',
+                        color: '#9333ea',
+                        '&:hover': {
+                          background: '#9333ea',
+                          color: '#fff'
+                        }
+                      }}
+                    >
+                      Filter
+                    </Button>
+                  </Box> 
                   <Box component={'td'}>
-                    --
-                  </Box>
-                  <Box component={'td'}>
-                    <Box sx={{ textAlign: 'center' }}>
-                    <Button
-                        onClick={handleFilterChange}
-                        sx={{
-                          border: '1px solid #9333ea',
-                          padding: '3px 10px',
-                          fontSize: '14px',
-                          borderRadius: '5px',
-                          color: '#9333ea',
-                          '&:hover': {
-                            background: '#9333ea',
-                            color: '#fff'
-                          }
-                        }}
-                      >
-                        Filter
-                      </Button>
-                      <Button
+                    <Box sx={{ textAlign: 'center' }}> <Button
                         onClick={onFilterClear}
                         sx={{
                           border: '1px solid #9333ea',
