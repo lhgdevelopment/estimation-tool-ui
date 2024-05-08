@@ -8,5 +8,6 @@ export type TMeetingSummeryComponent = {
 
 export const MeetingTypeList = [
   { title: 'Internal', id: 1 },
-  { title: 'Client', id: 2 }
+  { title: 'Client', id: 2 },
+  { title: 'Sales', id: 3 }
 ]

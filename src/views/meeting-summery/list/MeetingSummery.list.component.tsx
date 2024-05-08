@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Pagination,
   Paper,
   Table,
   TableBody,
@@ -16,12 +17,13 @@ import {
 import Link from 'next/link'
 import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
+import NoDataComponent from 'src/@core/components/no-data-component'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import { TableSx } from 'src/@core/theme/tableStyle'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateTime } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
-import { MeetingTypeList, TMeetingSummeryComponent } from '../MeetingSummery.decorator'
+import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
 
 export default function MeetingSummeryListComponent(props: TMeetingSummeryComponent) {
   const { listData, setListData } = props
@@ -31,17 +33,27 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
   const [totalPages, setTotalPages] = useState<number>(1)
   const [expendedRow, setExpended] = useState('')
   const [statusPreload, setStatusPreload] = useState(null)
+  const [preload, setPreload] = useState(false)
   const handleRowExpendable = (id: any) => {
     setExpended(prevState => id)
   }
 
   const getList = (page = 1) => {
-    apiRequest.get(`/meeting-summery?page=${page}`).then(res => {
-      const paginationData: any = res
-      setListData(res?.data)
-      setCurrentPage(paginationData?.['current_page'])
-      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
-    })
+    setPreload(true)
+    apiRequest
+      .get(`/meeting-summery?page=${page}`)
+      .then(res => {
+        const paginationData: any = res
+        setListData(res?.data)
+        setCurrentPage(paginationData?.['current_page'])
+        setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
+      .finally(() => {
+        setPreload(false)
+      })
   }
 
   const handlePageChange = (newPage: number) => {
@@ -85,20 +97,24 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
-      if (res.isConfirmed) {
-        apiRequest.delete(`/meeting-summery/${id}`).then(res => {
-          Swal.fire({
-            title: 'Deleted Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
-          getList()
-        })
-      }
     })
+      .then(res => {
+        if (res.isConfirmed) {
+          apiRequest.delete(`/meeting-summery/${id}`).then(res => {
+            Swal.fire({
+              title: 'Deleted Successfully!',
+              icon: 'success',
+              timer: 1000,
+              timerProgressBar: true,
+              showConfirmButton: false
+            })
+            getList()
+          })
+        }
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
   }
 
   useEffect(() => {
@@ -118,7 +134,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
     boxShadow: 24,
     p: 4
   }
-  if (!listData?.length) {
+  if (preload) {
     return <UiSkeleton />
   }
 
@@ -150,8 +166,6 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
               </TableHead>
               <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
                 {listData?.map((data: any, index: number) => {
-                  const meetingType = MeetingTypeList.find(type => type.id === data?.meetingType)
-
                   return (
                     <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
                       <TableCell className='px-4 py-3 text-sm  expendable-row'>
@@ -187,7 +201,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                         </Box>
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
-                        {meetingType?.title}
+                        {data?.meeting_type?.name}
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
                         {data.created_by?.name}
@@ -258,80 +272,18 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
               </TableBody>
             </Table>
           </TableContainer>
-          {!listData?.length && (
-            <Box
-              sx={{
-                padding: '27px',
-                textAlign: 'center',
-                color: '#dd2828',
-                fontSize: '20px'
-              }}
-            >
-              No Data Found!
-            </Box>
-          )}
+          {!listData?.length && <NoDataComponent />}
         </Box>
-        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
-          <span className='flex items-center col-span-3'>
-            Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
-            {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}
-          </span>
-          <span className='col-span-2'></span>
-          {/* <!-- Pagination --> */}
-          <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
-            <nav aria-label='Table navigation'>
-              <ul className='inline-flex items-center'>
-                <li>
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    className={`px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple ${
-                      currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    aria-label='Previous'
-                    disabled={currentPage === 1}
-                  >
-                    <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
-                      <path
-                        d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
-                        clipRule='evenodd'
-                        fillRule='evenodd'
-                      ></path>
-                    </svg>
-                  </button>
-                </li>
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <li key={index}>
-                    <button
-                      onClick={() => handlePageChange(index + 1)}
-                      className={`px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple ${
-                        currentPage === index + 1 ? 'bg-purple-600 text-white' : ''
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
-                <li>
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    className={`px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple ${
-                      currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    aria-label='Next'
-                    disabled={currentPage === totalPages}
-                  >
-                    <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
-                      <path
-                        d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
-                        clipRule='evenodd'
-                        fillRule='evenodd'
-                      ></path>
-                    </svg>
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </span>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 4 }}>
+          <Pagination
+            count={totalPages}
+            color='primary'
+            shape='rounded'
+            onChange={(e, value) => {
+              getList(value)
+            }}
+            defaultPage={currentPage}
+          />
         </Box>
       </Box>
     </Fragment>
