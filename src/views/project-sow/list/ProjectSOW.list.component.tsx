@@ -73,13 +73,19 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
                 <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                  <TableCell className='px-4 py-3' sx={{ width: '100%' }}>
+                  <TableCell className='px-4 py-3' sx={{ width: '40%' }}>
                     Project
                   </TableCell>
-                  <TableCell className='px-4 py-3'>Project Type</TableCell>
-                  <TableCell className='px-4 py-3'>Created By</TableCell>
-                  <TableCell className='px-4 py-3'>Created At</TableCell>
-                  <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Project Type
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Created By
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Created At
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ width: '100px', textAlign: 'center' }}>
                     Actions
                   </TableCell>
                 </TableRow>
@@ -120,9 +126,15 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
                           )}
                         </Box>
                       </TableCell>
-                      <TableCell className='px-4 py-3 text-sm'>{data.created_by?.name}</TableCell>
-                      <TableCell className='px-4 py-3 text-sm'>{data.created_by?.name}</TableCell>
-                      <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {data.created_by?.name}
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {data.created_by?.name}
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {formatDateTime(data?.created_at)}
+                      </TableCell>
 
                       <TableCell className='px-4 py-3'>
                         <Box className='flex items-center justify-end space-x-1 text-sm'>

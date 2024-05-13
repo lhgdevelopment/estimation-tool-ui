@@ -115,14 +115,24 @@ export default function LeadsListComponent(props: TLeadsComponent) {
               <TableHead>
                 <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                   <TableCell className='px-4 py-3'>First Name</TableCell>
-                  <TableCell className='px-4 py-3'>Last Name</TableCell>
-                  <TableCell className='px-4 py-3'>Company</TableCell>
-                  <TableCell className='px-4 py-3'>Phone</TableCell>
-                  <TableCell className='px-4 py-3'>Email</TableCell>
-                  <TableCell className='px-4 py-3'>Project Type</TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Last Name
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Company
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Phone
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Email
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Project Type
+                  </TableCell>
                   {/* <TableCell className='px-4 py-3'>Description</TableCell> */}
                   <TableCell className='px-4 py-3'>Created At</TableCell>
-                  <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
+                  <TableCell className='px-4 py-3 text-right' sx={{ width: '100px', textAlign: 'center' }}>
                     Actions
                   </TableCell>
                 </TableRow>

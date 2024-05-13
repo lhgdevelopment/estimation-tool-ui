@@ -150,7 +150,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['firstName'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
-                  placeholder='Enter First name'
+                  // placeholder='Enter First name'
                   name='firstName'
                   value={formData.firstName}
                   onChange={handleTextChange}
@@ -172,7 +172,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['lastName'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
-                  placeholder='Enter Last name'
+                  // placeholder='Enter Last name'
                   name='lastName'
                   value={formData.lastName}
                   onChange={handleTextChange}
@@ -197,7 +197,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['company'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
-                  placeholder='Enter company name'
+                  // placeholder='Enter company name'
                   name='company'
                   value={formData.company}
                   onChange={handleTextChange}
@@ -219,7 +219,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['phone'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
-                  placeholder='Enter Phone'
+                  // placeholder='Enter Phone'
                   name='phone'
                   value={formData.phone}
                   onChange={handleTextChange}
@@ -243,7 +243,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['email'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
-                  placeholder='Enter Email'
+                  // placeholder='Enter Email'
                   name='email'
                   value={formData.email}
                   onChange={handleTextChange}
@@ -270,6 +270,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['projectTypeId'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
+                  placeholder=''
                 />
                 {!!errorMessage?.['projectTypeId'] &&
                   errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
