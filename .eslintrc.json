@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "prettier"],
   "rules": {
     "react/display-name": "off",
     "@next/next/no-img-element": "off",
@@ -14,17 +10,19 @@
     //"@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     // add new line above comment
-    "lines-around-comment": [
-      "error",
-      {
-        "beforeLineComment": true,
-        "beforeBlockComment": true,
-        "allowBlockStart": true,
-        "allowClassStart": true,
-        "allowObjectStart": true,
-        "allowArrayStart": true
-      }
-    ],
+    // "lines-around-comment": [
+    //   "error",
+    //   {
+    //     "beforeBlockComment": true,
+    //     "beforeLineComment": false,
+    //     "allowBlockStart": true,
+    //     "allowBlockEnd": true,
+    //     "allowObjectStart": true,
+    //     "allowObjectEnd": true,
+    //     "allowArrayStart": true,
+    //     "allowArrayEnd": true
+    //   }
+    // ],
     // add new line above return
     "newline-before-return": "error",
     // add new line below import
@@ -44,22 +42,15 @@
       }
     ]
   },
-  "plugins": [
-    "import"
-  ],
+  "plugins": ["import"],
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [
-        ".ts",
-        ".tsx"
-      ]
+      "@typescript-eslint/parser": [".ts", ".tsx"]
     },
     "import/resolver": {
       "typescript": {
         "alwaysTryTypes": true,
-        "project": [
-          "./tsconfig.json"
-        ]
+        "project": ["./tsconfig.json"]
       }
     }
   }

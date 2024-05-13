@@ -157,8 +157,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['meetingName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  placeholder='Enter meeting name'
+                  }`} /* placeholder='Enter meeting name' */
                   name='meetingName'
                   value={formData.meetingName}
                   onChange={handleTextChange}
@@ -185,6 +184,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['meetingType'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
+                  placeholder=''
                 />
                 {!!errorMessage?.['meetingType'] &&
                   errorMessage?.['meetingType']?.map((message: any, index: number) => {
@@ -205,8 +205,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['clickupLink'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  placeholder='Enter clickup task link'
+                  }`} /* placeholder='Enter clickup task link' */
                   name='clickupLink'
                   value={formData.clickupLink}
                   onChange={handleTextChange}
@@ -227,8 +226,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['tldvLink'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  placeholder='Enter tldv link'
+                  }`} /* placeholder='Enter tldv link' */
                   name='tldvLink'
                   value={formData.tldvLink}
                   onChange={handleTextChange}
@@ -276,7 +274,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
                   <textarea
                     className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                    placeholder='Examples: Transcript Text'
+                    /* placeholder='Examples: Transcript Text' */
                     name='transcriptText'
                     rows={10}
                     value={formData.transcriptText}
@@ -323,7 +321,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           <Box sx={{ display: 'flex', gap: 5, mt: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm' htmlFor='is_private'>
-                <span className='text-gray-700 dark:text-gray-400 mr-2'>Is private?</span>
+                <span className='text-gray-700 dark:text-gray-400 mr-2'>Private?</span>
                 <input
                   id='is_private'
                   type='checkbox'

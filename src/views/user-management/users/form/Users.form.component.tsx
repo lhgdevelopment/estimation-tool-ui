@@ -101,7 +101,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter user name'
+                  // placeholder='Enter user name'
                   name='name'
                   value={formData.name}
                   onChange={handleTextChange}
@@ -127,6 +127,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                   value={formData.role}
                   onChange={handleSelectChange}
                   optionConfig={{ id: 'name', title: 'name' }}
+                  placeholder=''
                 />
               </label>
             </Box>
@@ -135,7 +136,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Email</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter user email'
+                  // placeholder='Enter user email'
                   name='email'
                   value={formData.email}
                   onChange={handleTextChange}
@@ -157,7 +158,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Password</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter user password'
+                  // placeholder='Enter user password'
                   name='password'
                   value={formData.password}
                   onChange={handleTextChange}
@@ -178,7 +179,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Confirm Password</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Confirm Password'
+                  // placeholder='Confirm Password'
                   name='password_confirmation'
                   value={formData.password_confirmation}
                   onChange={handleTextChange}
