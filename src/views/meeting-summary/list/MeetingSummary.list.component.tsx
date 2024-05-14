@@ -41,7 +41,7 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
   const getList = (page = 1) => {
     setPreload(true)
     apiRequest
-      .get(`/meeting-summary?page=${page}`)
+      .get(`/meeting-summery?page=${page}`)
       .then(res => {
         const paginationData: any = res
         setListData(res?.data)
@@ -66,7 +66,7 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
     data.pushToClickUp = false
     data.summaryText = data?.['meetingSummaryText']
     apiRequest
-      .put(`/meeting-summary/${data?.['id']}`, data)
+      .put(`/meeting-summery/${data?.['id']}`, data)
       .then(res => {
         setListData((prevState: []) => {
           const updatedList: any = [...prevState]
@@ -100,7 +100,7 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
     })
       .then(res => {
         if (res.isConfirmed) {
-          apiRequest.delete(`/meeting-summary/${id}`).then(res => {
+          apiRequest.delete(`/meeting-summery/${id}`).then(res => {
             Swal.fire({
               title: 'Deleted Successfully!',
               icon: 'success',

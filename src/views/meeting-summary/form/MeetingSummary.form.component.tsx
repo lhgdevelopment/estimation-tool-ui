@@ -71,9 +71,9 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
     setErrorMessage({})
     setPreload(true)
     if (router?.query['id']) {
-      // formData['summaryText'] = formData['tldvLink'] ? null : summaryText
+      formData['summaryText'] = formData['tldvLink'] ? null : summaryText
       apiRequest
-        .put(`/meeting-summary/${router?.query['id']}`, formData)
+        .put(`/meeting-summery/${router?.query['id']}`, formData)
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
@@ -90,7 +90,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
 
             return updatedList
           })
-          router.push('/meeting-summary/')
+          router.push('/meeting-summery/')
         })
         .catch(error => {
           setPreload(false)
@@ -99,9 +99,9 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
         })
     } else {
       apiRequest
-        .post('/meeting-summary', formData)
+        .post('/meeting-summery', formData)
         .then(res => {
-          apiRequest.get(`/meeting-summary`).then(res => {
+          apiRequest.get(`/meeting-summery`).then(res => {
             setListData(res?.data)
           })
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -119,7 +119,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
   const getDetails = (id: string | null | undefined) => {
     if (!id) return
     setPreload(true)
-    apiRequest.get(`/meeting-summary/${id}`).then((res: any) => {
+    apiRequest.get(`/meeting-summery/${id}`).then((res: any) => {
       setFormData({
         meetingName: res?.data?.['meetingName'],
         meetingType: res?.data?.['meetingType'],
@@ -342,7 +342,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
 
           <Box className='my-4 text-right'>
             {router?.query['id'] ? (
-              <Link href={`/meeting-summary/`} passHref>
+              <Link href={`/meeting-summery/`} passHref>
                 <Box
                   sx={{ cursor: 'pointer' }}
                   component={'a'}

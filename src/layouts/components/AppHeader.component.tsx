@@ -47,7 +47,12 @@ export default function AppHeaderComponent() {
           <Box component={'ul'} className='flex items-center flex-shrink-0 space-x-6'>
             {/* <!-- Theme toggler --> */}
             <Box component={'li'} className='flex'>
-              <Box component={'button'} className='rounded-md' aria-label='Toggle color mode' onClick={toggleTheme}>
+              <Box
+                component={'button'}
+                className='rounded-md focus:outline-none focus:shadow-outline-purple'
+                aria-label='Toggle color mode'
+                onClick={toggleTheme}
+              >
                 {!isDark && (
                   <Box>
                     <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -72,7 +77,7 @@ export default function AppHeaderComponent() {
             <Box component={'li'} className='relative'>
               <Box
                 component={'button'}
-                className='relative align-middle rounded-md'
+                className='relative align-middle rounded-md focus:outline-none focus:shadow-outline-purple'
                 aria-label='Notifications'
                 aria-haspopup='true'
                 onClick={() => {

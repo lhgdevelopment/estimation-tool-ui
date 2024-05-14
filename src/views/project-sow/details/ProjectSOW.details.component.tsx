@@ -26,7 +26,7 @@ export default function ProjectSOWDetailsComponent() {
   const [detailsData, setDetailsData] = useState<any>({})
   const getDetails = () => {
     setPreload(true)
-    apiRequest.get(`/project-summary/${router?.query['id']}`).then(res => {
+    apiRequest.get(`/project-summery/${router?.query['id']}`).then(res => {
       setDetailsData(res?.data)
       setPreload(false)
     })
