@@ -39,7 +39,7 @@ import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
 
 const steps = [
   'Transcript',
-  'Summery',
+  'Summary',
   'Problems & Goals',
   'Project Overview',
   'SOW',
@@ -250,7 +250,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     if (activeStep === 0) {
       if (projectSOWID) {
         apiRequest
-          .put(`/project-summery/${projectSOWID}`, projectSOWFormData)
+          .put(`/project-summary/${projectSOWID}`, projectSOWFormData)
           .then(res => {
             setProjectSOWFormData({
               ...projectSOWFormData,
@@ -278,12 +278,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           })
       } else {
         apiRequest
-          .post('/project-summery', projectSOWFormData)
+          .post('/project-summary', projectSOWFormData)
           .then(res => {
             if (setListData) {
               setListData([])
             }
-            apiRequest.get(`/project-summery?page=1`).then(res => {
+            apiRequest.get(`/project-summary?page=1`).then(res => {
               if (setListData) {
                 setListData(res?.data)
               }
@@ -317,7 +317,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     }
     if (activeStep === 1) {
       apiRequest
-        .put(`/project-summery/${projectSOWID}`, { summaryText })
+        .put(`/project-summary/${projectSOWID}`, { summaryText })
         .then(res => {
           if (res?.data?.meeting_transcript && type == 'NEXT') {
             apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id }).then(res2 => {
@@ -435,7 +435,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       apiRequest
         .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
         .then(res => {
-          apiRequest.get(`/project-summery?page=1`).then(res => {
+          apiRequest.get(`/project-summary?page=1`).then(res => {
             if (setListData) {
               setListData(res?.data)
             }
@@ -467,7 +467,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     let getEnableStep = 0
 
     setPreload(true)
-    apiRequest.get(`/project-summery/${id}`).then((res: any) => {
+    apiRequest.get(`/project-summary/${id}`).then((res: any) => {
       const transcriptId = res?.data?.id || ''
       const transcriptText = res?.data?.['meeting_transcript']?.['transcriptText'] || ''
       const projectTypeId = res?.data?.['meeting_transcript']?.['projectTypeId'] || ''

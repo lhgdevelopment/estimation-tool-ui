@@ -1,6 +1,6 @@
 import { Dispatch } from 'react'
 
-export type TMeetingSummeryComponent = {
+export type TMeetingSummaryComponent = {
   listData: any[]
   setListData: Dispatch<any>
   isEdit?: boolean

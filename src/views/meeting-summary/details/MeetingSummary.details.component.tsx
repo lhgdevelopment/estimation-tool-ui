@@ -10,14 +10,14 @@ import CopyToClipboard from 'src/@core/components/copy-to-clipboard'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 
-export default function MeetingSummeryDetailsComponent() {
+export default function MeetingSummaryDetailsComponent() {
   const meetingId = useRouter()?.query['id']
 
   const [preload, setPreload] = useState<boolean>(false)
   const [detailsData, setDetailsData] = useState<any>({})
   const getDetails = () => {
     setPreload(true)
-    apiRequest.get(`/meeting-summery/${meetingId}`).then(res => {
+    apiRequest.get(`/meeting-summary/${meetingId}`).then(res => {
       setDetailsData(res?.data)
       setPreload(false)
     })
@@ -55,7 +55,7 @@ export default function MeetingSummeryDetailsComponent() {
 
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 5 }}>
             {!!meetingId && (
-              <Link href={`/meeting-summery/edit/${meetingId}`} passHref>
+              <Link href={`/meeting-summary/edit/${meetingId}`} passHref>
                 <Box
                   sx={{ cursor: 'pointer' }}
                   component={'a'}
@@ -107,14 +107,14 @@ export default function MeetingSummeryDetailsComponent() {
                 aria-controls='sow1-content'
                 id='sow1-header'
               >
-                <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Summery Text</Box>
+                <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Summary Text</Box>
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={sowBodySx}>
-                  <MdPreview modelValue={detailsData?.['meetingSummeryText']} />
+                  <MdPreview modelValue={detailsData?.['meetingSummaryText']} />
                   <Box className='flex' sx={{ mt: 5 }}>
-                    <CopyToClipboard textToCopy={detailsData?.['meetingSummeryText']} />
-                    <Link href={`/meeting-summery/edit/${meetingId}`} passHref>
+                    <CopyToClipboard textToCopy={detailsData?.['meetingSummaryText']} />
+                    <Link href={`/meeting-summary/edit/${meetingId}`} passHref>
                       <Box
                         sx={{ cursor: 'pointer' }}
                         component={'a'}

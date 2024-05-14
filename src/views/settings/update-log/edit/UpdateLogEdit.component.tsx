@@ -9,7 +9,7 @@ export default function UpdateLogEditComponent() {
     <>
       <Box className='container px-6 mx-auto'>
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
-          Edit Meeting Summery
+          Edit Meeting Summary
         </Box>
         <UpdateLogFormComponent listData={listData} setListData={setListData} isEdit={true} />
       </Box>

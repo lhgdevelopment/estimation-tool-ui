@@ -12,9 +12,9 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
-import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
+import { TMeetingSummaryComponent } from '../MeetingSummary.decorator'
 
-export default function MeetingSummeryFormComponent(props: TMeetingSummeryComponent) {
+export default function MeetingSummaryFormComponent(props: TMeetingSummaryComponent) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { listData, setListData, isEdit } = props
   const [preload, setPreload] = useState<boolean>(false)
@@ -35,7 +35,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
-  const [summaryText, setSummeryText] = useState<any>('')
+  const [summaryText, setSummaryText] = useState<any>('')
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -73,7 +73,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     if (router?.query['id']) {
       // formData['summaryText'] = formData['tldvLink'] ? null : summaryText
       apiRequest
-        .put(`/meeting-summery/${router?.query['id']}`, formData)
+        .put(`/meeting-summary/${router?.query['id']}`, formData)
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
@@ -90,7 +90,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
             return updatedList
           })
-          router.push('/meeting-summery/')
+          router.push('/meeting-summary/')
         })
         .catch(error => {
           setPreload(false)
@@ -99,9 +99,9 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         })
     } else {
       apiRequest
-        .post('/meeting-summery', formData)
+        .post('/meeting-summary', formData)
         .then(res => {
-          apiRequest.get(`/meeting-summery`).then(res => {
+          apiRequest.get(`/meeting-summary`).then(res => {
             setListData(res?.data)
           })
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -119,18 +119,18 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
   const getDetails = (id: string | null | undefined) => {
     if (!id) return
     setPreload(true)
-    apiRequest.get(`/meeting-summery/${id}`).then((res: any) => {
+    apiRequest.get(`/meeting-summary/${id}`).then((res: any) => {
       setFormData({
         meetingName: res?.data?.['meetingName'],
         meetingType: res?.data?.['meetingType'],
         transcriptText: res?.data?.['transcriptText'],
-        summaryText: res?.data?.['meetingSummeryText'],
+        summaryText: res?.data?.['meetingSummaryText'],
         clickupLink: res?.data?.['clickupLink'],
         tldvLink: res?.data?.['tldvLink'],
         pushToClickUp: false,
         is_private: res?.data?.['is_private']
       })
-      setSummeryText(res?.data?.['summaryText'])
+      setSummaryText(res?.data?.['summaryText'])
       setPreload(false)
     })
   }
@@ -141,7 +141,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
   const onClear = () => {
     setFormData(prevState => ({ ...defaultData }))
-    setSummeryText('')
+    setSummaryText('')
     setErrorMessage({})
   }
 
@@ -297,12 +297,12 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             <Box sx={{ display: 'flex', gap: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm' htmlFor={'#summaryText'}>
-                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Summery Text</span>
+                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Summary Text</span>
 
                   <MdEditor
                     ref={summaryTextEditorRef}
                     modelValue={summaryText}
-                    onChange={setSummeryText}
+                    onChange={setSummaryText}
                     language='en-US'
                   />
                   {!!errorMessage?.['summaryText'] &&
@@ -342,7 +342,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
           <Box className='my-4 text-right'>
             {router?.query['id'] ? (
-              <Link href={`/meeting-summery/`} passHref>
+              <Link href={`/meeting-summary/`} passHref>
                 <Box
                   sx={{ cursor: 'pointer' }}
                   component={'a'}

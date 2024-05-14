@@ -18,7 +18,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
     setExpended(prevState => id)
   }
   const getList = (page = 1) => {
-    apiRequest.get(`/project-summery?page=${page}`).then(res => {
+    apiRequest.get(`/project-summary?page=${page}`).then(res => {
       const paginationData: any = res
 
       setListData(res?.data)
@@ -39,7 +39,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
       cancelButtonText: 'No, cancel!'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/project-summery/${id}`).then(res => {
+        apiRequest.delete(`/project-summary/${id}`).then(res => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',
@@ -138,7 +138,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
 
                       <TableCell className='px-4 py-3'>
                         <Box className='flex items-center justify-end space-x-1 text-sm'>
-                          <Link href={`/project-summery/${data?.id}`} passHref>
+                          <Link href={`/project-summary/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
@@ -148,7 +148,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
                               <VisibilityIcon />
                             </Box>
                           </Link>
-                          <Link href={`/project-summery/edit/${data?.id}`} passHref>
+                          <Link href={`/project-summary/edit/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}

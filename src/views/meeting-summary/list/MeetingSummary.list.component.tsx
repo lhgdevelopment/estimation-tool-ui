@@ -23,9 +23,9 @@ import { TableSx } from 'src/@core/theme/tableStyle'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateTime } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
-import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
+import { TMeetingSummaryComponent } from '../MeetingSummary.decorator'
 
-export default function MeetingSummeryListComponent(props: TMeetingSummeryComponent) {
+export default function MeetingSummaryListComponent(props: TMeetingSummaryComponent) {
   const { listData, setListData } = props
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -41,7 +41,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
   const getList = (page = 1) => {
     setPreload(true)
     apiRequest
-      .get(`/meeting-summery?page=${page}`)
+      .get(`/meeting-summary?page=${page}`)
       .then(res => {
         const paginationData: any = res
         setListData(res?.data)
@@ -64,9 +64,9 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
     setStatusPreload(data?.['id'])
     data.is_private = !data.is_private
     data.pushToClickUp = false
-    data.summaryText = data?.['meetingSummeryText']
+    data.summaryText = data?.['meetingSummaryText']
     apiRequest
-      .put(`/meeting-summery/${data?.['id']}`, data)
+      .put(`/meeting-summary/${data?.['id']}`, data)
       .then(res => {
         setListData((prevState: []) => {
           const updatedList: any = [...prevState]
@@ -100,7 +100,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
     })
       .then(res => {
         if (res.isConfirmed) {
-          apiRequest.delete(`/meeting-summery/${id}`).then(res => {
+          apiRequest.delete(`/meeting-summary/${id}`).then(res => {
             Swal.fire({
               title: 'Deleted Successfully!',
               icon: 'success',
@@ -212,7 +212,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
 
                       <TableCell className='px-4 py-3'>
                         <Box className='flex items-center justify-end space-x-1 text-sm'>
-                          <Link href={`/meeting-summery/${data?.id}`} passHref>
+                          <Link href={`/meeting-summary/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
@@ -223,7 +223,7 @@ export default function MeetingSummeryListComponent(props: TMeetingSummeryCompon
                             </Box>
                           </Link>
 
-                          <Link href={`/meeting-summery/edit/${data?.id}`} passHref>
+                          <Link href={`/meeting-summary/edit/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}

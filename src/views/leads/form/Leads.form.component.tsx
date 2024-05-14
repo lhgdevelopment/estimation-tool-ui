@@ -35,7 +35,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
-  const [summaryText, setSummeryText] = useState<any>('')
+  const [summaryText, setSummaryText] = useState<any>('')
 
   const handleReachText = (value: string, field: string) => {
     setFormData({
@@ -121,8 +121,8 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
         projectTypeId: res?.data?.['projectTypeId'],
         description: res?.data?.['description']
       })
-      setSummeryText(res?.data?.['meetingSummeryText'])
-      setSummeryText('')
+      setSummaryText(res?.data?.['meetingSummaryText'])
+      setSummaryText('')
       setPreload(false)
     })
   }
@@ -133,7 +133,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
 
   const onClear = () => {
     setFormData(prevState => ({ ...defaultData }))
-    setSummeryText('')
+    setSummaryText('')
     setErrorMessage({})
   }
 
