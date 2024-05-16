@@ -21,3 +21,12 @@ export const projectTypeList = [
   { title: 'Custom Development', id: 7 },
   { title: 'Marketing', id: 8 }
 ]
+
+export const transcriptSectionTitleSx = {
+  fontSize: '20px',
+  display: 'flex',
+  mt: '20px',
+  mb: '20px',
+  color: '#31A0F6',
+  fontWeight: '600'
+}

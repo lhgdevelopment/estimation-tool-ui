@@ -3,7 +3,7 @@ import CalculateIcon from '@mui/icons-material/Calculate'
 import GradingIcon from '@mui/icons-material/Grading'
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import PriceCheckIcon from '@mui/icons-material/PriceCheck'
-import { Box, Button } from '@mui/material'
+import { Box } from '@mui/material'
 import { useState } from 'react'
 import ProjectSOWListComponent from './list/ProjectSOW.list.component'
 
@@ -13,10 +13,19 @@ export default function ProjectSOWComponent() {
   return (
     <>
       <Box className='container px-6 mx-auto'>
-        <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
+        <Box
+          component={'h1'}
+          className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'
+          sx={{ display: 'flex', alignItems: 'center' }}
+        >
           New Project
-          <Button
+          <Box
+            component={'a'}
+            href='/project-summary/create'
             sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               height: '40px',
               width: '40px',
               p: '0',
@@ -31,7 +40,7 @@ export default function ProjectSOWComponent() {
             }}
           >
             <AddIcon />
-          </Button>
+          </Box>
         </Box>
         <Box className='grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4'>
           {/* <!-- Card --> */}
