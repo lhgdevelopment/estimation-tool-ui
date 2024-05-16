@@ -63,6 +63,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
         .then(res => {
           const fetchedOptions =
             res?.data?.map((item: any) => ({
+              ...item,
               title: item?.[optionConfig?.title],
               id: item?.[optionConfig?.id]
             })) || []
@@ -111,7 +112,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
   const selectOnOpen = () => {
     setOptionItems(initialOptionList)
     setSearchText('')
-  } 
+  }
 
   return (
     <FormControl fullWidth>
@@ -130,7 +131,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
           <ListSubheader
             sx={{
               pt: 1
-            }} 
+            }}
           >
             <TextField
               size='small'

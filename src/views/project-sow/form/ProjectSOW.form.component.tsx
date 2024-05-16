@@ -78,7 +78,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const projectSOWDefaultData = {
     transcriptId: '',
     transcriptText: '',
-    projectTypeId: '',
+    projectTypeId: null,
     projectName: '',
     company: '',
     clientPhone: '',
@@ -113,6 +113,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [scopeText, setScopeText] = useState<any>('')
 
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
+  const [projectTypeList, setProjectTypeList] = useState<any>([])
 
   type TServiceDeliverablesForm = {
     teamMember: string
@@ -595,33 +596,16 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
   }
 
-  useEffect(() => {
-    onClear()
-    setEnabledStep(0)
-    setActiveStep(0)
-  }, [])
-
-  useEffect(() => {
-    getDetails(id as string)
-  }, [id])
-
-  useEffect(() => {
-    if (isEdit && step && Number(step) <= enabledStep) {
-      setActiveStep(Number(step))
-    }
-  }, [enabledStep, isEdit, id, step])
-
-  useEffect(() => {
-    if (activeStep === 5 || activeStep === 6) {
-      getServiceTree()
-    }
-
-    if (activeStep) {
-      const currentPath = router.asPath.split('?')?.[0]
-      const updatedPath = `${currentPath}?step=${activeStep}`
-      router.replace(updatedPath)
-    }
-  }, [activeStep])
+  const getProjectTypeList = async () => {
+    await apiRequest
+      .get(`/project-type?per_page=1000`)
+      .then(res => {
+        setProjectTypeList(res?.data)
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.message, { variant: 'error' })
+      })
+  }
 
   const onClear = () => {
     setProjectSOWFormData(prevState => ({ ...projectSOWDefaultData }))
@@ -710,6 +694,55 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       </List>
     </Paper>
   )
+
+  const projectNameGenerate = () => {
+    const projectType = projectTypeList?.filter(
+      (projectType: any) => projectType?.id === projectSOWFormData.projectTypeId
+    )?.[0]
+    console.log(projectType?.name)
+    const projectName = `LHG ${projectSOWFormData.company ?? projectSOWFormData.company} ${
+      projectType?.name ? projectType?.name : ''
+    }`
+    if (projectName) {
+      setProjectSOWFormData({
+        ...projectSOWFormData,
+        projectName: projectName
+      })
+    }
+  }
+
+  useEffect(() => {
+    onClear()
+    setEnabledStep(0)
+    setActiveStep(0)
+    getProjectTypeList()
+  }, [])
+
+  useEffect(() => {
+    getDetails(id as string)
+  }, [id])
+
+  useEffect(() => {
+    if (isEdit && step && Number(step) <= enabledStep) {
+      setActiveStep(Number(step))
+    }
+  }, [enabledStep, isEdit, id, step])
+
+  useEffect(() => {
+    if (activeStep === 5 || activeStep === 6) {
+      getServiceTree()
+    }
+
+    if (activeStep) {
+      const currentPath = router.asPath.split('?')?.[0]
+      const updatedPath = `${currentPath}?step=${activeStep}`
+      router.replace(updatedPath)
+    }
+  }, [activeStep])
+
+  useEffect(() => {
+    projectNameGenerate()
+  }, [projectSOWFormData.company, projectSOWFormData.projectTypeId])
 
   return (
     <Box>
@@ -866,14 +899,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       <Box sx={{ width: '50%' }}>
                         <TextField
                           id='outlined-multiline-flexible'
-                          label='Email'
-                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                            errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                          }`}
-                          placeholder='name@company-name.com'
-                          name='clientEmail'
-                          value={projectSOWFormData.clientEmail}
+                          className={`block w-full mt-1 text-sm dark:bg-gray-700 dark:text-gray-300 dark:focus:shadow-outline-gray form-input`}
+                          placeholder='Project Name'
+                          name='projectName'
+                          value={projectSOWFormData.projectName}
                           onChange={handleProjectSOWChange}
+                          disabled
+                          sx={{ borderColor: '#e2e8f0' }}
                         />
                       </Box>
                     </Box>
@@ -885,11 +917,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       <Box sx={{ width: '100%' }}>
                         <TextField
                           id='outlined-multiline-flexible'
-                          label='Email'
+                          label='Link'
                           className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                             errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
                           }`}
-                          placeholder='name@company-name.com'
+                          placeholder='Link'
                           name='clientEmail'
                           value={projectSOWFormData.clientEmail}
                           onChange={handleProjectSOWChange}
