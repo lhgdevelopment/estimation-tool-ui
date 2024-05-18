@@ -1,6 +1,19 @@
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Button,
+  Pagination,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material'
 import Link from 'next/link'
+import { enqueueSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import { TableSx } from 'src/@core/theme/tableStyle'
@@ -18,13 +31,18 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
     setExpended(prevState => id)
   }
   const getList = (page = 1) => {
-    apiRequest.get(`/project-summery?page=${page}`).then(res => {
-      const paginationData: any = res
+    apiRequest
+      .get(`/project-summery?page=${page}`)
+      .then(res => {
+        const paginationData: any = res
 
-      setListData(res?.data)
-      setCurrentPage(paginationData?.['current_page'])
-      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
-    })
+        setListData(res?.data)
+        setCurrentPage(paginationData?.['current_page'])
+        setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
   }
 
   const onDelete = (id: string) => {
@@ -37,20 +55,24 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
-      if (res.isConfirmed) {
-        apiRequest.delete(`/project-summery/${id}`).then(res => {
-          Swal.fire({
-            title: 'Deleted Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
-          getList()
-        })
-      }
     })
+      .then(res => {
+        if (res.isConfirmed) {
+          apiRequest.delete(`/project-summery/${id}`).then(res => {
+            Swal.fire({
+              title: 'Deleted Successfully!',
+              icon: 'success',
+              timer: 1000,
+              timerProgressBar: true,
+              showConfirmButton: false
+            })
+            getList()
+          })
+        }
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
   }
 
   useEffect(() => {
@@ -73,13 +95,19 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
                 <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                  <TableCell className='px-4 py-3' sx={{ width: '100%' }}>
-                    Project
+                  <TableCell className='px-4 py-3' sx={{ width: '40%' }}>
+                    Project Name
                   </TableCell>
-                  <TableCell className='px-4 py-3'>Project Type</TableCell>
-                  <TableCell className='px-4 py-3'>Created By</TableCell>
-                  <TableCell className='px-4 py-3'>Created At</TableCell>
-                  <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Type
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Member
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Created At
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ width: '100px', textAlign: 'center' }}>
                     Actions
                   </TableCell>
                 </TableRow>
@@ -120,13 +148,21 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
                           )}
                         </Box>
                       </TableCell>
-                      <TableCell className='px-4 py-3 text-sm'>{data.created_by?.name}</TableCell>
-                      <TableCell className='px-4 py-3 text-sm'>{data.created_by?.name}</TableCell>
-                      <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {data.created_by?.name}
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        <Box sx={{ display: 'inline-block' }}>
+                          <Avatar>{String(data.created_by?.name)[0]}</Avatar>
+                        </Box>
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {formatDateTime(data?.created_at)}
+                      </TableCell>
 
                       <TableCell className='px-4 py-3'>
                         <Box className='flex items-center justify-end space-x-1 text-sm'>
-                          <Link href={`/project-summery/${data?.id}`} passHref>
+                          <Link href={`/project-summary/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
@@ -136,7 +172,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
                               <VisibilityIcon />
                             </Box>
                           </Link>
-                          <Link href={`/project-summery/edit/${data?.id}`} passHref>
+                          <Link href={`/project-summary/edit/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
@@ -185,67 +221,16 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
             </Box>
           )}
         </Box>
-        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
-          <span className='flex items-center col-span-3'>
-            Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
-            {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}
-          </span>
-          <span className='col-span-2'></span>
-          {/* <!-- Pagination --> */}
-          <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
-            <nav aria-label='Table navigation'>
-              <ul className='inline-flex items-center'>
-                <li>
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    className={`px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple ${
-                      currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    aria-label='Previous'
-                    disabled={currentPage === 1}
-                  >
-                    <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
-                      <path
-                        d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
-                        clipRule='evenodd'
-                        fillRule='evenodd'
-                      ></path>
-                    </svg>
-                  </button>
-                </li>
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <li key={index}>
-                    <button
-                      onClick={() => handlePageChange(index + 1)}
-                      className={`px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple ${
-                        currentPage === index + 1 ? 'bg-purple-600 text-white' : ''
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
-                <li>
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    className={`px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple ${
-                      currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    aria-label='Next'
-                    disabled={currentPage === totalPages}
-                  >
-                    <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
-                      <path
-                        d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
-                        clipRule='evenodd'
-                        fillRule='evenodd'
-                      ></path>
-                    </svg>
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </span>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 4 }}>
+          <Pagination
+            count={totalPages}
+            color='primary'
+            shape='rounded'
+            onChange={(e, value) => {
+              getList(value)
+            }}
+            defaultPage={currentPage}
+          />
         </Box>
       </Box>
     </Fragment>

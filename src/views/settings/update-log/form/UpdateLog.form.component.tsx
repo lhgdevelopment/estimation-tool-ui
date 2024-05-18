@@ -32,7 +32,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
-  const [summaryText, setSummeryText] = useState<any>('')
+  const [summaryText, setSummaryText] = useState<any>('')
 
   const handleReachText = (value: string, field: string) => {
     setFormData({
@@ -118,8 +118,8 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
         deployed: res?.data?.['deployed'],
         next: res?.data?.['next']
       })
-      setSummeryText(res?.data?.['meetingSummeryText'])
-      setSummeryText('')
+      setSummaryText(res?.data?.['meetingSummaryText'])
+      setSummaryText('')
       setPreload(false)
     })
   }
@@ -130,7 +130,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
 
   const onClear = () => {
     setFormData(prevState => ({ ...defaultData }))
-    setSummeryText('')
+    setSummaryText('')
     setErrorMessage({})
   }
 

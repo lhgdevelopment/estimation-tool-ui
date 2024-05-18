@@ -73,7 +73,7 @@ export default function ProjectSOWDetailsComponent() {
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 5 }}>
             <CopyToClipboard textToCopy={allTextRef?.current?.innerText} title='Copy All' />
-            <Link href={`/project-summery/edit/${detailsData?.id}`} passHref>
+            <Link href={`/project-summary/edit/${detailsData?.id}`} passHref>
               <Box
                 sx={{ cursor: 'pointer' }}
                 component={'a'}
@@ -92,7 +92,7 @@ export default function ProjectSOWDetailsComponent() {
                 aria-controls='sow1-content'
                 id='sow1-header'
               >
-                <Box sx={sowHeadingSx}>Project Summery</Box>
+                <Box sx={sowHeadingSx}>Project Summary</Box>
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={sowBodySx}>
@@ -103,7 +103,7 @@ export default function ProjectSOWDetailsComponent() {
                     <CopyToClipboard textToCopy={summaryTextRef?.current?.innerText} />
 
                     <Link
-                      href={`/project-summery/edit/${detailsData?.id}?step=${detailsData?.['summaryText'] ? 1 : 0}`}
+                      href={`/project-summary/edit/${detailsData?.id}?step=${detailsData?.['summaryText'] ? 1 : 0}`}
                       passHref
                     >
                       <Box
@@ -112,7 +112,7 @@ export default function ProjectSOWDetailsComponent() {
                         className='flex items-center justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
                         aria-label='View'
                       >
-                        <EditNoteIcon sx={{ mr: 2 }} /> Edit Project Summery
+                        <EditNoteIcon sx={{ mr: 2 }} /> Edit Project Summary
                       </Box>
                     </Link>
                   </Box>
@@ -138,7 +138,7 @@ export default function ProjectSOWDetailsComponent() {
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={problemGoalTextRef?.current?.innerText} />
-                    <Link href={`/project-summery/edit/${detailsData?.id}?step=2`} passHref>
+                    <Link href={`/project-summary/edit/${detailsData?.id}?step=2`} passHref>
                       <Box
                         sx={{ cursor: 'pointer' }}
                         component={'a'}
@@ -179,7 +179,7 @@ export default function ProjectSOWDetailsComponent() {
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={overviewTextRef?.current?.innerText} />
-                    <Link href={`/project-summery/edit/${detailsData?.id}?step=3`} passHref>
+                    <Link href={`/project-summary/edit/${detailsData?.id}?step=3`} passHref>
                       <Box
                         sx={{ cursor: 'pointer' }}
                         component={'a'}
@@ -216,7 +216,7 @@ export default function ProjectSOWDetailsComponent() {
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={scopeTextRef?.current?.innerText} />
-                    <Link href={`/project-summery/edit/${detailsData?.id}?step=4`} passHref>
+                    <Link href={`/project-summary/edit/${detailsData?.id}?step=4`} passHref>
                       <Box
                         sx={{ cursor: 'pointer' }}
                         component={'a'}
@@ -259,7 +259,7 @@ export default function ProjectSOWDetailsComponent() {
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={deliverablesRef?.current?.innerText} />
-                    <Link href={`/project-summery/edit/${detailsData?.id}?step=5`} passHref>
+                    <Link href={`/project-summary/edit/${detailsData?.id}?step=5`} passHref>
                       <Box
                         sx={{ cursor: 'pointer' }}
                         component={'a'}

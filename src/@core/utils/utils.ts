@@ -25,6 +25,33 @@ export const handleURLQueries = (router: NextRouter, path: string | undefined): 
 
 //   return formattedDate.replace(/\//g, '-')
 // }
+export function stringToColor(string: string) {
+  let hash = 0
+  let i
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash)
+  }
+
+  let color = '#'
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff
+    color += `00${value.toString(16)}`.slice(-2)
+  }
+  /* eslint-enable no-bitwise */
+
+  return color
+}
+export function stringAvatar(name: string) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name)
+    },
+    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`
+  }
+}
 
 export const dateDefaultFormat: Intl.DateTimeFormatOptions = {
   month: '2-digit',
@@ -34,11 +61,11 @@ export const dateDefaultFormat: Intl.DateTimeFormatOptions = {
 export function formatDateTime(
   date: Date,
   options: Intl.DateTimeFormatOptions = {
-    month: '2-digit',
-    day: '2-digit',
+    month: 'long',
+    day: 'numeric',
     year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+    hour: 'numeric',
+    minute: 'numeric',
     hour12: true
   }
 ): string {
@@ -57,4 +84,18 @@ export function addTargetBlankToMarkdownLinks(markdownText = '') {
   })
 
   return modifiedText
+}
+
+export function getShortStringNumber(num: number) {
+  const specialCases = [11, 12, 13]
+  const suffixes = ['th', 'st', 'nd', 'rd']
+  const lastTwoDigits = num % 100
+
+  if (specialCases.includes(lastTwoDigits)) {
+    return `${num}th`
+  } else {
+    const lastDigit = num % 10
+
+    return `${num}${suffixes[lastDigit] || suffixes[0]}`
+  }
 }

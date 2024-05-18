@@ -1,8 +1,8 @@
 import { Box } from '@mui/material'
 import { useState } from 'react'
-import UpdateLogFormComponent from '../form/UpdateLog.form.component'
+import MeetingSummaryFormComponent from '../form/MeetingSummary.form.component'
 
-export default function UpdateLogEditComponent() {
+export default function MeetingSummaryEditComponent() {
   const [listData, setListData] = useState<any>([])
 
   return (
@@ -11,7 +11,7 @@ export default function UpdateLogEditComponent() {
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
           Edit Meeting Summary
         </Box>
-        <UpdateLogFormComponent listData={listData} setListData={setListData} isEdit={true} />
+        <MeetingSummaryFormComponent listData={listData} setListData={setListData} isEdit={true} />
       </Box>
     </>
   )

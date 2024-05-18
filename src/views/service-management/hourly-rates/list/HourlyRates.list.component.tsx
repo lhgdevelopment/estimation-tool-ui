@@ -98,13 +98,13 @@ export default function HourlyRatesListComponent(props: THourlyRatesComponent) {
           <table className='w-full whitespace-no-wrap'>
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                <Box component={'th'} className='px-4 py-3' sx={{ width: '100%' }}>
+                <Box component={'th'} className='px-4 py-3' sx={{ width: '70%' }}>
                   Role Name
                 </Box>
                 <Box component={'th'} className='px-4 py-3' sx={{ textAlign: 'center' }}>
                   Hourly Rate
                 </Box>
-                <Box component={'th'} className='px-4 py-3 text-right'>
+                <Box component={'th'} className='px-4 py-3 text-right' sx={{ width: '100px', textAlign: 'center' }}>
                   Actions
                 </Box>
               </tr>

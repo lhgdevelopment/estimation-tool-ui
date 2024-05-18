@@ -49,13 +49,13 @@ const navigation: TNavigation[] = [
   {
     title: 'Project SOW',
     icon: BiotechIcon,
-    path: '/project-summery'
+    path: '/project-summary'
   },
 
   {
-    title: 'Meeting Summery',
+    title: 'Meeting Summary',
     icon: SpeakerNotesIcon,
-    path: '/meeting-summery'
+    path: '/meeting-summary'
   },
   {
     title: 'Leads',

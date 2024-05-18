@@ -1,5 +1,6 @@
 import AddIcon from '@material-ui/icons/Add'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
@@ -9,6 +10,7 @@ import {
   Checkbox,
   Chip,
   Grid,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
@@ -23,7 +25,8 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  TextField
 } from '@mui/material'
 import { useMask } from '@react-input/mask'
 import { ExposeParam } from 'md-editor-rt'
@@ -35,16 +38,24 @@ import { Dropdown } from 'src/@core/components/dropdown'
 import { MarkdownEditor } from 'src/@core/components/markdown-editor'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
-import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
+import { getShortStringNumber } from 'src/@core/utils/utils'
+import {
+  TProjectSOWFormComponent,
+  transcriptMeetingLinkAddButtonSx,
+  transcriptSectionTitleSx
+} from '../ProjectSOW.decorator'
 
 const steps = [
   'Transcript',
-  'Summery',
+  'Summary',
   'Problems & Goals',
-  'Project Overview',
+  'Overview',
   'SOW',
   'Deliverables',
-  'Combined Deliverables'
+  'Team Review',
+  'Estimation',
+  'Review',
+  'Approval'
 ]
 function not(a: any[], b: any[]) {
   return a.filter(value => b.indexOf(value) === -1)
@@ -73,14 +84,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const projectSOWDefaultData = {
     transcriptId: '',
-    transcriptText: '',
-    projectTypeId: '',
+    projectTypeId: null,
     projectName: '',
     company: '',
     clientPhone: '',
     clientEmail: '',
     clientWebsite: '',
-    summaryText: ''
+    summaryText: '',
+    meetingLinks: ['']
   }
 
   const [activeStep, setActiveStep] = useState(0)
@@ -109,6 +120,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [scopeText, setScopeText] = useState<any>('')
 
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
+  const [projectTypeList, setProjectTypeList] = useState<any>([])
+  const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
 
   type TServiceDeliverablesForm = {
     teamMember: string
@@ -202,7 +215,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     })
   }
 
-  const handleProjectSOWChange = (e: SelectChangeEvent<any>) => {
+  const handleProjectSOWChange = (e: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>) => {
     setProjectSOWFormData({
       ...projectSOWFormData,
       [e.target.name]: e.target.value
@@ -248,6 +261,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     const newActiveStep =
       isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1
     if (activeStep === 0) {
+      projectSOWFormData.meetingLinks = [...transcriptMeetingLinks]
       if (projectSOWID) {
         apiRequest
           .put(`/project-summery/${projectSOWID}`, projectSOWFormData)
@@ -476,17 +490,19 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       const clientEmail = res?.data?.['meeting_transcript']?.['clientEmail'] || ''
       const clientPhone = res?.data?.['meeting_transcript']?.['clientPhone'] || ''
       const clientWebsite = res?.data?.['meeting_transcript']?.['clientWebsite'] || ''
+      const meetingLinks = res?.data?.['meeting_transcript']?.['meetingLinks'] || ['']
       const summaryText = res?.data?.['summaryText'] || ''
+      setTranscriptMeetingLinks(res?.data?.['meeting_transcript']?.['meetingLinks'] || [''])
 
       setProjectSOWFormData({
         transcriptId,
-        transcriptText,
         projectTypeId,
         projectName,
         company,
         clientEmail,
         clientPhone,
         clientWebsite,
+        meetingLinks,
         summaryText
       })
       setProjectSOWID(id)
@@ -591,33 +607,16 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
   }
 
-  useEffect(() => {
-    onClear()
-    setEnabledStep(0)
-    setActiveStep(0)
-  }, [])
-
-  useEffect(() => {
-    getDetails(id as string)
-  }, [id])
-
-  useEffect(() => {
-    if (isEdit && step && Number(step) <= enabledStep) {
-      setActiveStep(Number(step))
-    }
-  }, [enabledStep, isEdit, id, step])
-
-  useEffect(() => {
-    if (activeStep === 5 || activeStep === 6) {
-      getServiceTree()
-    }
-
-    if (activeStep) {
-      const currentPath = router.asPath.split('?')?.[0]
-      const updatedPath = `${currentPath}?step=${activeStep}`
-      router.replace(updatedPath)
-    }
-  }, [activeStep])
+  const getProjectTypeList = async () => {
+    await apiRequest
+      .get(`/project-type?per_page=1000`)
+      .then(res => {
+        setProjectTypeList(res?.data)
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.message, { variant: 'error' })
+      })
+  }
 
   const onClear = () => {
     setProjectSOWFormData(prevState => ({ ...projectSOWDefaultData }))
@@ -707,125 +706,137 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     </Paper>
   )
 
+  const projectNameGenerate = () => {
+    const projectType = projectTypeList?.filter(
+      (projectType: any) => projectType?.id === projectSOWFormData.projectTypeId
+    )?.[0]
+    console.log(projectType?.name)
+    const projectName = `${projectType?.projectTypePrefix ? projectType?.projectTypePrefix : ''} ${
+      projectSOWFormData.company ?? projectSOWFormData.company
+    } ${projectType?.name ? projectType?.name : ''}`
+    if (projectName) {
+      setProjectSOWFormData({
+        ...projectSOWFormData,
+        projectName: projectName
+      })
+    }
+  }
+
+  useEffect(() => {
+    onClear()
+    setEnabledStep(0)
+    setActiveStep(0)
+    getProjectTypeList()
+  }, [])
+
+  useEffect(() => {
+    getDetails(id as string)
+  }, [id])
+
+  useEffect(() => {
+    if (isEdit && step && Number(step) <= enabledStep) {
+      setActiveStep(Number(step))
+    }
+  }, [enabledStep, isEdit, id, step])
+
+  useEffect(() => {
+    if (activeStep === 5 || activeStep === 6) {
+      getServiceTree()
+    }
+
+    if (activeStep) {
+      const currentPath = router.asPath.split('?')?.[0]
+      const updatedPath = `${currentPath}?step=${activeStep}`
+      router.replace(updatedPath)
+    }
+  }, [activeStep])
+
+  useEffect(() => {
+    projectNameGenerate()
+  }, [projectSOWFormData.company, projectSOWFormData.projectTypeId])
+
   return (
     <Box>
       {!!preload && <Preloader close={!preload} />}
-      <Box sx={{ width: '100%' }}>
-        <Stepper nonLinear activeStep={activeStep}>
-          {steps.map((label, index) => (
-            <Step key={label} completed={completed[index]}>
-              <StepButton color='inherit' onClick={handleStep(index)} disabled={enabledStep < index}>
-                {label}
-              </StepButton>
-            </Step>
-          ))}
-        </Stepper>
-        <Box sx={{ position: 'relative' }}>
+      <Box sx={{ display: 'flex', width: '100%', mt: '50px', alignItems: 'flex-start' }}>
+        <Box
+          sx={{
+            width: '250px',
+            background: '#e1eff8',
+            height: 'auto',
+            padding: '30px 20px',
+            borderRadius: '10px 0 0 10px'
+          }}
+        >
+          <Stepper
+            sx={{
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              alignItems: 'start',
+              '& .Mui-active.MuiStepLabel-iconContainer': {
+                position: 'relative',
+                padding: '0',
+                color: '#fff',
+                marginRight: '8px',
+                '& .MuiStepIcon-text': {
+                  display: 'none'
+                },
+                '&:after': {
+                  content: '"✔"',
+                  position: 'absolute',
+                  top: '0',
+                  left: '0',
+                  width: '100%',
+                  height: '100%'
+                }
+              },
+              '& .MuiStepLabel-label': {
+                fontWeight: '500',
+                '&.Mui-active': {
+                  color: '#31A0F6'
+                }
+              }
+            }}
+            nonLinear
+            activeStep={activeStep}
+          >
+            {steps.map((label, index) => (
+              <Step key={label} completed={completed[index]} sx={{ mb: 3, width: '100%' }}>
+                <StepButton
+                  color='inherit'
+                  sx={{ p: '5px', m: 0, justifyContent: 'flex-start' }}
+                  onClick={handleStep(index)}
+                  disabled={enabledStep < index}
+                >
+                  {label}
+                </StepButton>
+              </Step>
+            ))}
+          </Stepper>
+        </Box>
+        <Box
+          sx={{
+            width: 'calc( 100% - 250px )',
+            position: 'relative',
+            background: '#fff',
+            boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
+          }}
+        >
           <React.Fragment>
-            <Box sx={{ mt: 10, p: 10, border: '2px solid #7e3af2', borderRadius: 2 }}>
+            <Box sx={{ p: 8, borderRadius: '0 10px 10px 0' }}>
               {activeStep == 0 && (
                 <Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Transcript Text</span>
-                        <textarea
-                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                            errorMessage?.['transcriptText'] ? 'border-red-600' : 'dark:border-gray-600 '
-                          }`}
-                          placeholder='Enter Transcript Text'
-                          name='transcriptText'
-                          value={projectSOWFormData.transcriptText}
-                          onChange={handleTranscriptTextChange}
-                          rows={10}
-
-                          // rows={transcriptTextRows}
-                        />
-                        {!!errorMessage?.['transcriptText'] &&
-                          errorMessage?.['transcriptText']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '50%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
-                        <Dropdown
-                          url={'project-type'}
-                          name='projectTypeId'
-                          value={projectSOWFormData.projectTypeId}
-                          onChange={handleSelectChange}
-                        />
-                        {!!errorMessage?.['projectTypeId'] &&
-                          errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                    {/* <Box sx={{ width: '50%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
-                        <Dropdown
-                          url={'project-type'}
-                          name='projectTypeId'
-                          value={projectSOWFormData.projectTypeId}
-                          onChange={handleSelectChange}
-                          
-                        />
-                        {!!errorMessage?.['projectTypeId'] &&
-                          errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box> */}
-
-                    <Box sx={{ width: '50%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Name</span>
-                        <input
-                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ ...transcriptSectionTitleSx, mt: 0 }}>Client Information</Box>
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                      <Box sx={{ width: '50%' }}>
+                        <TextField
+                          id='outlined-multiline-flexible'
+                          label='Company Name'
+                          className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                             errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
                           }`}
-                          placeholder='Enter Project Name'
-                          name='projectName'
-                          value={projectSOWFormData.projectName}
-                          onChange={handleProjectSOWChange}
-                        />
-                        {!!errorMessage?.['projectName'] &&
-                          errorMessage?.['projectName']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '50%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Company</span>
-                        <input
-                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                            errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                          }`}
-                          placeholder='Enter Company'
+                          placeholder='Company Name'
                           name='company'
                           value={projectSOWFormData.company}
                           onChange={handleProjectSOWChange}
@@ -838,76 +849,140 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               </span>
                             )
                           })}
-                      </label>
-                    </Box>
-                    <Box sx={{ width: '50%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Phone</span>
-                        <input
-                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                            errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
+                      </Box>
+                      <Box sx={{ width: '50%' }}>
+                        <TextField
+                          id='outlined-multiline-flexible'
+                          label='Phone'
+                          className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                            errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
                           }`}
-                          placeholder='Enter Phone Number'
+                          placeholder='(999) 555-1234'
                           name='clientPhone'
                           value={projectSOWFormData.clientPhone}
                           onChange={handleProjectSOWChange}
                           type='tel'
                         />
-                        {!!errorMessage?.['clientPhone'] &&
-                          errorMessage?.['clientPhone']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
+                      </Box>
                     </Box>
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '50%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Email</span>
-                        <input
-                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                            errorMessage?.['clientEmail'] ? 'border-red-600' : 'dark:border-gray-600 '
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                      <Box sx={{ width: '50%' }}>
+                        <TextField
+                          id='outlined-multiline-flexible'
+                          label='Website'
+                          className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                            errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
                           }`}
-                          placeholder='Enter Email'
-                          name='clientEmail'
-                          value={projectSOWFormData.clientEmail}
-                          onChange={handleProjectSOWChange}
-                        />
-                        {!!errorMessage?.['clientEmail'] &&
-                          errorMessage?.['clientEmail']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                    <Box sx={{ width: '50%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Website</span>
-                        <input
-                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                            errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
-                          }`}
-                          placeholder='Enter Website'
+                          placeholder='https://www.company-website.com'
                           name='clientWebsite'
                           value={projectSOWFormData.clientWebsite}
                           onChange={handleProjectSOWChange}
                         />
-                        {!!errorMessage?.['clientWebsite'] &&
-                          errorMessage?.['clientWebsite']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
+                      </Box>
+                      <Box sx={{ width: '50%' }}>
+                        <TextField
+                          id='outlined-multiline-flexible'
+                          label='Email'
+                          className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                            errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                          }`}
+                          placeholder='name@company-name.com'
+                          name='clientEmail'
+                          value={projectSOWFormData.clientEmail}
+                          onChange={handleProjectSOWChange}
+                        />
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={transcriptSectionTitleSx}>Project Details</Box>
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                      <Box sx={{ width: '50%' }}>
+                        <Dropdown
+                          label={'Project Type'}
+                          placeholder={'Project Type'}
+                          url={'project-type'}
+                          name='projectTypeId'
+                          value={projectSOWFormData.projectTypeId}
+                          onChange={handleSelectChange}
+                        />
+                      </Box>
+                      <Box sx={{ width: '50%' }}>
+                        <TextField
+                          id='outlined-multiline-flexible'
+                          className={`block w-full mt-1 text-sm dark:bg-gray-700 dark:text-gray-300 dark:focus:shadow-outline-gray form-input`}
+                          placeholder='Project Name'
+                          name='projectName'
+                          value={projectSOWFormData.projectName}
+                          onChange={handleProjectSOWChange}
+                          disabled
+                          sx={{ borderColor: '#e2e8f0' }}
+                        />
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Box sx={transcriptSectionTitleSx}>Qualifying Meeting Transcript </Box>
+                      <Box
+                        sx={transcriptMeetingLinkAddButtonSx}
+                        onClick={() => {
+                          setTranscriptMeetingLinks(prevState => {
+                            const updatedLinks = [...prevState]
+                            updatedLinks.push('')
+
+                            return updatedLinks
+                          })
+                        }}
+                      >
+                        <AddIcon fontSize='small' />
+                      </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5, flexDirection: 'column' }}>
+                      {transcriptMeetingLinks?.map((transcriptMeetingLink: any, index: number) => {
+                        return (
+                          <Box sx={{ width: '100%', position: 'relative' }} key={index}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label={`${getShortStringNumber(index + 1)} Meeting Link`}
+                              className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input`}
+                              placeholder={`${getShortStringNumber(
+                                index + 1
+                              )} Meeting Link: https://tldv.io/app/meetings/unique-meeting-id/`}
+                              name='clientEmail'
+                              value={transcriptMeetingLink}
+                              onChange={e => {
+                                const { value } = e.target
+                                setTranscriptMeetingLinks(prevState => {
+                                  const updatedLinks = [...prevState]
+                                  updatedLinks[index] = value
+
+                                  return updatedLinks
+                                })
+                              }}
+                            />
+                            <IconButton
+                              onClick={() => {
+                                setTranscriptMeetingLinks(prevState => {
+                                  const updatedLinks = [...prevState]
+                                  updatedLinks.splice(index, 1)
+
+                                  return updatedLinks
+                                })
+                              }}
+                              sx={{
+                                position: 'absolute',
+                                top: '8px',
+                                right: '8px'
+                              }}
+                              color='error'
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
+                        )
+                      })}
                     </Box>
                   </Box>
                 </Box>
@@ -994,7 +1069,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
               {activeStep == 4 && (
                 <Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
+                  {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#problemGoalText'}>
                         <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Scope of Work</span>
@@ -1015,6 +1090,40 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           })}
                       </label>
                     </Box>
+                  </Box> */}
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Grid container spacing={2} justifyContent='center' alignItems='center'>
+                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
+                        {serviceTreeList(serviceDeliverableLeftList, serviceDeliverablesChecked)}
+                      </Grid>
+                      <Grid sx={{ width: '100px' }} item>
+                        <Grid container direction='column' alignItems='center'>
+                          <Button
+                            sx={{ my: 0.5 }}
+                            variant='outlined'
+                            size='small'
+                            onClick={handleCheckedLeftToRight}
+                            disabled={serviceDeliverablesChecked.length === 0}
+                            aria-label='move selected right'
+                          >
+                            &gt;
+                          </Button>
+                          <Button
+                            sx={{ my: 0.5 }}
+                            variant='outlined'
+                            size='small'
+                            onClick={handleCheckedRightToLeft}
+                            disabled={serviceDeliverablesChecked.length === 0}
+                            aria-label='move selected left'
+                          >
+                            &lt;
+                          </Button>
+                        </Grid>
+                      </Grid>
+                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
+                        {serviceTreeList(serviceDeliverableRightList, serviceDeliverablesChecked)}
+                      </Grid>
+                    </Grid>
                   </Box>
                 </Box>
               )}

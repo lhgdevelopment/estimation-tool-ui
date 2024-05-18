@@ -1,17 +1,17 @@
 import { Box } from '@mui/material'
 import { useState } from 'react'
-import MeetingSummeryFormComponent from '../form/MeetingSummery.form.component'
+import ProjectSOWFormComponent from '../form/ProjectSOW.form.component'
 
-export default function MeetingSummeryEditComponent() {
+export default function ProjectSOWCreateComponent() {
   const [listData, setListData] = useState<any>([])
 
   return (
     <>
       <Box className='container px-6 mx-auto'>
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
-          Edit Meeting Summery
+          Project SOW
         </Box>
-        <MeetingSummeryFormComponent listData={listData} setListData={setListData} isEdit={true} />
+        <ProjectSOWFormComponent listData={listData} setListData={setListData} />
       </Box>
     </>
   )

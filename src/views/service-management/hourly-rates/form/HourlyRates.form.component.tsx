@@ -103,7 +103,7 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Role Name</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter role name'
+                  // placeholder='Enter role name'
                   name='name'
                   value={formData.name}
                   onChange={handleTextChange}
@@ -123,7 +123,7 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hourly Rate</span>
                 <input
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter hourly rate'
+                  // placeholder='Enter hourly rate'
                   name='average_hourly'
                   value={formData.average_hourly}
                   onChange={handleTextChange}

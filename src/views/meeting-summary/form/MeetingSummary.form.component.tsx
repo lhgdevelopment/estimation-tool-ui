@@ -12,9 +12,9 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
-import { TMeetingSummeryComponent } from '../MeetingSummery.decorator'
+import { TMeetingSummaryComponent } from '../MeetingSummary.decorator'
 
-export default function MeetingSummeryFormComponent(props: TMeetingSummeryComponent) {
+export default function MeetingSummaryFormComponent(props: TMeetingSummaryComponent) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const { listData, setListData, isEdit } = props
   const [preload, setPreload] = useState<boolean>(false)
@@ -35,7 +35,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
-  const [summaryText, setSummeryText] = useState<any>('')
+  const [summaryText, setSummaryText] = useState<any>('')
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -71,7 +71,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
     setErrorMessage({})
     setPreload(true)
     if (router?.query['id']) {
-      // formData['summaryText'] = formData['tldvLink'] ? null : summaryText
+      formData['summaryText'] = formData['tldvLink'] ? null : summaryText
       apiRequest
         .put(`/meeting-summery/${router?.query['id']}`, formData)
         .then(res => {
@@ -124,13 +124,13 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
         meetingName: res?.data?.['meetingName'],
         meetingType: res?.data?.['meetingType'],
         transcriptText: res?.data?.['transcriptText'],
-        summaryText: res?.data?.['meetingSummeryText'],
+        summaryText: res?.data?.['meetingSummaryText'],
         clickupLink: res?.data?.['clickupLink'],
         tldvLink: res?.data?.['tldvLink'],
         pushToClickUp: false,
         is_private: res?.data?.['is_private']
       })
-      setSummeryText(res?.data?.['summaryText'])
+      setSummaryText(res?.data?.['summaryText'])
       setPreload(false)
     })
   }
@@ -141,7 +141,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
 
   const onClear = () => {
     setFormData(prevState => ({ ...defaultData }))
-    setSummeryText('')
+    setSummaryText('')
     setErrorMessage({})
   }
 
@@ -157,8 +157,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['meetingName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  placeholder='Enter meeting name'
+                  }`} /* placeholder='Enter meeting name' */
                   name='meetingName'
                   value={formData.meetingName}
                   onChange={handleTextChange}
@@ -185,6 +184,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['meetingType'] ? 'border-red-600' : 'dark:border-gray-600 '
                   }`}
+                  placeholder=''
                 />
                 {!!errorMessage?.['meetingType'] &&
                   errorMessage?.['meetingType']?.map((message: any, index: number) => {
@@ -205,8 +205,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['clickupLink'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  placeholder='Enter clickup task link'
+                  }`} /* placeholder='Enter clickup task link' */
                   name='clickupLink'
                   value={formData.clickupLink}
                   onChange={handleTextChange}
@@ -227,8 +226,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                 <input
                   className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                     errorMessage?.['tldvLink'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  placeholder='Enter tldv link'
+                  }`} /* placeholder='Enter tldv link' */
                   name='tldvLink'
                   value={formData.tldvLink}
                   onChange={handleTextChange}
@@ -276,7 +274,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
                   <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
                   <textarea
                     className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                    placeholder='Examples: Transcript Text'
+                    /* placeholder='Examples: Transcript Text' */
                     name='transcriptText'
                     rows={10}
                     value={formData.transcriptText}
@@ -299,12 +297,12 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
             <Box sx={{ display: 'flex', gap: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm' htmlFor={'#summaryText'}>
-                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Summery Text</span>
+                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Summary Text</span>
 
                   <MdEditor
                     ref={summaryTextEditorRef}
                     modelValue={summaryText}
-                    onChange={setSummeryText}
+                    onChange={setSummaryText}
                     language='en-US'
                   />
                   {!!errorMessage?.['summaryText'] &&
@@ -323,7 +321,7 @@ export default function MeetingSummeryFormComponent(props: TMeetingSummeryCompon
           <Box sx={{ display: 'flex', gap: 5, mt: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm' htmlFor='is_private'>
-                <span className='text-gray-700 dark:text-gray-400 mr-2'>Is private?</span>
+                <span className='text-gray-700 dark:text-gray-400 mr-2'>Private?</span>
                 <input
                   id='is_private'
                   type='checkbox'
