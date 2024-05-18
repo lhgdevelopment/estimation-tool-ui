@@ -84,14 +84,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const projectSOWDefaultData = {
     transcriptId: '',
-    transcriptText: '',
     projectTypeId: null,
     projectName: '',
     company: '',
     clientPhone: '',
     clientEmail: '',
     clientWebsite: '',
-    summaryText: ''
+    summaryText: '',
+    meetingLinks: ['']
   }
 
   const [activeStep, setActiveStep] = useState(0)
@@ -261,6 +261,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     const newActiveStep =
       isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1
     if (activeStep === 0) {
+      projectSOWFormData.meetingLinks = [...transcriptMeetingLinks]
       if (projectSOWID) {
         apiRequest
           .put(`/project-summery/${projectSOWID}`, projectSOWFormData)
@@ -489,17 +490,19 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       const clientEmail = res?.data?.['meeting_transcript']?.['clientEmail'] || ''
       const clientPhone = res?.data?.['meeting_transcript']?.['clientPhone'] || ''
       const clientWebsite = res?.data?.['meeting_transcript']?.['clientWebsite'] || ''
+      const meetingLinks = res?.data?.['meeting_transcript']?.['meetingLinks'] || ['']
       const summaryText = res?.data?.['summaryText'] || ''
+      setTranscriptMeetingLinks(res?.data?.['meeting_transcript']?.['meetingLinks'] || [''])
 
       setProjectSOWFormData({
         transcriptId,
-        transcriptText,
         projectTypeId,
         projectName,
         company,
         clientEmail,
         clientPhone,
         clientWebsite,
+        meetingLinks,
         summaryText
       })
       setProjectSOWID(id)
@@ -708,9 +711,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       (projectType: any) => projectType?.id === projectSOWFormData.projectTypeId
     )?.[0]
     console.log(projectType?.name)
-    const projectName = `LHG ${projectSOWFormData.company ?? projectSOWFormData.company} ${
-      projectType?.name ? projectType?.name : ''
-    }`
+    const projectName = `${projectType?.projectTypePrefix ? projectType?.projectTypePrefix : ''} ${
+      projectSOWFormData.company ?? projectSOWFormData.company
+    } ${projectType?.name ? projectType?.name : ''}`
     if (projectName) {
       setProjectSOWFormData({
         ...projectSOWFormData,
