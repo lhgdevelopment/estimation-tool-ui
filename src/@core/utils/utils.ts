@@ -85,3 +85,17 @@ export function addTargetBlankToMarkdownLinks(markdownText = '') {
 
   return modifiedText
 }
+
+export function getShortStringNumber(num: number) {
+  const specialCases = [11, 12, 13]
+  const suffixes = ['th', 'st', 'nd', 'rd']
+  const lastTwoDigits = num % 100
+
+  if (specialCases.includes(lastTwoDigits)) {
+    return `${num}th`
+  } else {
+    const lastDigit = num % 10
+
+    return `${num}${suffixes[lastDigit] || suffixes[0]}`
+  }
+}

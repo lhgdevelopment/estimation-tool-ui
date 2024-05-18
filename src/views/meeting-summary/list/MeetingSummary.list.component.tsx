@@ -38,10 +38,31 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
     setExpended(prevState => id)
   }
 
+  const defaultData = {
+    meetingName: ''
+  }
+
+  const [filterData, setFilterData] = useState(defaultData)
+
+  const handleFilterChange = () => {
+    getList()
+  }
+  const setFilterValues = (e: React.ChangeEvent<any>) => {
+    setFilterData({
+      ...filterData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  const onFilterClear = () => {
+    filterData.meetingName = ''
+    getList()
+  }
+
   const getList = (page = 1) => {
     setPreload(true)
     apiRequest
-      .get(`/meeting-summery?page=${page}`)
+      .get(`/meeting-summery?page=${page}&meetingName=${filterData?.meetingName}`)
       .then(res => {
         const paginationData: any = res
         setListData(res?.data)
@@ -165,6 +186,62 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
                 </TableRow>
               </TableHead>
               <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
+                <Box component={'tr'} className='text-gray-700 dark:text-gray-400' sx={{ '& td': { p: '5px 5px' } }}>
+                  <Box component={'td'}>
+                    <input
+                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      placeholder='Enter meeting name'
+                      name='meetingName'
+                      value={filterData.meetingName}
+                      onChange={setFilterValues}
+                    />
+                  </Box>
+                  <Box component={'td'}>--</Box>
+
+                  <Box component={'td'}>--</Box>
+
+                  <Box component={'td'} sx={{ textAlign: 'center' }}>
+                    --
+                  </Box>
+                  <Box component={'td'}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <Button
+                        onClick={handleFilterChange}
+                        sx={{
+                          border: '1px solid #9333ea',
+                          padding: '3px 10px',
+                          mr: 1,
+                          fontSize: '14px',
+                          borderRadius: '5px',
+                          color: '#9333ea',
+                          '&:hover': {
+                            background: '#9333ea',
+                            color: '#fff'
+                          }
+                        }}
+                      >
+                        Filter
+                      </Button>
+                      <Button
+                        onClick={onFilterClear}
+                        sx={{
+                          border: '1px solid #9333ea',
+                          padding: '3px 10px',
+                          fontSize: '14px',
+                          borderRadius: '5px',
+                          color: '#9333ea',
+                          '&:hover': {
+                            background: '#9333ea',
+                            color: '#fff'
+                          }
+                        }}
+                      >
+                        Clear
+                      </Button>
+                    </Box>
+                  </Box>
+                </Box>
+
                 {listData?.map((data: any, index: number) => {
                   return (
                     <TableRow key={index} className='text-gray-700 dark:text-gray-400'>

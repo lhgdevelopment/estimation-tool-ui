@@ -1,5 +1,6 @@
 import AddIcon from '@material-ui/icons/Add'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
@@ -9,6 +10,7 @@ import {
   Checkbox,
   Chip,
   Grid,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
@@ -36,7 +38,12 @@ import { Dropdown } from 'src/@core/components/dropdown'
 import { MarkdownEditor } from 'src/@core/components/markdown-editor'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
-import { TProjectSOWFormComponent, transcriptSectionTitleSx } from '../ProjectSOW.decorator'
+import { getShortStringNumber } from 'src/@core/utils/utils'
+import {
+  TProjectSOWFormComponent,
+  transcriptMeetingLinkAddButtonSx,
+  transcriptSectionTitleSx
+} from '../ProjectSOW.decorator'
 
 const steps = [
   'Transcript',
@@ -114,6 +121,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [projectTypeList, setProjectTypeList] = useState<any>([])
+  const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
 
   type TServiceDeliverablesForm = {
     teamMember: string
@@ -912,21 +920,66 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   </Box>
 
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={transcriptSectionTitleSx}>Qualifying Meeting Transcript</Box>
-                    <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                      <Box sx={{ width: '100%' }}>
-                        <TextField
-                          id='outlined-multiline-flexible'
-                          label='Link'
-                          className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                            errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                          }`}
-                          placeholder='Link'
-                          name='clientEmail'
-                          value={projectSOWFormData.clientEmail}
-                          onChange={handleProjectSOWChange}
-                        />
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Box sx={transcriptSectionTitleSx}>Qualifying Meeting Transcript </Box>
+                      <Box
+                        sx={transcriptMeetingLinkAddButtonSx}
+                        onClick={() => {
+                          setTranscriptMeetingLinks(prevState => {
+                            const updatedLinks = [...prevState]
+                            updatedLinks.push('')
+
+                            return updatedLinks
+                          })
+                        }}
+                      >
+                        <AddIcon fontSize='small' />
                       </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', gap: 5, mb: 5, flexDirection: 'column' }}>
+                      {transcriptMeetingLinks?.map((transcriptMeetingLink: any, index: number) => {
+                        return (
+                          <Box sx={{ width: '100%', position: 'relative' }} key={index}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label={`${getShortStringNumber(index + 1)} Meeting Link`}
+                              className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input`}
+                              placeholder={`${getShortStringNumber(
+                                index + 1
+                              )} Meeting Link: https://tldv.io/app/meetings/unique-meeting-id/`}
+                              name='clientEmail'
+                              value={transcriptMeetingLink}
+                              onChange={e => {
+                                const { value } = e.target
+                                setTranscriptMeetingLinks(prevState => {
+                                  const updatedLinks = [...prevState]
+                                  updatedLinks[index] = value
+
+                                  return updatedLinks
+                                })
+                              }}
+                            />
+                            <IconButton
+                              onClick={() => {
+                                setTranscriptMeetingLinks(prevState => {
+                                  const updatedLinks = [...prevState]
+                                  updatedLinks.splice(index, 1)
+
+                                  return updatedLinks
+                                })
+                              }}
+                              sx={{
+                                position: 'absolute',
+                                top: '8px',
+                                right: '8px'
+                              }}
+                              color='error'
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
+                        )
+                      })}
                     </Box>
                   </Box>
                 </Box>
@@ -1013,7 +1066,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
               {activeStep == 4 && (
                 <Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
+                  {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#problemGoalText'}>
                         <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Scope of Work</span>
@@ -1034,6 +1087,40 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           })}
                       </label>
                     </Box>
+                  </Box> */}
+                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                    <Grid container spacing={2} justifyContent='center' alignItems='center'>
+                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
+                        {serviceTreeList(serviceDeliverableLeftList, serviceDeliverablesChecked)}
+                      </Grid>
+                      <Grid sx={{ width: '100px' }} item>
+                        <Grid container direction='column' alignItems='center'>
+                          <Button
+                            sx={{ my: 0.5 }}
+                            variant='outlined'
+                            size='small'
+                            onClick={handleCheckedLeftToRight}
+                            disabled={serviceDeliverablesChecked.length === 0}
+                            aria-label='move selected right'
+                          >
+                            &gt;
+                          </Button>
+                          <Button
+                            sx={{ my: 0.5 }}
+                            variant='outlined'
+                            size='small'
+                            onClick={handleCheckedRightToLeft}
+                            disabled={serviceDeliverablesChecked.length === 0}
+                            aria-label='move selected left'
+                          >
+                            &lt;
+                          </Button>
+                        </Grid>
+                      </Grid>
+                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
+                        {serviceTreeList(serviceDeliverableRightList, serviceDeliverablesChecked)}
+                      </Grid>
+                    </Grid>
                   </Box>
                 </Box>
               )}
