@@ -215,7 +215,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     })
   }
 
-  const handleProjectSOWChange = (e: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleProjectSOWChange = (e: any) => {
     setProjectSOWFormData({
       ...projectSOWFormData,
       [e.target.name]: e.target.value
@@ -490,9 +490,16 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       const clientEmail = res?.data?.['meeting_transcript']?.['clientEmail'] || ''
       const clientPhone = res?.data?.['meeting_transcript']?.['clientPhone'] || ''
       const clientWebsite = res?.data?.['meeting_transcript']?.['clientWebsite'] || ''
-      const meetingLinks = res?.data?.['meeting_transcript']?.['meetingLinks'] || ['']
+      const meetingLinks = res?.data?.['meeting_transcript']?.['meeting_links'].map(
+        (meeting_link: any) => meeting_link?.meetingLink
+      ) || ['']
+
       const summaryText = res?.data?.['summaryText'] || ''
-      setTranscriptMeetingLinks(res?.data?.['meeting_transcript']?.['meetingLinks'] || [''])
+      setTranscriptMeetingLinks(
+        res?.data?.['meeting_transcript']?.['meeting_links'].map((meeting_link: any) => meeting_link?.meetingLink) || [
+          ''
+        ]
+      )
 
       setProjectSOWFormData({
         transcriptId,
