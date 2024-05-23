@@ -228,12 +228,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       [e?.target?.name]: e?.target?.value
     })
   }
-  const handleTranscriptTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setProjectSOWFormData({
-      ...projectSOWFormData,
-      transcriptText: e.target.value
-    })
-  }
+  // const handleTranscriptTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  //   setProjectSOWFormData({
+  //     ...projectSOWFormData,
+  //     transcriptText: e.target.value
+  //   })
+  // }
   function calculateNumberOfRows(text: string) {
     const numberOfLines = text.split('\n').length
     setTranscriptTextRows(Math.max(5, numberOfLines))
