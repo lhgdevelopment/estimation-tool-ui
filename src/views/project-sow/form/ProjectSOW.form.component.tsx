@@ -84,7 +84,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const projectSOWDefaultData = {
     transcriptId: '',
-    projectTypeId: null,
+    serviceId: null,
     projectName: '',
     company: '',
     clientPhone: '',
@@ -110,6 +110,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [preload, setPreload] = useState<boolean>(false)
   const [transcriptTextRows, setTranscriptTextRows] = useState<number>(10)
+  const [projectTypeID, setProjectTypeID] = useState<any>(null)
   const [projectSOWID, setProjectSOWID] = useState<any>(null)
   const [summaryText, setSummaryText] = useState<any>('')
   const [problemGoalID, setProblemGoalID] = useState<any>(null)
@@ -121,6 +122,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [projectTypeList, setProjectTypeList] = useState<any>([])
+  const [serviceList, setServiceList] = useState<any>([])
   const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
 
   type TServiceDeliverablesForm = {
@@ -362,20 +364,25 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .post(`/problems-and-goals/${problemGoalID}`, { problemGoalText })
         .then(res => {
           if (res?.data && type == 'NEXT') {
-            apiRequest.post('/project-overview', { problemGoalID }).then(res2 => {
-              enqueueSnackbar('Created Successfully!', { variant: 'success' })
-              setOverviewTextID(res2?.data?.id)
-              setOverviewText(res2?.data?.overviewText)
-              setTimeout(() => {
-                if (type == 'NEXT') {
-                  setActiveStep(newActiveStep)
-                  if (enabledStep < newActiveStep) {
-                    setEnabledStep(newActiveStep)
+            apiRequest
+              .post('/project-overview', {
+                problemGoalID,
+                projectTypeID
+              })
+              .then(res2 => {
+                enqueueSnackbar('Created Successfully!', { variant: 'success' })
+                setOverviewTextID(res2?.data?.id)
+                setOverviewText(res2?.data?.overviewText)
+                setTimeout(() => {
+                  if (type == 'NEXT') {
+                    setActiveStep(newActiveStep)
+                    if (enabledStep < newActiveStep) {
+                      setEnabledStep(newActiveStep)
+                    }
                   }
-                }
-                setPreload(false)
-              }, 1000)
-            })
+                  setPreload(false)
+                }, 1000)
+              })
           } else {
             setPreload(false)
           }
@@ -484,7 +491,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     apiRequest.get(`/project-summery/${id}`).then((res: any) => {
       const transcriptId = res?.data?.id || ''
       const transcriptText = res?.data?.['meeting_transcript']?.['transcriptText'] || ''
-      const projectTypeId = res?.data?.['meeting_transcript']?.['projectTypeId'] || ''
+      const serviceId = res?.data?.['meeting_transcript']?.['serviceId'] || ''
       const projectName = res?.data?.['meeting_transcript']?.['projectName'] || ''
       const company = res?.data?.['meeting_transcript']?.['company'] || ''
       const clientEmail = res?.data?.['meeting_transcript']?.['clientEmail'] || ''
@@ -503,7 +510,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
       setProjectSOWFormData({
         transcriptId,
-        projectTypeId,
+        serviceId,
         projectName,
         company,
         clientEmail,
@@ -554,8 +561,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const getServiceTree = async () => {
     await apiRequest
 
-      // .get(`/service-tree?per_page=500&projectTypeId=${projectSOWFormData.projectTypeId}`)
-      .get(`/service-tree?per_page=500&projectTypeId=${4}`)
+      // .get(`/service-tree?per_page=500&serviceId=${projectSOWFormData.serviceId}`)
+      .get(`/service-tree?per_page=500&serviceId=${4}`)
       .then(res => {
         setServiceTreeData(res?.data?.services)
         setServiceDeliverableLeftList(res?.data?.services?.[0]?.groups)
@@ -614,11 +621,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
   }
 
-  const getProjectTypeList = async () => {
+  // const getProjectTypeList = async () => {
+  //   await apiRequest
+  //     .get(`/project-type?per_page=1000`)
+  //     .then(res => {
+  //       setProjectTypeList(res?.data)
+  //     })
+  //     .catch(error => {
+  //       enqueueSnackbar(error?.message, { variant: 'error' })
+  //     })
+  // }
+
+  const getServiceList = async () => {
     await apiRequest
-      .get(`/project-type?per_page=1000`)
+      .get(`/services`)
       .then(res => {
-        setProjectTypeList(res?.data)
+        setServiceList(res?.data)
       })
       .catch(error => {
         enqueueSnackbar(error?.message, { variant: 'error' })
@@ -714,10 +732,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   )
 
   const projectNameGenerate = () => {
-    const projectType = projectTypeList?.filter(
-      (projectType: any) => projectType?.id === projectSOWFormData.projectTypeId
-    )?.[0]
-    console.log(projectType?.name)
+    const projectType = serviceList?.filter((service: any) => service?.id === projectSOWFormData.serviceId)?.[0]?.[
+      'project_type'
+    ]
+
     const projectName = `${projectType?.projectTypePrefix ? projectType?.projectTypePrefix : ''} ${
       projectSOWFormData.company ?? projectSOWFormData.company
     } ${projectType?.name ? projectType?.name : ''}`
@@ -733,7 +751,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     onClear()
     setEnabledStep(0)
     setActiveStep(0)
-    getProjectTypeList()
+    getServiceList()
   }, [])
 
   useEffect(() => {
@@ -760,7 +778,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   useEffect(() => {
     projectNameGenerate()
-  }, [projectSOWFormData.company, projectSOWFormData.projectTypeId])
+  }, [projectSOWFormData.company, projectSOWFormData.serviceId])
 
   return (
     <Box>
@@ -906,10 +924,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                       <Box sx={{ width: '50%' }}>
                         <Dropdown
-                          label={'Project Type'}
-                          url={'project-type'}
-                          name='projectTypeId'
-                          value={projectSOWFormData.projectTypeId}
+                          label={'Services'}
+                          url={'services'}
+                          name='serviceId'
+                          value={projectSOWFormData.serviceId}
                           onChange={handleSelectChange}
                         />
                       </Box>
