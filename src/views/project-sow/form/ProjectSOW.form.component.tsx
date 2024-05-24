@@ -33,7 +33,7 @@ import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import { MarkdownEditor } from 'src/@core/components/markdown-editor'
 import Preloader from 'src/@core/components/preloader'
@@ -907,7 +907,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       <Box sx={{ width: '50%' }}>
                         <Dropdown
                           label={'Project Type'}
-                          placeholder={'Project Type'}
                           url={'project-type'}
                           name='projectTypeId'
                           value={projectSOWFormData.projectTypeId}

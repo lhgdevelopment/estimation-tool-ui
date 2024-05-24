@@ -1,6 +1,6 @@
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
-import { Box, InputAdornment, ListSubheader, SxProps, TextField } from '@mui/material'
+import { Box, InputAdornment, InputLabel, ListSubheader, SxProps, TextField } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
@@ -30,7 +30,7 @@ type SelectPropsWithISelectProps = SelectProps & ISelectProps
 
 export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => {
   const {
-    placeholder = 'Please Select',
+    placeholder,
     url,
     isEnumField = false,
     enumList,
@@ -44,6 +44,9 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     isAddNewButton = false,
     onAddNew,
     syncOnOpen = false,
+    sx,
+    label,
+    labelId = 'demo-simple-select-label',
     ...otherProps
   } = props
   const dropdownRef = useRef(null)
@@ -113,75 +116,73 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
 
   return (
     <FormControl fullWidth>
-      <Box className='flex items-center'>
-        <Select
-          {...otherProps}
-          ref={ref}
-          value={multiple ? value || [] : value || ''}
-          onChange={onChange}
-          multiple={multiple}
-          sx={{ mt: 1, height: 38 }}
-          displayEmpty
-          fullWidth
-          onOpen={() => {
-            if (!optionItems.length || syncOnOpen) {
-              getList()
-            }
-          }}
-        >
-          {searchable && (
-            <ListSubheader
-              sx={{
-                pt: 1
-              }}
-            >
-              <TextField
-                size='small'
-                autoFocus
-                placeholder={searchPlaceholder}
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position='start'>
-                      <SearchIcon />
-                    </InputAdornment>
-                  )
-                }}
-                onChange={e => setSearchText(() => e.target.value)}
-                onKeyDown={e => {
-                  if (e.key !== 'Escape') {
-                    e.stopPropagation()
-                  }
-                }}
-              />
-            </ListSubheader>
-          )}
-          {placeholder && (
-            <MenuItem value='' disabled>
-              {placeholder}
-            </MenuItem>
-          )}
-          {preloader && <MenuItem disabled>Loading...</MenuItem>}
-          {optionItems?.map((option: any, index: number) => (
-            <MenuItem value={option.id} key={index}>
-              <Box component='span' dangerouslySetInnerHTML={{ __html: option.title }}></Box>
-            </MenuItem>
-          ))}
-        </Select>
-        {isAddNewButton && (
-          <button
-            type='button'
-            className={
-              'flex items-center justify-center ml-2 h-9 w-9 text-sm font-medium leading-5 rounded-lg outline-none border border-solid border-purple-400 dark:border-gray-400 text-purple-600 dark:text-gray-400 hover:bg-purple-400 hover:text-white'
-            }
-            onClick={() => {
-              onAddNew && onAddNew()
+      <InputLabel id={labelId}>{label}</InputLabel>
+      <Select
+        {...otherProps}
+        ref={ref}
+        value={multiple ? value || [] : value || ''}
+        label={label}
+        onChange={onChange}
+        multiple={multiple}
+        fullWidth
+        onOpen={() => {
+          if (!optionItems.length || syncOnOpen) {
+            getList()
+          }
+        }}
+      >
+        {searchable && (
+          <ListSubheader
+            sx={{
+              pt: 1
             }}
           >
-            <AddIcon />
-          </button>
+            <TextField
+              size='small'
+              autoFocus
+              placeholder={searchPlaceholder}
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position='start'>
+                    <SearchIcon />
+                  </InputAdornment>
+                )
+              }}
+              onChange={e => setSearchText(() => e.target.value)}
+              onKeyDown={e => {
+                if (e.key !== 'Escape') {
+                  e.stopPropagation()
+                }
+              }}
+            />
+          </ListSubheader>
         )}
-      </Box>
+        {placeholder && (
+          <MenuItem value='' disabled>
+            {placeholder}
+          </MenuItem>
+        )}
+        {preloader && <MenuItem disabled>Loading...</MenuItem>}
+        {optionItems?.map((option: any, index: number) => (
+          <MenuItem value={option.id} key={index}>
+            <Box component='span' dangerouslySetInnerHTML={{ __html: option.title }}></Box>
+          </MenuItem>
+        ))}
+      </Select>
+      {isAddNewButton && (
+        <button
+          type='button'
+          className={
+            'flex items-center justify-center ml-2 h-9 w-9 text-sm font-medium leading-5 rounded-lg outline-none border border-solid border-purple-400 dark:border-gray-400 text-purple-600 dark:text-gray-400 hover:bg-purple-400 hover:text-white'
+          }
+          onClick={() => {
+            onAddNew && onAddNew()
+          }}
+        >
+          <AddIcon />
+        </button>
+      )}
     </FormControl>
   )
 })
