@@ -282,7 +282,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           .catch(error => {
             setPreload(false)
             setErrorMessage(error?.response?.data?.errors)
-            enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+            enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
           })
       } else {
         apiRequest
@@ -319,7 +319,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           .catch(error => {
             setPreload(false)
             setErrorMessage(error?.response?.data?.errors)
-            enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+            enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
           })
       }
     }
@@ -346,7 +346,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               .catch(error => {
                 setPreload(false)
                 setErrorMessage(error?.response?.data?.errors)
-                enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
               })
           } else {
             setPreload(false)
@@ -355,7 +355,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 2) {
@@ -384,7 +384,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               .catch(error => {
                 setPreload(false)
                 setErrorMessage(error?.response?.data?.errors)
-                enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
               })
           } else {
             setPreload(false)
@@ -393,7 +393,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 3) {
@@ -420,7 +420,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               .catch(error => {
                 setPreload(false)
                 setErrorMessage(error?.response?.data?.errors)
-                enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
               })
           } else {
             setPreload(false)
@@ -429,7 +429,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
 
@@ -457,7 +457,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               .catch(error => {
                 setPreload(false)
                 setErrorMessage(error?.response?.data?.errors)
-                enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
               })
           } else {
             setPreload(false)
@@ -466,7 +466,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 5) {
@@ -491,13 +491,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             .catch(error => {
               setPreload(false)
               setErrorMessage(error?.response?.data?.errors)
-              enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+              enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
             })
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
