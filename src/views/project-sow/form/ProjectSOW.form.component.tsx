@@ -29,11 +29,10 @@ import {
   TextField
 } from '@mui/material'
 import { useMask } from '@react-input/mask'
-import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import { MarkdownEditor } from 'src/@core/components/markdown-editor'
 import Preloader from 'src/@core/components/preloader'
@@ -100,17 +99,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     [k: number]: boolean
   }>({})
 
-  const summaryTextEditorRef = useRef<ExposeParam>()
-  const problemGoalTextEditorRef = useRef<ExposeParam>()
-  const overviewTextEditorRef = useRef<ExposeParam>()
-  const scopeTextEditorRef = useRef<ExposeParam>()
-  const deliverablesTextEditorRef = useRef<ExposeParam>()
-
   const [projectSOWFormData, setProjectSOWFormData] = useState(projectSOWDefaultData)
 
   const [preload, setPreload] = useState<boolean>(false)
   const [transcriptTextRows, setTranscriptTextRows] = useState<number>(10)
-  const [projectTypeID, setProjectTypeID] = useState<any>(null)
   const [projectSOWID, setProjectSOWID] = useState<any>(null)
   const [summaryText, setSummaryText] = useState<any>('')
   const [problemGoalID, setProblemGoalID] = useState<any>(null)
@@ -290,7 +282,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           .catch(error => {
             setPreload(false)
             setErrorMessage(error?.response?.data?.errors)
-            enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+            enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
           })
       } else {
         apiRequest
@@ -327,7 +319,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           .catch(error => {
             setPreload(false)
             setErrorMessage(error?.response?.data?.errors)
-            enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+            enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
           })
       }
     }
@@ -336,19 +328,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .put(`/project-summery/${projectSOWID}`, { summaryText })
         .then(res => {
           if (res?.data?.meeting_transcript && type == 'NEXT') {
-            apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id }).then(res2 => {
-              enqueueSnackbar('Created Successfully!', { variant: 'success' })
+            apiRequest
+              .post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id })
+              .then(res2 => {
+                enqueueSnackbar('Created Successfully!', { variant: 'success' })
 
-              setProblemGoalID(res2?.data?.id)
-              setProblemGoalText(res2?.data?.problemGoalText)
-              setTimeout(() => {
-                setActiveStep(newActiveStep)
-                if (enabledStep < newActiveStep) {
-                  setEnabledStep(newActiveStep)
-                }
+                setProblemGoalID(res2?.data?.id)
+                setProblemGoalText(res2?.data?.problemGoalText)
+                setTimeout(() => {
+                  setActiveStep(newActiveStep)
+                  if (enabledStep < newActiveStep) {
+                    setEnabledStep(newActiveStep)
+                  }
+                  setPreload(false)
+                }, 1000)
+              })
+              .catch(error => {
                 setPreload(false)
-              }, 1000)
-            })
+                setErrorMessage(error?.response?.data?.errors)
+                enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+              })
           } else {
             setPreload(false)
           }
@@ -356,7 +355,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 2) {
@@ -366,8 +365,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           if (res?.data && type == 'NEXT') {
             apiRequest
               .post('/project-overview', {
-                problemGoalID,
-                projectTypeID
+                problemGoalID
               })
               .then(res2 => {
                 enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -383,6 +381,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   setPreload(false)
                 }, 1000)
               })
+              .catch(error => {
+                setPreload(false)
+                setErrorMessage(error?.response?.data?.errors)
+                enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+              })
           } else {
             setPreload(false)
           }
@@ -390,7 +393,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 3) {
@@ -398,20 +401,27 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .post(`/project-overview/${overviewTextID}`, { overviewText })
         .then(res => {
           if (res?.data && type == 'NEXT') {
-            apiRequest.post('/scope-of-work', { problemGoalID }).then(res2 => {
-              enqueueSnackbar('Created Successfully!', { variant: 'success' })
-              setScopeTextID(res2?.data?.id)
-              setScopeText(res2?.data?.scopeText)
-              setTimeout(() => {
-                if (type == 'NEXT') {
-                  setActiveStep(newActiveStep)
-                  if (enabledStep < newActiveStep) {
-                    setEnabledStep(newActiveStep)
+            apiRequest
+              .post('/scope-of-work', { problemGoalID })
+              .then(res2 => {
+                enqueueSnackbar('Created Successfully!', { variant: 'success' })
+                setScopeTextID(res2?.data?.id)
+                setScopeText(res2?.data?.scopeText)
+                setTimeout(() => {
+                  if (type == 'NEXT') {
+                    setActiveStep(newActiveStep)
+                    if (enabledStep < newActiveStep) {
+                      setEnabledStep(newActiveStep)
+                    }
                   }
-                }
+                  setPreload(false)
+                }, 1000)
+              })
+              .catch(error => {
                 setPreload(false)
-              }, 1000)
-            })
+                setErrorMessage(error?.response?.data?.errors)
+                enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+              })
           } else {
             setPreload(false)
           }
@@ -419,7 +429,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
         })
     }
 
@@ -428,20 +438,27 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .post(`/scope-of-work/${scopeTextID}`, { scopeText })
         .then(res => {
           if (res?.data && type == 'NEXT') {
-            apiRequest.post('/deliverables', { scopeOfWorkId: scopeTextID }).then(res2 => {
-              enqueueSnackbar('Created Successfully!', { variant: 'success' })
-              setDeliverablesTextID(res2?.data?.id)
-              setDeliverablesText(res2?.data?.deliverablesText)
-              setTimeout(() => {
-                if (type == 'NEXT') {
-                  setActiveStep(newActiveStep)
-                  if (enabledStep < newActiveStep) {
-                    setEnabledStep(newActiveStep)
+            apiRequest
+              .post('/deliverables', { scopeOfWorkId: scopeTextID })
+              .then(res2 => {
+                enqueueSnackbar('Created Successfully!', { variant: 'success' })
+                setDeliverablesTextID(res2?.data?.id)
+                setDeliverablesText(res2?.data?.deliverablesText)
+                setTimeout(() => {
+                  if (type == 'NEXT') {
+                    setActiveStep(newActiveStep)
+                    if (enabledStep < newActiveStep) {
+                      setEnabledStep(newActiveStep)
+                    }
                   }
-                }
+                  setPreload(false)
+                }, 1000)
+              })
+              .catch(error => {
                 setPreload(false)
-              }, 1000)
-            })
+                setErrorMessage(error?.response?.data?.errors)
+                enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+              })
           } else {
             setPreload(false)
           }
@@ -449,32 +466,38 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 5) {
       apiRequest
         .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
         .then(res => {
-          apiRequest.get(`/project-summery?page=1`).then(res => {
-            if (setListData) {
-              setListData(res?.data)
-            }
-          })
+          apiRequest
+            .get(`/project-summery?page=1`)
+            .then(res => {
+              if (setListData) {
+                setListData(res?.data)
+              }
+              enqueueSnackbar('Created Successfully!', { variant: 'success' })
 
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+              setTimeout(() => {
+                setActiveStep(6)
+                setPreload(false)
 
-          setTimeout(() => {
-            setActiveStep(6)
-            setPreload(false)
-
-            // setListData(res)
-          }, 1000)
+                // setListData(res)
+              }, 1000)
+            })
+            .catch(error => {
+              setPreload(false)
+              setErrorMessage(error?.response?.data?.errors)
+              enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
+            })
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message | 'Something went wrong!', { variant: 'error' })
         })
     }
   }
