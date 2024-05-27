@@ -48,3 +48,30 @@ export const transcriptMeetingLinkAddButtonSx = {
     background: '#7e22ce'
   }
 }
+
+export const scopeOfWorkListSx = {
+  '& .sow-list-item': {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '12px',
+    fontWeight: 600,
+    color: '#777778',
+    '& .sow-list-item-type': {
+      '& .item-type-common': {
+        padding: '5px 20px',
+        borderRadius: '15px',
+
+        '&.item-type-hive': {
+          background: '#903fe8',
+          color: '#fff'
+        },
+        '&.item-type-sow': {
+          background: '#215a6c',
+          color: '#fff'
+        }
+      }
+    },
+    '& .sow-list-item-check': { mx: 2 },
+    '& .sow-list-item-title': { lineHeight: 'normal' }
+  }
+}

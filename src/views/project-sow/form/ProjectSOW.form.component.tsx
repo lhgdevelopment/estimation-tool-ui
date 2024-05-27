@@ -40,6 +40,7 @@ import apiRequest from 'src/@core/utils/axios-config'
 import { getShortStringNumber } from 'src/@core/utils/utils'
 import {
   TProjectSOWFormComponent,
+  scopeOfWorkListSx,
   transcriptMeetingLinkAddButtonSx,
   transcriptSectionTitleSx
 } from '../ProjectSOW.decorator'
@@ -111,6 +112,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [overviewText, setOverviewText] = useState<any>('')
   const [scopeTextID, setScopeTextID] = useState<any>(null)
   const [scopeText, setScopeText] = useState<any>('')
+  const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
+  const [additionalServiceData, setAdditionalServiceData] = useState<any>([])
 
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [projectTypeList, setProjectTypeList] = useState<any>([])
@@ -402,11 +405,31 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .then(res => {
           if (res?.data && type == 'NEXT') {
             apiRequest
-              .post('/scope-of-work', { problemGoalID })
+              .get(`/scope-of-work?problemGoalId=${problemGoalID}`)
               .then(res2 => {
                 enqueueSnackbar('Created Successfully!', { variant: 'success' })
-                setScopeTextID(res2?.data?.id)
-                setScopeText(res2?.data?.scopeText)
+                console.log(res2?.data)
+
+                if (res2?.data?.['scopeOfWorks'].length) {
+                  //setScopeTextID(res2?.data?.id)
+                  setScopeOfWorkData(res2?.data?.['scopeOfWorks'])
+                  // setAdditionalServiceData(res2?.['additionalServices'])
+                } else {
+                  apiRequest
+                    .post(`/scope-of-work`, { problemGoalID })
+                    .then(res3 => {
+                      enqueueSnackbar('Created Successfully!', { variant: 'success' })
+                      setScopeOfWorkData(res3?.data)
+                    })
+                    .catch(error => {
+                      setPreload(false)
+                      setErrorMessage(error?.response?.data?.errors)
+                      enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                    })
+                }
+
+                console.log(newActiveStep)
+
                 setTimeout(() => {
                   if (type == 'NEXT') {
                     setActiveStep(newActiveStep)
@@ -558,12 +581,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         )
         getEnableStep = 3
       }
-
-      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id']) {
-        setScopeTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id'])
-        setScopeText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText'])
-        getEnableStep = 4
-      }
+      getEnableStep = 4
+      // if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id']) {
+      //   setScopeTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id'])
+      //   setScopeText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText'])
+      //   getEnableStep = 4
+      // }
 
       if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['id']) {
         setDeliverablesTextID(
@@ -769,6 +792,28 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
     }
   }
+
+  function serviceGroupByProjectTypeId(data: any) {
+    const grouped = data.reduce((acc: { [key: number]: any }, item: any) => {
+      const { projectTypeId, project_type } = item
+
+      if (!acc[projectTypeId]) {
+        acc[projectTypeId] = {
+          projectTypeName: project_type.name,
+          projectTypeId: projectTypeId,
+          services: []
+        }
+      }
+
+      acc[projectTypeId].services.push(item)
+
+      return acc
+    }, {})
+
+    return Object.values(grouped)
+  }
+
+  console.log(serviceGroupByProjectTypeId(serviceList))
 
   useEffect(() => {
     onClear()
@@ -1116,61 +1161,68 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
               {activeStep == 4 && (
                 <Box>
-                  {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Scope of Work</span>
-                        <Box
-                          sx={{
-                            position: 'relative'
-                          }}
-                        >
-                          <MarkdownEditor modelValue={scopeText} onChange={setScopeText} />
-                        </Box>
-                        {!!errorMessage?.['scopeText'] &&
-                          errorMessage?.['scopeText']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
+                  {/* scopeOfWorkData */}
+
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 5,
+                      mb: 5,
+                      overflow: 'hidden',
+                      overflowY: 'auto',
+                      height: '300px',
+                      border: '1px solid #ecedee',
+                      p: 3
+                    }}
+                  >
+                    <Box sx={scopeOfWorkListSx}>
+                      {scopeOfWorkData?.map((scopeOfWork: any, index: number) => {
+                        return (
+                          <Box className={'sow-list-item'} key={index}>
+                            <Box className={'sow-list-item-type'}>
+                              {scopeOfWork?.['serviceScopeId'] ? (
+                                <Box className={'item-type-common item-type-hive'}>HIVE</Box>
+                              ) : (
+                                <Box className={'item-type-common item-type-sow'}>SOW</Box>
+                              )}
+                            </Box>
+                            <Box className={'sow-list-item-check'}>
+                              <Checkbox value={scopeOfWork?.['id']} />
+                            </Box>
+                            <Box className={'sow-list-item-title'}>{scopeOfWork?.['title']}</Box>
+                          </Box>
+                        )
+                      })}
+                      {/* additionalServiceData */}
                     </Box>
-                  </Box> */}
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Grid container spacing={2} justifyContent='center' alignItems='center'>
-                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
-                        {serviceTreeList(serviceDeliverableLeftList, serviceDeliverablesChecked)}
-                      </Grid>
-                      <Grid sx={{ width: '100px' }} item>
-                        <Grid container direction='column' alignItems='center'>
-                          <Button
-                            sx={{ my: 0.5 }}
-                            variant='outlined'
-                            size='small'
-                            onClick={handleCheckedLeftToRight}
-                            disabled={serviceDeliverablesChecked.length === 0}
-                            aria-label='move selected right'
-                          >
-                            &gt;
-                          </Button>
-                          <Button
-                            sx={{ my: 0.5 }}
-                            variant='outlined'
-                            size='small'
-                            onClick={handleCheckedRightToLeft}
-                            disabled={serviceDeliverablesChecked.length === 0}
-                            aria-label='move selected left'
-                          >
-                            &lt;
-                          </Button>
-                        </Grid>
-                      </Grid>
-                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
-                        {serviceTreeList(serviceDeliverableRightList, serviceDeliverablesChecked)}
-                      </Grid>
-                    </Grid>
+                  </Box>
+                  <Box>
+                    <Box sx={{ fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }}>Add Services</Box>
+                    <Box sx={{ py: 0, px: 5 }}>
+                      {serviceGroupByProjectTypeId(serviceList).map((projectType: any, index: number) => (
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, fontWeight: '600' }} key={index}>
+                          <Box sx={{ mr: 2, color: '#777' }}>{projectType?.projectTypeName}</Box>
+                          <Box>
+                            {projectType?.services?.map((service: any) => (
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  p: '5px 20px',
+                                  borderRadius: '15px',
+                                  fontSize: '14px',
+                                  lineHeight: 'normal',
+                                  background: '#afaeb3',
+                                  color: '#fff'
+                                }}
+                                key={index}
+                              >
+                                {service.name}
+                              </Box>
+                            ))}
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
                   </Box>
                 </Box>
               )}
