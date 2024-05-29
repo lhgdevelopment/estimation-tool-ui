@@ -1,4 +1,5 @@
 import AddIcon from '@material-ui/icons/Add'
+import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
@@ -113,6 +114,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [scopeTextID, setScopeTextID] = useState<any>(null)
   const [scopeText, setScopeText] = useState<any>('')
   const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
+  const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
   const [additionalServiceData, setAdditionalServiceData] = useState<any>([])
 
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
@@ -410,16 +412,19 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 enqueueSnackbar('Created Successfully!', { variant: 'success' })
                 console.log(res2?.data)
 
-                if (res2?.data?.['scopeOfWorks'].length) {
-                  //setScopeTextID(res2?.data?.id)
-                  setScopeOfWorkData(res2?.data?.['scopeOfWorks'])
-                  // setAdditionalServiceData(res2?.['additionalServices'])
+                if (res2?.data?.scopeOfWorks.length) {
+                  setScopeOfWorkData(res2?.data?.scopeOfWorks)
+                  setSelectedScopeOfWorkData(res2?.data?.scopeOfWorks?.map((scopeOfWork: any) => scopeOfWork?.id))
+                  setAdditionalServiceData(
+                    res2?.data?.additionalServices?.map((additionalService: any) => additionalService?.id)
+                  )
                 } else {
                   apiRequest
                     .post(`/scope-of-work`, { problemGoalID })
                     .then(res3 => {
                       enqueueSnackbar('Created Successfully!', { variant: 'success' })
                       setScopeOfWorkData(res3?.data)
+                      setSelectedScopeOfWorkData(res2?.data?.map((scopeOfWork: any) => scopeOfWork?.id))
                     })
                     .catch(error => {
                       setPreload(false)
@@ -458,7 +463,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
     if (activeStep === 4) {
       apiRequest
-        .post(`/scope-of-work/${scopeTextID}`, { scopeText })
+        .post(`/scope-of-work-select/`, {
+          problemGoalId: problemGoalID,
+          scopeOfWorkIds: [...selectedScopeOfWorkData],
+          serviceIds: [...additionalServiceData]
+        })
         .then(res => {
           if (res?.data && type == 'NEXT') {
             apiRequest
@@ -529,6 +538,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setActiveStep(step)
   }
 
+  const handleScopeOfWorkCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked, value } = e.target
+    setSelectedScopeOfWorkData((prevState: any) => {
+      if (checked) {
+        return [...prevState, Number(value)]
+      } else {
+        return prevState.filter((item: any) => item !== Number(value))
+      }
+    })
+  }
+  const handleAdditionalServiceSelection = (id: any) => {
+    setAdditionalServiceData((prevState: any) => {
+      if (!prevState?.includes(id)) {
+        return [...prevState, Number(id)]
+      } else {
+        return prevState.filter((item: any) => item !== Number(id))
+      }
+    })
+    console.log(additionalServiceData)
+  }
   const getDetails = (id: string | null | undefined) => {
     if (!id) return
     let getEnableStep = 0
@@ -536,22 +565,20 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setPreload(true)
     apiRequest.get(`/project-summery/${id}`).then((res: any) => {
       const transcriptId = res?.data?.id || ''
-      const transcriptText = res?.data?.['meeting_transcript']?.['transcriptText'] || ''
-      const serviceId = res?.data?.['meeting_transcript']?.['serviceId'] || ''
-      const projectName = res?.data?.['meeting_transcript']?.['projectName'] || ''
-      const company = res?.data?.['meeting_transcript']?.['company'] || ''
-      const clientEmail = res?.data?.['meeting_transcript']?.['clientEmail'] || ''
-      const clientPhone = res?.data?.['meeting_transcript']?.['clientPhone'] || ''
-      const clientWebsite = res?.data?.['meeting_transcript']?.['clientWebsite'] || ''
-      const meetingLinks = res?.data?.['meeting_transcript']?.['meeting_links'].map(
+      const transcriptText = res?.data?.meeting_transcript?.['transcriptText'] || ''
+      const serviceId = res?.data?.meeting_transcript?.['serviceId'] || ''
+      const projectName = res?.data?.meeting_transcript?.['projectName'] || ''
+      const company = res?.data?.meeting_transcript?.['company'] || ''
+      const clientEmail = res?.data?.meeting_transcript?.['clientEmail'] || ''
+      const clientPhone = res?.data?.meeting_transcript?.['clientPhone'] || ''
+      const clientWebsite = res?.data?.meeting_transcript?.['clientWebsite'] || ''
+      const meetingLinks = res?.data?.meeting_transcript?.['meeting_links'].map(
         (meeting_link: any) => meeting_link?.meetingLink
       ) || ['']
 
       const summaryText = res?.data?.['summaryText'] || ''
       setTranscriptMeetingLinks(
-        res?.data?.['meeting_transcript']?.['meeting_links'].map((meeting_link: any) => meeting_link?.meetingLink) || [
-          ''
-        ]
+        res?.data?.meeting_transcript?.['meeting_links'].map((meeting_link: any) => meeting_link?.meetingLink) || ['']
       )
 
       setProjectSOWFormData({
@@ -568,34 +595,34 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       setProjectSOWID(id)
       setSummaryText(res?.data?.['summaryText'])
       getEnableStep = 1
-      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['id']) {
-        setProblemGoalID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['id'])
-        setProblemGoalText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText'])
+      if (res?.data?.meeting_transcript?.problems_and_goals?.['id']) {
+        setProblemGoalID(res?.data?.meeting_transcript?.problems_and_goals?.['id'])
+        setProblemGoalText(res?.data?.meeting_transcript?.problems_and_goals?.problemGoalText)
         getEnableStep = 2
       }
 
-      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['id']) {
-        setOverviewTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['id'])
-        setOverviewText(
-          res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']
-        )
+      if (res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.['id']) {
+        setOverviewTextID(res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.['id'])
+        setOverviewText(res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.overviewText)
         getEnableStep = 3
       }
-      getEnableStep = 4
-      // if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id']) {
-      //   setScopeTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id'])
-      //   setScopeText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText'])
-      //   getEnableStep = 4
-      // }
 
-      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['id']) {
-        setDeliverablesTextID(
-          res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['id']
+      if (res?.data?.scopeOfWorksData && res?.data?.scopeOfWorksData?.scopeOfWorks?.length) {
+        setScopeOfWorkData(res?.data?.scopeOfWorksData?.scopeOfWorks)
+        setSelectedScopeOfWorkData(
+          res?.data?.scopeOfWorksData?.scopeOfWorks?.map((scopeOfWork: any) => scopeOfWork?.id)
         )
+
+        setAdditionalServiceData(
+          res?.data?.scopeOfWorksData?.additionalServices?.map((additionalService: any) => additionalService?.id)
+        )
+        getEnableStep = 4
+      }
+
+      if (res?.data?.meeting_transcript?.problems_and_goals?.scope_of_work?.deliverables?.['id']) {
+        setDeliverablesTextID(res?.data?.meeting_transcript?.problems_and_goals?.scope_of_work?.deliverables?.['id'])
         setDeliverablesText(
-          res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
-            'deliverablesText'
-          ]
+          res?.data?.meeting_transcript?.problems_and_goals?.scope_of_work?.deliverables?.['deliverablesText']
         )
         getEnableStep = 5
       }
@@ -813,7 +840,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     return Object.values(grouped)
   }
 
-  console.log(serviceGroupByProjectTypeId(serviceList))
+  // console.log(serviceGroupByProjectTypeId(serviceList))
 
   useEffect(() => {
     onClear()
@@ -1120,8 +1147,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         >
                           <MarkdownEditor modelValue={problemGoalText} onChange={setProblemGoalText} />
                         </Box>
-                        {!!errorMessage?.['problemGoalText'] &&
-                          errorMessage?.['problemGoalText']?.map((message: any, index: number) => {
+                        {!!errorMessage?.problemGoalText &&
+                          errorMessage?.problemGoalText?.map((message: any, index: number) => {
                             return (
                               <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                 {message}
@@ -1146,8 +1173,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         >
                           <MarkdownEditor modelValue={overviewText} onChange={setOverviewText} />
                         </Box>
-                        {!!errorMessage?.['overviewText'] &&
-                          errorMessage?.['overviewText']?.map((message: any, index: number) => {
+                        {!!errorMessage?.overviewText &&
+                          errorMessage?.overviewText?.map((message: any, index: number) => {
                             return (
                               <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                 {message}
@@ -1187,7 +1214,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               )}
                             </Box>
                             <Box className={'sow-list-item-check'}>
-                              <Checkbox value={scopeOfWork?.['id']} />
+                              <Checkbox
+                                onChange={handleScopeOfWorkCheckbox}
+                                value={scopeOfWork?.['id']}
+                                checked={selectedScopeOfWorkData?.includes(scopeOfWork?.['id'])}
+                              />
                             </Box>
                             <Box className={'sow-list-item-title'}>{scopeOfWork?.['title']}</Box>
                           </Box>
@@ -1199,23 +1230,46 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box>
                     <Box sx={{ fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }}>Add Services</Box>
                     <Box sx={{ py: 0, px: 5 }}>
-                      {serviceGroupByProjectTypeId(serviceList).map((projectType: any, index: number) => (
+                      {serviceGroupByProjectTypeId(serviceList)?.map((projectType: any, index: number) => (
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, fontWeight: '600' }} key={index}>
                           <Box sx={{ mr: 2, color: '#777' }}>{projectType?.projectTypeName}</Box>
                           <Box>
                             {projectType?.services?.map((service: any) => (
                               <Box
                                 sx={{
+                                  position: 'relative',
                                   display: 'flex',
-                                  p: '5px 20px',
+                                  p: '5px 25px',
                                   borderRadius: '15px',
                                   fontSize: '14px',
                                   lineHeight: 'normal',
                                   background: '#afaeb3',
-                                  color: '#fff'
+                                  color: '#fff',
+                                  cursor: 'pointer',
+                                  '&.selected': {
+                                    background: '#31A0F6'
+                                  }
                                 }}
                                 key={index}
+                                className={`${additionalServiceData?.includes(service?.id) ? 'selected' : ''}`}
+                                onClick={() => {
+                                  handleAdditionalServiceSelection(service?.id)
+                                }}
                               >
+                                {additionalServiceData.includes(service?.id) ? (
+                                  <CheckIcon
+                                    sx={{
+                                      position: 'absolute',
+                                      top: '50%',
+                                      left: '5px',
+                                      transform: 'translate(0, -50%)',
+                                      fontSize: '18px',
+                                      mr: 1
+                                    }}
+                                  />
+                                ) : (
+                                  <></>
+                                )}
                                 {service.name}
                               </Box>
                             ))}
