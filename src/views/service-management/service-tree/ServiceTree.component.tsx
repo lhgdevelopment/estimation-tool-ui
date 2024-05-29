@@ -916,8 +916,6 @@ export default function ServiceTreeComponent() {
 
     // setDefaultExpandedKeys([dragNode.key])
   }
-  console.log(serviceTreeData)
-  console.log(expendendKeys)
 
   return (
     <>
@@ -945,7 +943,7 @@ export default function ServiceTreeComponent() {
               }
             }}
           >
-            <AddIcon sx={{ fontSize: '18px' }} /> Add Service
+            <AddIcon fontSize='small' /> Add Service
           </Button>
         </Box>
         <Box>
@@ -1004,7 +1002,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={editButtonSx}
                         >
-                          <EditIcon sx={{ fontSize: '18px' }} />
+                          <EditIcon fontSize='small' />
                         </Button>
                         <Button
                           onClick={e => {
@@ -1012,7 +1010,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={deleteButtonSx}
                         >
-                          <DeleteIcon sx={{ fontSize: '18px' }} />
+                          <DeleteIcon fontSize='small' />
                         </Button>
                         <Button
                           onClick={e => {
@@ -1026,7 +1024,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={addButtonSx}
                         >
-                          <AddIcon sx={{ fontSize: '18px' }} /> Add Group
+                          <AddIcon fontSize='small' /> Add Group
                         </Button>
                       </Box>
                     </Box>
@@ -1042,7 +1040,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={editButtonSx}
                         >
-                          <EditIcon sx={{ fontSize: '18px' }} />
+                          <EditIcon fontSize='small' />
                         </Button>
                         <Button
                           onClick={e => {
@@ -1050,7 +1048,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={deleteButtonSx}
                         >
-                          <DeleteIcon sx={{ fontSize: '18px' }} />
+                          <DeleteIcon fontSize='small' />
                         </Button>
                         <Button
                           onClick={e => {
@@ -1062,7 +1060,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={addButtonSx}
                         >
-                          <AddIcon sx={{ fontSize: '18px' }} /> Add SOW
+                          <AddIcon fontSize='small' /> Add SOW
                         </Button>
                       </Box>
                     </Box>
@@ -1078,7 +1076,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={editButtonSx}
                         >
-                          <EditIcon sx={{ fontSize: '18px' }} />
+                          <EditIcon fontSize='small' />
                         </Button>
                         <Button
                           onClick={e => {
@@ -1086,7 +1084,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={deleteButtonSx}
                         >
-                          <DeleteIcon sx={{ fontSize: '18px' }} />
+                          <DeleteIcon fontSize='small' />
                         </Button>
                         <Button
                           onClick={e => {
@@ -1098,7 +1096,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={addButtonSx}
                         >
-                          <AddIcon sx={{ fontSize: '18px' }} /> Add Deliverable
+                          <AddIcon fontSize='small' /> Add Deliverable
                         </Button>
                       </Box>
                     </Box>
@@ -1114,7 +1112,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={editButtonSx}
                         >
-                          <EditIcon sx={{ fontSize: '18px' }} />
+                          <EditIcon fontSize='small' />
                         </Button>
                         <Button
                           onClick={e => {
@@ -1122,7 +1120,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={deleteButtonSx}
                         >
-                          <DeleteIcon sx={{ fontSize: '18px' }} />
+                          <DeleteIcon fontSize='small' />
                         </Button>
                         <Button
                           onClick={e => {
@@ -1138,7 +1136,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={addButtonSx}
                         >
-                          <AddIcon sx={{ fontSize: '18px' }} /> Add Task
+                          <AddIcon fontSize='small' /> Add Task
                         </Button>
                       </Box>
                     </Box>
@@ -1154,7 +1152,7 @@ export default function ServiceTreeComponent() {
                           }}
                           sx={editButtonSx}
                         >
-                          <EditIcon sx={{ fontSize: '18px' }} />
+                          <EditIcon fontSize='small' />
                         </Button>
                       </Box>
                       <Button
@@ -1163,7 +1161,7 @@ export default function ServiceTreeComponent() {
                         }}
                         sx={deleteButtonSx}
                       >
-                        <DeleteIcon sx={{ fontSize: '18px' }} />
+                        <DeleteIcon fontSize='small' />
                       </Button>
                       <Button
                         onClick={e => {
@@ -1181,7 +1179,7 @@ export default function ServiceTreeComponent() {
                         }}
                         sx={addButtonSx}
                       >
-                        <AddIcon sx={{ fontSize: '18px' }} />
+                        <AddIcon fontSize='small' />
                         Add Sub Task
                       </Button>
                     </Box>

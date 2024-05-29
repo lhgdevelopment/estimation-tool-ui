@@ -1,4 +1,5 @@
 import AddIcon from '@material-ui/icons/Add'
+import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
@@ -29,11 +30,10 @@ import {
   TextField
 } from '@mui/material'
 import { useMask } from '@react-input/mask'
-import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import { MarkdownEditor } from 'src/@core/components/markdown-editor'
 import Preloader from 'src/@core/components/preloader'
@@ -41,6 +41,7 @@ import apiRequest from 'src/@core/utils/axios-config'
 import { getShortStringNumber } from 'src/@core/utils/utils'
 import {
   TProjectSOWFormComponent,
+  scopeOfWorkListSx,
   transcriptMeetingLinkAddButtonSx,
   transcriptSectionTitleSx
 } from '../ProjectSOW.decorator'
@@ -84,7 +85,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const projectSOWDefaultData = {
     transcriptId: '',
-    projectTypeId: null,
+    serviceId: null,
     projectName: '',
     company: '',
     clientPhone: '',
@@ -100,12 +101,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     [k: number]: boolean
   }>({})
 
-  const summaryTextEditorRef = useRef<ExposeParam>()
-  const problemGoalTextEditorRef = useRef<ExposeParam>()
-  const overviewTextEditorRef = useRef<ExposeParam>()
-  const scopeTextEditorRef = useRef<ExposeParam>()
-  const deliverablesTextEditorRef = useRef<ExposeParam>()
-
   const [projectSOWFormData, setProjectSOWFormData] = useState(projectSOWDefaultData)
 
   const [preload, setPreload] = useState<boolean>(false)
@@ -118,9 +113,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [overviewText, setOverviewText] = useState<any>('')
   const [scopeTextID, setScopeTextID] = useState<any>(null)
   const [scopeText, setScopeText] = useState<any>('')
+  const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
+  const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
+  const [additionalServiceData, setAdditionalServiceData] = useState<any>([])
 
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [projectTypeList, setProjectTypeList] = useState<any>([])
+  const [serviceList, setServiceList] = useState<any>([])
   const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
 
   type TServiceDeliverablesForm = {
@@ -288,7 +287,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           .catch(error => {
             setPreload(false)
             setErrorMessage(error?.response?.data?.errors)
-            enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+            enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
           })
       } else {
         apiRequest
@@ -325,7 +324,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           .catch(error => {
             setPreload(false)
             setErrorMessage(error?.response?.data?.errors)
-            enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+            enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
           })
       }
     }
@@ -334,19 +333,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .put(`/project-summery/${projectSOWID}`, { summaryText })
         .then(res => {
           if (res?.data?.meeting_transcript && type == 'NEXT') {
-            apiRequest.post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id }).then(res2 => {
-              enqueueSnackbar('Created Successfully!', { variant: 'success' })
+            apiRequest
+              .post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id })
+              .then(res2 => {
+                enqueueSnackbar('Created Successfully!', { variant: 'success' })
 
-              setProblemGoalID(res2?.data?.id)
-              setProblemGoalText(res2?.data?.problemGoalText)
-              setTimeout(() => {
-                setActiveStep(newActiveStep)
-                if (enabledStep < newActiveStep) {
-                  setEnabledStep(newActiveStep)
-                }
+                setProblemGoalID(res2?.data?.id)
+                setProblemGoalText(res2?.data?.problemGoalText)
+                setTimeout(() => {
+                  setActiveStep(newActiveStep)
+                  if (enabledStep < newActiveStep) {
+                    setEnabledStep(newActiveStep)
+                  }
+                  setPreload(false)
+                }, 1000)
+              })
+              .catch(error => {
                 setPreload(false)
-              }, 1000)
-            })
+                setErrorMessage(error?.response?.data?.errors)
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+              })
           } else {
             setPreload(false)
           }
@@ -354,7 +360,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 2) {
@@ -362,20 +368,29 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .post(`/problems-and-goals/${problemGoalID}`, { problemGoalText })
         .then(res => {
           if (res?.data && type == 'NEXT') {
-            apiRequest.post('/project-overview', { problemGoalID }).then(res2 => {
-              enqueueSnackbar('Created Successfully!', { variant: 'success' })
-              setOverviewTextID(res2?.data?.id)
-              setOverviewText(res2?.data?.overviewText)
-              setTimeout(() => {
-                if (type == 'NEXT') {
-                  setActiveStep(newActiveStep)
-                  if (enabledStep < newActiveStep) {
-                    setEnabledStep(newActiveStep)
+            apiRequest
+              .post('/project-overview', {
+                problemGoalID
+              })
+              .then(res2 => {
+                enqueueSnackbar('Created Successfully!', { variant: 'success' })
+                setOverviewTextID(res2?.data?.id)
+                setOverviewText(res2?.data?.overviewText)
+                setTimeout(() => {
+                  if (type == 'NEXT') {
+                    setActiveStep(newActiveStep)
+                    if (enabledStep < newActiveStep) {
+                      setEnabledStep(newActiveStep)
+                    }
                   }
-                }
+                  setPreload(false)
+                }, 1000)
+              })
+              .catch(error => {
                 setPreload(false)
-              }, 1000)
-            })
+                setErrorMessage(error?.response?.data?.errors)
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+              })
           } else {
             setPreload(false)
           }
@@ -383,7 +398,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 3) {
@@ -391,20 +406,50 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .post(`/project-overview/${overviewTextID}`, { overviewText })
         .then(res => {
           if (res?.data && type == 'NEXT') {
-            apiRequest.post('/scope-of-work', { problemGoalID }).then(res2 => {
-              enqueueSnackbar('Created Successfully!', { variant: 'success' })
-              setScopeTextID(res2?.data?.id)
-              setScopeText(res2?.data?.scopeText)
-              setTimeout(() => {
-                if (type == 'NEXT') {
-                  setActiveStep(newActiveStep)
-                  if (enabledStep < newActiveStep) {
-                    setEnabledStep(newActiveStep)
-                  }
+            apiRequest
+              .get(`/scope-of-work?problemGoalId=${problemGoalID}`)
+              .then(res2 => {
+                enqueueSnackbar('Created Successfully!', { variant: 'success' })
+                console.log(res2?.data)
+
+                if (res2?.data?.scopeOfWorks.length) {
+                  setScopeOfWorkData(res2?.data?.scopeOfWorks)
+                  setSelectedScopeOfWorkData(res2?.data?.scopeOfWorks?.map((scopeOfWork: any) => scopeOfWork?.id))
+                  setAdditionalServiceData(
+                    res2?.data?.additionalServices?.map((additionalService: any) => additionalService?.id)
+                  )
+                } else {
+                  apiRequest
+                    .post(`/scope-of-work`, { problemGoalID })
+                    .then(res3 => {
+                      enqueueSnackbar('Created Successfully!', { variant: 'success' })
+                      setScopeOfWorkData(res3?.data)
+                      setSelectedScopeOfWorkData(res2?.data?.map((scopeOfWork: any) => scopeOfWork?.id))
+                    })
+                    .catch(error => {
+                      setPreload(false)
+                      setErrorMessage(error?.response?.data?.errors)
+                      enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                    })
                 }
+
+                console.log(newActiveStep)
+
+                setTimeout(() => {
+                  if (type == 'NEXT') {
+                    setActiveStep(newActiveStep)
+                    if (enabledStep < newActiveStep) {
+                      setEnabledStep(newActiveStep)
+                    }
+                  }
+                  setPreload(false)
+                }, 1000)
+              })
+              .catch(error => {
                 setPreload(false)
-              }, 1000)
-            })
+                setErrorMessage(error?.response?.data?.errors)
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+              })
           } else {
             setPreload(false)
           }
@@ -412,29 +457,40 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
 
     if (activeStep === 4) {
       apiRequest
-        .post(`/scope-of-work/${scopeTextID}`, { scopeText })
+        .post(`/scope-of-work-select/`, {
+          problemGoalId: problemGoalID,
+          scopeOfWorkIds: [...selectedScopeOfWorkData],
+          serviceIds: [...additionalServiceData]
+        })
         .then(res => {
           if (res?.data && type == 'NEXT') {
-            apiRequest.post('/deliverables', { scopeOfWorkId: scopeTextID }).then(res2 => {
-              enqueueSnackbar('Created Successfully!', { variant: 'success' })
-              setDeliverablesTextID(res2?.data?.id)
-              setDeliverablesText(res2?.data?.deliverablesText)
-              setTimeout(() => {
-                if (type == 'NEXT') {
-                  setActiveStep(newActiveStep)
-                  if (enabledStep < newActiveStep) {
-                    setEnabledStep(newActiveStep)
+            apiRequest
+              .post('/deliverables', { scopeOfWorkId: scopeTextID })
+              .then(res2 => {
+                enqueueSnackbar('Created Successfully!', { variant: 'success' })
+                setDeliverablesTextID(res2?.data?.id)
+                setDeliverablesText(res2?.data?.deliverablesText)
+                setTimeout(() => {
+                  if (type == 'NEXT') {
+                    setActiveStep(newActiveStep)
+                    if (enabledStep < newActiveStep) {
+                      setEnabledStep(newActiveStep)
+                    }
                   }
-                }
+                  setPreload(false)
+                }, 1000)
+              })
+              .catch(error => {
                 setPreload(false)
-              }, 1000)
-            })
+                setErrorMessage(error?.response?.data?.errors)
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+              })
           } else {
             setPreload(false)
           }
@@ -442,32 +498,38 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 5) {
       apiRequest
         .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
         .then(res => {
-          apiRequest.get(`/project-summery?page=1`).then(res => {
-            if (setListData) {
-              setListData(res?.data)
-            }
-          })
+          apiRequest
+            .get(`/project-summery?page=1`)
+            .then(res => {
+              if (setListData) {
+                setListData(res?.data)
+              }
+              enqueueSnackbar('Created Successfully!', { variant: 'success' })
 
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+              setTimeout(() => {
+                setActiveStep(6)
+                setPreload(false)
 
-          setTimeout(() => {
-            setActiveStep(6)
-            setPreload(false)
-
-            // setListData(res)
-          }, 1000)
+                // setListData(res)
+              }, 1000)
+            })
+            .catch(error => {
+              setPreload(false)
+              setErrorMessage(error?.response?.data?.errors)
+              enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+            })
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -476,6 +538,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setActiveStep(step)
   }
 
+  const handleScopeOfWorkCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked, value } = e.target
+    setSelectedScopeOfWorkData((prevState: any) => {
+      if (checked) {
+        return [...prevState, Number(value)]
+      } else {
+        return prevState.filter((item: any) => item !== Number(value))
+      }
+    })
+  }
+  const handleAdditionalServiceSelection = (id: any) => {
+    setAdditionalServiceData((prevState: any) => {
+      if (!prevState?.includes(id)) {
+        return [...prevState, Number(id)]
+      } else {
+        return prevState.filter((item: any) => item !== Number(id))
+      }
+    })
+    console.log(additionalServiceData)
+  }
   const getDetails = (id: string | null | undefined) => {
     if (!id) return
     let getEnableStep = 0
@@ -483,27 +565,25 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setPreload(true)
     apiRequest.get(`/project-summery/${id}`).then((res: any) => {
       const transcriptId = res?.data?.id || ''
-      const transcriptText = res?.data?.['meeting_transcript']?.['transcriptText'] || ''
-      const projectTypeId = res?.data?.['meeting_transcript']?.['projectTypeId'] || ''
-      const projectName = res?.data?.['meeting_transcript']?.['projectName'] || ''
-      const company = res?.data?.['meeting_transcript']?.['company'] || ''
-      const clientEmail = res?.data?.['meeting_transcript']?.['clientEmail'] || ''
-      const clientPhone = res?.data?.['meeting_transcript']?.['clientPhone'] || ''
-      const clientWebsite = res?.data?.['meeting_transcript']?.['clientWebsite'] || ''
-      const meetingLinks = res?.data?.['meeting_transcript']?.['meeting_links'].map(
+      const transcriptText = res?.data?.meeting_transcript?.['transcriptText'] || ''
+      const serviceId = res?.data?.meeting_transcript?.['serviceId'] || ''
+      const projectName = res?.data?.meeting_transcript?.['projectName'] || ''
+      const company = res?.data?.meeting_transcript?.['company'] || ''
+      const clientEmail = res?.data?.meeting_transcript?.['clientEmail'] || ''
+      const clientPhone = res?.data?.meeting_transcript?.['clientPhone'] || ''
+      const clientWebsite = res?.data?.meeting_transcript?.['clientWebsite'] || ''
+      const meetingLinks = res?.data?.meeting_transcript?.['meeting_links'].map(
         (meeting_link: any) => meeting_link?.meetingLink
       ) || ['']
 
       const summaryText = res?.data?.['summaryText'] || ''
       setTranscriptMeetingLinks(
-        res?.data?.['meeting_transcript']?.['meeting_links'].map((meeting_link: any) => meeting_link?.meetingLink) || [
-          ''
-        ]
+        res?.data?.meeting_transcript?.['meeting_links'].map((meeting_link: any) => meeting_link?.meetingLink) || ['']
       )
 
       setProjectSOWFormData({
         transcriptId,
-        projectTypeId,
+        serviceId,
         projectName,
         company,
         clientEmail,
@@ -515,34 +595,34 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       setProjectSOWID(id)
       setSummaryText(res?.data?.['summaryText'])
       getEnableStep = 1
-      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['id']) {
-        setProblemGoalID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['id'])
-        setProblemGoalText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText'])
+      if (res?.data?.meeting_transcript?.problems_and_goals?.['id']) {
+        setProblemGoalID(res?.data?.meeting_transcript?.problems_and_goals?.['id'])
+        setProblemGoalText(res?.data?.meeting_transcript?.problems_and_goals?.problemGoalText)
         getEnableStep = 2
       }
 
-      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['id']) {
-        setOverviewTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['id'])
-        setOverviewText(
-          res?.data?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.['overviewText']
-        )
+      if (res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.['id']) {
+        setOverviewTextID(res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.['id'])
+        setOverviewText(res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.overviewText)
         getEnableStep = 3
       }
 
-      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id']) {
-        setScopeTextID(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['id'])
-        setScopeText(res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText'])
+      if (res?.data?.scopeOfWorksData && res?.data?.scopeOfWorksData?.scopeOfWorks?.length) {
+        setScopeOfWorkData(res?.data?.scopeOfWorksData?.scopeOfWorks)
+        setSelectedScopeOfWorkData(
+          res?.data?.scopeOfWorksData?.scopeOfWorks?.map((scopeOfWork: any) => scopeOfWork?.id)
+        )
+
+        setAdditionalServiceData(
+          res?.data?.scopeOfWorksData?.additionalServices?.map((additionalService: any) => additionalService?.id)
+        )
         getEnableStep = 4
       }
 
-      if (res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['id']) {
-        setDeliverablesTextID(
-          res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.['id']
-        )
+      if (res?.data?.meeting_transcript?.problems_and_goals?.scope_of_work?.deliverables?.['id']) {
+        setDeliverablesTextID(res?.data?.meeting_transcript?.problems_and_goals?.scope_of_work?.deliverables?.['id'])
         setDeliverablesText(
-          res?.data?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['deliverables']?.[
-            'deliverablesText'
-          ]
+          res?.data?.meeting_transcript?.problems_and_goals?.scope_of_work?.deliverables?.['deliverablesText']
         )
         getEnableStep = 5
       }
@@ -554,8 +634,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const getServiceTree = async () => {
     await apiRequest
 
-      // .get(`/service-tree?per_page=500&projectTypeId=${projectSOWFormData.projectTypeId}`)
-      .get(`/service-tree?per_page=500&projectTypeId=${4}`)
+      // .get(`/service-tree?per_page=500&serviceId=${projectSOWFormData.serviceId}`)
+      .get(`/service-tree?per_page=500&serviceId=${4}`)
       .then(res => {
         setServiceTreeData(res?.data?.services)
         setServiceDeliverableLeftList(res?.data?.services?.[0]?.groups)
@@ -614,11 +694,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
   }
 
-  const getProjectTypeList = async () => {
+  // const getProjectTypeList = async () => {
+  //   await apiRequest
+  //     .get(`/project-type?per_page=1000`)
+  //     .then(res => {
+  //       setProjectTypeList(res?.data)
+  //     })
+  //     .catch(error => {
+  //       enqueueSnackbar(error?.message, { variant: 'error' })
+  //     })
+  // }
+
+  const getServiceList = async () => {
     await apiRequest
-      .get(`/project-type?per_page=1000`)
+      .get(`/services`)
       .then(res => {
-        setProjectTypeList(res?.data)
+        setServiceList(res?.data)
       })
       .catch(error => {
         enqueueSnackbar(error?.message, { variant: 'error' })
@@ -714,10 +805,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   )
 
   const projectNameGenerate = () => {
-    const projectType = projectTypeList?.filter(
-      (projectType: any) => projectType?.id === projectSOWFormData.projectTypeId
-    )?.[0]
-    console.log(projectType?.name)
+    const projectType = serviceList?.filter((service: any) => service?.id === projectSOWFormData.serviceId)?.[0]?.[
+      'project_type'
+    ]
+
     const projectName = `${projectType?.projectTypePrefix ? projectType?.projectTypePrefix : ''} ${
       projectSOWFormData.company ?? projectSOWFormData.company
     } ${projectType?.name ? projectType?.name : ''}`
@@ -729,11 +820,33 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     }
   }
 
+  function serviceGroupByProjectTypeId(data: any) {
+    const grouped = data.reduce((acc: { [key: number]: any }, item: any) => {
+      const { projectTypeId, project_type } = item
+
+      if (!acc[projectTypeId]) {
+        acc[projectTypeId] = {
+          projectTypeName: project_type.name,
+          projectTypeId: projectTypeId,
+          services: []
+        }
+      }
+
+      acc[projectTypeId].services.push(item)
+
+      return acc
+    }, {})
+
+    return Object.values(grouped)
+  }
+
+  // console.log(serviceGroupByProjectTypeId(serviceList))
+
   useEffect(() => {
     onClear()
     setEnabledStep(0)
     setActiveStep(0)
-    getProjectTypeList()
+    getServiceList()
   }, [])
 
   useEffect(() => {
@@ -760,7 +873,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   useEffect(() => {
     projectNameGenerate()
-  }, [projectSOWFormData.company, projectSOWFormData.projectTypeId])
+  }, [projectSOWFormData.company, projectSOWFormData.serviceId])
 
   return (
     <Box>
@@ -906,10 +1019,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                       <Box sx={{ width: '50%' }}>
                         <Dropdown
-                          label={'Project Type'}
-                          url={'project-type'}
-                          name='projectTypeId'
-                          value={projectSOWFormData.projectTypeId}
+                          label={'Services'}
+                          url={'services'}
+                          name='serviceId'
+                          value={projectSOWFormData.serviceId}
                           onChange={handleSelectChange}
                         />
                       </Box>
@@ -1034,8 +1147,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         >
                           <MarkdownEditor modelValue={problemGoalText} onChange={setProblemGoalText} />
                         </Box>
-                        {!!errorMessage?.['problemGoalText'] &&
-                          errorMessage?.['problemGoalText']?.map((message: any, index: number) => {
+                        {!!errorMessage?.problemGoalText &&
+                          errorMessage?.problemGoalText?.map((message: any, index: number) => {
                             return (
                               <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                 {message}
@@ -1060,8 +1173,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         >
                           <MarkdownEditor modelValue={overviewText} onChange={setOverviewText} />
                         </Box>
-                        {!!errorMessage?.['overviewText'] &&
-                          errorMessage?.['overviewText']?.map((message: any, index: number) => {
+                        {!!errorMessage?.overviewText &&
+                          errorMessage?.overviewText?.map((message: any, index: number) => {
                             return (
                               <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                 {message}
@@ -1075,61 +1188,95 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
               {activeStep == 4 && (
                 <Box>
-                  {/* <Box sx={{ display: 'flex', flexDirection: 'column', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Scope of Work</span>
-                        <Box
-                          sx={{
-                            position: 'relative'
-                          }}
-                        >
-                          <MarkdownEditor modelValue={scopeText} onChange={setScopeText} />
-                        </Box>
-                        {!!errorMessage?.['scopeText'] &&
-                          errorMessage?.['scopeText']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
+                  {/* scopeOfWorkData */}
+
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 5,
+                      mb: 5,
+                      overflow: 'hidden',
+                      overflowY: 'auto',
+                      height: '300px',
+                      border: '1px solid #ecedee',
+                      p: 3
+                    }}
+                  >
+                    <Box sx={scopeOfWorkListSx}>
+                      {scopeOfWorkData?.map((scopeOfWork: any, index: number) => {
+                        return (
+                          <Box className={'sow-list-item'} key={index}>
+                            <Box className={'sow-list-item-type'}>
+                              {scopeOfWork?.['serviceScopeId'] ? (
+                                <Box className={'item-type-common item-type-hive'}>HIVE</Box>
+                              ) : (
+                                <Box className={'item-type-common item-type-sow'}>SOW</Box>
+                              )}
+                            </Box>
+                            <Box className={'sow-list-item-check'}>
+                              <Checkbox
+                                onChange={handleScopeOfWorkCheckbox}
+                                value={scopeOfWork?.['id']}
+                                checked={selectedScopeOfWorkData?.includes(scopeOfWork?.['id'])}
+                              />
+                            </Box>
+                            <Box className={'sow-list-item-title'}>{scopeOfWork?.['title']}</Box>
+                          </Box>
+                        )
+                      })}
+                      {/* additionalServiceData */}
                     </Box>
-                  </Box> */}
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Grid container spacing={2} justifyContent='center' alignItems='center'>
-                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
-                        {serviceTreeList(serviceDeliverableLeftList, serviceDeliverablesChecked)}
-                      </Grid>
-                      <Grid sx={{ width: '100px' }} item>
-                        <Grid container direction='column' alignItems='center'>
-                          <Button
-                            sx={{ my: 0.5 }}
-                            variant='outlined'
-                            size='small'
-                            onClick={handleCheckedLeftToRight}
-                            disabled={serviceDeliverablesChecked.length === 0}
-                            aria-label='move selected right'
-                          >
-                            &gt;
-                          </Button>
-                          <Button
-                            sx={{ my: 0.5 }}
-                            variant='outlined'
-                            size='small'
-                            onClick={handleCheckedRightToLeft}
-                            disabled={serviceDeliverablesChecked.length === 0}
-                            aria-label='move selected left'
-                          >
-                            &lt;
-                          </Button>
-                        </Grid>
-                      </Grid>
-                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
-                        {serviceTreeList(serviceDeliverableRightList, serviceDeliverablesChecked)}
-                      </Grid>
-                    </Grid>
+                  </Box>
+                  <Box>
+                    <Box sx={{ fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }}>Add Services</Box>
+                    <Box sx={{ py: 0, px: 5 }}>
+                      {serviceGroupByProjectTypeId(serviceList)?.map((projectType: any, index: number) => (
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, fontWeight: '600' }} key={index}>
+                          <Box sx={{ mr: 2, color: '#777' }}>{projectType?.projectTypeName}</Box>
+                          <Box>
+                            {projectType?.services?.map((service: any) => (
+                              <Box
+                                sx={{
+                                  position: 'relative',
+                                  display: 'flex',
+                                  p: '5px 25px',
+                                  borderRadius: '15px',
+                                  fontSize: '14px',
+                                  lineHeight: 'normal',
+                                  background: '#afaeb3',
+                                  color: '#fff',
+                                  cursor: 'pointer',
+                                  '&.selected': {
+                                    background: '#31A0F6'
+                                  }
+                                }}
+                                key={index}
+                                className={`${additionalServiceData?.includes(service?.id) ? 'selected' : ''}`}
+                                onClick={() => {
+                                  handleAdditionalServiceSelection(service?.id)
+                                }}
+                              >
+                                {additionalServiceData.includes(service?.id) ? (
+                                  <CheckIcon
+                                    sx={{
+                                      position: 'absolute',
+                                      top: '50%',
+                                      left: '5px',
+                                      transform: 'translate(0, -50%)',
+                                      fontSize: '18px',
+                                      mr: 1
+                                    }}
+                                  />
+                                ) : (
+                                  <></>
+                                )}
+                                {service.name}
+                              </Box>
+                            ))}
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
                   </Box>
                 </Box>
               )}
