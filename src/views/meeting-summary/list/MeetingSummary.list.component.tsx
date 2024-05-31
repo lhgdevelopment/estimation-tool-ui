@@ -85,7 +85,7 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
     setStatusPreload(data?.['id'])
     data.is_private = !data.is_private
     data.pushToClickUp = false
-    data.summaryText = data?.['meetingSummaryText']
+    data.summaryText = data?.['meetingSummeryText']
     apiRequest
       .put(`/meeting-summery/${data?.['id']}`, data)
       .then(res => {

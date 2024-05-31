@@ -111,9 +111,9 @@ export default function MeetingSummaryDetailsComponent() {
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={sowBodySx}>
-                  <MdPreview modelValue={detailsData?.['meetingSummaryText']} />
+                  <MdPreview modelValue={detailsData?.['meetingSummeryText']} />
                   <Box className='flex' sx={{ mt: 5 }}>
-                    <CopyToClipboard textToCopy={detailsData?.['meetingSummaryText']} />
+                    <CopyToClipboard textToCopy={detailsData?.['meetingSummeryText']} />
                     <Link href={`/meeting-summary/edit/${meetingId}`} passHref>
                       <Box
                         sx={{ cursor: 'pointer' }}

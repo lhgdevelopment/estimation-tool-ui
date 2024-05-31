@@ -2,7 +2,7 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box } from '@mui/material'
+import { Box, Checkbox, TextField } from '@mui/material'
 import { ExposeParam, MdEditor } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
@@ -124,7 +124,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
         meetingName: res?.data?.['meetingName'],
         meetingType: res?.data?.['meetingType'],
         transcriptText: res?.data?.['transcriptText'],
-        summaryText: res?.data?.['meetingSummaryText'],
+        summaryText: res?.data?.['meetingSummeryText'],
         clickupLink: res?.data?.['clickupLink'],
         tldvLink: res?.data?.['tldvLink'],
         pushToClickUp: false,
@@ -152,94 +152,80 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Name</span>
-                <input
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['meetingName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`} /* placeholder='Enter meeting name' */
-                  name='meetingName'
-                  value={formData.meetingName}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['meetingName'] &&
-                  errorMessage?.['meetingName']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Meeting Name'}
+                name='meetingName'
+                value={formData.meetingName}
+                onChange={handleTextChange}
+                error={errorMessage?.['meetingName']}
+                fullWidth
+              />
+              {!!errorMessage?.['meetingName'] &&
+                errorMessage?.['meetingName']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Type</span>
-
-                <Dropdown
-                  url='meeting-type'
-                  name='meetingType'
-                  value={formData.meetingType}
-                  onChange={handleSelectChange}
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['meetingType'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  placeholder=''
-                />
-                {!!errorMessage?.['meetingType'] &&
-                  errorMessage?.['meetingType']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <Dropdown
+                label={'Meeting Type'}
+                url='meeting-type'
+                name='meetingType'
+                value={formData.meetingType}
+                onChange={handleSelectChange}
+                placeholder=''
+                error={!!errorMessage?.['meetingType']}
+              />
+              {!!errorMessage?.['meetingType'] &&
+                errorMessage?.['meetingType']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
           </Box>
 
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Clickup Link</span>
-                <input
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['clickupLink'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`} /* placeholder='Enter clickup task link' */
-                  name='clickupLink'
-                  value={formData.clickupLink}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['clickupLink'] &&
-                  errorMessage?.['clickupLink']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Clickup Link'}
+                name='clickupLink'
+                value={formData.clickupLink}
+                onChange={handleTextChange}
+                error={errorMessage?.['clickupLink']}
+                fullWidth
+              />
+              {!!errorMessage?.['clickupLink'] &&
+                errorMessage?.['clickupLink']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>TLDV Link</span>
-                <input
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['tldvLink'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`} /* placeholder='Enter tldv link' */
-                  name='tldvLink'
-                  value={formData.tldvLink}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['tldvLink'] &&
-                  errorMessage?.['tldvLink']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'TLDV Link'}
+                name='tldvLink'
+                value={formData.tldvLink}
+                onChange={handleTextChange}
+                error={errorMessage?.['tldvLink']}
+                fullWidth
+              />
+              {!!errorMessage?.['tldvLink'] &&
+                errorMessage?.['tldvLink']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
           </Box>
 
@@ -248,9 +234,8 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
               <Box sx={{ width: '50%' }}>
                 <label className='block text-sm' htmlFor='pushToClickUp'>
                   <span className='text-gray-700 dark:text-gray-400 mr-2'>Push to clickup</span>
-                  <input
+                  <Checkbox
                     id='pushToClickUp'
-                    type='checkbox'
                     className='h-6 w-6 border-purple-600 text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray'
                     name='pushToClickUp'
                     checked={formData.pushToClickUp}
@@ -322,9 +307,8 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm' htmlFor='is_private'>
                 <span className='text-gray-700 dark:text-gray-400 mr-2'>Private?</span>
-                <input
+                <Checkbox
                   id='is_private'
-                  type='checkbox'
                   className='h-6 w-6 border-purple-600 text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray'
                   name='is_private'
                   checked={formData.is_private}

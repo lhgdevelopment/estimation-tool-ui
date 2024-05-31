@@ -7,10 +7,8 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import {
   Box,
-  Button,
   Checkbox,
   Chip,
-  Grid,
   IconButton,
   List,
   ListItemButton,
@@ -116,6 +114,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
   const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
   const [additionalServiceData, setAdditionalServiceData] = useState<any>([])
+  const [deliverableScopeOfWorkData, setDeliverableScopeOfWorkData] = useState<any>([])
+  const [selectedDeliverableScopeOfWorkData, setSelectedDeliverableScopeOfWorkData] = useState<any>([])
+  const [selectedDeliverableNotesData, setSelectedDeliverableNotesData] = useState<any>([])
 
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [projectTypeList, setProjectTypeList] = useState<any>([])
@@ -409,7 +410,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             apiRequest
               .get(`/scope-of-work?problemGoalId=${problemGoalID}`)
               .then(res2 => {
-                enqueueSnackbar('Created Successfully!', { variant: 'success' })
+                enqueueSnackbar('Generated Successfully!', { variant: 'success' })
                 console.log(res2?.data)
 
                 if (res2?.data?.scopeOfWorks.length) {
@@ -422,9 +423,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   apiRequest
                     .post(`/scope-of-work`, { problemGoalID })
                     .then(res3 => {
-                      enqueueSnackbar('Created Successfully!', { variant: 'success' })
+                      enqueueSnackbar('Generated Successfully!', { variant: 'success' })
                       setScopeOfWorkData(res3?.data)
-                      setSelectedScopeOfWorkData(res2?.data?.map((scopeOfWork: any) => scopeOfWork?.id))
+                      setSelectedScopeOfWorkData(res3?.data?.map((scopeOfWork: any) => scopeOfWork?.id))
                     })
                     .catch(error => {
                       setPreload(false)
@@ -469,13 +470,40 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           serviceIds: [...additionalServiceData]
         })
         .then(res => {
-          if (res?.data && type == 'NEXT') {
+          if (res && type == 'NEXT') {
             apiRequest
-              .post('/deliverables', { scopeOfWorkId: scopeTextID })
+              .get(`/deliverables?problemGoalId=${problemGoalID}`)
               .then(res2 => {
-                enqueueSnackbar('Created Successfully!', { variant: 'success' })
-                setDeliverablesTextID(res2?.data?.id)
-                setDeliverablesText(res2?.data?.deliverablesText)
+                enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                console.log(res2?.data)
+
+                if (res2?.data?.deliverables.length) {
+                  setDeliverableScopeOfWorkData(res2?.data?.deliverables)
+                  setSelectedDeliverableScopeOfWorkData(
+                    res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
+                  )
+                  setSelectedDeliverableNotesData(
+                    res2?.data?.deliverableNotes?.map((deliverableNote: any) => deliverableNote?.id)
+                  )
+                } else {
+                  apiRequest
+                    .post(`/deliverables`, { problemGoalId: problemGoalID })
+                    .then(res3 => {
+                      enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                      setDeliverableScopeOfWorkData(res3?.data?.deliverable)
+                      setSelectedDeliverableScopeOfWorkData(
+                        res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
+                      )
+                    })
+                    .catch(error => {
+                      setPreload(false)
+                      setErrorMessage(error?.response?.data?.errors)
+                      enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                    })
+                }
+
+                console.log(newActiveStep)
+
                 setTimeout(() => {
                   if (type == 'NEXT') {
                     setActiveStep(newActiveStep)
@@ -556,12 +584,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         return prevState.filter((item: any) => item !== Number(id))
       }
     })
-    console.log(additionalServiceData)
   }
   const getDetails = (id: string | null | undefined) => {
     if (!id) return
     let getEnableStep = 0
-
     setPreload(true)
     apiRequest.get(`/project-summery/${id}`).then((res: any) => {
       const transcriptId = res?.data?.id || ''
@@ -619,13 +645,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         getEnableStep = 4
       }
 
-      if (res?.data?.meeting_transcript?.problems_and_goals?.scope_of_work?.deliverables?.['id']) {
-        setDeliverablesTextID(res?.data?.meeting_transcript?.problems_and_goals?.scope_of_work?.deliverables?.['id'])
-        setDeliverablesText(
-          res?.data?.meeting_transcript?.problems_and_goals?.scope_of_work?.deliverables?.['deliverablesText']
+      if (res?.data?.deliverablesData && res?.data?.deliverablesData?.deliverables) {
+        setDeliverableScopeOfWorkData(res?.data?.deliverablesData?.deliverables)
+        setSelectedDeliverableScopeOfWorkData(
+          res?.data?.deliverablesData?.deliverables?.map((deliverable: any) => deliverable?.id)
+        )
+        setSelectedDeliverableNotesData(
+          res?.data?.deliverablesData?.deliverableNotes?.map((deliverableNote: any) => deliverableNote?.id)
         )
         getEnableStep = 5
       }
+
       setEnabledStep(getEnableStep)
       setPreload(false)
     })
@@ -1188,8 +1218,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
               {activeStep == 4 && (
                 <Box>
-                  {/* scopeOfWorkData */}
-
                   <Box
                     sx={{
                       display: 'flex',
@@ -1283,62 +1311,94 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
               {activeStep == 5 && (
                 <Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm' htmlFor={'#deliverablesText'}>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Deliverable</span>
-                        <Box
-                          sx={{
-                            position: 'relative'
-                          }}
-                        >
-                          <MarkdownEditor modelValue={deliverablesText} onChange={setDeliverablesText} />
-                        </Box>
-                        {!!errorMessage?.['deliverablesText'] &&
-                          errorMessage?.['deliverablesText']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 5,
+                      mb: 5,
+                      overflow: 'hidden',
+                      overflowY: 'auto',
+                      height: '300px',
+                      border: '1px solid #ecedee',
+                      p: 3
+                    }}
+                  >
+                    <Box sx={scopeOfWorkListSx}>
+                      {deliverableScopeOfWorkData?.map((deliverable: any, index: number) => {
+                        return (
+                          <Box className={'sow-list-item'} key={index}>
+                            <Box className={'sow-list-item-type'}>
+                              {deliverable?.['serviceScopeId'] ? (
+                                <Box className={'item-type-common item-type-hive'}>HIVE</Box>
+                              ) : (
+                                <Box className={'item-type-common item-type-sow'}>SOW</Box>
+                              )}
+                            </Box>
+                            <Box className={'sow-list-item-check'}>
+                              <Checkbox
+                                onChange={handleScopeOfWorkCheckbox}
+                                value={deliverable?.['id']}
+                                checked={selectedDeliverableNotesData?.includes(deliverable?.['id'])}
+                              />
+                            </Box>
+                            <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                          </Box>
+                        )
+                      })}
                     </Box>
                   </Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Grid container spacing={2} justifyContent='center' alignItems='center'>
-                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
-                        {serviceTreeList(serviceDeliverableLeftList, serviceDeliverablesChecked)}
-                      </Grid>
-                      <Grid sx={{ width: '100px' }} item>
-                        <Grid container direction='column' alignItems='center'>
-                          <Button
-                            sx={{ my: 0.5 }}
-                            variant='outlined'
-                            size='small'
-                            onClick={handleCheckedLeftToRight}
-                            disabled={serviceDeliverablesChecked.length === 0}
-                            aria-label='move selected right'
-                          >
-                            &gt;
-                          </Button>
-                          <Button
-                            sx={{ my: 0.5 }}
-                            variant='outlined'
-                            size='small'
-                            onClick={handleCheckedRightToLeft}
-                            disabled={serviceDeliverablesChecked.length === 0}
-                            aria-label='move selected left'
-                          >
-                            &lt;
-                          </Button>
-                        </Grid>
-                      </Grid>
-                      <Grid sx={{ width: 'calc(50% - 50px)' }} item>
-                        {serviceTreeList(serviceDeliverableRightList, serviceDeliverablesChecked)}
-                      </Grid>
-                    </Grid>
-                  </Box>
+                  <Box></Box>
+                  {/* <Box>
+                    <Box sx={{ fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }}>Add Services</Box>
+                    <Box sx={{ py: 0, px: 5 }}>
+                      {serviceGroupByProjectTypeId(serviceList)?.map((projectType: any, index: number) => (
+                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, fontWeight: '600' }} key={index}>
+                          <Box sx={{ mr: 2, color: '#777' }}>{projectType?.projectTypeName}</Box>
+                          <Box>
+                            {projectType?.services?.map((service: any) => (
+                              <Box
+                                sx={{
+                                  position: 'relative',
+                                  display: 'flex',
+                                  p: '5px 25px',
+                                  borderRadius: '15px',
+                                  fontSize: '14px',
+                                  lineHeight: 'normal',
+                                  background: '#afaeb3',
+                                  color: '#fff',
+                                  cursor: 'pointer',
+                                  '&.selected': {
+                                    background: '#31A0F6'
+                                  }
+                                }}
+                                key={index}
+                                className={`${additionalServiceData?.includes(service?.id) ? 'selected' : ''}`}
+                                onClick={() => {
+                                  handleAdditionalServiceSelection(service?.id)
+                                }}
+                              >
+                                {additionalServiceData.includes(service?.id) ? (
+                                  <CheckIcon
+                                    sx={{
+                                      position: 'absolute',
+                                      top: '50%',
+                                      left: '5px',
+                                      transform: 'translate(0, -50%)',
+                                      fontSize: '18px',
+                                      mr: 1
+                                    }}
+                                  />
+                                ) : (
+                                  <></>
+                                )}
+                                {service.name}
+                              </Box>
+                            ))}
+                          </Box>
+                        </Box>
+                      ))}
+                    </Box>
+                  </Box> */}
                 </Box>
               )}
               {activeStep == 6 && (
