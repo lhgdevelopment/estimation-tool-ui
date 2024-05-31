@@ -118,7 +118,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
         deployed: res?.data?.['deployed'],
         next: res?.data?.['next']
       })
-      setSummaryText(res?.data?.['meetingSummaryText'])
+      setSummaryText(res?.data?.['meetingSummeryText'])
       setSummaryText('')
       setPreload(false)
     })

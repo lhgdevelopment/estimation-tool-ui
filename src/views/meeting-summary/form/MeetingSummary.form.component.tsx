@@ -124,7 +124,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
         meetingName: res?.data?.['meetingName'],
         meetingType: res?.data?.['meetingType'],
         transcriptText: res?.data?.['transcriptText'],
-        summaryText: res?.data?.['meetingSummaryText'],
+        summaryText: res?.data?.['meetingSummeryText'],
         clickupLink: res?.data?.['clickupLink'],
         tldvLink: res?.data?.['tldvLink'],
         pushToClickUp: false,

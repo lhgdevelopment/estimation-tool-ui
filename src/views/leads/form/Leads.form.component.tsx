@@ -121,7 +121,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
         projectTypeId: res?.data?.['projectTypeId'],
         description: res?.data?.['description']
       })
-      setSummaryText(res?.data?.['meetingSummaryText'])
+      setSummaryText(res?.data?.['meetingSummeryText'])
       setSummaryText('')
       setPreload(false)
     })
