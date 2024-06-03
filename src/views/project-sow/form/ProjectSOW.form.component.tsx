@@ -5,28 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import {
-  Box,
-  Checkbox,
-  Chip,
-  IconButton,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Paper,
-  SelectChangeEvent,
-  Step,
-  StepButton,
-  Stepper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField
-} from '@mui/material'
+import { Box, Checkbox, IconButton, SelectChangeEvent, Step, StepButton, Stepper, TextField } from '@mui/material'
 import { useMask } from '@react-input/mask'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
@@ -39,6 +18,9 @@ import apiRequest from 'src/@core/utils/axios-config'
 import { getShortStringNumber } from 'src/@core/utils/utils'
 import {
   TProjectSOWFormComponent,
+  deliverableNoteAddButtonSx,
+  deliverableNoteItemSx,
+  deliverableNoteRemoveButtonSx,
   scopeOfWorkListSx,
   transcriptMeetingLinkAddButtonSx,
   transcriptSectionTitleSx
@@ -102,7 +84,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [projectSOWFormData, setProjectSOWFormData] = useState(projectSOWDefaultData)
 
   const [preload, setPreload] = useState<boolean>(false)
-  const [transcriptTextRows, setTranscriptTextRows] = useState<number>(10)
   const [projectSOWID, setProjectSOWID] = useState<any>(null)
   const [summaryText, setSummaryText] = useState<any>('')
   const [problemGoalID, setProblemGoalID] = useState<any>(null)
@@ -116,21 +97,19 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [additionalServiceData, setAdditionalServiceData] = useState<any>([])
   const [deliverableScopeOfWorkData, setDeliverableScopeOfWorkData] = useState<any>([])
   const [selectedDeliverableScopeOfWorkData, setSelectedDeliverableScopeOfWorkData] = useState<any>([])
-  const [selectedDeliverableNotesData, setSelectedDeliverableNotesData] = useState<any>([])
 
-  const [serviceTreeData, setServiceTreeData] = useState<any>([])
+  type TDeliverableNote = {
+    noteLink: string
+    note: string
+  }
+  const deliverableNoteDefaultData = { noteLink: '', note: '' }
+  const [deliverableNotesData, setDeliverableNotesData] = useState<any[]>([deliverableNoteDefaultData])
+
+  // const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [projectTypeList, setProjectTypeList] = useState<any>([])
   const [serviceList, setServiceList] = useState<any>([])
   const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
 
-  type TServiceDeliverablesForm = {
-    teamMember: string
-    hours: number
-    timeline: string
-    internal: string
-    retail: string
-    josh: string
-  }
   const serviceDeliverablesFormDefaultData = {
     teamMember: '',
     hours: 0,
@@ -146,75 +125,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [errorMessage, setErrorMessage] = useState<any>({})
 
-  interface IDeliverableHours {
-    [key: string]: {
-      [key: string]: {
-        hours: number
-      }
-    }
-  }
-
-  function countTotalDeliverableHours(deliverableHours: IDeliverableHours = {}) {
-    let totalHours = 0
-
-    for (const key1 in deliverableHours) {
-      for (const key2 in deliverableHours[key1]) {
-        totalHours += deliverableHours[key1][key2].hours
-      }
-    }
-
-    return totalHours
-  }
-
-  interface ITaskHours {
-    [key: string]: {
-      hours: number
-    }
-  }
-  function countTotalTaskHours(taskHours: ITaskHours = {}): number {
-    let totalHours = 0
-
-    for (const key in taskHours) {
-      if (taskHours.hasOwnProperty(key)) {
-        totalHours += taskHours[key].hours
-      }
-    }
-
-    return totalHours
-  }
-
-  const handleTaskTextChange = (
-    value = '',
-    field = '',
-    serviceId = '',
-    groupId = '',
-    sowId = '',
-    deliverableId = '',
-    taskId = '',
-    subTaskId = null
-  ) => {
-    const serviceDeliverables = { ...serviceDeliverablesFormData }
-
-    if (
-      serviceDeliverables &&
-      serviceDeliverables[serviceId] &&
-      serviceDeliverables[serviceId][groupId] &&
-      serviceDeliverables[serviceId][groupId][sowId] &&
-      serviceDeliverables[serviceId][groupId][sowId][deliverableId] &&
-      serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId]
-    ) {
-      if (subTaskId) {
-        serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][subTaskId][field] = Number(value)
-      } else {
-        serviceDeliverables[serviceId][groupId][sowId][deliverableId][taskId][field] = Number(value)
-      }
-    }
-
-    setServiceDeliverablesFormData((prevState: any) => {
-      return { ...prevState, ...serviceDeliverables }
-    })
-  }
-
   const handleProjectSOWChange = (e: any) => {
     setProjectSOWFormData({
       ...projectSOWFormData,
@@ -228,16 +138,28 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       [e?.target?.name]: e?.target?.value
     })
   }
+
+  const handleNotesInputChange = (index: number, event: any) => {
+    const { name, value } = event.target
+    const newNotes = [...deliverableNotesData]
+    newNotes[index][name] = value
+    setDeliverableNotesData(newNotes)
+  }
+
+  const handleDeliverableNoteAdd = () => {
+    setDeliverableNotesData(prevState => [...prevState, deliverableNoteDefaultData])
+  }
+  const handleDeliverableNoteRemove = (index: number) => {
+    const newNotes = deliverableNotesData.filter((_, noteIndex) => noteIndex !== index)
+    setDeliverableNotesData(newNotes)
+  }
+
   // const handleTranscriptTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
   //   setProjectSOWFormData({
   //     ...projectSOWFormData,
   //     transcriptText: e.target.value
   //   })
   // }
-  function calculateNumberOfRows(text: string) {
-    const numberOfLines = text.split('\n').length
-    setTranscriptTextRows(Math.max(5, numberOfLines))
-  }
 
   const totalSteps = () => {
     return steps.length
@@ -411,7 +333,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               .get(`/scope-of-work?problemGoalId=${problemGoalID}`)
               .then(res2 => {
                 enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-                console.log(res2?.data)
 
                 if (res2?.data?.scopeOfWorks.length) {
                   setScopeOfWorkData(res2?.data?.scopeOfWorks)
@@ -433,8 +354,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
                     })
                 }
-
-                console.log(newActiveStep)
 
                 setTimeout(() => {
                   if (type == 'NEXT') {
@@ -482,9 +401,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   setSelectedDeliverableScopeOfWorkData(
                     res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
                   )
-                  setSelectedDeliverableNotesData(
-                    res2?.data?.deliverableNotes?.map((deliverableNote: any) => deliverableNote?.id)
-                  )
+                  if (res2?.data?.deliverableNotes?.length) {
+                    setDeliverableNotesData(res2?.data?.deliverableNotes)
+                  } else {
+                    setDeliverableNotesData([deliverableNoteDefaultData])
+                  }
                 } else {
                   apiRequest
                     .post(`/deliverables`, { problemGoalId: problemGoalID })
@@ -501,8 +422,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
                     })
                 }
-
-                console.log(newActiveStep)
 
                 setTimeout(() => {
                   if (type == 'NEXT') {
@@ -531,34 +450,73 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     }
     if (activeStep === 5) {
       apiRequest
-        .post(`/deliverables/${deliverablesTextID}`, { deliverablesText })
+        .post(`/deliverables-select/`, {
+          problemGoalId: problemGoalID,
+          deliverableIds: [...selectedDeliverableScopeOfWorkData],
+          notes: [...deliverableNotesData]
+        })
         .then(res => {
-          apiRequest
-            .get(`/project-summery?page=1`)
-            .then(res => {
-              if (setListData) {
-                setListData(res?.data)
-              }
-              enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          if (res && type == 'NEXT') {
+            apiRequest
+              .get(`/deliverables?problemGoalId=${problemGoalID}`)
+              .then(res2 => {
+                enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                console.log(res2?.data)
 
-              setTimeout(() => {
-                setActiveStep(6)
+                if (res2?.data?.deliverables.length) {
+                  setDeliverableScopeOfWorkData(res2?.data?.deliverables)
+                  setSelectedDeliverableScopeOfWorkData(
+                    res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
+                  )
+                  if (res2?.data?.deliverableNotes?.length) {
+                    setDeliverableNotesData(res2?.data?.deliverableNotes)
+                  } else {
+                    setDeliverableNotesData([deliverableNoteDefaultData])
+                  }
+                } else {
+                  apiRequest
+                    .post(`/deliverables`, { problemGoalId: problemGoalID })
+                    .then(res3 => {
+                      enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                      setDeliverableScopeOfWorkData(res3?.data?.deliverable)
+                      setSelectedDeliverableScopeOfWorkData(
+                        res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
+                      )
+                    })
+                    .catch(error => {
+                      setPreload(false)
+                      setErrorMessage(error?.response?.data?.errors)
+                      enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                    })
+                }
+
+                setTimeout(() => {
+                  if (type == 'NEXT') {
+                    setActiveStep(newActiveStep)
+                    if (enabledStep < newActiveStep) {
+                      setEnabledStep(newActiveStep)
+                    }
+                  }
+                  setPreload(false)
+                }, 1000)
+              })
+              .catch(error => {
                 setPreload(false)
-
-                // setListData(res)
-              }, 1000)
-            })
-            .catch(error => {
-              setPreload(false)
-              setErrorMessage(error?.response?.data?.errors)
-              enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
-            })
+                setErrorMessage(error?.response?.data?.errors)
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+              })
+          } else {
+            setPreload(false)
+          }
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
           enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
+    }
+
+    if (activeStep === 6) {
     }
   }
 
@@ -650,9 +608,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         setSelectedDeliverableScopeOfWorkData(
           res?.data?.deliverablesData?.deliverables?.map((deliverable: any) => deliverable?.id)
         )
-        setSelectedDeliverableNotesData(
-          res?.data?.deliverablesData?.deliverableNotes?.map((deliverableNote: any) => deliverableNote?.id)
-        )
+        setDeliverableNotesData(res?.data?.deliverablesData?.deliverableNotes)
+
         getEnableStep = 5
       }
 
@@ -661,68 +618,67 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     })
   }
 
-  const getServiceTree = async () => {
-    await apiRequest
+  // const getServiceTree = async () => {
+  //   await apiRequest
+  //     // .get(`/service-tree?per_page=500&serviceId=${projectSOWFormData.serviceId}`)
+  //     .get(`/service-tree?per_page=500&serviceId=${4}`)
+  //     .then(res => {
+  //       setServiceTreeData(res?.data?.services)
+  //       setServiceDeliverableLeftList(res?.data?.services?.[0]?.groups)
+  //       const transformServiceTree = res?.data?.services.map((service: any) => {
+  //         const serviceObj = {
+  //           [service.id]: Object.fromEntries(
+  //             service?.groups?.map((group: any) => {
+  //               const groupObj = Object.fromEntries(
+  //                 group?.sows?.map((sow: any) => {
+  //                   const sowObj = Object.fromEntries(
+  //                     sow?.deliverables?.map((deliverable: any) => {
+  //                       const deliverableObj = Object.fromEntries(
+  //                         deliverable?.tasks?.map((task: any) => {
+  //                           if (task?.sub_tasks?.length) {
+  //                             const taskObj = Object.fromEntries(
+  //                               (task?.sub_tasks || []).map((sub_task: any) => {
+  //                                 return [
+  //                                   [sub_task.id],
+  //                                   {
+  //                                     hours: null
+  //                                   }
+  //                                 ]
+  //                               })
+  //                             )
 
-      // .get(`/service-tree?per_page=500&serviceId=${projectSOWFormData.serviceId}`)
-      .get(`/service-tree?per_page=500&serviceId=${4}`)
-      .then(res => {
-        setServiceTreeData(res?.data?.services)
-        setServiceDeliverableLeftList(res?.data?.services?.[0]?.groups)
-        const transformServiceTree = res?.data?.services.map((service: any) => {
-          const serviceObj = {
-            [service.id]: Object.fromEntries(
-              service?.groups?.map((group: any) => {
-                const groupObj = Object.fromEntries(
-                  group?.sows?.map((sow: any) => {
-                    const sowObj = Object.fromEntries(
-                      sow?.deliverables?.map((deliverable: any) => {
-                        const deliverableObj = Object.fromEntries(
-                          deliverable?.tasks?.map((task: any) => {
-                            if (task?.sub_tasks?.length) {
-                              const taskObj = Object.fromEntries(
-                                (task?.sub_tasks || []).map((sub_task: any) => {
-                                  return [
-                                    [sub_task.id],
-                                    {
-                                      hours: null
-                                    }
-                                  ]
-                                })
-                              )
+  //                             return [task.id, taskObj]
+  //                           }
 
-                              return [task.id, taskObj]
-                            }
+  //                           return {
+  //                             hours: null
+  //                           }
+  //                         })
+  //                       )
 
-                            return {
-                              hours: null
-                            }
-                          })
-                        )
+  //                       return [deliverable.id, deliverableObj]
+  //                     })
+  //                   )
 
-                        return [deliverable.id, deliverableObj]
-                      })
-                    )
+  //                   return [sow.id, sowObj]
+  //                 })
+  //               )
 
-                    return [sow.id, sowObj]
-                  })
-                )
+  //               return [group.id, groupObj]
+  //             })
+  //           )
+  //         }
 
-                return [group.id, groupObj]
-              })
-            )
-          }
+  //         return serviceObj
+  //       })[0]
+  //       setServiceDeliverablesFormData(transformServiceTree)
 
-          return serviceObj
-        })[0]
-        setServiceDeliverablesFormData(transformServiceTree)
-
-        // setServiceDeliverablesFormData()
-      })
-      .catch(error => {
-        enqueueSnackbar(error?.message, { variant: 'error' })
-      })
-  }
+  //       // setServiceDeliverablesFormData()
+  //     })
+  //     .catch(error => {
+  //       enqueueSnackbar(error?.message, { variant: 'error' })
+  //     })
+  // }
 
   // const getProjectTypeList = async () => {
   //   await apiRequest
@@ -767,72 +723,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setActiveStep(0)
     setEnabledStep(0)
   }
-
-  const leftChecked: any = intersection(
-    serviceDeliverablesChecked,
-    serviceDeliverableLeftList.map(serviceDeliverable => serviceDeliverable.id)
-  )
-
-  const rightChecked: any = intersection(
-    serviceDeliverablesChecked,
-    serviceDeliverableRightList.map(serviceDeliverable => serviceDeliverable.id)
-  )
-
-  const handleCheckedLeftToRight = () => {
-    const itemsToAdd = serviceDeliverableLeftList.filter(e => serviceDeliverablesChecked.indexOf(e.id) !== -1)
-    setServiceDeliverableRightList(serviceDeliverableRightList.concat(itemsToAdd))
-    setServiceDeliverableLeftList(
-      serviceDeliverableLeftList.filter(e => serviceDeliverablesChecked.indexOf(e.id) === -1)
-    )
-    setServiceDeliverablesChecked([])
-  }
-
-  const handleCheckedRightToLeft = () => {
-    const itemsToAdd = serviceDeliverableRightList.filter(e => serviceDeliverablesChecked.indexOf(e.id) !== -1)
-    setServiceDeliverableLeftList(serviceDeliverableLeftList.concat(itemsToAdd))
-    setServiceDeliverableRightList(
-      serviceDeliverableRightList.filter(e => serviceDeliverablesChecked.indexOf(e.id) === -1)
-    )
-    setServiceDeliverablesChecked([])
-  }
-
-  const serviceTreeList = (items: any[], checkedItems: any[]) => (
-    <Paper sx={{ width: '100%', height: '500px', overflow: 'auto' }}>
-      <List dense component='div' role='list'>
-        {items?.map((item: any) => {
-          const labelId = `transfer-list-item-${item.id}-label`
-          const handleCheckedToggle = (e: any) => {
-            const currentIndex = serviceDeliverablesChecked.indexOf(item.id)
-            const newChecked = [...serviceDeliverablesChecked]
-
-            if (currentIndex === -1) {
-              newChecked.push(item.id)
-            } else {
-              newChecked.splice(currentIndex, 1)
-            }
-
-            setServiceDeliverablesChecked(newChecked)
-          }
-
-          return (
-            <ListItemButton key={item.id} role='listitem' onClick={handleCheckedToggle}>
-              <ListItemIcon>
-                <Checkbox
-                  checked={checkedItems.indexOf(item.id) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{
-                    'aria-labelledby': labelId
-                  }}
-                />
-              </ListItemIcon>
-              <ListItemText id={labelId} primary={<div dangerouslySetInnerHTML={{ __html: item.name as string }} />} />
-            </ListItemButton>
-          )
-        })}
-      </List>
-    </Paper>
-  )
 
   const projectNameGenerate = () => {
     const projectType = serviceList?.filter((service: any) => service?.id === projectSOWFormData.serviceId)?.[0]?.[
@@ -887,13 +777,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     if (isEdit && step && Number(step) <= enabledStep) {
       setActiveStep(Number(step))
     }
-  }, [enabledStep, isEdit, id, step])
+  }, [isEdit, id, step])
 
   useEffect(() => {
-    if (activeStep === 5 || activeStep === 6) {
-      getServiceTree()
-    }
-
     if (activeStep) {
       const currentPath = router.asPath.split('?')?.[0]
       const updatedPath = `${currentPath}?step=${activeStep}`
@@ -984,7 +870,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           id='outlined-multiline-flexible'
                           label='Company Name'
                           className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                            errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                            errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600'
                           }`}
                           placeholder='Company Name'
                           name='company'
@@ -1227,6 +1113,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       overflowY: 'auto',
                       height: '300px',
                       border: '1px solid #ecedee',
+                      borderRadius: '5px',
                       p: 3
                     }}
                   >
@@ -1310,7 +1197,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
 
               {activeStep == 5 && (
-                <Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                   <Box
                     sx={{
                       display: 'flex',
@@ -1320,6 +1207,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       overflowY: 'auto',
                       height: '300px',
                       border: '1px solid #ecedee',
+                      borderRadius: '5px',
                       p: 3
                     }}
                   >
@@ -1338,7 +1226,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               <Checkbox
                                 onChange={handleScopeOfWorkCheckbox}
                                 value={deliverable?.['id']}
-                                checked={selectedDeliverableNotesData?.includes(deliverable?.['id'])}
+                                checked={selectedDeliverableScopeOfWorkData?.includes(deliverable?.['id'])}
                               />
                             </Box>
                             <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
@@ -1347,7 +1235,59 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       })}
                     </Box>
                   </Box>
-                  <Box></Box>
+
+                  <Box sx={{ display: 'flex', flexDirection: 'column', mt: 5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
+                      <Box sx={{ fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }}>Notes</Box>
+                      <Box sx={deliverableNoteAddButtonSx} onClick={handleDeliverableNoteAdd}>
+                        <AddIcon fontSize='small' />
+                      </Box>
+                    </Box>
+
+                    <Box>
+                      {deliverableNotesData?.map((deliverableNote: any, index: number) => {
+                        return (
+                          <Box sx={deliverableNoteItemSx} key={index}>
+                            <Box sx={{ width: '100%' }}>
+                              <TextField
+                                label={'Meeting Link'}
+                                name='noteLink'
+                                value={deliverableNote?.noteLink}
+                                onChange={e => {
+                                  handleNotesInputChange(index, e)
+                                }}
+                                placeholder={`${getShortStringNumber(
+                                  index + 1
+                                )} Meeting Link: https://tldv.io/app/meetings/unique-meeting-id/`}
+                                fullWidth
+                              />
+                            </Box>
+                            <Box sx={{ width: '100%' }}>
+                              <TextField
+                                label={'Note'}
+                                name='note'
+                                value={deliverableNote?.note}
+                                onChange={e => {
+                                  handleNotesInputChange(index, e)
+                                }}
+                                placeholder={`Type any additional notes here that will help the estimating team`}
+                                fullWidth
+                              />
+                            </Box>
+
+                            <IconButton
+                              onClick={() => {
+                                handleDeliverableNoteRemove(index)
+                              }}
+                              sx={deliverableNoteRemoveButtonSx}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Box>
+                        )
+                      })}
+                    </Box>
+                  </Box>
                   {/* <Box>
                     <Box sx={{ fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }}>Add Services</Box>
                     <Box sx={{ py: 0, px: 5 }}>
@@ -1401,318 +1341,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   </Box> */}
                 </Box>
               )}
-              {activeStep == 6 && (
-                <Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <TableContainer component={Paper}>
-                        <Table aria-label='table'>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell />
-                              <TableCell>Deliverable & Timeline</TableCell>
-                              <TableCell>Team Member</TableCell>
-                              <TableCell>Hours</TableCell>
-                              <TableCell>Timeline</TableCell>
-                              <TableCell>Internal</TableCell>
-                              <TableCell>Retail</TableCell>
-                              <TableCell>Josh</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {serviceTreeData?.map((service: any, index: number) => {
-                              return (
-                                <>
-                                  <TableRow key={`service-${service.id}`}>
-                                    <TableCell sx={{ width: '70px' }}>
-                                      <Chip
-                                        label='Service'
-                                        sx={{ width: '100%', px: 2, background: '#0a53a8', color: '#fff' }}
-                                      />
-                                    </TableCell>
-                                    <TableCell
-                                      component='th'
-                                      scope='row'
-                                      dangerouslySetInnerHTML={{ __html: service.name }}
-                                      sx={{ width: '400px' }}
-                                    />
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
-                                    <TableCell></TableCell>
-                                  </TableRow>
-                                  {service.groups.map((group: any) => (
-                                    <>
-                                      <TableRow key={`group-${group.id}`}>
-                                        <TableCell sx={{ width: '70px' }}>
-                                          <Chip
-                                            label='Group'
-                                            sx={{ width: '100%', px: 2, background: '#bfe1f6', color: '#000' }}
-                                          />
-                                        </TableCell>
-                                        <TableCell
-                                          component='th'
-                                          scope='row'
-                                          dangerouslySetInnerHTML={{ __html: group.name }}
-                                          sx={{ width: '400px' }}
-                                        />
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                      </TableRow>
-                                      {group.sows.map((sow: any) => (
-                                        <React.Fragment key={`sow-${sow.id}`}>
-                                          <TableRow key={`sow-${sow.id}`}>
-                                            <TableCell sx={{ width: '70px' }}>
-                                              <Chip
-                                                label='SOW'
-                                                sx={{ width: '100%', px: 2, background: '#215a6c', color: '#fff' }}
-                                              />
-                                            </TableCell>
-                                            <TableCell
-                                              component='th'
-                                              scope='row'
-                                              dangerouslySetInnerHTML={{ __html: sow.name }}
-                                              sx={{ width: '400px' }}
-                                            />
-                                            <TableCell></TableCell>
-                                            <TableCell></TableCell>
-                                            <TableCell></TableCell>
-                                            <TableCell></TableCell>
-                                            <TableCell></TableCell>
-                                            <TableCell></TableCell>
-                                          </TableRow>
-                                          {sow.deliverables.map((deliverable: any) => (
-                                            <React.Fragment key={`deliverable-${deliverable.id}`}>
-                                              <TableRow key={`deliverable-${deliverable.id}`}>
-                                                <TableCell sx={{ width: '70px' }}>
-                                                  <Chip
-                                                    label='Deliverable'
-                                                    sx={{ width: '100%', px: 2, background: '#c6dbe1', color: '#000' }}
-                                                  />
-                                                </TableCell>
-                                                <TableCell
-                                                  component='th'
-                                                  scope='row'
-                                                  dangerouslySetInnerHTML={{ __html: deliverable.name }}
-                                                  sx={{ width: '400px' }}
-                                                />
-                                                <TableCell></TableCell>
-                                                <TableCell align='center'>
-                                                  {countTotalDeliverableHours(
-                                                    serviceDeliverablesFormData?.[service.id]?.[group.id]?.[sow.id]?.[
-                                                      deliverable.id
-                                                    ]
-                                                  )}
-                                                </TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                              </TableRow>
-                                              {deliverable.tasks.map((task: any) => (
-                                                <>
-                                                  <TableRow key={`task-${task.id}`}>
-                                                    <TableCell sx={{ width: '70px' }}>
-                                                      <Chip
-                                                        label='Task'
-                                                        sx={{
-                                                          width: '100%',
-                                                          px: 2,
-                                                          background: '#ffc8aa',
-                                                          color: '#000'
-                                                        }}
-                                                      />
-                                                    </TableCell>
-                                                    <TableCell
-                                                      component='th'
-                                                      scope='row'
-                                                      dangerouslySetInnerHTML={{ __html: task.name }}
-                                                      sx={{ width: '400px' }}
-                                                    />
-                                                    {!task?.sub_tasks?.length ? (
-                                                      <>
-                                                        <TableCell>
-                                                          <Dropdown url='' />
-                                                        </TableCell>
-                                                        <TableCell align='center'>
-                                                          <input
-                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input text-center'
-                                                            type='number'
-                                                            placeholder=''
-                                                            name='hours'
-                                                            value={
-                                                              serviceDeliverablesFormData?.[service.id]?.[group.id]?.[
-                                                                sow.id
-                                                              ]?.[deliverable.id]?.[task.id]?.hours
-                                                            }
-                                                            onChange={e => {
-                                                              handleTaskTextChange(
-                                                                e.target.value,
-                                                                'hours',
-                                                                service.id,
-                                                                group.id,
-                                                                sow.id,
-                                                                deliverable.id,
-                                                                task.id
-                                                              )
-                                                            }}
-                                                          />
-                                                        </TableCell>
-                                                        <TableCell>
-                                                          <input
-                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                            placeholder=''
-                                                            name='name'
-                                                          />
-                                                        </TableCell>
-                                                        <TableCell>
-                                                          <input
-                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                            placeholder=''
-                                                            name='name'
-                                                          />
-                                                        </TableCell>
-                                                        <TableCell>
-                                                          <input
-                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                            placeholder=''
-                                                            name='name'
-                                                          />
-                                                        </TableCell>
-                                                        <TableCell>
-                                                          <input
-                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                            placeholder=''
-                                                            name='name'
-                                                          />
-                                                        </TableCell>
-                                                      </>
-                                                    ) : (
-                                                      <>
-                                                        <TableCell></TableCell>
-                                                        <TableCell align='center'>
-                                                          {/* {console.log(
-                                                            serviceDeliverablesFormData?.[service.id]?.[group.id]?.[
-                                                              sow.id
-                                                            ]?.[deliverable.id]?.[task.id]?.reduce(
-                                                              (total, sub_task) => total + Number(sub_task?.hours),
-                                                              0
-                                                            )
-                                                          )} */}
-                                                          {countTotalTaskHours(
-                                                            serviceDeliverablesFormData?.[service.id]?.[group.id]?.[
-                                                              sow.id
-                                                            ]?.[deliverable.id]?.[task.id]
-                                                          )}
-                                                        </TableCell>
-                                                        <TableCell></TableCell>
-                                                        <TableCell></TableCell>
-                                                        <TableCell></TableCell>
-                                                        <TableCell></TableCell>
-                                                      </>
-                                                    )}
-                                                  </TableRow>
-                                                  {task.sub_tasks.map((subTask: any) => (
-                                                    <TableRow key={`sub_task-${subTask.id}`}>
-                                                      <TableCell sx={{ width: '70px' }}>
-                                                        <Chip
-                                                          label='Subtask'
-                                                          sx={{
-                                                            width: '100%',
-                                                            px: 2,
-                                                            background: '#ffe5a0',
-                                                            color: '#000'
-                                                          }}
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell
-                                                        component='th'
-                                                        scope='row'
-                                                        dangerouslySetInnerHTML={{ __html: subTask.name }}
-                                                        sx={{ width: '400px' }}
-                                                      />
-                                                      <TableCell>
-                                                        <Dropdown url='' />
-                                                      </TableCell>
-                                                      <TableCell align='center'>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input text-center'
-                                                          type='number'
-                                                          placeholder=''
-                                                          name='hours'
-                                                          value={
-                                                            serviceDeliverablesFormData?.[service.id]?.[group.id]?.[
-                                                              sow.id
-                                                            ]?.[deliverable.id]?.[task.id]?.[subTask.id]?.hours
-                                                          }
-                                                          onChange={e => {
-                                                            handleTaskTextChange(
-                                                              e.target.value,
-                                                              'hours',
-                                                              service.id,
-                                                              group.id,
-                                                              sow.id,
-                                                              deliverable.id,
-                                                              task.id,
-                                                              subTask.id
-                                                            )
-                                                          }}
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        <input
-                                                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                                          placeholder=''
-                                                          name='name'
-                                                        />
-                                                      </TableCell>
-                                                    </TableRow>
-                                                  ))}
-                                                </>
-                                              ))}
-                                            </React.Fragment>
-                                          ))}
-                                        </React.Fragment>
-                                      ))}
-                                    </>
-                                  ))}
-                                </>
-                              )
-                            })}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Box>
-                  </Box>
-                </Box>
-              )}
+              {activeStep == 6 && <Box>Team Review</Box>}
+              {activeStep == 7 && <Box>Estimation</Box>}
+              {activeStep == 8 && <Box>Review</Box>}
+              {activeStep == 9 && <Box>Approval</Box>}
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
