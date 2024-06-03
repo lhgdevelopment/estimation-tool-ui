@@ -75,3 +75,41 @@ export const scopeOfWorkListSx = {
     '& .sow-list-item-title': { lineHeight: 'normal' }
   }
 }
+
+export const deliverableNoteAddButtonSx = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '30px',
+  width: '30px',
+  p: '0',
+  ml: '15px',
+  background: '#9333ea',
+  minWidth: 'auto',
+  color: '#fff',
+  borderRadius: '50%',
+  cursor: 'pointer',
+  '&:hover': {
+    background: '#7e22ce'
+  }
+}
+
+export const deliverableNoteItemSx = {
+  display: 'flex',
+  flexDirection: 'column',
+  position: 'relative',
+  padding: '25px',
+  border: '1px solid #ecedee',
+  borderRadius: '5px',
+  gap: 5,
+  mb: '30px'
+}
+
+export const deliverableNoteRemoveButtonSx = {
+  position: 'absolute',
+  top: '-20px',
+  right: '20px',
+  background: '#FF4C51',
+  color: '#fff',
+  '&:hover': { background: '#FF4C51' }
+}
