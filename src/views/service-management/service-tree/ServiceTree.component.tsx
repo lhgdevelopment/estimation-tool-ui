@@ -138,14 +138,16 @@ export default function ServiceTreeComponent() {
     subArr: string
   ) => {
     if (index != -1) {
-      const subArrData = [...formData?.[subArr]]
+      const subArrData = formData?.[subArr]
       subArrData[index][field] = value
-      console.log(subArrData)
 
-      setFormData((prevState: any) => ({
-        ...prevState,
-        [subArr]: [...subArrData]
-      }))
+      console.log(formData?.[subArr])
+      console.log({ subArrData })
+
+      // setFormData((prevState: any) => ({
+      //   ...prevState,
+      //   [subArr]: [...subArrData]
+      // }))
     } else {
       setFormData((prevState: any) => ({
         ...prevState,
@@ -243,12 +245,16 @@ export default function ServiceTreeComponent() {
   }
 
   const addSubField = (formData: any, setFormData: Dispatch<SetStateAction<any>>, subArr: string, data: any) => {
-    console.log(formData)
+    console.log({ formData })
+    console.log({ subArr })
+    console.log({ data })
+    console.log([...formData?.[subArr], ...data])
 
     setFormData({
       ...formData,
-      [subArr]: [...formData?.[subArr], data]
+      [subArr]: [...formData?.[subArr], ...data]
     })
+    //console.log(formData)
   }
 
   const removeNameField = (
@@ -257,7 +263,7 @@ export default function ServiceTreeComponent() {
     setFormData: Dispatch<SetStateAction<any>>,
     subArr: string
   ) => {
-    const subArrData = [...formData?.[subArr]]
+    const subArrData = formData?.[subArr]
     subArrData.splice(index, 1)
     setFormData({
       ...formData,
@@ -396,9 +402,10 @@ export default function ServiceTreeComponent() {
   const onServiceGroupSubmit = (e: React.FormEvent<any>) => {
     setErrorMessage({})
     e.preventDefault()
+
     if (serviceGroupEditDataId) {
       apiRequest
-        .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData)
+        .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData?.groups)
         .then(res => {
           enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceGroupClear()
@@ -411,7 +418,10 @@ export default function ServiceTreeComponent() {
         })
     } else {
       apiRequest
-        .post('/service-groups', serviceGroupFormData)
+        .post('/service-groups', {
+          groups: [...serviceGroupFormData?.groups],
+          serviceId: serviceGroupFormData?.serviceId
+        })
         .then(res => {
           setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -1728,7 +1738,7 @@ export default function ServiceTreeComponent() {
                       <button
                         type='button'
                         onClick={() => {
-                          addSubField(serviceSOWFormData, setServiceSOWFormData, 'scopes', serviceSOWFormData.scopes)
+                          addSubField(serviceSOWFormData, setServiceSOWFormData, 'scopes', serviceSOWDefaultData.scopes)
                         }}
                         className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
                       >
@@ -1961,7 +1971,7 @@ export default function ServiceTreeComponent() {
                             serviceDeliverableFormData,
                             setServiceDeliverableFormData,
                             'deliverables',
-                            serviceDeliverableFormData.deliverables
+                            serviceDeliverableDefaultData.deliverables
                           )
                         }}
                         className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'

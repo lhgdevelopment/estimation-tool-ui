@@ -94,7 +94,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [scopeText, setScopeText] = useState<any>('')
   const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
   const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
+  const [additionalServiceScopeOfWorkData, setAdditionalServiceScopeOfWorkData] = useState<any>([])
+  const [selectedAdditionalServiceScopeOfWorkData, setSelectedAdditionalServiceScopeOfWorkData] = useState<any>([])
   const [additionalServiceData, setAdditionalServiceData] = useState<any>([])
+  const [selectedAdditionalServiceData, setSelectedAdditionalServiceData] = useState<any>([])
   const [deliverableScopeOfWorkData, setDeliverableScopeOfWorkData] = useState<any>([])
   const [selectedDeliverableScopeOfWorkData, setSelectedDeliverableScopeOfWorkData] = useState<any>([])
 
@@ -337,16 +340,48 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 if (res2?.data?.scopeOfWorks.length) {
                   setScopeOfWorkData(res2?.data?.scopeOfWorks)
                   setSelectedScopeOfWorkData(res2?.data?.scopeOfWorks?.map((scopeOfWork: any) => scopeOfWork?.id))
-                  setAdditionalServiceData(
+                  setSelectedAdditionalServiceData(
                     res2?.data?.additionalServices?.map((additionalService: any) => additionalService?.id)
                   )
+                  setTimeout(() => {
+                    if (type == 'NEXT') {
+                      setActiveStep(newActiveStep)
+                      if (enabledStep < newActiveStep) {
+                        setEnabledStep(newActiveStep)
+                      }
+                    }
+                    setPreload(false)
+                  }, 1000)
                 } else {
                   apiRequest
                     .post(`/scope-of-work`, { problemGoalID })
                     .then(res3 => {
                       enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-                      setScopeOfWorkData(res3?.data)
-                      setSelectedScopeOfWorkData(res3?.data?.map((scopeOfWork: any) => scopeOfWork?.id))
+
+                      setScopeOfWorkData(res3?.data?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId))
+                      setSelectedScopeOfWorkData(
+                        res3?.data
+                          ?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
+                          ?.map((scopeOfWork: any) => scopeOfWork?.id)
+                      )
+
+                      setSelectedAdditionalServiceScopeOfWorkData(
+                        res3?.data
+                          ?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
+                          ?.map((scopeOfWork: any) => scopeOfWork?.id)
+                      )
+                      setAdditionalServiceScopeOfWorkData(
+                        res3?.data?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
+                      )
+                      setTimeout(() => {
+                        if (type == 'NEXT') {
+                          setActiveStep(newActiveStep)
+                          if (enabledStep < newActiveStep) {
+                            setEnabledStep(newActiveStep)
+                          }
+                        }
+                        setPreload(false)
+                      }, 1000)
                     })
                     .catch(error => {
                       setPreload(false)
@@ -354,16 +389,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
                     })
                 }
-
-                setTimeout(() => {
-                  if (type == 'NEXT') {
-                    setActiveStep(newActiveStep)
-                    if (enabledStep < newActiveStep) {
-                      setEnabledStep(newActiveStep)
-                    }
-                  }
-                  setPreload(false)
-                }, 1000)
               })
               .catch(error => {
                 setPreload(false)
@@ -386,7 +411,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .post(`/scope-of-work-select/`, {
           problemGoalId: problemGoalID,
           scopeOfWorkIds: [...selectedScopeOfWorkData],
-          serviceIds: [...additionalServiceData]
+          serviceIds: [...selectedAdditionalServiceData]
         })
         .then(res => {
           if (res && type == 'NEXT') {
@@ -406,6 +431,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   } else {
                     setDeliverableNotesData([deliverableNoteDefaultData])
                   }
+                  setTimeout(() => {
+                    if (type == 'NEXT') {
+                      setActiveStep(newActiveStep)
+                      if (enabledStep < newActiveStep) {
+                        setEnabledStep(newActiveStep)
+                      }
+                    }
+                    setPreload(false)
+                  }, 1000)
                 } else {
                   apiRequest
                     .post(`/deliverables`, { problemGoalId: problemGoalID })
@@ -415,6 +449,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       setSelectedDeliverableScopeOfWorkData(
                         res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
                       )
+                      setTimeout(() => {
+                        if (type == 'NEXT') {
+                          setActiveStep(newActiveStep)
+                          if (enabledStep < newActiveStep) {
+                            setEnabledStep(newActiveStep)
+                          }
+                        }
+                        setPreload(false)
+                      }, 1000)
                     })
                     .catch(error => {
                       setPreload(false)
@@ -422,16 +465,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
                     })
                 }
-
-                setTimeout(() => {
-                  if (type == 'NEXT') {
-                    setActiveStep(newActiveStep)
-                    if (enabledStep < newActiveStep) {
-                      setEnabledStep(newActiveStep)
-                    }
-                  }
-                  setPreload(false)
-                }, 1000)
               })
               .catch(error => {
                 setPreload(false)
@@ -473,6 +506,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   } else {
                     setDeliverableNotesData([deliverableNoteDefaultData])
                   }
+                  setTimeout(() => {
+                    if (type == 'NEXT') {
+                      setActiveStep(newActiveStep)
+                      if (enabledStep < newActiveStep) {
+                        setEnabledStep(newActiveStep)
+                      }
+                    }
+                    setPreload(false)
+                  }, 1000)
                 } else {
                   apiRequest
                     .post(`/deliverables`, { problemGoalId: problemGoalID })
@@ -482,6 +524,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       setSelectedDeliverableScopeOfWorkData(
                         res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
                       )
+                      setTimeout(() => {
+                        if (type == 'NEXT') {
+                          setActiveStep(newActiveStep)
+                          if (enabledStep < newActiveStep) {
+                            setEnabledStep(newActiveStep)
+                          }
+                        }
+                        setPreload(false)
+                      }, 1000)
                     })
                     .catch(error => {
                       setPreload(false)
@@ -489,16 +540,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
                     })
                 }
-
-                setTimeout(() => {
-                  if (type == 'NEXT') {
-                    setActiveStep(newActiveStep)
-                    if (enabledStep < newActiveStep) {
-                      setEnabledStep(newActiveStep)
-                    }
-                  }
-                  setPreload(false)
-                }, 1000)
               })
               .catch(error => {
                 setPreload(false)
@@ -535,7 +576,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     })
   }
   const handleAdditionalServiceSelection = (id: any) => {
-    setAdditionalServiceData((prevState: any) => {
+    setSelectedAdditionalServiceData((prevState: any) => {
       if (!prevState?.includes(id)) {
         return [...prevState, Number(id)]
       } else {
@@ -592,18 +633,36 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       }
 
       if (res?.data?.scopeOfWorksData && res?.data?.scopeOfWorksData?.scopeOfWorks?.length) {
-        setScopeOfWorkData(res?.data?.scopeOfWorksData?.scopeOfWorks)
+        setScopeOfWorkData(
+          res?.data?.scopeOfWorksData?.scopeOfWorks?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
+        )
         setSelectedScopeOfWorkData(
-          res?.data?.scopeOfWorksData?.scopeOfWorks?.map((scopeOfWork: any) => scopeOfWork?.id)
+          res?.data?.scopeOfWorksData?.scopeOfWorks
+            ?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
+            ?.map((scopeOfWork: any) => scopeOfWork?.id)
         )
 
-        setAdditionalServiceData(
+        setSelectedAdditionalServiceScopeOfWorkData(
+          res?.data?.scopeOfWorksData?.scopeOfWorks
+            ?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
+            ?.map((scopeOfWork: any) => scopeOfWork?.id)
+        )
+        setAdditionalServiceScopeOfWorkData(
+          res?.data?.scopeOfWorksData?.scopeOfWorks?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
+        )
+        console.log(selectedScopeOfWorkData)
+        console.log(selectedAdditionalServiceScopeOfWorkData)
+
+        setSelectedAdditionalServiceData(
           res?.data?.scopeOfWorksData?.additionalServices?.map((additionalService: any) => additionalService?.id)
         )
         getEnableStep = 4
       }
 
-      if (res?.data?.deliverablesData && res?.data?.deliverablesData?.deliverables) {
+      console.log(res?.data?.deliverablesData?.deliverables)
+      console.log(res?.data)
+
+      if (res?.data?.deliverablesData && res?.data?.deliverablesData?.deliverables?.length) {
         setDeliverableScopeOfWorkData(res?.data?.deliverablesData?.deliverables)
         setSelectedDeliverableScopeOfWorkData(
           res?.data?.deliverablesData?.deliverables?.map((deliverable: any) => deliverable?.id)
@@ -1139,7 +1198,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           </Box>
                         )
                       })}
-                      {/* additionalServiceData */}
+                      {/* selectedAdditionalServiceData */}
                     </Box>
                   </Box>
                   <Box>
@@ -1166,12 +1225,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   }
                                 }}
                                 key={index}
-                                className={`${additionalServiceData?.includes(service?.id) ? 'selected' : ''}`}
+                                className={`${selectedAdditionalServiceData?.includes(service?.id) ? 'selected' : ''}`}
                                 onClick={() => {
                                   handleAdditionalServiceSelection(service?.id)
                                 }}
                               >
-                                {additionalServiceData.includes(service?.id) ? (
+                                {selectedAdditionalServiceData.includes(service?.id) ? (
                                   <CheckIcon
                                     sx={{
                                       position: 'absolute',
@@ -1312,12 +1371,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   }
                                 }}
                                 key={index}
-                                className={`${additionalServiceData?.includes(service?.id) ? 'selected' : ''}`}
+                                className={`${selectedAdditionalServiceData?.includes(service?.id) ? 'selected' : ''}`}
                                 onClick={() => {
                                   handleAdditionalServiceSelection(service?.id)
                                 }}
                               >
-                                {additionalServiceData.includes(service?.id) ? (
+                                {selectedAdditionalServiceData.includes(service?.id) ? (
                                   <CheckIcon
                                     sx={{
                                       position: 'absolute',
