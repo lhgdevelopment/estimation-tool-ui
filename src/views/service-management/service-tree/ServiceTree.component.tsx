@@ -138,14 +138,16 @@ export default function ServiceTreeComponent() {
     subArr: string
   ) => {
     if (index != -1) {
-      const subArrData = [...formData?.[subArr]]
+      const subArrData = formData?.[subArr]
       subArrData[index][field] = value
-      console.log(subArrData)
 
-      setFormData((prevState: any) => ({
-        ...prevState,
-        [subArr]: [...subArrData]
-      }))
+      console.log(formData?.[subArr])
+      console.log({ subArrData })
+
+      // setFormData((prevState: any) => ({
+      //   ...prevState,
+      //   [subArr]: [...subArrData]
+      // }))
     } else {
       setFormData((prevState: any) => ({
         ...prevState,
@@ -243,12 +245,11 @@ export default function ServiceTreeComponent() {
   }
 
   const addSubField = (formData: any, setFormData: Dispatch<SetStateAction<any>>, subArr: string, data: any) => {
-    console.log(formData)
-
     setFormData({
       ...formData,
-      [subArr]: [...formData?.[subArr], data]
+      [subArr]: [...formData?.[subArr], ...data]
     })
+    //console.log(formData)
   }
 
   const removeNameField = (
@@ -257,7 +258,7 @@ export default function ServiceTreeComponent() {
     setFormData: Dispatch<SetStateAction<any>>,
     subArr: string
   ) => {
-    const subArrData = [...formData?.[subArr]]
+    const subArrData = formData?.[subArr]
     subArrData.splice(index, 1)
     setFormData({
       ...formData,
@@ -396,9 +397,10 @@ export default function ServiceTreeComponent() {
   const onServiceGroupSubmit = (e: React.FormEvent<any>) => {
     setErrorMessage({})
     e.preventDefault()
+
     if (serviceGroupEditDataId) {
       apiRequest
-        .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData)
+        .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData?.groups)
         .then(res => {
           enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceGroupClear()
@@ -411,7 +413,10 @@ export default function ServiceTreeComponent() {
         })
     } else {
       apiRequest
-        .post('/service-groups', serviceGroupFormData)
+        .post('/service-groups', {
+          groups: [...serviceGroupFormData?.groups],
+          serviceId: serviceGroupFormData?.serviceId
+        })
         .then(res => {
           setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
