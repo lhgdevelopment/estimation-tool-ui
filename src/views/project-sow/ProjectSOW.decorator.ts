@@ -49,6 +49,17 @@ export const transcriptMeetingLinkAddButtonSx = {
   }
 }
 
+export const scopeOfWorkListContainer = {
+  display: 'flex',
+  gap: 5,
+  mb: 5,
+  overflow: 'hidden',
+  overflowY: 'auto',
+  height: '300px',
+  border: '1px solid #ecedee',
+  borderRadius: '5px',
+  p: 3
+}
 export const scopeOfWorkListSx = {
   '& .sow-list-item': {
     display: 'flex',
@@ -68,6 +79,10 @@ export const scopeOfWorkListSx = {
         '&.item-type-sow': {
           background: '#215a6c',
           color: '#fff'
+        },
+        '&.item-type-deliverable': {
+          background: '#c6dbe1',
+          color: '#215a6c'
         }
       }
     },

@@ -21,6 +21,7 @@ import {
   deliverableNoteAddButtonSx,
   deliverableNoteItemSx,
   deliverableNoteRemoveButtonSx,
+  scopeOfWorkListContainer,
   scopeOfWorkListSx,
   transcriptMeetingLinkAddButtonSx,
   transcriptSectionTitleSx
@@ -98,8 +99,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [selectedAdditionalServiceScopeOfWorkData, setSelectedAdditionalServiceScopeOfWorkData] = useState<any>([])
   const [additionalServiceData, setAdditionalServiceData] = useState<any>([])
   const [selectedAdditionalServiceData, setSelectedAdditionalServiceData] = useState<any>([])
-  const [deliverableScopeOfWorkData, setDeliverableScopeOfWorkData] = useState<any>([])
-  const [selectedDeliverableScopeOfWorkData, setSelectedDeliverableScopeOfWorkData] = useState<any>([])
+  const [deliverableData, setDeliverableData] = useState<any>([])
+  const [selectedDeliverableData, setSelectedDeliverableData] = useState<any>([])
 
   type TDeliverableNote = {
     noteLink: string
@@ -208,6 +209,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               }
 
               setPreload(false)
+              enqueueSnackbar('Updated Successfully!', { variant: 'success' })
             }, 1000)
           })
           .catch(error => {
@@ -245,6 +247,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               }
 
               setPreload(false)
+              enqueueSnackbar('Created Successfully!', { variant: 'success' })
             }, 1000)
           })
           .catch(error => {
@@ -262,8 +265,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             apiRequest
               .post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id })
               .then(res2 => {
-                enqueueSnackbar('Created Successfully!', { variant: 'success' })
-
                 setProblemGoalID(res2?.data?.id)
                 setProblemGoalText(res2?.data?.problemGoalText)
                 setTimeout(() => {
@@ -272,6 +273,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     setEnabledStep(newActiveStep)
                   }
                   setPreload(false)
+                  enqueueSnackbar('Created Successfully!', { variant: 'success' })
                 }, 1000)
               })
               .catch(error => {
@@ -299,7 +301,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 problemGoalID
               })
               .then(res2 => {
-                enqueueSnackbar('Created Successfully!', { variant: 'success' })
                 setOverviewTextID(res2?.data?.id)
                 setOverviewText(res2?.data?.overviewText)
                 setTimeout(() => {
@@ -310,6 +311,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     }
                   }
                   setPreload(false)
+                  enqueueSnackbar('Created Successfully!', { variant: 'success' })
                 }, 1000)
               })
               .catch(error => {
@@ -335,13 +337,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             apiRequest
               .get(`/scope-of-work?problemGoalId=${problemGoalID}`)
               .then(res2 => {
-                enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-
                 if (res2?.data?.scopeOfWorks.length) {
                   setScopeOfWorkData(res2?.data?.scopeOfWorks)
                   setSelectedScopeOfWorkData(res2?.data?.scopeOfWorks?.map((scopeOfWork: any) => scopeOfWork?.id))
                   setSelectedAdditionalServiceData(
-                    res2?.data?.additionalServices?.map((additionalService: any) => additionalService?.id)
+                    res2?.data?.additionalServices?.map(
+                      (additionalService: any) => additionalService?.selectedServiceId
+                    )
                   )
                   setTimeout(() => {
                     if (type == 'NEXT') {
@@ -351,13 +353,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       }
                     }
                     setPreload(false)
+                    enqueueSnackbar('Generated Successfully!', { variant: 'success' })
                   }, 1000)
                 } else {
                   apiRequest
                     .post(`/scope-of-work`, { problemGoalID })
                     .then(res3 => {
-                      enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-
                       setScopeOfWorkData(res3?.data?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId))
                       setSelectedScopeOfWorkData(
                         res3?.data
@@ -381,6 +382,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           }
                         }
                         setPreload(false)
+                        enqueueSnackbar('Generated Successfully!', { variant: 'success' })
                       }, 1000)
                     })
                     .catch(error => {
@@ -418,14 +420,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             apiRequest
               .get(`/deliverables?problemGoalId=${problemGoalID}`)
               .then(res2 => {
-                enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-                console.log(res2?.data)
-
                 if (res2?.data?.deliverables.length) {
-                  setDeliverableScopeOfWorkData(res2?.data?.deliverables)
-                  setSelectedDeliverableScopeOfWorkData(
-                    res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
-                  )
+                  setDeliverableData(res2?.data?.deliverables)
+                  setSelectedDeliverableData(res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
                   if (res2?.data?.deliverableNotes?.length) {
                     setDeliverableNotesData(res2?.data?.deliverableNotes)
                   } else {
@@ -439,16 +436,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       }
                     }
                     setPreload(false)
+                    enqueueSnackbar('Generated Successfully!', { variant: 'success' })
                   }, 1000)
                 } else {
                   apiRequest
                     .post(`/deliverables`, { problemGoalId: problemGoalID })
                     .then(res3 => {
-                      enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-                      setDeliverableScopeOfWorkData(res3?.data?.deliverable)
-                      setSelectedDeliverableScopeOfWorkData(
-                        res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
-                      )
+                      setDeliverableData(res3?.data?.deliverable)
+                      setSelectedDeliverableData(res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
                       setTimeout(() => {
                         if (type == 'NEXT') {
                           setActiveStep(newActiveStep)
@@ -457,6 +452,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           }
                         }
                         setPreload(false)
+                        enqueueSnackbar('Generated Successfully!', { variant: 'success' })
                       }, 1000)
                     })
                     .catch(error => {
@@ -485,7 +481,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       apiRequest
         .post(`/deliverables-select/`, {
           problemGoalId: problemGoalID,
-          deliverableIds: [...selectedDeliverableScopeOfWorkData],
+          deliverableIds: [...selectedDeliverableData],
           notes: [...deliverableNotesData]
         })
         .then(res => {
@@ -493,14 +489,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             apiRequest
               .get(`/deliverables?problemGoalId=${problemGoalID}`)
               .then(res2 => {
-                enqueueSnackbar('Generated Successfully!', { variant: 'success' })
                 console.log(res2?.data)
 
                 if (res2?.data?.deliverables.length) {
-                  setDeliverableScopeOfWorkData(res2?.data?.deliverables)
-                  setSelectedDeliverableScopeOfWorkData(
-                    res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
-                  )
+                  setDeliverableData(res2?.data?.deliverables)
+                  setSelectedDeliverableData(res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
                   if (res2?.data?.deliverableNotes?.length) {
                     setDeliverableNotesData(res2?.data?.deliverableNotes)
                   } else {
@@ -514,16 +507,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       }
                     }
                     setPreload(false)
+                    enqueueSnackbar('Generated Successfully!', { variant: 'success' })
                   }, 1000)
                 } else {
                   apiRequest
                     .post(`/deliverables`, { problemGoalId: problemGoalID })
                     .then(res3 => {
-                      enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-                      setDeliverableScopeOfWorkData(res3?.data?.deliverable)
-                      setSelectedDeliverableScopeOfWorkData(
-                        res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id)
-                      )
+                      setDeliverableData(res3?.data?.deliverable)
+                      setSelectedDeliverableData(res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
                       setTimeout(() => {
                         if (type == 'NEXT') {
                           setActiveStep(newActiveStep)
@@ -532,6 +523,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           }
                         }
                         setPreload(false)
+                        enqueueSnackbar('Generated Successfully!', { variant: 'success' })
                       }, 1000)
                     })
                     .catch(error => {
@@ -642,32 +634,35 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             ?.map((scopeOfWork: any) => scopeOfWork?.id)
         )
 
-        setSelectedAdditionalServiceScopeOfWorkData(
-          res?.data?.scopeOfWorksData?.scopeOfWorks
-            ?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
-            ?.map((scopeOfWork: any) => scopeOfWork?.id)
-        )
-        setAdditionalServiceScopeOfWorkData(
-          res?.data?.scopeOfWorksData?.scopeOfWorks?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
-        )
-        console.log(selectedScopeOfWorkData)
-        console.log(selectedAdditionalServiceScopeOfWorkData)
+        console.log({ additionalServiceScopeOfWorkData })
+        console.log({ selectedAdditionalServiceScopeOfWorkData })
 
         setSelectedAdditionalServiceData(
-          res?.data?.scopeOfWorksData?.additionalServices?.map((additionalService: any) => additionalService?.id)
+          res?.data?.scopeOfWorksData?.additionalServices?.map(
+            (additionalService: any) => additionalService?.selectedServiceId
+          )
         )
+
         getEnableStep = 4
       }
 
-      console.log(res?.data?.deliverablesData?.deliverables)
-      console.log(res?.data)
+      // console.log(res?.data?.deliverablesData?.deliverables)
+      // console.log(res?.data)
 
       if (res?.data?.deliverablesData && res?.data?.deliverablesData?.deliverables?.length) {
-        setDeliverableScopeOfWorkData(res?.data?.deliverablesData?.deliverables)
-        setSelectedDeliverableScopeOfWorkData(
+        setDeliverableData(res?.data?.deliverablesData?.deliverables)
+        setSelectedDeliverableData(
           res?.data?.deliverablesData?.deliverables?.map((deliverable: any) => deliverable?.id)
         )
         setDeliverableNotesData(res?.data?.deliverablesData?.deliverableNotes)
+        setSelectedAdditionalServiceScopeOfWorkData(
+          res?.data?.deliverablesData?.deliverables
+            ?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
+            ?.map((deliverable: any) => deliverable?.id)
+        )
+        setAdditionalServiceScopeOfWorkData(
+          res?.data?.deliverablesData?.deliverables?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
+        )
 
         getEnableStep = 5
       }
@@ -812,6 +807,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       }
 
       acc[projectTypeId].services.push(item)
+
+      return acc
+    }, {})
+
+    return Object.values(grouped)
+  }
+
+  function serviceDeliverableGroupByScopeOfWorkId(data: any) {
+    const grouped = data.reduce((acc: { [key: number]: any }, item: any) => {
+      const { scopeOfWorkId, scope_of_work } = item
+
+      if (!acc[scopeOfWorkId]) {
+        acc[scopeOfWorkId] = {
+          serviceScopeTitle: scope_of_work.title,
+          scopeOfWorkId: scopeOfWorkId,
+          deliverables: []
+        }
+      }
+
+      acc[scopeOfWorkId].deliverables.push(item)
 
       return acc
     }, {})
@@ -1163,19 +1178,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
               {activeStep == 4 && (
                 <Box>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      gap: 5,
-                      mb: 5,
-                      overflow: 'hidden',
-                      overflowY: 'auto',
-                      height: '300px',
-                      border: '1px solid #ecedee',
-                      borderRadius: '5px',
-                      p: 3
-                    }}
-                  >
+                  <Box sx={scopeOfWorkListContainer}>
                     <Box sx={scopeOfWorkListSx}>
                       {scopeOfWorkData?.map((scopeOfWork: any, index: number) => {
                         return (
@@ -1257,38 +1260,47 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
               {activeStep == 5 && (
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      gap: 5,
-                      mb: 5,
-                      overflow: 'hidden',
-                      overflowY: 'auto',
-                      height: '300px',
-                      border: '1px solid #ecedee',
-                      borderRadius: '5px',
-                      p: 3
-                    }}
-                  >
+                  <Box sx={scopeOfWorkListContainer}>
                     <Box sx={scopeOfWorkListSx}>
-                      {deliverableScopeOfWorkData?.map((deliverable: any, index: number) => {
+                      {serviceDeliverableGroupByScopeOfWorkId(
+                        deliverableData?.filter((deliverable: any) => !deliverable?.additionalServiceId)
+                      )?.map((scopeOfWork: any, index: number) => {
                         return (
-                          <Box className={'sow-list-item'} key={index}>
-                            <Box className={'sow-list-item-type'}>
-                              {deliverable?.['serviceScopeId'] ? (
-                                <Box className={'item-type-common item-type-hive'}>HIVE</Box>
-                              ) : (
-                                <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                              )}
+                          <Box key={index}>
+                            <Box className={'sow-list-item'}>
+                              <Box className={'sow-list-item-type'}>
+                                {scopeOfWork?.['serviceDeliverablesId'] ? (
+                                  <Box className={'item-type-common item-type-hive'}>Hive</Box>
+                                ) : (
+                                  <Box className={'item-type-common item-type-sow'}>SOW</Box>
+                                )}
+                              </Box>
+                              <Box className={'sow-list-item-check'}>
+                                <Checkbox
+                                  onChange={handleScopeOfWorkCheckbox}
+                                  value={scopeOfWork?.scopeOfWorkId}
+                                  checked={selectedDeliverableData?.includes(scopeOfWork?.scopeOfWorkId)}
+                                />
+                              </Box>
+                              <Box className={'sow-list-item-title'}>{scopeOfWork?.serviceScopeTitle}</Box>
                             </Box>
-                            <Box className={'sow-list-item-check'}>
-                              <Checkbox
-                                onChange={handleScopeOfWorkCheckbox}
-                                value={deliverable?.['id']}
-                                checked={selectedDeliverableScopeOfWorkData?.includes(deliverable?.['id'])}
-                              />
-                            </Box>
-                            <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                            {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
+                              return (
+                                <Box className={'sow-list-item'} key={deliverableIndex}>
+                                  <Box className={'sow-list-item-type'}>
+                                    <Box className={'item-type-common item-type-deliverable'}>Deliverable</Box>
+                                  </Box>
+                                  <Box className={'sow-list-item-check'}>
+                                    <Checkbox
+                                      onChange={handleScopeOfWorkCheckbox}
+                                      value={deliverable?.['id']}
+                                      checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                    />
+                                  </Box>
+                                  <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                                </Box>
+                              )
+                            })}
                           </Box>
                         )
                       })}
@@ -1347,57 +1359,55 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       })}
                     </Box>
                   </Box>
-                  {/* <Box>
-                    <Box sx={{ fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }}>Add Services</Box>
-                    <Box sx={{ py: 0, px: 5 }}>
-                      {serviceGroupByProjectTypeId(serviceList)?.map((projectType: any, index: number) => (
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, fontWeight: '600' }} key={index}>
-                          <Box sx={{ mr: 2, color: '#777' }}>{projectType?.projectTypeName}</Box>
-                          <Box>
-                            {projectType?.services?.map((service: any) => (
-                              <Box
-                                sx={{
-                                  position: 'relative',
-                                  display: 'flex',
-                                  p: '5px 25px',
-                                  borderRadius: '15px',
-                                  fontSize: '14px',
-                                  lineHeight: 'normal',
-                                  background: '#afaeb3',
-                                  color: '#fff',
-                                  cursor: 'pointer',
-                                  '&.selected': {
-                                    background: '#31A0F6'
-                                  }
-                                }}
-                                key={index}
-                                className={`${selectedAdditionalServiceData?.includes(service?.id) ? 'selected' : ''}`}
-                                onClick={() => {
-                                  handleAdditionalServiceSelection(service?.id)
-                                }}
-                              >
-                                {selectedAdditionalServiceData.includes(service?.id) ? (
-                                  <CheckIcon
-                                    sx={{
-                                      position: 'absolute',
-                                      top: '50%',
-                                      left: '5px',
-                                      transform: 'translate(0, -50%)',
-                                      fontSize: '18px',
-                                      mr: 1
-                                    }}
+                  <Box>
+                    <Box sx={{ fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }}>Added Services</Box>
+                    <Box sx={scopeOfWorkListContainer}>
+                      <Box sx={scopeOfWorkListSx}>
+                        {serviceDeliverableGroupByScopeOfWorkId(
+                          deliverableData?.filter((deliverable: any) => !deliverable?.additionalServiceId)
+                        )?.map((scopeOfWork: any, index: number) => {
+                          return (
+                            <Box key={index}>
+                              <Box className={'sow-list-item'}>
+                                <Box className={'sow-list-item-type'}>
+                                  {scopeOfWork?.['serviceDeliverablesId'] ? (
+                                    <Box className={'item-type-common item-type-hive'}>Hive</Box>
+                                  ) : (
+                                    <Box className={'item-type-common item-type-sow'}>SOW</Box>
+                                  )}
+                                </Box>
+                                <Box className={'sow-list-item-check'}>
+                                  <Checkbox
+                                    onChange={handleScopeOfWorkCheckbox}
+                                    value={scopeOfWork?.scopeOfWorkId}
+                                    checked={selectedDeliverableData?.includes(scopeOfWork?.scopeOfWorkId)}
                                   />
-                                ) : (
-                                  <></>
-                                )}
-                                {service.name}
+                                </Box>
+                                <Box className={'sow-list-item-title'}>{scopeOfWork?.serviceScopeTitle}</Box>
                               </Box>
-                            ))}
-                          </Box>
-                        </Box>
-                      ))}
+                              {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
+                                return (
+                                  <Box className={'sow-list-item'} key={deliverableIndex}>
+                                    <Box className={'sow-list-item-type'}>
+                                      <Box className={'item-type-common item-type-deliverable'}>Deliverable</Box>
+                                    </Box>
+                                    <Box className={'sow-list-item-check'}>
+                                      <Checkbox
+                                        onChange={handleScopeOfWorkCheckbox}
+                                        value={deliverable?.['id']}
+                                        checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                      />
+                                    </Box>
+                                    <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                                  </Box>
+                                )
+                              })}
+                            </Box>
+                          )
+                        })}
+                      </Box>
                     </Box>
-                  </Box> */}
+                  </Box>
                 </Box>
               )}
               {activeStep == 6 && <Box>Team Review</Box>}
