@@ -67,6 +67,7 @@ export const scopeOfWorkListSx = {
     fontSize: '12px',
     fontWeight: 600,
     color: '#777778',
+    cursor: 'pointer',
     '& .sow-list-item-type': {
       '& .item-type-common': {
         padding: '5px 20px',
@@ -127,4 +128,13 @@ export const deliverableNoteRemoveButtonSx = {
   background: '#FF4C51',
   color: '#fff',
   '&:hover': { background: '#FF4C51' }
+}
+export const sectionTitleSx = { fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }
+export const sectionSubTitleSx = {
+  display: 'flex',
+  alignItems: 'center',
+  fontSize: '14px',
+  fontWeight: '600',
+  color: '#777',
+  mb: 4
 }
