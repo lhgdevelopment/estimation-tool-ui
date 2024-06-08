@@ -1347,7 +1347,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
               {activeStep == 5 && (
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={sectionTitleSx}>Add Services</Box>
+                  <Box sx={sectionTitleSx}>Deliverable</Box>
                   <Box sx={scopeOfWorkListContainer}>
                     <Box sx={scopeOfWorkListSx}>
                       {serviceDeliverableGroupByScopeOfWorkId(
