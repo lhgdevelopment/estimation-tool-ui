@@ -21,11 +21,11 @@ import {
   deliverableNoteAddButtonSx,
   deliverableNoteItemSx,
   deliverableNoteRemoveButtonSx,
+  formTitleSx,
   scopeOfWorkListContainer,
   scopeOfWorkListSx,
   sectionSubTitleSx,
-  sectionTitleSx,
-  transcriptSectionTitleSx
+  sectionTitleSx
 } from '../ProjectSOW.decorator'
 import ProjectSOWTranscriptFormComponent from './steps/transcript/ProjectSOWTranscript.component'
 
@@ -1389,9 +1389,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               {activeStep == 6 && (
                 <Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ ...transcriptSectionTitleSx, mt: 0 }}>
-                      Team Review - {projectSOWFormData?.projectName}
-                    </Box>
+                    <Box sx={{ ...formTitleSx, mt: 0 }}>Team Review - {projectSOWFormData?.projectName}</Box>
                     <Box
                       sx={{
                         display: 'flex',

@@ -16,15 +16,6 @@ export type TProjectSOWTranscriptFormViewProps = {
   errorMessage: any
 }
 
-export const transcriptSectionTitleSx = {
-  fontSize: '20px',
-  display: 'flex',
-  mt: '20px',
-  mb: '20px',
-  color: '#31A0F6',
-  fontWeight: '600'
-}
-
 export const transcriptMeetingLinkAddButtonSx = {
   display: 'flex',
   alignItems: 'center',

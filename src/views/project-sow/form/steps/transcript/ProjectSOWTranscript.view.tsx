@@ -5,11 +5,8 @@ import 'md-editor-rt/lib/style.css'
 import { Dropdown } from 'src/@core/components/dropdown'
 import { handleFormInputChange, handleFormSelectChange } from 'src/@core/utils/form'
 import { getShortStringNumber } from 'src/@core/utils/utils'
-import {
-  TProjectSOWTranscriptFormViewProps,
-  transcriptMeetingLinkAddButtonSx,
-  transcriptSectionTitleSx
-} from './ProjectSOWTranscript.decorator'
+import { formTitleSx } from '../../../ProjectSOW.decorator'
+import { TProjectSOWTranscriptFormViewProps, transcriptMeetingLinkAddButtonSx } from './ProjectSOWTranscript.decorator'
 
 export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscriptFormViewProps) {
   const { errorMessage, projectSOWFormData, setProjectSOWFormData, setTranscriptMeetingLinks, transcriptMeetingLinks } =
@@ -18,7 +15,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
   return (
     <Box>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Box sx={{ ...transcriptSectionTitleSx, mt: 0 }}>Client Information</Box>
+        <Box sx={{ ...formTitleSx, mt: 0 }}>Client Information</Box>
         <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
           <Box sx={{ width: '50%' }}>
             <TextField
@@ -94,7 +91,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
         </Box>
       </Box>
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-        <Box sx={transcriptSectionTitleSx}>Project Details</Box>
+        <Box sx={formTitleSx}>Project Details</Box>
         <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
           <Box sx={{ width: '50%' }}>
             <Dropdown
@@ -126,7 +123,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
 
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={transcriptSectionTitleSx}>Qualifying Meeting Transcript </Box>
+          <Box sx={formTitleSx}>Qualifying Meeting Transcript </Box>
           <Box
             sx={transcriptMeetingLinkAddButtonSx}
             onClick={() => {

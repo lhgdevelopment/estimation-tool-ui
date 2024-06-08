@@ -22,6 +22,15 @@ export const projectTypeList = [
   { title: 'Marketing', id: 8 }
 ]
 
+export const formTitleSx = {
+  fontSize: '20px',
+  display: 'flex',
+  mt: '20px',
+  mb: '20px',
+  color: '#31A0F6',
+  fontWeight: '600'
+}
+
 export const scopeOfWorkListContainer = {
   display: 'flex',
   gap: 5,
