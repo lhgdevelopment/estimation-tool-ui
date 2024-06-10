@@ -71,7 +71,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
     setErrorMessage({})
     setPreload(true)
     if (router?.query['id']) {
-      formData['summaryText'] = formData['tldvLink'] ? null : summaryText
+      // formData['summaryText'] = formData['tldvLink'] ? null : summaryText
       apiRequest
         .put(`/meeting-summery/${router?.query['id']}`, formData)
         .then(res => {

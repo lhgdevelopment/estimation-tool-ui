@@ -22,7 +22,7 @@ export const projectTypeList = [
   { title: 'Marketing', id: 8 }
 ]
 
-export const transcriptSectionTitleSx = {
+export const formTitleSx = {
   fontSize: '20px',
   display: 'flex',
   mt: '20px',
@@ -31,24 +31,17 @@ export const transcriptSectionTitleSx = {
   fontWeight: '600'
 }
 
-export const transcriptMeetingLinkAddButtonSx = {
+export const scopeOfWorkListContainer = {
   display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: '30px',
-  width: '30px',
-  p: '0',
-  ml: '15px',
-  background: '#9333ea',
-  minWidth: 'auto',
-  color: '#fff',
-  borderRadius: '50%',
-  cursor: 'pointer',
-  '&:hover': {
-    background: '#7e22ce'
-  }
+  gap: 5,
+  mb: 5,
+  overflow: 'hidden',
+  overflowY: 'auto',
+  height: '300px',
+  border: '1px solid #ecedee',
+  borderRadius: '5px',
+  p: 3
 }
-
 export const scopeOfWorkListSx = {
   '& .sow-list-item': {
     display: 'flex',
@@ -56,6 +49,7 @@ export const scopeOfWorkListSx = {
     fontSize: '12px',
     fontWeight: 600,
     color: '#777778',
+    cursor: 'pointer',
     '& .sow-list-item-type': {
       '& .item-type-common': {
         padding: '5px 20px',
@@ -68,6 +62,10 @@ export const scopeOfWorkListSx = {
         '&.item-type-sow': {
           background: '#215a6c',
           color: '#fff'
+        },
+        '&.item-type-deliverable': {
+          background: '#c6dbe1',
+          color: '#215a6c'
         }
       }
     },
@@ -112,4 +110,13 @@ export const deliverableNoteRemoveButtonSx = {
   background: '#FF4C51',
   color: '#fff',
   '&:hover': { background: '#FF4C51' }
+}
+export const sectionTitleSx = { fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }
+export const sectionSubTitleSx = {
+  display: 'flex',
+  alignItems: 'center',
+  fontSize: '14px',
+  fontWeight: '600',
+  color: '#777',
+  mb: 4
 }

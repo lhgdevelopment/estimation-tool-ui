@@ -930,32 +930,39 @@ export default function ServiceTreeComponent() {
   return (
     <>
       <Box className='container px-6 mx-auto'>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
-            Service
-          </Box>
-          <Button
+        <Box
+          component={'h1'}
+          className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'
+          sx={{ display: 'flex', alignItems: 'center' }}
+        >
+          Service
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '40px',
+              width: '40px',
+              p: '0',
+              ml: '20px',
+              background: '#9333ea',
+              minWidth: 'auto',
+              color: '#fff',
+              borderRadius: '50%',
+              cursor: 'pointer',
+              '&:hover': {
+                background: '#7e22ce'
+              }
+            }}
             onClick={() => {
               handleServiceModalOpen()
               setFormType(EServiceFormType.SERVICE)
             }}
-            sx={{
-              fontSize: '12px',
-              textTransform: 'none',
-              padding: '2px 10px',
-              border: '1px solid #9333ea',
-              lineHeight: 'normal',
-              color: '#9333ea',
-              mx: '5px',
-              '&:hover': {
-                background: '#9333ea',
-                color: '#fff'
-              }
-            }}
           >
-            <AddIcon fontSize='small' /> Add Service
-          </Button>
+            <AddIcon />
+          </Box>
         </Box>
+
         <Box>
           <Box sx={{ flexGrow: 1 }}>
             <DirectoryTree
