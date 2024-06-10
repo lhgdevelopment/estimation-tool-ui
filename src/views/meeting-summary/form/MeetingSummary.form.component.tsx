@@ -90,7 +90,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
 
             return updatedList
           })
-          router.push('/meeting-summery/')
+          router.push('/meeting-summary/')
         })
         .catch(error => {
           setPreload(false)
