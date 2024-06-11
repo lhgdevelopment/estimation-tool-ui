@@ -123,7 +123,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
 
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Box sx={formTitleSx}>Qualifying Meeting Transcript </Box>
+          <Box sx={formTitleSx}>Qualifying Meeting Transcript</Box>
           <Box
             sx={transcriptMeetingLinkAddButtonSx}
             onClick={() => {
