@@ -8,17 +8,18 @@ import { useEffect, useRef, useState } from 'react'
 type TMarkdownEditorProps = EditorProps
 
 export function MarkdownEditor(props: TMarkdownEditorProps) {
-  const { language = 'en-US', preview = true, modelValue } = props
+  const { language = 'en-US', preview = true, modelValue, readOnly } = props
+
   const mdEditorRef = useRef<ExposeParam>()
   const [isPreviewOpen, setIsPreview] = useState<boolean>(preview)
   const [isCopied, setIsCopied] = useState<boolean>(false)
+
   useEffect(() => {
     mdEditorRef.current?.on('preview', (e: boolean) => {
       setIsPreview(e)
-      console.log(e)
     })
   }, [])
-  console.log()
+
   const handleCopyClick = () => {
     navigator.clipboard
       .writeText(modelValue)
@@ -30,7 +31,7 @@ export function MarkdownEditor(props: TMarkdownEditorProps) {
   }
 
   return (
-    <Box sx={{ position: 'relative' }}>
+    <Box sx={{ position: 'relative' }} className={`${readOnly ? 'read-only' : ''}`}>
       {isPreviewOpen && (
         <Box
           sx={{

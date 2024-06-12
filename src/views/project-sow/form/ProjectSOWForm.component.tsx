@@ -7,6 +7,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Checkbox, IconButton, SelectChangeEvent, Step, StepButton, Stepper, TextField } from '@mui/material'
 import { useMask } from '@react-input/mask'
+import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
@@ -27,6 +28,7 @@ import {
   sectionSubTitleSx,
   sectionTitleSx
 } from '../ProjectSOW.decorator'
+import { teamReviewBoxSx } from './ProjectSOWForm.decorator'
 import ProjectSOWTranscriptFormComponent from './steps/transcript/ProjectSOWTranscript.component'
 
 const steps = [
@@ -1390,17 +1392,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 <Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Box sx={{ ...formTitleSx, mt: 0 }}>Team Review - {projectSOWFormData?.projectName}</Box>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        p: '20px',
-                        boxShadow: '4px 4px 4px 4px rgb(0 0 0 / 0.1)'
-                      }}
-                    >
-                      <Box sx={sectionSubTitleSx}>Client Information</Box>
+                    <Box sx={teamReviewBoxSx}>
+                      <Box className='team-review-box-title'>Client Information</Box>
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '50%' }}>
+                        <Box sx={{ width: '30%' }}>
                           <TextField
                             id='outlined-multiline-flexible'
                             label='Company Name'
@@ -1420,7 +1415,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               )
                             })}
                         </Box>
-                        <Box sx={{ width: '50%' }}>
+                        <Box sx={{ width: '70%' }}>
                           <TextField
                             id='outlined-multiline-flexible'
                             label='Website'
@@ -1433,9 +1428,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           />
                         </Box>
                       </Box>
-                      <Box sx={sectionSubTitleSx}>Project Details</Box>
+                      <Box className='team-review-box-title'>Project Details</Box>
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '50%' }}>
+                        <Box sx={{ width: '30%' }}>
                           <Dropdown
                             label={'Services'}
                             url={'services'}
@@ -1444,7 +1439,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             disabled
                           />
                         </Box>
-                        <Box sx={{ width: '50%' }}>
+                        <Box sx={{ width: '70%' }}>
                           <TextField
                             id='outlined-multiline-flexible'
                             label='Project Name'
@@ -1457,34 +1452,110 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           />
                         </Box>
                       </Box>
-                      <Box sx={sectionSubTitleSx}>Qualifying Meeting Transcripts</Box>
+                      <Box className='team-review-box-title'>Qualifying Meeting Transcripts</Box>
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                         <Box sx={{ width: '50%' }}>
                           <TextField
                             id='outlined-multiline-flexible'
-                            label='Project Name'
+                            label='Meeting Transcripts'
                             className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                               errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
                             }`}
                             name='projectName'
-                            value={projectSOWFormData.projectName}
+                            value={''}
+                            disabled
+                          />
+                        </Box>
+                        <Box sx={{ width: '50%' }}>
+                          <TextField
+                            id='outlined-multiline-flexible'
+                            label='Meeting Transcripts'
+                            className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                              errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                            }`}
+                            name='projectName'
+                            value={''}
                             disabled
                           />
                         </Box>
                       </Box>
-                      <Box sx={sectionSubTitleSx}>Account Manager Notes</Box>
+                      <Box className='team-review-box-title'>Account Manager Notes</Box>
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                         <Box sx={{ width: '50%' }}>
                           <TextField
                             id='outlined-multiline-flexible'
-                            label='Project Name'
+                            label='Account Manager Notes'
                             className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                               errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
                             }`}
                             name='projectName'
-                            value={projectSOWFormData.projectName}
+                            value={''}
                             disabled
                           />
+                        </Box>
+                      </Box>
+                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                        <Box sx={{ width: '100%' }}>
+                          <Box
+                            component={'textarea'}
+                            id='outlined-multiline-flexible'
+                            className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                              errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                            }`}
+                            name='projectName'
+                            rows={5}
+                          />
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Box sx={{ ...teamReviewBoxSx, p: 0 }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Box sx={{ width: '100%' }}>
+                          <Box
+                            className='team-review-box-title'
+                            sx={{ p: '10px 15px', borderBottom: '1px solid rgba(0, 0, 0, 0.1)' }}
+                          >
+                            Problem & Goals
+                          </Box>
+                        </Box>
+                        <Box className='team-review-content-box'>
+                          <MdPreview modelValue={problemGoalText} />
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Box sx={{ ...teamReviewBoxSx, p: 0 }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Box sx={{ width: '100%' }}>
+                          <Box
+                            className='team-review-box-title'
+                            sx={{ p: '10px 15px', borderBottom: '1px solid rgba(0, 0, 0, 0.1)' }}
+                          >
+                            Project Overview
+                          </Box>
+                        </Box>
+                        <Box className='team-review-content-box'>
+                          <MdPreview modelValue={overviewText} />
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Box sx={teamReviewBoxSx}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Box sx={{ width: '100%' }}>
+                          <Box className='team-review-box-title'>Project Team Needed</Box>
+                        </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item'>Account Manager</Box>
+                            <Box>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item'>Account Manager</Box>
+                            <Box>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
                         </Box>
                       </Box>
                     </Box>
