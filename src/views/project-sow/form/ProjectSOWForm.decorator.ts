@@ -65,3 +65,17 @@ export const teamReviewBoxSx = {
     }
   }
 }
+
+export const sowEstimationAccordionSectionSx = {
+  mb: 5,
+  boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.1)',
+  borderRadius: '10px',
+  '&.Mui-expanded': { boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.1)' },
+  '&::before': { display: 'none' },
+  '& .section-title': {
+    fontSize: '16px',
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#777'
+  }
+}

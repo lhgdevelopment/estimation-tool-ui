@@ -3,9 +3,22 @@ import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box, Checkbox, IconButton, SelectChangeEvent, Step, StepButton, Stepper, TextField } from '@mui/material'
+import {
+  Accordion,
+  Box,
+  Checkbox,
+  IconButton,
+  SelectChangeEvent,
+  Step,
+  StepButton,
+  Stepper,
+  TextField
+} from '@mui/material'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
 import { useMask } from '@react-input/mask'
 import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
@@ -28,7 +41,8 @@ import {
   sectionSubTitleSx,
   sectionTitleSx
 } from '../ProjectSOW.decorator'
-import { teamReviewBoxSx } from './ProjectSOWForm.decorator'
+
+import { sowEstimationAccordionSectionSx, teamReviewBoxSx } from './ProjectSOWForm.decorator'
 import ProjectSOWTranscriptFormComponent from './steps/transcript/ProjectSOWTranscript.component'
 
 const steps = [
@@ -734,7 +748,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           res?.data?.deliverablesData?.deliverables?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
         )
 
-        getEnableStep = 6
+        getEnableStep = 9
       }
 
       setEnabledStep(getEnableStep)
@@ -1036,7 +1050,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#summaryText'}>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Summary Text</span>
+                        <Box sx={{ ...formTitleSx, mt: 0 }}>
+                          {projectSOWFormData?.projectName} - Qualifying Meeting Summary
+                        </Box>
                         <Box
                           sx={{
                             position: 'relative'
@@ -1063,8 +1079,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Problem Goal Text</span>
-
+                        <Box sx={{ ...formTitleSx, mt: 0 }}> {projectSOWFormData?.projectName}'s Problem & Goal</Box>
                         <Box
                           sx={{
                             position: 'relative'
@@ -1090,7 +1105,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                     <Box sx={{ width: '100%' }}>
                       <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Overview Text</span>
+                        <Box sx={{ ...formTitleSx, mt: 0 }}>Project Overview</Box>
                         <Box
                           sx={{
                             position: 'relative'
@@ -1562,7 +1577,110 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   </Box>
                 </Box>
               )}
-              {activeStep == 7 && <Box>Estimation</Box>}
+              {activeStep == 7 && (
+                <Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ ...formTitleSx, mt: 0 }}>Team Review - {projectSOWFormData?.projectName}</Box>
+                    <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
+                      <AccordionSummary
+                        sx={{ borderBottom: '2px solid #f9fafb' }}
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls='sow1-content'
+                        id='sow1-header'
+                        className='section-title'
+                      >
+                        Client Information
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Box sx={{ display: 'flex', gap: 5, mt: 5 }}>
+                          <Box sx={{ width: '30%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Company Name'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600'
+                              }`}
+                              name='company'
+                              value={projectSOWFormData.company}
+                              disabled
+                            />
+                            {!!errorMessage?.['company'] &&
+                              errorMessage?.['company']?.map((message: any, index: number) => {
+                                return (
+                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                    {message}
+                                  </span>
+                                )
+                              })}
+                          </Box>
+                          <Box sx={{ width: '70%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Website'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='clientWebsite'
+                              value={projectSOWFormData.clientWebsite}
+                              disabled
+                            />
+                          </Box>
+                        </Box>
+                      </AccordionDetails>
+                    </Accordion>
+                    <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
+                      <AccordionSummary
+                        sx={{ borderBottom: '2px solid #f9fafb' }}
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls='sow1-content'
+                        id='sow1-header'
+                        className='section-title'
+                      >
+                        Problem & Goals
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <MdPreview modelValue={problemGoalText} />
+                      </AccordionDetails>
+                    </Accordion>
+                    <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
+                      <AccordionSummary
+                        sx={{ borderBottom: '2px solid #f9fafb' }}
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls='sow1-content'
+                        id='sow1-header'
+                        className='section-title'
+                      >
+                        Project Overview
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <MdPreview modelValue={overviewText} />
+                      </AccordionDetails>
+                    </Accordion>
+
+                    <Box sx={teamReviewBoxSx}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Box sx={{ width: '100%' }}>
+                          <Box className='team-review-box-title'>Project Team Needed</Box>
+                        </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item'>Account Manager</Box>
+                            <Box>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item'>Account Manager</Box>
+                            <Box>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
               {activeStep == 8 && <Box>Review</Box>}
               {activeStep == 9 && <Box>Approval</Box>}
             </Box>

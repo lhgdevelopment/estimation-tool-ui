@@ -248,17 +248,8 @@ export default function ProjectSOWDetailsComponent() {
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={sowBodySx}>
-                  <Box ref={deliverablesRef}>
-                    <MdPreview
-                      modelValue={
-                        detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.[
-                          'deliverables'
-                        ]?.['deliverablesText']
-                      }
-                    />
-                  </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
-                    <CopyToClipboard textToCopy={deliverablesRef?.current?.innerText} />
+                    {/* <CopyToClipboard textToCopy={deliverablesRef?.current?.innerText} /> */}
                     <Link href={`/project-summary/edit/${detailsData?.id}?step=5`} passHref>
                       <Box
                         sx={{ cursor: 'pointer' }}
