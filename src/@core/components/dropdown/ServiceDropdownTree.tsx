@@ -1,20 +1,26 @@
 import SearchIcon from '@mui/icons-material/Search'
-import { Box, InputAdornment, ListSubheader, TextField } from '@mui/material'
+import { Box, InputAdornment, ListSubheader, SxProps, TextField } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
 import { useEffect, useState } from 'react'
 import apiRequest from '../../utils/axios-config'
 
-interface ISelectProps extends SelectProps {
+type TOptionConfig = { title: string; id: string }
+
+interface ISelectProps {
   label?: string
+  url?: string
+  isEnumField?: boolean
   searchable?: boolean
   searchPlaceholder?: string
-  type?: 'services' | 'groups' | 'sows' | 'deliverables' | 'tasks'
-  filter?: string
+  optionConfig?: TOptionConfig
+  enumList?: { title: string; id: string | number }[]
+  sx?: SxProps
 }
 
-export function ServiceDropdownTree(props: ISelectProps) {
+type SelectPropsWithISelectProps = SelectProps & ISelectProps
+export function ServiceDropdownTree(props: SelectPropsWithISelectProps) {
   const {
     placeholder = 'Please Select',
     multiple = false,

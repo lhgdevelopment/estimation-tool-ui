@@ -19,7 +19,6 @@ import {
 } from '@mui/material'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
-import { useMask } from '@react-input/mask'
 import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
@@ -74,13 +73,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [serviceDeliverablesChecked, setServiceDeliverablesChecked] = React.useState<any[]>([])
   const [serviceDeliverableLeftList, setServiceDeliverableLeftList] = React.useState<any[]>([])
   const [serviceDeliverableRightList, setServiceDeliverableRightList] = React.useState<any[]>([])
-
-  const phoneInputRef = useMask({
-    mask: '(___) ___-____',
-    replacement: { _: /\d/ },
-    showMask: true,
-    separate: true
-  })
 
   const projectSOWDefaultData = {
     transcriptId: '',
@@ -1407,192 +1399,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 <Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Box sx={{ ...formTitleSx, mt: 0 }}>Team Review - {projectSOWFormData?.projectName}</Box>
-                    <Box sx={teamReviewBoxSx}>
-                      <Box className='team-review-box-title'>Client Information</Box>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '30%' }}>
-                          <TextField
-                            id='outlined-multiline-flexible'
-                            label='Company Name'
-                            className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                              errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600'
-                            }`}
-                            name='company'
-                            value={projectSOWFormData.company}
-                            disabled
-                          />
-                          {!!errorMessage?.['company'] &&
-                            errorMessage?.['company']?.map((message: any, index: number) => {
-                              return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                  {message}
-                                </span>
-                              )
-                            })}
-                        </Box>
-                        <Box sx={{ width: '70%' }}>
-                          <TextField
-                            id='outlined-multiline-flexible'
-                            label='Website'
-                            className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                              errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                            }`}
-                            name='clientWebsite'
-                            value={projectSOWFormData.clientWebsite}
-                            disabled
-                          />
-                        </Box>
-                      </Box>
-                      <Box className='team-review-box-title'>Project Details</Box>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '30%' }}>
-                          <Dropdown
-                            label={'Services'}
-                            url={'services'}
-                            name='serviceId'
-                            value={projectSOWFormData.serviceId}
-                            disabled
-                          />
-                        </Box>
-                        <Box sx={{ width: '70%' }}>
-                          <TextField
-                            id='outlined-multiline-flexible'
-                            label='Project Name'
-                            className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                              errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                            }`}
-                            name='projectName'
-                            value={projectSOWFormData.projectName}
-                            disabled
-                          />
-                        </Box>
-                      </Box>
-                      <Box className='team-review-box-title'>Qualifying Meeting Transcripts</Box>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '50%' }}>
-                          <TextField
-                            id='outlined-multiline-flexible'
-                            label='Meeting Transcripts'
-                            className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                              errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                            }`}
-                            name='projectName'
-                            value={''}
-                            disabled
-                          />
-                        </Box>
-                        <Box sx={{ width: '50%' }}>
-                          <TextField
-                            id='outlined-multiline-flexible'
-                            label='Meeting Transcripts'
-                            className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                              errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                            }`}
-                            name='projectName'
-                            value={''}
-                            disabled
-                          />
-                        </Box>
-                      </Box>
-                      <Box className='team-review-box-title'>Account Manager Notes</Box>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '50%' }}>
-                          <TextField
-                            id='outlined-multiline-flexible'
-                            label='Account Manager Notes'
-                            className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                              errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                            }`}
-                            name='projectName'
-                            value={''}
-                            disabled
-                          />
-                        </Box>
-                      </Box>
-                      <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                        <Box sx={{ width: '100%' }}>
-                          <Box
-                            component={'textarea'}
-                            id='outlined-multiline-flexible'
-                            className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                              errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                            }`}
-                            name='projectName'
-                            rows={5}
-                          />
-                        </Box>
-                      </Box>
-                    </Box>
-                    <Box sx={{ ...teamReviewBoxSx, p: 0 }}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Box sx={{ width: '100%' }}>
-                          <Box
-                            className='team-review-box-title'
-                            sx={{ p: '10px 15px', borderBottom: '1px solid rgba(0, 0, 0, 0.1)' }}
-                          >
-                            Problem & Goals
-                          </Box>
-                        </Box>
-                        <Box className='team-review-content-box'>
-                          <MdPreview modelValue={problemGoalText} />
-                        </Box>
-                      </Box>
-                    </Box>
-                    <Box sx={{ ...teamReviewBoxSx, p: 0 }}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Box sx={{ width: '100%' }}>
-                          <Box
-                            className='team-review-box-title'
-                            sx={{ p: '10px 15px', borderBottom: '1px solid rgba(0, 0, 0, 0.1)' }}
-                          >
-                            Project Overview
-                          </Box>
-                        </Box>
-                        <Box className='team-review-content-box'>
-                          <MdPreview modelValue={overviewText} />
-                        </Box>
-                      </Box>
-                    </Box>
-                    <Box sx={teamReviewBoxSx}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Box sx={{ width: '100%' }}>
-                          <Box className='team-review-box-title'>Project Team Needed</Box>
-                        </Box>
-                        <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item'>Account Manager</Box>
-                            <Box>
-                              <Dropdown url='users' />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item'>Account Manager</Box>
-                            <Box>
-                              <Dropdown url='users' />
-                            </Box>
-                          </Box>
-                        </Box>
-                      </Box>
-                    </Box>
-                  </Box>
-                </Box>
-              )}
-              {activeStep == 7 && (
-                <Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ ...formTitleSx, mt: 0 }}>Team Review - {projectSOWFormData?.projectName}</Box>
-                    <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
+
+                    <Accordion sx={teamReviewBoxSx}>
                       <AccordionSummary
-                        sx={{ borderBottom: '2px solid #f9fafb' }}
                         expandIcon={<ExpandMoreIcon />}
-                        aria-controls='sow1-content'
-                        id='sow1-header'
-                        className='section-title'
+                        aria-controls='client-information-content'
+                        id='client-information-header'
                       >
                         Client Information
                       </AccordionSummary>
                       <AccordionDetails>
-                        <Box sx={{ display: 'flex', gap: 5, mt: 5 }}>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                           <Box sx={{ width: '30%' }}>
                             <TextField
                               id='outlined-multiline-flexible'
@@ -1626,15 +1443,93 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             />
                           </Box>
                         </Box>
+                        <Box className='team-review-box-title'>Project Details</Box>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                          <Box sx={{ width: '30%' }}>
+                            <Dropdown
+                              label={'Services'}
+                              url={'services'}
+                              name='serviceId'
+                              value={projectSOWFormData.serviceId}
+                              disabled
+                            />
+                          </Box>
+                          <Box sx={{ width: '70%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Project Name'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='projectName'
+                              value={projectSOWFormData.projectName}
+                              disabled
+                            />
+                          </Box>
+                        </Box>
+                        <Box className='team-review-box-title'>Qualifying Meeting Transcripts</Box>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                          <Box sx={{ width: '50%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Meeting Transcripts'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='projectName'
+                              value={''}
+                              disabled
+                            />
+                          </Box>
+                          <Box sx={{ width: '50%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Meeting Transcripts'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='projectName'
+                              value={''}
+                              disabled
+                            />
+                          </Box>
+                        </Box>
+                        <Box className='team-review-box-title'>Account Manager Notes</Box>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                          <Box sx={{ width: '50%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Account Manager Notes'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='projectName'
+                              value={''}
+                              disabled
+                            />
+                          </Box>
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                          <Box sx={{ width: '100%' }}>
+                            <Box
+                              component={'textarea'}
+                              id='outlined-multiline-flexible'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='projectName'
+                              rows={5}
+                            />
+                          </Box>
+                        </Box>
                       </AccordionDetails>
                     </Accordion>
-                    <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
+
+                    <Accordion sx={teamReviewBoxSx}>
                       <AccordionSummary
-                        sx={{ borderBottom: '2px solid #f9fafb' }}
                         expandIcon={<ExpandMoreIcon />}
-                        aria-controls='sow1-content'
-                        id='sow1-header'
-                        className='section-title'
+                        aria-controls='problemAndGoal-content'
+                        id='problemAndGoal-header'
                       >
                         Problem & Goals
                       </AccordionSummary>
@@ -1642,13 +1537,294 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         <MdPreview modelValue={problemGoalText} />
                       </AccordionDetails>
                     </Accordion>
-                    <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
+
+                    <Accordion sx={teamReviewBoxSx}>
                       <AccordionSummary
-                        sx={{ borderBottom: '2px solid #f9fafb' }}
                         expandIcon={<ExpandMoreIcon />}
-                        aria-controls='sow1-content'
-                        id='sow1-header'
-                        className='section-title'
+                        aria-controls='problemAndGoal-content'
+                        id='problemAndGoal-header'
+                      >
+                        Project Overview
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <MdPreview modelValue={overviewText} />
+                      </AccordionDetails>
+                    </Accordion>
+
+                    <Box sx={teamReviewBoxSx}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Box sx={{ width: '100%' }}>
+                          <Box className='team-review-box-title'>Project Team Needed</Box>
+                        </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item'>Account Manager</Box>
+                            <Box>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item'>Account Manager</Box>
+                            <Box>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Box>
+              )}
+              {activeStep == 7 && (
+                // <Box>
+                //   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                //     <Box sx={{ ...formTitleSx, mt: 0 }}>Team Review - {projectSOWFormData?.projectName}</Box>
+                //     <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
+                //       <AccordionSummary
+                //         sx={{ borderBottom: '2px solid #f9fafb' }}
+                //         expandIcon={<ExpandMoreIcon />}
+                //         aria-controls='sow1-content'
+                //         id='sow1-header'
+                //         className='section-title'
+                //       >
+                //         Client Information
+                //       </AccordionSummary>
+                //       <AccordionDetails>
+                //         <Box sx={{ display: 'flex', gap: 5, mt: 5 }}>
+                //           <Box sx={{ width: '30%' }}>
+                //             <TextField
+                //               id='outlined-multiline-flexible'
+                //               label='Company Name'
+                //               className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                //                 errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600'
+                //               }`}
+                //               name='company'
+                //               value={projectSOWFormData.company}
+                //               disabled
+                //             />
+                //             {!!errorMessage?.['company'] &&
+                //               errorMessage?.['company']?.map((message: any, index: number) => {
+                //                 return (
+                //                   <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                //                     {message}
+                //                   </span>
+                //                 )
+                //               })}
+                //           </Box>
+                //           <Box sx={{ width: '70%' }}>
+                //             <TextField
+                //               id='outlined-multiline-flexible'
+                //               label='Website'
+                //               className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                //                 errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                //               }`}
+                //               name='clientWebsite'
+                //               value={projectSOWFormData.clientWebsite}
+                //               disabled
+                //             />
+                //           </Box>
+                //         </Box>
+                //       </AccordionDetails>
+                //     </Accordion>
+                //     <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
+                //       <AccordionSummary
+                //         sx={{ borderBottom: '2px solid #f9fafb' }}
+                //         expandIcon={<ExpandMoreIcon />}
+                //         aria-controls='sow1-content'
+                //         id='sow1-header'
+                //         className='section-title'
+                //       >
+                //         Problem & Goals
+                //       </AccordionSummary>
+                //       <AccordionDetails>
+                //         <MdPreview modelValue={problemGoalText} />
+                //       </AccordionDetails>
+                //     </Accordion>
+                //     <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
+                //       <AccordionSummary
+                //         sx={{ borderBottom: '2px solid #f9fafb' }}
+                //         expandIcon={<ExpandMoreIcon />}
+                //         aria-controls='sow1-content'
+                //         id='sow1-header'
+                //         className='section-title'
+                //       >
+                //         Project Overview
+                //       </AccordionSummary>
+                //       <AccordionDetails>
+                //         <MdPreview modelValue={overviewText} />
+                //       </AccordionDetails>
+                //     </Accordion>
+
+                //     <Box sx={teamReviewBoxSx}>
+                //       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                //         <Box sx={{ width: '100%' }}>
+                //           <Box className='team-review-box-title'>Project Team Needed</Box>
+                //         </Box>
+                //         <Box className='team-review-team-need-box'>
+                //           <Box className='team-review-team-need-inner'>
+                //             <Box className='team-review-team-need-item'>Account Manager</Box>
+                //             <Box>
+                //               <Dropdown url='users' />
+                //             </Box>
+                //           </Box>
+                //           <Box className='team-review-team-need-inner'>
+                //             <Box className='team-review-team-need-item'>Account Manager</Box>
+                //             <Box>
+                //               <Dropdown url='users' />
+                //             </Box>
+                //           </Box>
+                //         </Box>
+                //       </Box>
+                //     </Box>
+                //   </Box>
+                // </Box>
+                <Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ ...formTitleSx, mt: 0 }}>Estimation - {projectSOWFormData?.projectName}</Box>
+
+                    <Accordion sx={teamReviewBoxSx}>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls='client-information-content'
+                        id='client-information-header'
+                      >
+                        Client Information
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                          <Box sx={{ width: '30%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Company Name'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600'
+                              }`}
+                              name='company'
+                              value={projectSOWFormData.company}
+                              disabled
+                            />
+                            {!!errorMessage?.['company'] &&
+                              errorMessage?.['company']?.map((message: any, index: number) => {
+                                return (
+                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                    {message}
+                                  </span>
+                                )
+                              })}
+                          </Box>
+                          <Box sx={{ width: '70%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Website'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='clientWebsite'
+                              value={projectSOWFormData.clientWebsite}
+                              disabled
+                            />
+                          </Box>
+                        </Box>
+                        <Box className='team-review-box-title'>Project Details</Box>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                          <Box sx={{ width: '30%' }}>
+                            <Dropdown
+                              label={'Services'}
+                              url={'services'}
+                              name='serviceId'
+                              value={projectSOWFormData.serviceId}
+                              disabled
+                            />
+                          </Box>
+                          <Box sx={{ width: '70%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Project Name'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='projectName'
+                              value={projectSOWFormData.projectName}
+                              disabled
+                            />
+                          </Box>
+                        </Box>
+                        <Box className='team-review-box-title'>Qualifying Meeting Transcripts</Box>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                          <Box sx={{ width: '50%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Meeting Transcripts'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='projectName'
+                              value={''}
+                              disabled
+                            />
+                          </Box>
+                          <Box sx={{ width: '50%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Meeting Transcripts'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='projectName'
+                              value={''}
+                              disabled
+                            />
+                          </Box>
+                        </Box>
+                        <Box className='team-review-box-title'>Account Manager Notes</Box>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                          <Box sx={{ width: '50%' }}>
+                            <TextField
+                              id='outlined-multiline-flexible'
+                              label='Account Manager Notes'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='projectName'
+                              value={''}
+                              disabled
+                            />
+                          </Box>
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+                          <Box sx={{ width: '100%' }}>
+                            <Box
+                              component={'textarea'}
+                              id='outlined-multiline-flexible'
+                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                              }`}
+                              name='projectName'
+                              rows={5}
+                            />
+                          </Box>
+                        </Box>
+                      </AccordionDetails>
+                    </Accordion>
+
+                    <Accordion sx={teamReviewBoxSx}>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls='problemAndGoal-content'
+                        id='problemAndGoal-header'
+                      >
+                        Problem & Goals
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <MdPreview modelValue={problemGoalText} />
+                      </AccordionDetails>
+                    </Accordion>
+
+                    <Accordion sx={teamReviewBoxSx}>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls='problemAndGoal-content'
+                        id='problemAndGoal-header'
                       >
                         Project Overview
                       </AccordionSummary>
