@@ -595,7 +595,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               })
           }
         })
-        .catch(error => {})
+        .catch(error => {
+          console.log(error)
+        })
     } else {
       setPreload(false)
     }
