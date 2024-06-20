@@ -124,6 +124,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   // const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [projectTypeList, setProjectTypeList] = useState<any>([])
   const [serviceList, setServiceList] = useState<any>([])
+  const [userList, setUserList] = useState<any>([])
   const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
 
   const serviceDeliverablesFormDefaultData = {
@@ -607,7 +608,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setActiveStep(step)
   }
 
-  const handleScopeOfWorkCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleScopeOfWorkCheckbox: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { checked, value } = e.target
     setSelectedScopeOfWorkData((prevState: any) => {
       if (checked) {
@@ -879,6 +880,21 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
   }
 
+  const getUserList = async () => {
+    await apiRequest
+      .get(`/users`)
+      .then(res => {
+        setUserList(
+          res?.data?.map((item: any) => {
+            return { ...item, title: item?.name }
+          })
+        )
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.message, { variant: 'error' })
+      })
+  }
+
   const onClear = () => {
     setProjectSOWFormData(prevState => ({ ...projectSOWDefaultData }))
 
@@ -982,6 +998,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setEnabledStep(0)
     setActiveStep(0)
     getServiceList()
+    getUserList()
   }, [])
 
   useEffect(() => {
@@ -1174,11 +1191,18 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         return (
                           <Box className={'sow-list-item'} key={index}>
                             <Box className={'sow-list-item-type'}>
-                              {scopeOfWork?.['serviceScopeId'] ? (
+                              {/* {scopeOfWork?.['serviceScopeId'] ? (
                                 <Box className={'item-type-common item-type-hive'}>HIVE</Box>
                               ) : (
                                 <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                              )}
+                              )} */}
+                              <Box
+                                className={`item-type-common item-type-sow ${
+                                  scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                }`}
+                              >
+                                SOW
+                              </Box>
                             </Box>
                             <Box className={'sow-list-item-check'}>
                               <Checkbox
@@ -1260,11 +1284,18 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box key={index}>
                             <Box className={'sow-list-item'} component={'label'}>
                               <Box className={'sow-list-item-type'}>
-                                {scopeOfWork?.['serviceDeliverablesId'] ? (
+                                {/* {scopeOfWork?.['serviceDeliverablesId'] ? (
                                   <Box className={'item-type-common item-type-hive'}>Hive</Box>
                                 ) : (
                                   <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                                )}
+                                )} */}
+                                <Box
+                                  className={`item-type-common item-type-sow ${
+                                    scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                  }`}
+                                >
+                                  SOW
+                                </Box>
                               </Box>
                               <Box className={'sow-list-item-check'}>
                                 <Checkbox
@@ -1384,11 +1415,18 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                       <Box key={scopeOfWorkIndex}>
                                         <Box className={'sow-list-item'} component={'label'}>
                                           <Box className={'sow-list-item-type'}>
-                                            {scopeOfWork?.['serviceDeliverablesId'] ? (
+                                            {/* {scopeOfWork?.['serviceDeliverablesId'] ? (
                                               <Box className={'item-type-common item-type-hive'}>Hive</Box>
                                             ) : (
                                               <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                                            )}
+                                            )} */}
+                                            <Box
+                                              className={`item-type-common item-type-sow ${
+                                                scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                              }`}
+                                            >
+                                              SOW
+                                            </Box>
                                           </Box>
                                           <Box className={'sow-list-item-check'}>
                                             <Checkbox
@@ -1607,13 +1645,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Account Manager</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Project Manager</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                         </Box>
@@ -1621,13 +1659,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Graphic Designer</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>UI/UX Designer</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                         </Box>
@@ -1635,7 +1673,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Web Designer</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'></Box>
@@ -1644,13 +1682,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Sr. Developer</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>WP Specialist</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                         </Box>
@@ -1658,7 +1696,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Jr. Developer</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'></Box>
@@ -1833,13 +1871,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Account Manager</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Project Manager</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                         </Box>
@@ -1847,13 +1885,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Graphic Designer</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>UI/UX Designer</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                         </Box>
@@ -1861,7 +1899,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Web Designer</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'></Box>
@@ -1870,13 +1908,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Sr. Developer</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>WP Specialist</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                         </Box>
@@ -1884,7 +1922,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Jr. Developer</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown url='users' />
+                              <Dropdown dataList={userList} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'></Box>
@@ -1903,11 +1941,18 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               <Box key={index}>
                                 <Box className={'sow-list-item'} component={'label'}>
                                   <Box className={'sow-list-item-type'}>
-                                    {scopeOfWork?.['serviceDeliverablesId'] ? (
+                                    {/*  {scopeOfWork?.['serviceDeliverablesId'] ? (
                                       <Box className={'item-type-common item-type-hive'}>Hive</Box>
                                     ) : (
                                       <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                                    )}
+                                    )} */}
+                                    <Box
+                                      className={`item-type-common item-type-sow ${
+                                        scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                      }`}
+                                    >
+                                      SOW
+                                    </Box>
                                   </Box>
                                   <Box className={'sow-list-item-check'}>
                                     <Checkbox
@@ -1925,18 +1970,76 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                 </Box>
                                 {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
                                   return (
-                                    <Box className={'sow-list-item'} key={deliverableIndex} component={'label'}>
-                                      <Box className={'sow-list-item-type'}>
-                                        <Box className={'item-type-common item-type-deliverable'}>Deliverable</Box>
+                                    <Box key={deliverableIndex}>
+                                      <Box className={'sow-list-item'} component={'label'}>
+                                        <Box className={'sow-list-item-type'}>
+                                          <Box
+                                            className={`item-type-common item-type-deliverable ${
+                                              scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                            }`}
+                                          >
+                                            Deliverable
+                                          </Box>
+                                        </Box>
+                                        <Box className={'sow-list-item-check'}>
+                                          <Checkbox
+                                            onChange={handleDeliverableCheckbox}
+                                            value={deliverable?.['id']}
+                                            checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                          />
+                                        </Box>
+                                        <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
                                       </Box>
-                                      <Box className={'sow-list-item-check'}>
-                                        <Checkbox
-                                          onChange={handleDeliverableCheckbox}
-                                          value={deliverable?.['id']}
-                                          checked={selectedDeliverableData?.includes(deliverable?.['id'])}
-                                        />
+                                      <Box className={'sow-list-item'} component={'label'}>
+                                        <Box className={'sow-list-item-type'}>
+                                          <Box
+                                            className={`item-type-common item-type-task ${
+                                              scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                            }`}
+                                          >
+                                            Task
+                                          </Box>
+                                        </Box>
+                                        <Box className={'sow-list-item-check'}>
+                                          <Checkbox
+                                            onChange={handleDeliverableCheckbox}
+                                            value={deliverable?.['id']}
+                                            checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                          />
+                                        </Box>
+                                        <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                                        {selectedDeliverableData?.includes(deliverable?.['id']) && (
+                                          <Box className={'sow-list-item-input'}>
+                                            <Dropdown dataList={userList} />
+                                            <TextField className={'sow-list-item-text-input'} />
+                                          </Box>
+                                        )}
                                       </Box>
-                                      <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                                      <Box className={'sow-list-item'} component={'label'}>
+                                        <Box className={'sow-list-item-type'}>
+                                          <Box
+                                            className={`item-type-common item-type-subtask ${
+                                              scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                            }`}
+                                          >
+                                            Subtask
+                                          </Box>
+                                        </Box>
+                                        <Box className={'sow-list-item-check'}>
+                                          <Checkbox
+                                            onChange={handleDeliverableCheckbox}
+                                            value={deliverable?.['id']}
+                                            checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                          />
+                                        </Box>
+                                        <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                                        {selectedDeliverableData?.includes(deliverable?.['id']) && (
+                                          <Box className={'sow-list-item-input'}>
+                                            <Dropdown dataList={userList} />
+                                            <TextField className={'sow-list-item-text-input'} />
+                                          </Box>
+                                        )}
+                                      </Box>
                                     </Box>
                                   )
                                 })}
@@ -1975,11 +2078,18 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <Box key={scopeOfWorkIndex}>
                                           <Box className={'sow-list-item'} component={'label'}>
                                             <Box className={'sow-list-item-type'}>
-                                              {scopeOfWork?.['serviceDeliverablesId'] ? (
+                                              {/* {scopeOfWork?.['serviceDeliverablesId'] ? (
                                                 <Box className={'item-type-common item-type-hive'}>Hive</Box>
                                               ) : (
                                                 <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                                              )}
+                                              )} */}
+                                              <Box
+                                                className={`item-type-common item-type-sow ${
+                                                  scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                                }`}
+                                              >
+                                                SOW
+                                              </Box>
                                             </Box>
                                             <Box className={'sow-list-item-check'}>
                                               <Checkbox

@@ -50,14 +50,15 @@ export const scopeOfWorkListSx = {
     fontWeight: 600,
     color: '#777778',
     cursor: 'pointer',
+    mb: '10px',
     '& .sow-list-item-type': {
       '& .item-type-common': {
         padding: '5px 20px',
         borderRadius: '15px',
-
+        width: '130px',
+        textAlign: 'center',
         '&.item-type-hive': {
-          background: '#903fe8',
-          color: '#fff'
+          border: '3px solid #903fe8'
         },
         '&.item-type-sow': {
           background: '#215a6c',
@@ -66,11 +67,32 @@ export const scopeOfWorkListSx = {
         '&.item-type-deliverable': {
           background: '#c6dbe1',
           color: '#215a6c'
+        },
+        '&.item-type-task': {
+          background: '#ffc8a9',
+          color: '#215a6c'
+        },
+        '&.item-type-subtask': {
+          background: '#ffe5a0',
+          color: '#215a6c'
         }
       }
     },
     '& .sow-list-item-check': { mx: 2 },
-    '& .sow-list-item-title': { lineHeight: 'normal' }
+    '& .sow-list-item-title': { lineHeight: 'normal', width: '100%', maxWidth: '500px' },
+    '& .sow-list-item-input': {
+      display: 'flex',
+      '& .MuiSelect-select': {
+        p: '5px'
+      },
+      '& .sow-list-item-text-input': {
+        ml: '5px',
+        '& .MuiInputBase-input': {
+          p: '5px',
+          width: '30px'
+        }
+      }
+    }
   }
 }
 
