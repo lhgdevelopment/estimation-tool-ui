@@ -41,7 +41,7 @@ import {
   sectionTitleSx
 } from '../ProjectSOW.decorator'
 
-import { sowEstimationAccordionSectionSx, teamReviewBoxSx } from './ProjectSOWForm.decorator'
+import { teamReviewBoxSx } from './ProjectSOWForm.decorator'
 import ProjectSOWTranscriptFormComponent from './steps/transcript/ProjectSOWTranscript.component'
 
 const steps = [
@@ -111,6 +111,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [selectedAdditionalServiceData, setSelectedAdditionalServiceData] = useState<any>([])
   const [deliverableData, setDeliverableData] = useState<any>([])
   const [selectedDeliverableData, setSelectedDeliverableData] = useState<any>([])
+
+  const [estimationTaskData, setEstimationTaskData] = useState<any>([])
 
   type TDeliverableNote = {
     noteLink: string
@@ -196,6 +198,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setErrorMessage({})
     const newActiveStep =
       isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1
+    // console.log({ activeStep })
     if (activeStep === 0) {
       projectSOWFormData.meetingLinks = [...transcriptMeetingLinks]
       if (projectSOWID) {
@@ -499,7 +502,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             apiRequest
               .get(`/deliverables?problemGoalId=${problemGoalID}`)
               .then(res2 => {
-                console.log(res2?.data)
+                // console.log(res2?.data)
 
                 if (res2?.data?.deliverables.length) {
                   setDeliverableData(res2?.data?.deliverables)
@@ -560,6 +563,41 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     }
 
     if (activeStep === 6) {
+      // console.log({ activeStep })
+    }
+    if (activeStep === 7) {
+      apiRequest
+        .get(`/estimation-tasks?problemGoalId=${problemGoalID}`)
+        .then(res => {
+          console.log(res)
+          if (res?.data?.tasks?.length) {
+            setEstimationTaskData(res?.data?.tasks)
+          } else {
+            apiRequest
+              .post(`/estimation-tasks`, { problemGoalId: problemGoalID })
+              .then(res2 => {
+                setEstimationTaskData(res?.data)
+                setTimeout(() => {
+                  if (type == 'NEXT') {
+                    setActiveStep(newActiveStep)
+                    if (enabledStep < newActiveStep) {
+                      setEnabledStep(newActiveStep)
+                    }
+                  }
+                  setPreload(false)
+                  enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                }, 1000)
+              })
+              .catch(error => {
+                setPreload(false)
+                setErrorMessage(error?.response?.data?.errors)
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+              })
+          }
+        })
+        .catch(error => {})
+    } else {
+      setPreload(false)
     }
   }
 
@@ -656,96 +694,103 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     if (!id) return
     let getEnableStep = 0
     setPreload(true)
-    apiRequest.get(`/project-summery/${id}`).then((res: any) => {
-      const transcriptId = res?.data?.id || ''
-      const transcriptText = res?.data?.meeting_transcript?.['transcriptText'] || ''
-      const serviceId = res?.data?.meeting_transcript?.['serviceId'] || ''
-      const projectName = res?.data?.meeting_transcript?.['projectName'] || ''
-      const company = res?.data?.meeting_transcript?.['company'] || ''
-      const clientEmail = res?.data?.meeting_transcript?.['clientEmail'] || ''
-      const clientPhone = res?.data?.meeting_transcript?.['clientPhone'] || ''
-      const clientWebsite = res?.data?.meeting_transcript?.['clientWebsite'] || ''
-      const meetingLinks = res?.data?.meeting_transcript?.['meeting_links'].map(
-        (meeting_link: any) => meeting_link?.meetingLink
-      ) || ['']
+    apiRequest
+      .get(`/project-summery/${id}`)
+      .then((res: any) => {
+        const transcriptId = res?.data?.id || ''
+        const transcriptText = res?.data?.meeting_transcript?.['transcriptText'] || ''
+        const serviceId = res?.data?.meeting_transcript?.['serviceId'] || ''
+        const projectName = res?.data?.meeting_transcript?.['projectName'] || ''
+        const company = res?.data?.meeting_transcript?.['company'] || ''
+        const clientEmail = res?.data?.meeting_transcript?.['clientEmail'] || ''
+        const clientPhone = res?.data?.meeting_transcript?.['clientPhone'] || ''
+        const clientWebsite = res?.data?.meeting_transcript?.['clientWebsite'] || ''
+        const meetingLinks = res?.data?.meeting_transcript?.['meeting_links'].map(
+          (meeting_link: any) => meeting_link?.meetingLink
+        ) || ['']
 
-      const summaryText = res?.data?.['summaryText'] || ''
-      setTranscriptMeetingLinks(
-        res?.data?.meeting_transcript?.['meeting_links'].map((meeting_link: any) => meeting_link?.meetingLink) || ['']
-      )
-
-      setProjectSOWFormData({
-        transcriptId,
-        serviceId,
-        projectName,
-        company,
-        clientEmail,
-        clientPhone,
-        clientWebsite,
-        meetingLinks,
-        summaryText
-      })
-      setProjectSOWID(id)
-      setSummaryText(res?.data?.['summaryText'])
-      getEnableStep = 1
-      if (res?.data?.meeting_transcript?.problems_and_goals?.['id']) {
-        setProblemGoalID(res?.data?.meeting_transcript?.problems_and_goals?.['id'])
-        setProblemGoalText(res?.data?.meeting_transcript?.problems_and_goals?.problemGoalText)
-        getEnableStep = 2
-      }
-
-      if (res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.['id']) {
-        setOverviewTextID(res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.['id'])
-        setOverviewText(res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.overviewText)
-        getEnableStep = 3
-      }
-
-      if (res?.data?.scopeOfWorksData && res?.data?.scopeOfWorksData?.scopeOfWorks?.length) {
-        setScopeOfWorkData(
-          res?.data?.scopeOfWorksData?.scopeOfWorks?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
-        )
-        setSelectedScopeOfWorkData(
-          res?.data?.scopeOfWorksData?.scopeOfWorks
-            ?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
-            ?.map((scopeOfWork: any) => scopeOfWork?.id)
+        const summaryText = res?.data?.['summaryText'] || ''
+        setTranscriptMeetingLinks(
+          res?.data?.meeting_transcript?.['meeting_links'].map((meeting_link: any) => meeting_link?.meetingLink) || ['']
         )
 
-        console.log({ additionalServiceScopeOfWorkData })
-        console.log({ selectedAdditionalServiceScopeOfWorkData })
+        setProjectSOWFormData({
+          transcriptId,
+          serviceId,
+          projectName,
+          company,
+          clientEmail,
+          clientPhone,
+          clientWebsite,
+          meetingLinks,
+          summaryText
+        })
+        setProjectSOWID(id)
+        setSummaryText(res?.data?.['summaryText'])
+        getEnableStep = 1
+        if (res?.data?.meeting_transcript?.problems_and_goals?.['id']) {
+          setProblemGoalID(res?.data?.meeting_transcript?.problems_and_goals?.['id'])
+          setProblemGoalText(res?.data?.meeting_transcript?.problems_and_goals?.problemGoalText)
+          getEnableStep = 2
+        }
 
-        setSelectedAdditionalServiceData(
-          res?.data?.scopeOfWorksData?.additionalServices?.map(
-            (additionalService: any) => additionalService?.selectedServiceId
+        if (res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.['id']) {
+          setOverviewTextID(res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.['id'])
+          setOverviewText(res?.data?.meeting_transcript?.problems_and_goals?.project_overview?.overviewText)
+          getEnableStep = 3
+        }
+
+        if (res?.data?.scopeOfWorksData && res?.data?.scopeOfWorksData?.scopeOfWorks?.length) {
+          setScopeOfWorkData(
+            res?.data?.scopeOfWorksData?.scopeOfWorks?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
           )
-        )
+          setSelectedScopeOfWorkData(
+            res?.data?.scopeOfWorksData?.scopeOfWorks
+              ?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
+              ?.map((scopeOfWork: any) => scopeOfWork?.id)
+          )
 
-        getEnableStep = 4
-      }
+          // console.log({ additionalServiceScopeOfWorkData })
+          // console.log({ selectedAdditionalServiceScopeOfWorkData })
 
-      // console.log(res?.data?.deliverablesData?.deliverables)
-      // console.log(res?.data)
+          setSelectedAdditionalServiceData(
+            res?.data?.scopeOfWorksData?.additionalServices?.map(
+              (additionalService: any) => additionalService?.selectedServiceId
+            )
+          )
 
-      if (res?.data?.deliverablesData && res?.data?.deliverablesData?.deliverables?.length) {
-        setDeliverableData(res?.data?.deliverablesData?.deliverables)
-        setSelectedDeliverableData(
-          res?.data?.deliverablesData?.deliverables?.map((deliverable: any) => deliverable?.id)
-        )
-        setDeliverableNotesData(res?.data?.deliverablesData?.deliverableNotes)
-        setSelectedAdditionalServiceScopeOfWorkData(
-          res?.data?.deliverablesData?.deliverables
-            ?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
-            ?.map((deliverable: any) => deliverable?.id)
-        )
-        setAdditionalServiceScopeOfWorkData(
-          res?.data?.deliverablesData?.deliverables?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
-        )
+          getEnableStep = 4
+        }
 
-        getEnableStep = 9
-      }
+        console.log(res?.data?.deliverablesData?.deliverables)
+        console.log(res?.data)
 
-      setEnabledStep(getEnableStep)
-      setPreload(false)
-    })
+        if (res?.data?.deliverablesData && res?.data?.deliverablesData?.deliverables?.length) {
+          setDeliverableData(res?.data?.deliverablesData?.deliverables)
+          setSelectedDeliverableData(
+            res?.data?.deliverablesData?.deliverables?.map((deliverable: any) => deliverable?.id)
+          )
+          setDeliverableNotesData(res?.data?.deliverablesData?.deliverableNotes)
+          setSelectedAdditionalServiceScopeOfWorkData(
+            res?.data?.deliverablesData?.deliverables
+              ?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
+              ?.map((deliverable: any) => deliverable?.id)
+          )
+          setAdditionalServiceScopeOfWorkData(
+            res?.data?.deliverablesData?.deliverables?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
+          )
+
+          getEnableStep = 9
+        }
+
+        setEnabledStep(getEnableStep)
+        setPreload(false)
+      })
+      .catch(error => {
+        setEnabledStep(0)
+        setPreload(false)
+        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+      })
   }
 
   // const getServiceTree = async () => {
@@ -949,9 +994,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   useEffect(() => {
     if (activeStep) {
-      const currentPath = router.asPath.split('?')?.[0]
+      const currentPath = router.asPath.split('?')[0]
       const updatedPath = `${currentPath}?step=${activeStep}`
-      router.replace(updatedPath)
+      router.replace(updatedPath, undefined, { shallow: true })
     }
   }, [activeStep])
 
@@ -1551,24 +1596,70 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       </AccordionDetails>
                     </Accordion>
 
-                    <Box sx={teamReviewBoxSx}>
+                    <Box sx={{ ...teamReviewBoxSx, p: '15px' }}>
                       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Box sx={{ width: '100%' }}>
                           <Box className='team-review-box-title'>Project Team Needed</Box>
                         </Box>
                         <Box className='team-review-team-need-box'>
                           <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item'>Account Manager</Box>
-                            <Box>
+                            <Box className='team-review-team-need-item-title'>Account Manager</Box>
+                            <Box className='team-review-team-need-item-input'>
                               <Dropdown url='users' />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item'>Account Manager</Box>
-                            <Box>
+                            <Box className='team-review-team-need-item-title'>Project Manager</Box>
+                            <Box className='team-review-team-need-item-input'>
                               <Dropdown url='users' />
                             </Box>
                           </Box>
+                        </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>Graphic Designer</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>UI/UX Designer</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                        </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>Web Designer</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'></Box>
+                        </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>Sr. Developer</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>WP Specialist</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                        </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>Jr. Developer</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'></Box>
                         </Box>
                       </Box>
                     </Box>
@@ -1576,108 +1667,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 </Box>
               )}
               {activeStep == 7 && (
-                // <Box>
-                //   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                //     <Box sx={{ ...formTitleSx, mt: 0 }}>Team Review - {projectSOWFormData?.projectName}</Box>
-                //     <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
-                //       <AccordionSummary
-                //         sx={{ borderBottom: '2px solid #f9fafb' }}
-                //         expandIcon={<ExpandMoreIcon />}
-                //         aria-controls='sow1-content'
-                //         id='sow1-header'
-                //         className='section-title'
-                //       >
-                //         Client Information
-                //       </AccordionSummary>
-                //       <AccordionDetails>
-                //         <Box sx={{ display: 'flex', gap: 5, mt: 5 }}>
-                //           <Box sx={{ width: '30%' }}>
-                //             <TextField
-                //               id='outlined-multiline-flexible'
-                //               label='Company Name'
-                //               className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                //                 errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600'
-                //               }`}
-                //               name='company'
-                //               value={projectSOWFormData.company}
-                //               disabled
-                //             />
-                //             {!!errorMessage?.['company'] &&
-                //               errorMessage?.['company']?.map((message: any, index: number) => {
-                //                 return (
-                //                   <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                //                     {message}
-                //                   </span>
-                //                 )
-                //               })}
-                //           </Box>
-                //           <Box sx={{ width: '70%' }}>
-                //             <TextField
-                //               id='outlined-multiline-flexible'
-                //               label='Website'
-                //               className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                //                 errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                //               }`}
-                //               name='clientWebsite'
-                //               value={projectSOWFormData.clientWebsite}
-                //               disabled
-                //             />
-                //           </Box>
-                //         </Box>
-                //       </AccordionDetails>
-                //     </Accordion>
-                //     <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
-                //       <AccordionSummary
-                //         sx={{ borderBottom: '2px solid #f9fafb' }}
-                //         expandIcon={<ExpandMoreIcon />}
-                //         aria-controls='sow1-content'
-                //         id='sow1-header'
-                //         className='section-title'
-                //       >
-                //         Problem & Goals
-                //       </AccordionSummary>
-                //       <AccordionDetails>
-                //         <MdPreview modelValue={problemGoalText} />
-                //       </AccordionDetails>
-                //     </Accordion>
-                //     <Accordion defaultExpanded={false} sx={sowEstimationAccordionSectionSx}>
-                //       <AccordionSummary
-                //         sx={{ borderBottom: '2px solid #f9fafb' }}
-                //         expandIcon={<ExpandMoreIcon />}
-                //         aria-controls='sow1-content'
-                //         id='sow1-header'
-                //         className='section-title'
-                //       >
-                //         Project Overview
-                //       </AccordionSummary>
-                //       <AccordionDetails>
-                //         <MdPreview modelValue={overviewText} />
-                //       </AccordionDetails>
-                //     </Accordion>
-
-                //     <Box sx={teamReviewBoxSx}>
-                //       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                //         <Box sx={{ width: '100%' }}>
-                //           <Box className='team-review-box-title'>Project Team Needed</Box>
-                //         </Box>
-                //         <Box className='team-review-team-need-box'>
-                //           <Box className='team-review-team-need-inner'>
-                //             <Box className='team-review-team-need-item'>Account Manager</Box>
-                //             <Box>
-                //               <Dropdown url='users' />
-                //             </Box>
-                //           </Box>
-                //           <Box className='team-review-team-need-inner'>
-                //             <Box className='team-review-team-need-item'>Account Manager</Box>
-                //             <Box>
-                //               <Dropdown url='users' />
-                //             </Box>
-                //           </Box>
-                //         </Box>
-                //       </Box>
-                //     </Box>
-                //   </Box>
-                // </Box>
                 <Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                     <Box sx={{ ...formTitleSx, mt: 0 }}>Estimation - {projectSOWFormData?.projectName}</Box>
@@ -1833,25 +1822,211 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       </AccordionDetails>
                     </Accordion>
 
-                    <Box sx={teamReviewBoxSx}>
+                    <Box sx={{ ...teamReviewBoxSx, p: '15px' }}>
                       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Box sx={{ width: '100%' }}>
                           <Box className='team-review-box-title'>Project Team Needed</Box>
                         </Box>
                         <Box className='team-review-team-need-box'>
                           <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item'>Account Manager</Box>
-                            <Box>
+                            <Box className='team-review-team-need-item-title'>Account Manager</Box>
+                            <Box className='team-review-team-need-item-input'>
                               <Dropdown url='users' />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item'>Account Manager</Box>
-                            <Box>
+                            <Box className='team-review-team-need-item-title'>Project Manager</Box>
+                            <Box className='team-review-team-need-item-input'>
                               <Dropdown url='users' />
                             </Box>
                           </Box>
                         </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>Graphic Designer</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>UI/UX Designer</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                        </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>Web Designer</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'></Box>
+                        </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>Sr. Developer</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>WP Specialist</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                        </Box>
+                        <Box className='team-review-team-need-box'>
+                          <Box className='team-review-team-need-inner'>
+                            <Box className='team-review-team-need-item-title'>Jr. Developer</Box>
+                            <Box className='team-review-team-need-item-input'>
+                              <Dropdown url='users' />
+                            </Box>
+                          </Box>
+                          <Box className='team-review-team-need-inner'></Box>
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      <Box sx={sectionTitleSx}>Deliverable</Box>
+                      <Box sx={scopeOfWorkListContainer}>
+                        <Box sx={scopeOfWorkListSx}>
+                          {serviceDeliverableGroupByScopeOfWorkId(
+                            deliverableData?.filter((deliverable: any) => !deliverable?.additionalServiceId)
+                          )?.map((scopeOfWork: any, index: number) => {
+                            return (
+                              <Box key={index}>
+                                <Box className={'sow-list-item'} component={'label'}>
+                                  <Box className={'sow-list-item-type'}>
+                                    {scopeOfWork?.['serviceDeliverablesId'] ? (
+                                      <Box className={'item-type-common item-type-hive'}>Hive</Box>
+                                    ) : (
+                                      <Box className={'item-type-common item-type-sow'}>SOW</Box>
+                                    )}
+                                  </Box>
+                                  <Box className={'sow-list-item-check'}>
+                                    <Checkbox
+                                      onChange={() => {
+                                        handleDeliverableCheckboxBySow(scopeOfWork?.deliverables)
+                                      }}
+                                      value={scopeOfWork?.id}
+                                      checked={isSowCheckedInDeliverable(
+                                        scopeOfWork?.deliverables,
+                                        selectedDeliverableData
+                                      )}
+                                    />
+                                  </Box>
+                                  <Box className={'sow-list-item-title'}>{scopeOfWork?.title}</Box>
+                                </Box>
+                                {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
+                                  return (
+                                    <Box className={'sow-list-item'} key={deliverableIndex} component={'label'}>
+                                      <Box className={'sow-list-item-type'}>
+                                        <Box className={'item-type-common item-type-deliverable'}>Deliverable</Box>
+                                      </Box>
+                                      <Box className={'sow-list-item-check'}>
+                                        <Checkbox
+                                          onChange={handleDeliverableCheckbox}
+                                          value={deliverable?.['id']}
+                                          checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                        />
+                                      </Box>
+                                      <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                                    </Box>
+                                  )
+                                })}
+                              </Box>
+                            )
+                          })}
+                        </Box>
+                      </Box>
+                    </Box>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                      <Box sx={sectionTitleSx}>Added Services</Box>
+                      <Box>
+                        {scopeOfWorkGroupByAdditionalServiceId(
+                          serviceDeliverableGroupByScopeOfWorkId(
+                            deliverableData?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
+                          )
+                        )?.map((additionalService: any, additionalServiceIndex: number) => {
+                          return (
+                            <Box key={additionalServiceIndex}>
+                              <Box sx={sectionSubTitleSx} component={'label'}>
+                                <Checkbox
+                                  onChange={() => {
+                                    handleDeliverableCheckboxByService(additionalService)
+                                  }}
+                                  value={additionalService?.id}
+                                  checked={isServiceCheckedInDeliverable(additionalService, selectedDeliverableData)}
+                                  sx={{ p: 0, mr: 2 }}
+                                />
+                                {additionalService?.id}
+                              </Box>
+                              <Box sx={scopeOfWorkListContainer}>
+                                <Box sx={scopeOfWorkListSx}>
+                                  {additionalService?.scope_of_works?.map(
+                                    (scopeOfWork: any, scopeOfWorkIndex: number) => {
+                                      return (
+                                        <Box key={scopeOfWorkIndex}>
+                                          <Box className={'sow-list-item'} component={'label'}>
+                                            <Box className={'sow-list-item-type'}>
+                                              {scopeOfWork?.['serviceDeliverablesId'] ? (
+                                                <Box className={'item-type-common item-type-hive'}>Hive</Box>
+                                              ) : (
+                                                <Box className={'item-type-common item-type-sow'}>SOW</Box>
+                                              )}
+                                            </Box>
+                                            <Box className={'sow-list-item-check'}>
+                                              <Checkbox
+                                                onChange={() => {
+                                                  handleDeliverableCheckboxBySow(scopeOfWork?.deliverables)
+                                                }}
+                                                value={scopeOfWork?.id}
+                                                checked={isSowCheckedInDeliverable(
+                                                  scopeOfWork?.deliverables,
+                                                  selectedDeliverableData
+                                                )}
+                                              />
+                                            </Box>
+                                            <Box className={'sow-list-item-title'}>{scopeOfWork?.title}</Box>
+                                          </Box>
+                                          {scopeOfWork?.deliverables?.map(
+                                            (deliverable: any, deliverableIndex: number) => {
+                                              return (
+                                                <Box
+                                                  className={'sow-list-item'}
+                                                  key={deliverableIndex}
+                                                  component={'label'}
+                                                >
+                                                  <Box className={'sow-list-item-type'}>
+                                                    <Box className={'item-type-common item-type-deliverable'}>
+                                                      Deliverable
+                                                    </Box>
+                                                  </Box>
+                                                  <Box className={'sow-list-item-check'}>
+                                                    <Checkbox
+                                                      onChange={handleDeliverableCheckbox}
+                                                      value={deliverable?.['id']}
+                                                      checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                                    />
+                                                  </Box>
+                                                  <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                                                </Box>
+                                              )
+                                            }
+                                          )}
+                                        </Box>
+                                      )
+                                    }
+                                  )}
+                                </Box>
+                              </Box>
+                            </Box>
+                          )
+                        })}
                       </Box>
                     </Box>
                   </Box>

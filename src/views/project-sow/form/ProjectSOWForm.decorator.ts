@@ -35,10 +35,11 @@ export type TProjectSOwFormViewProps = {
 export const teamReviewBoxSx = {
   display: 'flex',
   flexDirection: 'column',
-  p: '15px',
+
   boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.1)',
   mb: '25px',
-  borderRadius: '15px',
+  borderRadius: '10px',
+  '&::before': { display: 'none' },
   '& .team-review-box-title': {
     display: 'flex',
     alignItems: 'center',
@@ -57,10 +58,23 @@ export const teamReviewBoxSx = {
     display: 'flex',
     '& .team-review-team-need-inner': {
       display: 'flex',
+      alignItems: 'center',
       width: '50%',
-      '& .team-review-team-need-item': {
+      paddingRight: '10px',
+      mb: '10px',
+      ':last-child': {
+        paddingRight: 0,
+        paddingLeft: '10px'
+      },
+      '& .team-review-team-need-item-title': {
         display: 'flex',
-        width: '50%'
+        width: '140px'
+      },
+      '& .team-review-team-need-item-input': {
+        width: 'calc(100% - 140px)',
+        '& .MuiSelect-select': {
+          p: '10px'
+        }
       }
     }
   }
