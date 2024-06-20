@@ -6,7 +6,9 @@ import Select, { SelectProps } from '@mui/material/Select'
 import { useEffect, useState } from 'react'
 import apiRequest from '../../utils/axios-config'
 
-interface ISelectProps extends SelectProps {
+type TOptionConfig = { title: string; id: string }
+
+interface ISelectProps {
   label?: string
   searchable?: boolean
   searchPlaceholder?: string
@@ -14,7 +16,8 @@ interface ISelectProps extends SelectProps {
   filter?: string
 }
 
-export function ServiceDropdownTree(props: ISelectProps) {
+type SelectPropsWithISelectProps = SelectProps & ISelectProps
+export function ServiceDropdownTree(props: SelectPropsWithISelectProps) {
   const {
     placeholder = 'Please Select',
     multiple = false,
