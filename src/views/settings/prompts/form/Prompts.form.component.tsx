@@ -119,7 +119,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Type</span>
                 <Dropdown
                   isEnumField
-                  enumList={promptsTypeList}
+                  dataList={promptsTypeList}
                   name='type'
                   value={promptsPromptsFormData.type}
                   onChange={handleSelectChange}

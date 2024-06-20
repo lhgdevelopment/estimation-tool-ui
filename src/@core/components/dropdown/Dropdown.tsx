@@ -19,7 +19,7 @@ interface ISelectProps {
   searchable?: boolean
   searchPlaceholder?: string
   optionConfig?: TOptionConfig
-  enumList?: { title: string; id: string | number }[]
+  dataList?: { title: string; id: string | number }[]
   sx?: SxProps
   isAddNewButton?: boolean
   onAddNew?: () => void
@@ -33,7 +33,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     placeholder,
     url,
     isEnumField = false,
-    enumList,
+    dataList,
     optionConfig = { title: 'name', id: 'id' },
     multiple = false,
     searchable = true,
@@ -74,9 +74,9 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
         .catch(() => {
           getList()
         })
-    } else if (enumList) {
-      setOptionItems([...enumList])
-      setInitialOptionList([...enumList])
+    } else if (dataList) {
+      setOptionItems([...dataList])
+      setInitialOptionList([...dataList])
       setPreloader(false)
     } else {
       setOptionItems([])
