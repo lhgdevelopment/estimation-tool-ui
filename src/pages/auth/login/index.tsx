@@ -5,11 +5,12 @@ import MuiCard, { CardProps } from '@mui/material/Card'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 import { styled } from '@mui/material/styles'
 
+import LoadingButton from '@mui/lab/LoadingButton'
 import { Box } from '@mui/material'
 import axios from 'axios'
 import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
 import BlankLayout from 'src/layouts/BlankLayout'
-
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: '28rem' }
@@ -29,6 +30,8 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const LoginPage = () => {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const [preload, setPreload] = useState<boolean>(false)
   const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
@@ -47,6 +50,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent<any>) => {
     setErrorMessage('')
+    setPreload(true)
     await axios
       .post(`${process.env['API_BASE_URL']}/login`, formData)
       .then(response => {
@@ -64,8 +68,10 @@ const LoginPage = () => {
         router.back()
       })
       .catch(error => {
-        console.error('Login failed:', error)
+        setPreload(false)
+        // console.error('Login failed:', error)
         setErrorMessage(error?.response?.data?.message)
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
   }
 
@@ -112,6 +118,7 @@ const LoginPage = () => {
                   type='text'
                   name='email'
                   onChange={e => handleTextChange(e)}
+                  disabled={preload}
                 />
               </label>
               <label className='block mt-4 text-sm'>
@@ -124,18 +131,23 @@ const LoginPage = () => {
                   type='password'
                   name='password'
                   onChange={e => handleTextChange(e)}
+                  disabled={preload}
                 />
               </label>
 
               {!!errorMessage && <p className='text-sm text-red-600 dark:text-red-400 mt-5'>{errorMessage}</p>}
 
-              <button
+              <LoadingButton
                 type='submit'
                 onClick={handleSubmit}
                 className='block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+                loading={preload}
+                loadingPosition='start'
+                variant='contained'
+                sx={{ mt: '15px' }}
               >
                 Log in
-              </button>
+              </LoadingButton>
 
               {/* <hr className='my-8' /> */}
 
