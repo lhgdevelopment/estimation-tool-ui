@@ -24,7 +24,6 @@ import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
-import { Dropdown } from 'src/@core/components/dropdown'
 import { MarkdownEditor } from 'src/@core/components/markdown-editor'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -41,6 +40,8 @@ import {
   sectionTitleSx
 } from '../ProjectSOW.decorator'
 
+import axios from 'axios'
+import { Dropdown } from 'src/@core/components/dropdown/Dropdown'
 import { teamReviewBoxSx } from './ProjectSOWForm.decorator'
 import ProjectSOWTranscriptFormComponent from './steps/transcript/ProjectSOWTranscript.component'
 
@@ -112,6 +113,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [deliverableData, setDeliverableData] = useState<any>([])
   const [selectedDeliverableData, setSelectedDeliverableData] = useState<any>([])
 
+  const [employeeRoleIdData, setEmployeeIdRole] = useState<any>([])
+
   const [estimationTaskData, setEstimationTaskData] = useState<any>([])
 
   type TDeliverableNote = {
@@ -126,6 +129,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [serviceList, setServiceList] = useState<any>([])
   const [userList, setUserList] = useState<any>([])
   const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
+  const [employeeRoleData, setEmployeeRole] = useState<any>([])
 
   const serviceDeliverablesFormDefaultData = {
     teamMember: '',
@@ -881,10 +885,29 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }
 
   const getUserList = async () => {
-    await apiRequest
-      .get(`/users`)
+    await axios
+      .get('https://time.cloud.lhgdev.com/en/api/payroll/users', {
+        headers: {
+          'X-AUTH-USER': 'lhg-raju',
+          'X-AUTH-TOKEN': 'raju@2016'
+        }
+      })
       .then(res => {
         setUserList(
+          res?.data?.map((item: any) => {
+            return { ...item, title: item?.name }
+          })
+        )
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.message, { variant: 'error' })
+      })
+  }
+  const getEmployeeRoleList = async () => {
+    await apiRequest
+      .get(`/employee-roles`)
+      .then(res => {
+        setEmployeeRole(
           res?.data?.map((item: any) => {
             return { ...item, title: item?.name }
           })
@@ -998,7 +1021,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setEnabledStep(0)
     setActiveStep(0)
     getServiceList()
-    getUserList()
+    // getUserList()
+    getEmployeeRoleList()
   }, [])
 
   useEffect(() => {
@@ -1645,7 +1669,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-team-need-inner'>
                             <Box className='team-review-team-need-item-title'>Account Manager</Box>
                             <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
+                              <Dropdown dataList={userList} optionConfig={{ id: 'id', title: 'username' }} />
                             </Box>
                           </Box>
                           <Box className='team-review-team-need-inner'>
@@ -1654,52 +1678,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               <Dropdown dataList={userList} />
                             </Box>
                           </Box>
-                        </Box>
-                        <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Graphic Designer</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>UI/UX Designer</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                        </Box>
-                        <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Web Designer</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'></Box>
-                        </Box>
-                        <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Sr. Developer</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>WP Specialist</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                        </Box>
-                        <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Jr. Developer</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'></Box>
                         </Box>
                       </Box>
                     </Box>
