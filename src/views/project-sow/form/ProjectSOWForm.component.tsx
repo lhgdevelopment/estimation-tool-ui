@@ -42,7 +42,7 @@ import {
 
 import axios from 'axios'
 import { Dropdown } from 'src/@core/components/dropdown/Dropdown'
-import { teamReviewBoxSx } from './ProjectSOWForm.decorator'
+import { kimaiUserData, teamReviewBoxSx } from './ProjectSOWForm.decorator'
 import ProjectSOWTranscriptFormComponent from './steps/transcript/ProjectSOWTranscript.component'
 
 const steps = [
@@ -1248,7 +1248,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       {serviceGroupByProjectTypeId(serviceList)?.map((projectType: any, index: number) => (
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, fontWeight: '600' }} key={index}>
                           <Box sx={{ mr: 2, color: '#777' }}>{projectType?.projectTypeName}</Box>
-                          <Box>
+                          <Box sx={{ my: 3 }}>
                             {projectType?.services?.map((service: any) => (
                               <Box
                                 sx={{
@@ -1257,10 +1257,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   p: '5px 25px',
                                   borderRadius: '15px',
                                   fontSize: '14px',
-                                  lineHeight: 'normal',
+                                  lineHeight: '14px',
                                   background: '#afaeb3',
                                   color: '#fff',
                                   cursor: 'pointer',
+                                  mb: 1,
                                   '&.selected': {
                                     background: '#31A0F6'
                                   }
@@ -1358,6 +1359,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     </Box>
                   </Box>
 
+                  <Box sx={{ display: 'flex', flexDirection: 'column', mt: 5 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
+                      <Box sx={sectionTitleSx}></Box>
+                      <Box sx={deliverableNoteAddButtonSx} onClick={handleDeliverableNoteAdd}>
+                        <AddIcon fontSize='small' />
+                      </Box>
+                    </Box>
+                  </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column', mt: 5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
                       <Box sx={sectionTitleSx}>Notes</Box>
@@ -1666,18 +1675,16 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-box-title'>Project Team Needed</Box>
                         </Box>
                         <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Account Manager</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} optionConfig={{ id: 'id', title: 'username' }} />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Project Manager</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
+                          {employeeRoleData?.map((employeeRole: any, index: number) => {
+                            return (
+                              <Box className='team-review-team-need-item' key={index}>
+                                <Box className='team-review-team-need-item-title'>{employeeRole?.name}</Box>
+                                <Box className='team-review-team-need-item-input'>
+                                  <Dropdown dataList={kimaiUserData} optionConfig={{ id: 'id', title: 'username' }} />
+                                </Box>
+                              </Box>
+                            )
+                          })}
                         </Box>
                       </Box>
                     </Box>
@@ -1846,64 +1853,16 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box className='team-review-box-title'>Project Team Needed</Box>
                         </Box>
                         <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Account Manager</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Project Manager</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                        </Box>
-                        <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Graphic Designer</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>UI/UX Designer</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                        </Box>
-                        <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Web Designer</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'></Box>
-                        </Box>
-                        <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Sr. Developer</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>WP Specialist</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                        </Box>
-                        <Box className='team-review-team-need-box'>
-                          <Box className='team-review-team-need-inner'>
-                            <Box className='team-review-team-need-item-title'>Jr. Developer</Box>
-                            <Box className='team-review-team-need-item-input'>
-                              <Dropdown dataList={userList} />
-                            </Box>
-                          </Box>
-                          <Box className='team-review-team-need-inner'></Box>
+                          {employeeRoleData?.map((employeeRole: any, index: number) => {
+                            return (
+                              <Box className='team-review-team-need-item' key={index}>
+                                <Box className='team-review-team-need-item-title'>{employeeRole?.name}</Box>
+                                <Box className='team-review-team-need-item-input'>
+                                  <Dropdown dataList={kimaiUserData} optionConfig={{ id: 'id', title: 'username' }} />
+                                </Box>
+                              </Box>
+                            )
+                          })}
                         </Box>
                       </Box>
                     </Box>

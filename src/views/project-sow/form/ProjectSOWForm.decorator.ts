@@ -56,7 +56,8 @@ export const teamReviewBoxSx = {
   },
   '& .team-review-team-need-box': {
     display: 'flex',
-    '& .team-review-team-need-inner': {
+    flexWrap: 'wrap',
+    '& .team-review-team-need-item': {
       display: 'flex',
       alignItems: 'center',
       width: '50%',
