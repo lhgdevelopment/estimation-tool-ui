@@ -107,6 +107,11 @@ const navigation: TNavigation[] = [
         title: 'Services',
         icon: SettingsEthernetIcon,
         path: '/service-management/service-tree'
+      },
+      {
+        title: 'Questions',
+        icon: SettingsEthernetIcon,
+        path: '/service-management/service-question'
       }
     ]
   },
