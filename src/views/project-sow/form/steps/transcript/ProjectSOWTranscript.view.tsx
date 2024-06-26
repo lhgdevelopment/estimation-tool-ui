@@ -5,7 +5,7 @@ import 'md-editor-rt/lib/style.css'
 import { Dropdown } from 'src/@core/components/dropdown'
 import { handleFormInputChange, handleFormSelectChange } from 'src/@core/utils/form'
 import { getShortStringNumber } from 'src/@core/utils/utils'
-import { formTitleSx } from '../../../ProjectSOW.decorator'
+import { formTitleSx } from '../../../ProjectSOW.style'
 import { TProjectSOWTranscriptFormViewProps, transcriptMeetingLinkAddButtonSx } from './ProjectSOWTranscript.decorator'
 
 export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscriptFormViewProps) {
