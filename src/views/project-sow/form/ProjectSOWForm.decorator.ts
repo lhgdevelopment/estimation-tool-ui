@@ -32,68 +32,6 @@ export type TProjectSOwFormViewProps = {
   handleDeliverableNoteRemove: any
 }
 
-export const teamReviewBoxSx = {
-  display: 'flex',
-  flexDirection: 'column',
-
-  boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.1)',
-  mb: '25px',
-  borderRadius: '10px',
-  '&::before': { display: 'none' },
-  '& .team-review-box-title': {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#777',
-    mb: '10px'
-  },
-
-  '& .team-review-content-box': {
-    height: '300px',
-    overflow: 'hidden',
-    overflowY: 'scroll'
-  },
-  '& .team-review-team-need-box': {
-    display: 'flex',
-    flexWrap: 'wrap',
-    '& .team-review-team-need-item': {
-      display: 'flex',
-      alignItems: 'center',
-      width: '50%',
-      paddingRight: '10px',
-      mb: '10px',
-      ':last-child': {
-        paddingRight: 0,
-        paddingLeft: '10px'
-      },
-      '& .team-review-team-need-item-title': {
-        display: 'flex',
-        width: '140px'
-      },
-      '& .team-review-team-need-item-input': {
-        width: 'calc(100% - 140px)',
-        '& .MuiSelect-select': {
-          p: '10px'
-        }
-      }
-    }
-  }
-}
-
-export const sowEstimationAccordionSectionSx = {
-  mb: 5,
-  boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.1)',
-  borderRadius: '10px',
-  '&.Mui-expanded': { boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.1)' },
-  '&::before': { display: 'none' },
-  '& .section-title': {
-    fontSize: '16px',
-    fontWeight: '600',
-    textAlign: 'center',
-    color: '#777'
-  }
-}
 export const kimaiUserData = [
   {
     id: 2,

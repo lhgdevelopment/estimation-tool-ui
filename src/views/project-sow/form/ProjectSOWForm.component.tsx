@@ -1,22 +1,11 @@
 import AddIcon from '@material-ui/icons/Add'
 import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import {
-  Accordion,
-  Box,
-  Checkbox,
-  IconButton,
-  SelectChangeEvent,
-  Step,
-  StepButton,
-  Stepper,
-  TextField
-} from '@mui/material'
+import { Accordion, Box, Checkbox, SelectChangeEvent, Step, StepButton, Stepper, TextField } from '@mui/material'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import { MdPreview } from 'md-editor-rt'
@@ -28,21 +17,21 @@ import { MarkdownEditor } from 'src/@core/components/markdown-editor'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import { getShortStringNumber } from 'src/@core/utils/utils'
+import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
+
+import axios from 'axios'
+import { Dropdown } from 'src/@core/components/dropdown/Dropdown'
 import {
-  TProjectSOWFormComponent,
-  deliverableNoteAddButtonSx,
   deliverableNoteItemSx,
-  deliverableNoteRemoveButtonSx,
   formTitleSx,
   scopeOfWorkListContainer,
   scopeOfWorkListSx,
   sectionSubTitleSx,
-  sectionTitleSx
-} from '../ProjectSOW.decorator'
-
-import axios from 'axios'
-import { Dropdown } from 'src/@core/components/dropdown/Dropdown'
-import { kimaiUserData, teamReviewBoxSx } from './ProjectSOWForm.decorator'
+  sectionTitleSx,
+  serviceQuestionItemSx,
+  teamReviewBoxSx
+} from '../ProjectSOW.style'
+import { kimaiUserData } from './ProjectSOWForm.decorator'
 import ProjectSOWTranscriptFormComponent from './steps/transcript/ProjectSOWTranscript.component'
 
 const steps = [
@@ -117,6 +106,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [estimationTaskData, setEstimationTaskData] = useState<any>([])
 
+  const [deliverableServiceQuestionData, setDeliverableServiceQuestionData] = useState<any[]>([])
+
   type TDeliverableNote = {
     noteLink: string
     note: string
@@ -124,9 +115,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const deliverableNoteDefaultData = { noteLink: '', note: '' }
   const [deliverableNotesData, setDeliverableNotesData] = useState<any[]>([deliverableNoteDefaultData])
 
-  // const [serviceTreeData, setServiceTreeData] = useState<any>([])
-  const [projectTypeList, setProjectTypeList] = useState<any>([])
   const [serviceList, setServiceList] = useState<any>([])
+  const [serviceQuestionList, setServiceQuestion] = useState<any>([])
   const [userList, setUserList] = useState<any>([])
   const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
   const [employeeRoleData, setEmployeeRole] = useState<any>([])
@@ -165,6 +155,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     const newNotes = [...deliverableNotesData]
     newNotes[index][name] = value
     setDeliverableNotesData(newNotes)
+  }
+
+  const handleServiceQuestionInputChange = (index: number, event: any) => {
+    const { name, value } = event.target
+    const newQuestion = [...deliverableServiceQuestionData]
+    newQuestion[index] = value
+    setDeliverableServiceQuestionData(newQuestion)
   }
 
   const handleDeliverableNoteAdd = () => {
@@ -769,8 +766,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           getEnableStep = 4
         }
 
-        console.log(res?.data?.deliverablesData?.deliverables)
-        console.log(res?.data)
+        // console.log(res?.data?.deliverablesData?.deliverables)
+        // console.log(res?.data)
 
         if (res?.data?.deliverablesData && res?.data?.deliverablesData?.deliverables?.length) {
           setDeliverableData(res?.data?.deliverablesData?.deliverables)
@@ -800,84 +797,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
   }
 
-  // const getServiceTree = async () => {
-  //   await apiRequest
-  //     // .get(`/service-tree?per_page=500&serviceId=${projectSOWFormData.serviceId}`)
-  //     .get(`/service-tree?per_page=500&serviceId=${4}`)
-  //     .then(res => {
-  //       setServiceTreeData(res?.data?.services)
-  //       setServiceDeliverableLeftList(res?.data?.services?.[0]?.groups)
-  //       const transformServiceTree = res?.data?.services.map((service: any) => {
-  //         const serviceObj = {
-  //           [service.id]: Object.fromEntries(
-  //             service?.groups?.map((group: any) => {
-  //               const groupObj = Object.fromEntries(
-  //                 group?.sows?.map((sow: any) => {
-  //                   const sowObj = Object.fromEntries(
-  //                     sow?.deliverables?.map((deliverable: any) => {
-  //                       const deliverableObj = Object.fromEntries(
-  //                         deliverable?.tasks?.map((task: any) => {
-  //                           if (task?.sub_tasks?.length) {
-  //                             const taskObj = Object.fromEntries(
-  //                               (task?.sub_tasks || []).map((sub_task: any) => {
-  //                                 return [
-  //                                   [sub_task.id],
-  //                                   {
-  //                                     hours: null
-  //                                   }
-  //                                 ]
-  //                               })
-  //                             )
-
-  //                             return [task.id, taskObj]
-  //                           }
-
-  //                           return {
-  //                             hours: null
-  //                           }
-  //                         })
-  //                       )
-
-  //                       return [deliverable.id, deliverableObj]
-  //                     })
-  //                   )
-
-  //                   return [sow.id, sowObj]
-  //                 })
-  //               )
-
-  //               return [group.id, groupObj]
-  //             })
-  //           )
-  //         }
-
-  //         return serviceObj
-  //       })[0]
-  //       setServiceDeliverablesFormData(transformServiceTree)
-
-  //       // setServiceDeliverablesFormData()
-  //     })
-  //     .catch(error => {
-  //       enqueueSnackbar(error?.message, { variant: 'error' })
-  //     })
-  // }
-
-  // const getProjectTypeList = async () => {
-  //   await apiRequest
-  //     .get(`/project-type?per_page=1000`)
-  //     .then(res => {
-  //       setProjectTypeList(res?.data)
-  //     })
-  //     .catch(error => {
-  //       enqueueSnackbar(error?.message, { variant: 'error' })
-  //     })
-  // }
-
   const getServiceList = async () => {
     await apiRequest
       .get(`/services`)
       .then(res => {
         setServiceList(res?.data)
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.message, { variant: 'error' })
+      })
+  }
+
+  const getServiceQuestionList = async () => {
+    await apiRequest
+      .get(`/questions`)
+      .then(res => {
+        setServiceQuestion(res?.data)
       })
       .catch(error => {
         enqueueSnackbar(error?.message, { variant: 'error' })
@@ -983,6 +918,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       if (!acc[scopeOfWorkId]) {
         acc[scopeOfWorkId] = {
           ...scope_of_work,
+          additional_service_info: item?.additional_service_info,
           deliverables: []
         }
       }
@@ -1008,10 +944,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       return acc
     }, {})
 
-    const result = Object.keys(groupedData).map(key => ({
-      id: key,
-      scope_of_works: groupedData[key]
-    }))
+    const result = Object.keys(groupedData).map(key => {
+      return {
+        ...groupedData[key][0]?.additional_service_info,
+        scope_of_works: groupedData[key]
+      }
+    })
 
     return result
   }
@@ -1023,6 +961,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     getServiceList()
     // getUserList()
     getEmployeeRoleList()
+    getServiceQuestionList()
   }, [])
 
   useEffect(() => {
@@ -1214,12 +1153,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       {scopeOfWorkData?.map((scopeOfWork: any, index: number) => {
                         return (
                           <Box className={'sow-list-item'} key={index}>
+                            <Box className={'sow-list-item-sl'}>{index + 1}</Box>
                             <Box className={'sow-list-item-type'}>
-                              {/* {scopeOfWork?.['serviceScopeId'] ? (
-                                <Box className={'item-type-common item-type-hive'}>HIVE</Box>
-                              ) : (
-                                <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                              )} */}
                               <Box
                                 className={`item-type-common item-type-sow ${
                                   scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
@@ -1308,15 +1243,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         return (
                           <Box key={index}>
                             <Box className={'sow-list-item'} component={'label'}>
+                              <Box className={'sow-list-item-sl'}>{index + 1}</Box>
                               <Box className={'sow-list-item-type'}>
-                                {/* {scopeOfWork?.['serviceDeliverablesId'] ? (
-                                  <Box className={'item-type-common item-type-hive'}>Hive</Box>
-                                ) : (
-                                  <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                                )} */}
                                 <Box
                                   className={`item-type-common item-type-sow ${
-                                    scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                    !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
                                   }`}
                                 >
                                   SOW
@@ -1339,6 +1270,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
                               return (
                                 <Box className={'sow-list-item'} key={deliverableIndex} component={'label'}>
+                                  <Box className={'sow-list-item-sl'}>{`${index + 1}.${deliverableIndex + 1}`}</Box>
                                   <Box className={'sow-list-item-type'}>
                                     <Box className={'item-type-common item-type-deliverable'}>Deliverable</Box>
                                   </Box>
@@ -1361,18 +1293,35 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
                   <Box sx={{ display: 'flex', flexDirection: 'column', mt: 5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
-                      <Box sx={sectionTitleSx}></Box>
-                      <Box sx={deliverableNoteAddButtonSx} onClick={handleDeliverableNoteAdd}>
-                        <AddIcon fontSize='small' />
-                      </Box>
+                      <Box sx={sectionTitleSx}>Service Question</Box>
+                    </Box>
+                    <Box sx={{ width: '100%', display: 'flex', gap: 5 }}>
+                      {serviceQuestionList?.map((serviceQuestion: any, index: number) => {
+                        return (
+                          <Box sx={serviceQuestionItemSx} key={index}>
+                            <Box sx={{ width: '100%' }}>
+                              <TextField value={`${serviceQuestion?.title} #${index}`} fullWidth disabled />
+                            </Box>
+                            <Box sx={{ width: '100%' }}>
+                              <TextField
+                                // label={`Service Related Questions Answer #${index}`}
+                                name='question'
+                                value={deliverableServiceQuestionData[index]}
+                                onChange={e => {
+                                  handleServiceQuestionInputChange(index, e)
+                                }}
+                                placeholder={`Service Related Questions Answer #${index}`}
+                                fullWidth
+                              />
+                            </Box>
+                          </Box>
+                        )
+                      })}
                     </Box>
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column', mt: 5 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
-                      <Box sx={sectionTitleSx}>Notes</Box>
-                      <Box sx={deliverableNoteAddButtonSx} onClick={handleDeliverableNoteAdd}>
-                        <AddIcon fontSize='small' />
-                      </Box>
+                      <Box sx={sectionTitleSx}>Project Notes</Box>
                     </Box>
 
                     <Box>
@@ -1405,15 +1354,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                 fullWidth
                               />
                             </Box>
-
-                            <IconButton
-                              onClick={() => {
-                                handleDeliverableNoteRemove(index)
-                              }}
-                              sx={deliverableNoteRemoveButtonSx}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
                           </Box>
                         )
                       })}
@@ -1438,7 +1378,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                 checked={isServiceCheckedInDeliverable(additionalService, selectedDeliverableData)}
                                 sx={{ p: 0, mr: 2 }}
                               />
-                              {additionalService?.id}
+                              {additionalService?.name}
                             </Box>
                             <Box sx={scopeOfWorkListContainer}>
                               <Box sx={scopeOfWorkListSx}>
@@ -1448,14 +1388,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                       <Box key={scopeOfWorkIndex}>
                                         <Box className={'sow-list-item'} component={'label'}>
                                           <Box className={'sow-list-item-type'}>
-                                            {/* {scopeOfWork?.['serviceDeliverablesId'] ? (
-                                              <Box className={'item-type-common item-type-hive'}>Hive</Box>
-                                            ) : (
-                                              <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                                            )} */}
                                             <Box
                                               className={`item-type-common item-type-sow ${
-                                                scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                                !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
                                               }`}
                                             >
                                               SOW
@@ -1665,7 +1600,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         Project Overview
                       </AccordionSummary>
                       <AccordionDetails>
-                        <MdPreview modelValue={overviewText} />
+                        <MarkdownEditor modelValue={overviewText} onChange={setOverviewText} />
                       </AccordionDetails>
                     </Accordion>
 
@@ -1868,24 +1803,21 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     </Box>
 
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                      <Box sx={sectionTitleSx}>Deliverable</Box>
+                      <Box sx={sectionTitleSx}>SOWs, Deliverables, Tasks, and Subtasks</Box>
                       <Box sx={scopeOfWorkListContainer}>
                         <Box sx={scopeOfWorkListSx}>
                           {serviceDeliverableGroupByScopeOfWorkId(
                             deliverableData?.filter((deliverable: any) => !deliverable?.additionalServiceId)
                           )?.map((scopeOfWork: any, index: number) => {
+                            console.log(scopeOfWork)
+
                             return (
                               <Box key={index}>
                                 <Box className={'sow-list-item'} component={'label'}>
                                   <Box className={'sow-list-item-type'}>
-                                    {/*  {scopeOfWork?.['serviceDeliverablesId'] ? (
-                                      <Box className={'item-type-common item-type-hive'}>Hive</Box>
-                                    ) : (
-                                      <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                                    )} */}
                                     <Box
                                       className={`item-type-common item-type-sow ${
-                                        scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                        !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
                                       }`}
                                     >
                                       SOW
@@ -1912,7 +1844,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <Box className={'sow-list-item-type'}>
                                           <Box
                                             className={`item-type-common item-type-deliverable ${
-                                              scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                              !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
                                             }`}
                                           >
                                             Deliverable
@@ -1931,7 +1863,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <Box className={'sow-list-item-type'}>
                                           <Box
                                             className={`item-type-common item-type-task ${
-                                              scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                              !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
                                             }`}
                                           >
                                             Task
@@ -1956,7 +1888,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <Box className={'sow-list-item-type'}>
                                           <Box
                                             className={`item-type-common item-type-subtask ${
-                                              scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                              !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
                                             }`}
                                           >
                                             Subtask
@@ -2005,7 +1937,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   checked={isServiceCheckedInDeliverable(additionalService, selectedDeliverableData)}
                                   sx={{ p: 0, mr: 2 }}
                                 />
-                                {additionalService?.id}
+
+                                {additionalService?.name}
                               </Box>
                               <Box sx={scopeOfWorkListContainer}>
                                 <Box sx={scopeOfWorkListSx}>
