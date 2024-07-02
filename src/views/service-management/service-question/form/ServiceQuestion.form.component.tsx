@@ -2,9 +2,10 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
+import { Dropdown } from 'src/@core/components/dropdown'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TServiceQuestionComponent } from '../ServiceQuestion.decorator'
 
@@ -13,7 +14,8 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
-    title: ''
+    title: '',
+    serviceId: ''
   }
 
   const [formData, setFormData] = useState(defaultData)
@@ -52,12 +54,11 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
             if (editedServiceQuestionIndex !== -1) {
               updatedList[editedServiceQuestionIndex] = res?.data
             }
-            enqueueSnackbar('Created Successfully!', { variant: 'success' })
-
             onClear()
 
             return updatedList
           })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -80,7 +81,8 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
 
   useEffect(() => {
     setFormData({
-      title: editData?.['title']
+      title: editData?.['title'],
+      serviceId: editData?.['serviceId']
     })
   }, [editDataId, editData])
 
@@ -96,10 +98,10 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '100%' }}>
+            <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Title</span>
-                <input
+                <TextField
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   // placeholder='Enter role name'
                   name='title'
@@ -108,6 +110,27 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
                 />
                 {!!errorMessage?.['title'] &&
                   errorMessage?.['title']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
+              </label>
+            </Box>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service</span>
+                <Dropdown
+                  url={'services'}
+                  name='serviceId'
+                  value={formData.serviceId}
+                  onChange={e => {
+                    handleSelectChange(e)
+                  }}
+                />
+                {!!errorMessage?.['serviceId'] &&
+                  errorMessage?.['serviceId']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}

@@ -1,5 +1,6 @@
-import { Box, Button } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import { Box, Button, TextField } from '@mui/material'
+import { Fragment, useState } from 'react'
+import { Dropdown } from 'src/@core/components/dropdown'
 import NoDataComponent from 'src/@core/components/no-data-component'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -13,7 +14,8 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
   const [preloader, setPreloader] = useState<boolean>(false)
 
   const defaultData = {
-    title: ''
+    title: '',
+    serviceId: ''
   }
 
   const [filterData, setFilterData] = useState(defaultData)
@@ -36,26 +38,28 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
     setFilterData(prevState => ({ ...defaultData }))
   }
 
-  const handlePageChange = (newPage: number) => {
-    getList(newPage)
-  }
-
   const getList = (page = 1) => {
     setPreloader(true)
-    apiRequest.get(`/questions?page=${page}&title=${filterData?.title}`).then(res => {
-      const paginationData: any = res
-      setListData(res?.data)
-      setCurrentPage(paginationData?.['current_page'])
-      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
-      setPreloader(false)
-    })
+    apiRequest
+      .get(`/questions?page=${page}&title=${filterData?.title}&serviceId=${filterData?.serviceId}`)
+      .then(res => {
+        const paginationData: any = res
+        setListData(res?.data)
+        setCurrentPage(paginationData?.['current_page'])
+        setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+        setPreloader(false)
+      })
   }
 
   const onEdit = (id: string) => {
     setEditDataId(id)
 
-    const editData = listData.length ? listData?.filter((data: any) => data['id'] == id)[0] : {}
+    const editData: any = listData.length ? listData?.filter((data: any) => data['id'] == id)[0] : {}
     setEditData(editData)
+  }
+
+  const handlePageChange = (newPage: number) => {
+    getList(newPage)
   }
 
   const onDelete = (id: string) => {
@@ -84,9 +88,9 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
     })
   }
 
-  useEffect(() => {
-    getList()
-  }, [editDataId, filterData])
+  // useEffect(() => {
+  //   getList()
+  // }, [editDataId, filterData])
 
   return (
     <Fragment>
@@ -95,8 +99,11 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
           <table className='w-full whitespace-no-wrap'>
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                <Box component={'th'} className='px-4 py-3' sx={{ width: '100%' }}>
+                <Box component={'th'} className='px-4 py-3' sx={{ width: '50%' }}>
                   Title
+                </Box>
+                <Box component={'th'} className='px-4 py-3' sx={{ width: '50%' }}>
+                  Service
                 </Box>
 
                 <Box component={'th'} className='px-4 py-3 text-right' sx={{ width: '100px', textAlign: 'center' }}>
@@ -107,12 +114,23 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
             <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
               <Box component={'tr'} className='text-gray-700 dark:text-gray-400' sx={{ '& td': { p: '5px 5px' } }}>
                 <Box component={'td'}>
-                  <input
+                  <TextField
                     className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                     placeholder='Enter title'
                     name='title'
                     value={filterData.title}
                     onChange={handleFilterChange}
+                  />
+                </Box>
+                <Box component={'td'}>
+                  <Dropdown
+                    url={'services'}
+                    name='serviceId'
+                    value={filterData.serviceId}
+                    onChange={e => {
+                      handleFilterSelectChange(e)
+                    }}
+                    placeholder='Select service'
                   />
                 </Box>
 
@@ -150,6 +168,9 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
                     <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                       <Box component={'td'} className='px-4 py-3 text-sm'>
                         {data?.title}
+                      </Box>
+                      <Box component={'td'} className='px-4 py-3 text-sm'>
+                        {data?.service_info?.name}
                       </Box>
 
                       <Box component={'td'} className='px-4 py-3'>
