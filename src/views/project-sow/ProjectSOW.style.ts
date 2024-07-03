@@ -128,14 +128,33 @@ export const sectionSubTitleSx = {
   mb: 4
 }
 
+export const sectionTitleAddButtonSx = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '30px',
+  width: '30px',
+  p: '0',
+  ml: '15px',
+  background: '#9333ea',
+  minWidth: 'auto',
+  color: '#fff',
+  borderRadius: '50%',
+  cursor: 'pointer',
+  '&:hover': {
+    background: '#7e22ce'
+  }
+}
+
 export const serviceQuestionItemSx = {
-  width: '50%',
+  width: 'calc(50% - 30px)',
   display: 'flex',
   flexWrap: 'wrap',
   position: 'relative',
   gap: 2,
   mb: '15px',
   padding: '15px',
+  m: '15px',
   border: '1px solid #ecedee',
   borderRadius: '5px'
 }
@@ -199,5 +218,23 @@ export const sowEstimationAccordionSectionSx = {
     fontWeight: '600',
     textAlign: 'center',
     color: '#777'
+  }
+}
+
+export const sowAddButtonSx = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  height: '30px',
+  width: '30px',
+  p: '0',
+  ml: '15px',
+  background: '#9333ea',
+  minWidth: 'auto',
+  color: '#fff',
+  borderRadius: '50%',
+  cursor: 'pointer',
+  '&:hover': {
+    background: '#7e22ce'
   }
 }
