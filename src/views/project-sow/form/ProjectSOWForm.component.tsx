@@ -101,8 +101,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [deliverableData, setDeliverableData] = useState<any>([])
   const [selectedDeliverableData, setSelectedDeliverableData] = useState<any>([])
 
-  const [employeeRoleIdData, setEmployeeIdRole] = useState<any>([])
-
   const [estimationTaskData, setEstimationTaskData] = useState<any>([])
 
   const [deliverableServiceQuestionData, setDeliverableServiceQuestionData] = useState<any[]>([])
@@ -116,7 +114,32 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [serviceList, setServiceList] = useState<any>([])
   const [serviceQuestionList, setServiceQuestion] = useState<any>([])
-  const [userList, setUserList] = useState<any>([])
+  const [teamUserList, setTeamUserList] = useState<any>([])
+
+  const [associatedUserWithRole, setAssociatedUserWithRole] = useState<
+    {
+      employeeRoleId: number
+      associateId: number
+    }[]
+  >([])
+
+  const getAssociatedUserWithRole = (roleId: number, userId: number) => {
+    setAssociatedUserWithRole((prevState: any) => {
+      if (prevState.some((item: any) => item.employeeRoleId === roleId)) {
+        return prevState.map((item: any) => {
+          if (item.employeeRoleId === roleId) {
+            return { ...item, associateId: userId }
+          }
+
+          return item
+        })
+      } else {
+        return [...prevState, { employeeRoleId: roleId, associateId: userId }]
+      }
+    })
+    console.log(associatedUserWithRole)
+  }
+
   const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
   const [employeeRoleData, setEmployeeRole] = useState<any>([])
 
@@ -593,7 +616,28 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     }
 
     if (activeStep === 6) {
-      // console.log({ activeStep })
+      apiRequest
+        .post(`/team-review/`, {
+          transcriptId: projectSOWFormData.transcriptId,
+          teams: [...associatedUserWithRole]
+        })
+        .then(res => {
+          setTimeout(() => {
+            if (type == 'NEXT') {
+              setActiveStep(newActiveStep)
+              if (enabledStep < newActiveStep) {
+                setEnabledStep(newActiveStep)
+              }
+            }
+            setPreload(false)
+            enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+          }, 1000)
+        })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
     }
     if (activeStep === 7) {
       apiRequest
@@ -858,7 +902,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     await apiRequest
       .get(`/associates`)
       .then(res => {
-        setUserList(res?.data)
+        setTeamUserList(res?.data)
       })
       .catch(error => {
         enqueueSnackbar(error?.message, { variant: 'error' })
@@ -874,7 +918,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   //       }
   //     })
   //     .then(res => {
-  //       setUserList(
+  //       setTeamUserList(
   //         res?.data?.map((item: any) => {
   //           return { ...item, title: item?.name }
   //         })
@@ -1679,7 +1723,18 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               <Box className='team-review-team-need-item' key={index}>
                                 <Box className='team-review-team-need-item-title'>{employeeRole?.name}</Box>
                                 <Box className='team-review-team-need-item-input'>
-                                  <Dropdown dataList={userList} optionConfig={{ id: 'id', title: 'name' }} />
+                                  <Dropdown
+                                    dataList={teamUserList}
+                                    optionConfig={{ id: 'id', title: 'name' }}
+                                    onChange={event => {
+                                      getAssociatedUserWithRole(employeeRole?.id, Number(event?.target?.value))
+                                    }}
+                                    value={
+                                      associatedUserWithRole?.find(
+                                        (item: any) => item?.employeeRoleId === employeeRole?.id
+                                      )?.associateId
+                                    }
+                                  />
                                 </Box>
                               </Box>
                             )
@@ -1857,7 +1912,18 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               <Box className='team-review-team-need-item' key={index}>
                                 <Box className='team-review-team-need-item-title'>{employeeRole?.name}</Box>
                                 <Box className='team-review-team-need-item-input'>
-                                  <Dropdown dataList={userList} optionConfig={{ id: 'id', title: 'name' }} />
+                                  <Dropdown
+                                    dataList={teamUserList}
+                                    optionConfig={{ id: 'id', title: 'name' }}
+                                    onChange={event => {
+                                      getAssociatedUserWithRole(employeeRole?.id, Number(event?.target?.value))
+                                    }}
+                                    value={
+                                      associatedUserWithRole?.find(
+                                        (item: any) => item?.employeeRoleId === employeeRole?.id
+                                      )?.associateId
+                                    }
+                                  />
                                 </Box>
                               </Box>
                             )
@@ -1943,7 +2009,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
                                         {selectedDeliverableData?.includes(deliverable?.['id']) && (
                                           <Box className={'sow-list-item-input'}>
-                                            <Dropdown dataList={userList} />
+                                            <Dropdown dataList={teamUserList} />
                                             <TextField className={'sow-list-item-text-input'} />
                                           </Box>
                                         )}
@@ -1968,7 +2034,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
                                         {selectedDeliverableData?.includes(deliverable?.['id']) && (
                                           <Box className={'sow-list-item-input'}>
-                                            <Dropdown dataList={userList} />
+                                            <Dropdown dataList={teamUserList} />
                                             <TextField className={'sow-list-item-text-input'} />
                                           </Box>
                                         )}
