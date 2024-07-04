@@ -96,16 +96,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
 
   const [scopeOfWorkPhaseList, setScopeOfWorkPhaseList] = useState<any[]>([])
-  type TScopeOfWorkSingleFormData = {
-    title: string
-    order: string
-  }
-  type TScopeOfWorkFormData = {
-    phaseId: string
-    sows: TScopeOfWorkSingleFormData[]
-  }
 
-  const scopeOfWorkDefaultData: TScopeOfWorkFormData = {
+  const scopeOfWorkDefaultData = {
     phaseId: '',
     sows: [
       {
@@ -115,7 +107,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     ]
   }
 
-  const [scopeOfWorkFormData, setScopeOfWorkFormData] = useState<TScopeOfWorkFormData>(scopeOfWorkDefaultData)
+  const [scopeOfWorkFormData, setScopeOfWorkFormData] = useState<any>(scopeOfWorkDefaultData)
 
   const handleScopeOfWorkSelectChange = (e: SelectChangeEvent<any>) => {
     setScopeOfWorkFormData({
@@ -2310,7 +2302,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
               <Box sx={{ width: '100%' }}>
                 <Box sx={{ fontSize: '20px', fontWeight: 600, color: '#158ddf', marginBottom: '0.5rem' }}>SOW</Box>
-                {scopeOfWorkFormData?.sows?.map((scopeOfWork: TScopeOfWorkSingleFormData, index: number) => {
+                {scopeOfWorkFormData?.sows?.map((scopeOfWork: any, index: number) => {
                   return (
                     <Box
                       sx={{
