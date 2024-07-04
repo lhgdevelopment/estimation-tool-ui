@@ -116,6 +116,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     })
   }
 
+  const handleAddNewSow = () => {
+    const sows = [...scopeOfWorkFormData.sows]
+    sows.push({
+      title: '',
+      order: ''
+    })
+    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, sows }))
+  }
+
   const handleScopeOfWorkInputChange = (index: number, event: any) => {
     const { name, value } = event.target
     const sows = [...scopeOfWorkFormData.sows]
@@ -1442,10 +1451,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           <Box sx={serviceQuestionItemSx} key={index}>
                             <Box sx={{ width: '100%' }}>
                               <Box component='label' sx={{ mb: 2 }}>
-                                {`${serviceQuestion.title} #${index + 1}`}
+                                {`#${index + 1}. ${serviceQuestion.title} `}
                               </Box>
                               <TextField
-                                // label={`Service Related Questions Answer #${index}`}
                                 name='answer'
                                 value={
                                   deliverableServiceQuestionData?.find(
@@ -1455,7 +1463,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                 onChange={e => {
                                   handleServiceQuestionInputChange(e.target.value, serviceQuestion?.id)
                                 }}
-                                placeholder={`Service Related Questions Answer #${index + 1}`}
+                                placeholder={`#${index + 1}. Service Related Questions Answer`}
                                 fullWidth
                               />
                             </Box>
@@ -2289,8 +2297,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     dataList={scopeOfWorkPhaseList}
                     label={'Phase'}
                   />
-                  {!!errorMessage?.['serviceGroupId'] &&
-                    errorMessage?.['serviceGroupId']?.map((message: any, index: number) => {
+                  {!!errorMessage?.['phaseId'] &&
+                    errorMessage?.['phaseId']?.map((message: any, index: number) => {
                       return (
                         <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                           {message}
@@ -2301,12 +2309,25 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               </Box>
 
               <Box sx={{ width: '100%' }}>
-                <Box sx={{ fontSize: '20px', fontWeight: 600, color: '#158ddf', marginBottom: '0.5rem' }}>SOW</Box>
+                <Box
+                  sx={{ display: 'flex', fontSize: '20px', fontWeight: 600, color: '#158ddf', marginBottom: '0.5rem' }}
+                >
+                  SOW{' '}
+                  <Box
+                    sx={sowAddButtonSx}
+                    onClick={() => {
+                      handleAddNewSow()
+                    }}
+                  >
+                    <AddIcon fontSize='small' />
+                  </Box>
+                </Box>
                 {scopeOfWorkFormData?.sows?.map((scopeOfWork: any, index: number) => {
                   return (
                     <Box
                       sx={{
-                        width: '100%'
+                        width: '100%',
+                        mb: '10px'
                       }}
                       key={index}
                     >
@@ -2334,170 +2355,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               </Box>
             </Box>
 
-            {/* {serviceSOWEditDataId ? (
-                <>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                      </label>
-                      <RichTextEditor
-                        value={serviceSOWFormData.name}
-                        onBlur={newContent =>
-                          handleReachText(newContent, 'name', serviceSOWFormData, setServiceSOWFormData)
-                        }
-                      />
-                      {!!errorMessage?.['name'] &&
-                        errorMessage?.['name']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </Box>
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                        <input
-                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                          placeholder='Examples: 1'
-                          name='order'
-                          value={serviceSOWFormData.order}
-                          onChange={e => {
-                            handleTextChange(e, serviceSOWFormData, setServiceSOWFormData)
-                          }}
-                        />
-                        {!!errorMessage?.['order'] &&
-                          errorMessage?.['order']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                  </Box>
-                </>
-              ) : (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 5,
-                    mb: 5,
-                    flexDirection: 'column'
-                  }}
-                >
-                  <>
-                    {serviceSOWFormData.scopes?.map((scope, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          width: '100%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          p: '20px',
-                          padding: '24px'
-                        }}
-                      >
-                        <Box sx={{ width: '100%' }}>
-                          <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                            <Box sx={{ width: '100%' }}>
-                              <label className='block text-sm'>
-                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                              </label>
-
-                              <Box sx={{ width: '100%' }}>
-                                <RichTextEditor
-                                  value={scope.name}
-                                  onBlur={newContent =>
-                                    handleMultipleReachTextChange(
-                                      newContent,
-                                      'name',
-                                      index,
-                                      serviceSOWFormData,
-                                      setServiceSOWFormData,
-                                      'scopes'
-                                    )
-                                  }
-                                />
-                              </Box>
-
-                              {!!errorMessage?.[`names.${index}`] &&
-                                errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
-                                  return (
-                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                      {String(message).replaceAll('names.0', 'name')}
-                                    </span>
-                                  )
-                                })}
-                            </Box>
-                          </Box>
-                          <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                            <Box sx={{ width: '100%' }}>
-                              <label className='block text-sm'>
-                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                                <input
-                                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                  placeholder='Examples: 1'
-                                  name='order'
-                                  value={scope.order}
-                                  onChange={e => {
-                                    handleMultipleTextChange(
-                                      e,
-                                      serviceSOWFormData,
-                                      setServiceSOWFormData,
-                                      index,
-                                      'scopes'
-                                    )
-                                  }}
-                                />
-                              </label>
-                            </Box>
-                          </Box>
-                        </Box>
-                        <Button
-                          type='button'
-                          onClick={() => removeNameField(index, serviceSOWFormData, setServiceSOWFormData, 'scopes')}
-                          className='mt-1 p-0 bg-red-500 text-white rounded-md'
-                          sx={{
-                            p: 0,
-                            border: '1px solid #dc2626',
-                            borderRadius: '50%',
-                            minWidth: 'auto',
-                            height: '35px',
-                            width: '35px',
-                            color: '#dc2626',
-                            ml: 2,
-                            '&:hover': {
-                              background: '#dc2626',
-                              color: '#fff'
-                            }
-                          }}
-                        >
-                          <DeleteIcon />
-                        </Button>
-                      </Box>
-                    ))}
-                  </>
-
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <button
-                      type='button'
-                      onClick={() => {
-                        addSubField(serviceSOWFormData, setServiceSOWFormData, 'scopes', serviceSOWDefaultData.scopes)
-                      }}
-                      className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
-                    >
-                      <AddIcon /> Add Another Scope
-                    </button>
-                  </Box>
-                </Box>
-              )} */}
             <Box className='my-4 text-right'>
               <button
                 onClick={onServiceSOWClear}
