@@ -14,7 +14,7 @@ import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
-import { Dropdown, ServiceDropdownTree } from 'src/@core/components/dropdown'
+import { Dropdown } from 'src/@core/components/dropdown'
 import { MarkdownEditor } from 'src/@core/components/markdown-editor'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -64,7 +64,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [serviceDeliverableRightList, setServiceDeliverableRightList] = React.useState<any[]>([])
 
   const projectSOWDefaultData = {
-    transcriptId: '',
     serviceId: null,
     projectName: '',
     company: '',
@@ -85,6 +84,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [preload, setPreload] = useState<boolean>(false)
   const [projectSOWID, setProjectSOWID] = useState<any>(null)
+  const [transcriptId, setTranscriptId] = useState<any>(null)
   const [summaryText, setSummaryText] = useState<any>('')
   const [problemGoalID, setProblemGoalID] = useState<any>(null)
   const [problemGoalText, setProblemGoalText] = useState<any>('')
@@ -94,6 +94,43 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [scopeText, setScopeText] = useState<any>('')
   const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
   const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
+
+  const [scopeOfWorkPhaseList, setScopeOfWorkPhaseList] = useState<any[]>([])
+  type TScopeOfWorkSingleFormData = {
+    title: string
+    order: string
+  }
+  type TScopeOfWorkFormData = {
+    phaseId: string
+    sows: TScopeOfWorkSingleFormData[]
+  }
+
+  const scopeOfWorkDefaultData: TScopeOfWorkFormData = {
+    phaseId: '',
+    sows: [
+      {
+        title: '',
+        order: ''
+      }
+    ]
+  }
+
+  const [scopeOfWorkFormData, setScopeOfWorkFormData] = useState<TScopeOfWorkFormData>(scopeOfWorkDefaultData)
+
+  const handleScopeOfWorkSelectChange = (e: SelectChangeEvent<any>) => {
+    setScopeOfWorkFormData({
+      ...scopeOfWorkFormData,
+      [e?.target?.name]: e?.target?.value
+    })
+  }
+
+  const handleScopeOfWorkInputChange = (index: number, event: any) => {
+    const { name, value } = event.target
+    const sows = [...scopeOfWorkFormData.sows]
+    sows[index][name] = value
+    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, sows }))
+  }
+
   const [additionalServiceScopeOfWorkData, setAdditionalServiceScopeOfWorkData] = useState<any>([])
   const [selectedAdditionalServiceScopeOfWorkData, setSelectedAdditionalServiceScopeOfWorkData] = useState<any>([])
   const [additionalServiceData, setAdditionalServiceData] = useState<any>([])
@@ -118,8 +155,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const [associatedUserWithRole, setAssociatedUserWithRole] = useState<
     {
-      employeeRoleId: number
-      associateId: number
+      employeeRoleId: string
+      associateId: string
     }[]
   >([])
 
@@ -137,7 +174,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         return [...prevState, { employeeRoleId: roleId, associateId: userId }]
       }
     })
-    console.log(associatedUserWithRole)
   }
 
   const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
@@ -212,7 +248,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       setDeliverableServiceQuestionData((prevState: any) => [...prevState, { questionId, answer }])
     }
   }
-  console.log(deliverableServiceQuestionData)
 
   const handleDeliverableNoteAdd = () => {
     setDeliverableNotesData(prevState => [...prevState, deliverableNoteDefaultData])
@@ -258,8 +293,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           .put(`/project-summery/${projectSOWID}`, projectSOWFormData)
           .then(res => {
             setProjectSOWFormData({
-              ...projectSOWFormData,
-              ['transcriptId']: res?.data?.transcriptId
+              ...projectSOWFormData
             })
             setProjectSOWID(res?.data?.id)
             setSummaryText(res?.data?.summaryText)
@@ -296,8 +330,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             })
 
             setProjectSOWFormData({
-              ...projectSOWFormData,
-              ['transcriptId']: res?.data?.transcriptId
+              ...projectSOWFormData
             })
             setProjectSOWID(res?.data?.id)
             setSummaryText(res?.data?.summaryText)
@@ -326,9 +359,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       apiRequest
         .put(`/project-summery/${projectSOWID}`, { summaryText })
         .then(res => {
-          if (res?.data?.meeting_transcript && type == 'NEXT') {
+          setTranscriptId(res?.data?.meeting_transcript?.id)
+          if (transcriptId && type == 'NEXT') {
             apiRequest
-              .post('/problems-and-goals', { transcriptId: res?.data?.meeting_transcript?.id })
+              .post('/problems-and-goals', { transcriptId })
               .then(res2 => {
                 setProblemGoalID(res2?.data?.id)
                 setProblemGoalText(res2?.data?.problemGoalText)
@@ -618,7 +652,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     if (activeStep === 6) {
       apiRequest
         .post(`/team-review/`, {
-          transcriptId: projectSOWFormData.transcriptId,
+          transcriptId,
           teams: [...associatedUserWithRole]
         })
         .then(res => {
@@ -773,7 +807,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     apiRequest
       .get(`/project-summery/${id}`)
       .then((res: any) => {
-        const transcriptId = res?.data?.id || ''
+        setTranscriptId(res?.data?.meeting_transcript?.id)
         const transcriptText = res?.data?.meeting_transcript?.['transcriptText'] || ''
         const serviceId = res?.data?.meeting_transcript?.['serviceId'] || ''
         const projectName = res?.data?.meeting_transcript?.['projectName'] || ''
@@ -791,7 +825,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         )
 
         setProjectSOWFormData({
-          transcriptId,
           serviceId,
           projectName,
           company,
@@ -881,6 +914,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       .get(`/services`)
       .then(res => {
         setServiceList(res?.data)
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.message, { variant: 'error' })
+      })
+  }
+
+  const getScopeOfWorkPhaseList = async () => {
+    await apiRequest
+      .get(`/service-groups?serviceId=${projectSOWFormData?.serviceId}`)
+      .then(res => {
+        setScopeOfWorkPhaseList(res?.data)
       })
       .catch(error => {
         enqueueSnackbar(error?.message, { variant: 'error' })
@@ -1052,6 +1096,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     getUserList()
     getEmployeeRoleList()
     getServiceQuestionList()
+    getScopeOfWorkPhaseList()
   }, [])
 
   useEffect(() => {
@@ -2230,12 +2275,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         >
           <Box sx={{ mb: '20px' }}>
             <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
-              Add SOW
+              Add Scope of Work
             </h2>
           </Box>
 
           <form>
-            <Box sx={{ display: 'flex', width: '100%', gap: 5, mb: 5 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 5, mb: 5 }}>
               <Box
                 sx={{
                   width: '100%',
@@ -2245,14 +2290,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 }}
               >
                 <label className='block text-sm'>
-                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Group</span>
-                  <ServiceDropdownTree
-                    name='serviceGroupId'
-                    value={serviceSOWFormData.serviceGroupId}
-                    // onChange={e => {
-                    //   handleSelectChange(e, serviceSOWFormData, setServiceSOWFormData)
-                    // }}
-                    type='groups'
+                  <Dropdown
+                    name='phaseId'
+                    value={scopeOfWorkFormData.phaseId}
+                    onChange={handleScopeOfWorkSelectChange}
+                    dataList={scopeOfWorkPhaseList}
+                    label={'Phase'}
                   />
                   {!!errorMessage?.['serviceGroupId'] &&
                     errorMessage?.['serviceGroupId']?.map((message: any, index: number) => {
@@ -2263,6 +2306,39 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       )
                     })}
                 </label>
+              </Box>
+
+              <Box sx={{ width: '100%' }}>
+                <Box sx={{ fontSize: '20px', fontWeight: 600, color: '#158ddf', marginBottom: '0.5rem' }}>SOW</Box>
+                {scopeOfWorkFormData?.sows?.map((scopeOfWork: TScopeOfWorkSingleFormData, index: number) => {
+                  return (
+                    <Box
+                      sx={{
+                        width: '100%'
+                      }}
+                      key={index}
+                    >
+                      <TextField
+                        label={'SOW'}
+                        name='title'
+                        value={scopeOfWork?.title}
+                        onChange={e => {
+                          handleScopeOfWorkInputChange(index, e)
+                        }}
+                        placeholder={`SOW`}
+                        fullWidth
+                      />
+                      {!!errorMessage?.['title'] &&
+                        errorMessage?.['title']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
+                    </Box>
+                  )
+                })}
               </Box>
             </Box>
 
