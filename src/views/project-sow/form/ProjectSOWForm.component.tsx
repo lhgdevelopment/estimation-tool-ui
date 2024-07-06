@@ -2,11 +2,28 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Accordion, Box, Checkbox, Modal, SelectChangeEvent, Step, StepButton, Stepper, TextField } from '@mui/material'
+import {
+  Accordion,
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Modal,
+  Select,
+  SelectChangeEvent,
+  Step,
+  StepButton,
+  Stepper,
+  TextField
+} from '@mui/material'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import { MdPreview } from 'md-editor-rt'
@@ -29,6 +46,7 @@ import {
   sectionTitleSx,
   serviceQuestionItemSx,
   sowAddButtonSx,
+  sowRemoveButtonSx,
   teamReviewBoxSx
 } from '../ProjectSOW.style'
 import ProjectSOWTranscriptFormComponent from './steps/transcript/ProjectSOWTranscript.component'
@@ -95,27 +113,31 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
   const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
 
-  const [scopeOfWorkPhaseList, setScopeOfWorkPhaseList] = useState<any[]>([])
-  type TScopeOfWorkSingleFormData = {
-    title: string
-    order: string
+  const [serviceSOWModalOpen, setServiceSowModalOpen] = useState<boolean>(false)
+
+  const handleServiceSOWModalOpen = () => {
+    setServiceSowModalOpen(true)
   }
-  type TScopeOfWorkFormData = {
-    phaseId: string
-    sows: TScopeOfWorkSingleFormData[]
+  const handleServiceSOWModalClose = () => {
+    setServiceSowModalOpen(false)
+    handleSOWOnClear()
   }
 
-  const scopeOfWorkDefaultData: TScopeOfWorkFormData = {
+  const [scopeOfWorkPhaseList, setScopeOfWorkPhaseList] = useState<any[]>([])
+
+  const scopeOfWorkDefaultData = {
     phaseId: '',
-    sows: [
+    title: '',
+    scopeOfWorks: [
       {
         title: '',
-        order: ''
+        serial: ''
       }
     ]
   }
 
-  const [scopeOfWorkFormData, setScopeOfWorkFormData] = useState<TScopeOfWorkFormData>(scopeOfWorkDefaultData)
+  const [scopeOfWorkFormData, setScopeOfWorkFormData] = useState<any>(scopeOfWorkDefaultData)
+  const [scopeOfWorkEditId, setScopeOfWorkEditId] = useState<any>(null)
 
   const handleScopeOfWorkSelectChange = (e: SelectChangeEvent<any>) => {
     setScopeOfWorkFormData({
@@ -124,11 +146,91 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     })
   }
 
-  const handleScopeOfWorkInputChange = (index: number, event: any) => {
+  const handleAddNewSow = () => {
+    const scopeOfWorks = [...scopeOfWorkFormData.scopeOfWorks]
+    scopeOfWorks.push({
+      title: '',
+      order: ''
+    })
+    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, scopeOfWorks }))
+  }
+
+  const handleRemoveSow = (index: number) => {
+    const scopeOfWorks = [...scopeOfWorkFormData.scopeOfWorks]
+    scopeOfWorks.splice(index, 1)
+    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, scopeOfWorks }))
+  }
+
+  const handleScopeOfWorkMultipleInputChange = (index: number, event: any) => {
     const { name, value } = event.target
-    const sows = [...scopeOfWorkFormData.sows]
-    sows[index][name] = value
-    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, sows }))
+    const scopeOfWorks = [...scopeOfWorkFormData.scopeOfWorks]
+    scopeOfWorks[index][name] = value
+    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, scopeOfWorks }))
+  }
+
+  const handleScopeOfWorkInputChange = (event: any) => {
+    const { name, value } = event.target
+    const scopeOfWorks = scopeOfWorkFormData
+    scopeOfWorks[name] = value
+    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, ...scopeOfWorks }))
+  }
+
+  const handleSOWOnClear = () => {
+    setScopeOfWorkFormData(scopeOfWorkDefaultData)
+    setScopeOfWorkEditId(null)
+  }
+
+  const handleSOWOnEdit = (data: any) => {
+    const { id, title, serial } = data
+    setScopeOfWorkEditId(id)
+    setScopeOfWorkFormData({
+      title
+    })
+    handleServiceSOWModalOpen()
+  }
+
+  const handleSOWSaveOnClick = () => {
+    setPreload(true)
+    if (scopeOfWorkEditId) {
+      apiRequest
+        .post(`/scope-of-work/${scopeOfWorkEditId}`, { ...scopeOfWorkFormData })
+        .then(res => {
+          console.log(res)
+          setScopeOfWorkData((prevState: any[]) => [
+            ...prevState.map((sow: any) => {
+              if (sow?.id === scopeOfWorkEditId) return res.data
+
+              return sow
+            })
+          ])
+
+          setPreload(false)
+          enqueueSnackbar('Updatedf Successfully!', { variant: 'success' })
+          handleServiceSOWModalClose()
+        })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    } else {
+      apiRequest
+        .post('/scope-of-work/add-multi', { ...scopeOfWorkFormData, problemGoalId: problemGoalID })
+        .then(res => {
+          console.log(res)
+          setScopeOfWorkData((prevState: any[]) => [...res?.data, ...prevState])
+          setSelectedScopeOfWorkData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
+
+          setPreload(false)
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          handleServiceSOWModalClose()
+        })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    }
   }
 
   const [additionalServiceScopeOfWorkData, setAdditionalServiceScopeOfWorkData] = useState<any>([])
@@ -174,6 +276,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         return [...prevState, { employeeRoleId: roleId, associateId: userId }]
       }
     })
+    console.log(associatedUserWithRole)
   }
 
   const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
@@ -193,37 +296,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [deliverablesText, setDeliverablesText] = useState<any>('')
 
   const [errorMessage, setErrorMessage] = useState<any>({})
-
-  const [serviceSOWModalOpen, setServiceSowModalOpen] = useState<boolean>(false)
-  const [serviceSOWEditDataId, setServiceSOWEditDataId] = useState<null | string>(null)
-  const handleServiceSOWModalOpen = () => {
-    setServiceSowModalOpen(true)
-    setErrorMessage({})
-  }
-  const handleServiceSOWModalClose = () => {
-    setServiceSowModalOpen(false)
-    setErrorMessage({})
-  }
-  const serviceSOWDefaultData = {
-    serviceGroupId: '',
-    name: '',
-    order: '',
-    scopes: [{ name: '', order: '' }]
-  }
-
-  const [serviceSOWFormData, setServiceSOWFormData] = useState(serviceSOWDefaultData)
-  const onServiceSOWClear = () => {
-    setServiceSOWFormData(prevState => ({ ...serviceSOWDefaultData }))
-    setServiceSOWEditDataId(null)
-    handleServiceSOWModalClose()
-  }
-
-  const handleProjectSOWChange = (e: any) => {
-    setProjectSOWFormData({
-      ...projectSOWFormData,
-      [e.target.name]: e.target.value
-    })
-  }
 
   const handleSelectChange = (e: SelectChangeEvent<any>) => {
     setProjectSOWFormData({
@@ -921,25 +993,29 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }
 
   const getScopeOfWorkPhaseList = async () => {
-    await apiRequest
-      .get(`/service-groups?serviceId=${projectSOWFormData?.serviceId}`)
-      .then(res => {
-        setScopeOfWorkPhaseList(res?.data)
-      })
-      .catch(error => {
-        enqueueSnackbar(error?.message, { variant: 'error' })
-      })
+    if (projectSOWFormData?.serviceId) {
+      await apiRequest
+        .get(`/service-groups?serviceId=${projectSOWFormData?.serviceId}`)
+        .then(res => {
+          setScopeOfWorkPhaseList(res?.data)
+        })
+        .catch(error => {
+          enqueueSnackbar(error?.message, { variant: 'error' })
+        })
+    }
   }
 
   const getServiceQuestionList = async () => {
-    await apiRequest
-      .get(`/questions?serviceId=${projectSOWFormData?.serviceId}`)
-      .then(res => {
-        setServiceQuestion(res?.data)
-      })
-      .catch(error => {
-        enqueueSnackbar(error?.message, { variant: 'error' })
-      })
+    if (projectSOWFormData?.serviceId) {
+      await apiRequest
+        .get(`/questions?serviceId=${projectSOWFormData?.serviceId}`)
+        .then(res => {
+          setServiceQuestion(res?.data)
+        })
+        .catch(error => {
+          enqueueSnackbar(error?.message, { variant: 'error' })
+        })
+    }
   }
 
   const getUserList = async () => {
@@ -1222,7 +1298,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         {!!errorMessage?.['summaryText'] &&
                           errorMessage?.['summaryText']?.map((message: any, index: number) => {
                             return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
                                 {message}
                               </span>
                             )
@@ -1248,7 +1324,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         {!!errorMessage?.problemGoalText &&
                           errorMessage?.problemGoalText?.map((message: any, index: number) => {
                             return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
                                 {message}
                               </span>
                             )
@@ -1274,7 +1350,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         {!!errorMessage?.overviewText &&
                           errorMessage?.overviewText?.map((message: any, index: number) => {
                             return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
                                 {message}
                               </span>
                             )
@@ -1301,12 +1377,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     <Box sx={scopeOfWorkListSx}>
                       {scopeOfWorkData?.map((scopeOfWork: any, index: number) => {
                         return (
-                          <Box className={'sow-list-item'} key={index}>
+                          <Box className={'sow-list-item'} key={index + Math.random()}>
                             <Box className={'sow-list-item-sl'}>{index + 1}</Box>
                             <Box className={'sow-list-item-type'}>
                               <Box
                                 className={`item-type-common item-type-sow ${
-                                  scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
+                                  !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
                                 }`}
                               >
                                 SOW
@@ -1319,7 +1395,30 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                 checked={selectedScopeOfWorkData?.includes(scopeOfWork?.['id'])}
                               />
                             </Box>
-                            <Box className={'sow-list-item-title'}>{scopeOfWork?.['title']}</Box>
+                            <Box
+                              className={'sow-list-item-title'}
+                              sx={{
+                                color: !scopeOfWork?.['additionalServiceId'] ? '#903fe8' : '',
+                                opacity: selectedScopeOfWorkData?.includes(scopeOfWork?.['id']) ? 1 : 0.5
+                              }}
+                              component={selectedScopeOfWorkData?.includes(scopeOfWork?.['id']) ? 'span' : 'del'}
+                            >
+                              {scopeOfWork?.['title']}
+                            </Box>
+                            <Button
+                              sx={{
+                                ml: '5px',
+                                p: '2px',
+                                minWidth: 0,
+                                border: '2px solid #7e22ce',
+                                borderRadius: '5px'
+                              }}
+                              onClick={() => handleSOWOnEdit(scopeOfWork)}
+                            >
+                              <EditIcon
+                                sx={{ color: '#7e22ce', height: '14px !important', width: '14px !important' }}
+                              />
+                            </Button>
                           </Box>
                         )
                       })}
@@ -1330,7 +1429,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     <Box sx={sectionTitleSx}>Add Services</Box>
                     <Box sx={{ py: 0, px: 5 }}>
                       {serviceGroupByProjectTypeId(serviceList)?.map((projectType: any, index: number) => (
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, fontWeight: '600' }} key={index}>
+                        <Box
+                          sx={{ display: 'flex', alignItems: 'center', mb: 2, fontWeight: '600' }}
+                          key={index + Math.random()}
+                        >
                           <Box sx={{ mr: 2, color: '#777' }}>{projectType?.projectTypeName}</Box>
                           <Box sx={{ my: 3 }}>
                             {projectType?.services?.map((service: any) => (
@@ -1350,7 +1452,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                     background: '#31A0F6'
                                   }
                                 }}
-                                key={index}
+                                key={index + Math.random()}
                                 className={`${selectedAdditionalServiceData?.includes(service?.id) ? 'selected' : ''}`}
                                 onClick={() => {
                                   handleAdditionalServiceSelection(service?.id)
@@ -1390,7 +1492,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         deliverableData?.filter((deliverable: any) => !deliverable?.additionalServiceId)
                       )?.map((scopeOfWork: any, index: number) => {
                         return (
-                          <Box key={index}>
+                          <Box key={index + Math.random()}>
                             <Box className={'sow-list-item'} component={'label'}>
                               <Box className={'sow-list-item-sl'}>{index + 1}</Box>
                               <Box className={'sow-list-item-type'}>
@@ -1447,13 +1549,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     <Box sx={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}>
                       {serviceQuestionList?.map((serviceQuestion: any, index: number) => {
                         return (
-                          <Box sx={serviceQuestionItemSx} key={index}>
+                          <Box sx={serviceQuestionItemSx} key={index + Math.random()}>
                             <Box sx={{ width: '100%' }}>
                               <Box component='label' sx={{ mb: 2 }}>
-                                {`${serviceQuestion.title} #${index + 1}`}
+                                {`#${index + 1}. ${serviceQuestion.title} `}
                               </Box>
                               <TextField
-                                // label={`Service Related Questions Answer #${index}`}
                                 name='answer'
                                 value={
                                   deliverableServiceQuestionData?.find(
@@ -1463,7 +1564,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                 onChange={e => {
                                   handleServiceQuestionInputChange(e.target.value, serviceQuestion?.id)
                                 }}
-                                placeholder={`Service Related Questions Answer #${index + 1}`}
+                                placeholder={`#${index + 1}. Service Related Questions Answer`}
                                 fullWidth
                               />
                             </Box>
@@ -1480,7 +1581,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     <Box>
                       {deliverableNotesData?.map((deliverableNote: any, index: number) => {
                         return (
-                          <Box sx={deliverableNoteItemSx} key={index}>
+                          <Box sx={deliverableNoteItemSx} key={index + Math.random()}>
                             <Box sx={{ width: '100%' }}>
                               <TextField
                                 label={'Meeting Link'}
@@ -1630,7 +1731,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             {!!errorMessage?.['company'] &&
                               errorMessage?.['company']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
                                     {message}
                                   </span>
                                 )
@@ -1764,22 +1865,37 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         </Box>
                         <Box className='team-review-team-need-box'>
                           {employeeRoleData?.map((employeeRole: any, index: number) => {
+                            console.log(
+                              associatedUserWithRole?.find((item: any) => item?.employeeRoleId === employeeRole?.id)
+                                ?.associateId
+                            )
+
                             return (
-                              <Box className='team-review-team-need-item' key={index}>
-                                <Box className='team-review-team-need-item-title'>{employeeRole?.name}</Box>
+                              <Box className='team-review-team-need-item' key={index + Math.random()}>
                                 <Box className='team-review-team-need-item-input'>
-                                  <Dropdown
-                                    dataList={teamUserList}
-                                    optionConfig={{ id: 'id', title: 'name' }}
-                                    onChange={event => {
-                                      getAssociatedUserWithRole(employeeRole?.id, Number(event?.target?.value))
-                                    }}
-                                    value={
-                                      associatedUserWithRole?.find(
-                                        (item: any) => item?.employeeRoleId === employeeRole?.id
-                                      )?.associateId
-                                    }
-                                  />
+                                  <FormControl fullWidth>
+                                    <InputLabel id='associateId-label'>{employeeRole?.name}</InputLabel>
+                                    <Select
+                                      labelId='associateId-label'
+                                      id='associateId'
+                                      onChange={event => {
+                                        getAssociatedUserWithRole(employeeRole?.id, Number(event?.target?.value))
+                                      }}
+                                      value={
+                                        associatedUserWithRole?.find(
+                                          (item: any) => item?.employeeRoleId === employeeRole?.id
+                                        )?.associateId || ''
+                                      }
+                                      name={`associateId_${employeeRole?.id}`}
+                                      label={employeeRole?.name}
+                                    >
+                                      {teamUserList?.map((item: any) => (
+                                        <MenuItem value={item?.id} key={item?.id}>
+                                          {item?.name}
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
                                 </Box>
                               </Box>
                             )
@@ -1819,7 +1935,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             {!!errorMessage?.['company'] &&
                               errorMessage?.['company']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
                                     {message}
                                   </span>
                                 )
@@ -1953,22 +2069,37 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         </Box>
                         <Box className='team-review-team-need-box'>
                           {employeeRoleData?.map((employeeRole: any, index: number) => {
+                            console.log(
+                              associatedUserWithRole?.find((item: any) => item?.employeeRoleId === employeeRole?.id)
+                                ?.associateId
+                            )
+
                             return (
-                              <Box className='team-review-team-need-item' key={index}>
-                                <Box className='team-review-team-need-item-title'>{employeeRole?.name}</Box>
+                              <Box className='team-review-team-need-item' key={index + Math.random()}>
                                 <Box className='team-review-team-need-item-input'>
-                                  <Dropdown
-                                    dataList={teamUserList}
-                                    optionConfig={{ id: 'id', title: 'name' }}
-                                    onChange={event => {
-                                      getAssociatedUserWithRole(employeeRole?.id, Number(event?.target?.value))
-                                    }}
-                                    value={
-                                      associatedUserWithRole?.find(
-                                        (item: any) => item?.employeeRoleId === employeeRole?.id
-                                      )?.associateId
-                                    }
-                                  />
+                                  <FormControl fullWidth>
+                                    <InputLabel id='associateId-label'>{employeeRole?.name}</InputLabel>
+                                    <Select
+                                      labelId='associateId-label'
+                                      id='associateId'
+                                      onChange={event => {
+                                        getAssociatedUserWithRole(employeeRole?.id, Number(event?.target?.value))
+                                      }}
+                                      value={
+                                        associatedUserWithRole?.find(
+                                          (item: any) => item?.employeeRoleId === employeeRole?.id
+                                        )?.associateId || ''
+                                      }
+                                      name={`associateId_${employeeRole?.id}`}
+                                      label={employeeRole?.name}
+                                    >
+                                      {teamUserList?.map((item: any) => (
+                                        <MenuItem value={item?.id} key={item?.id}>
+                                          {item?.name}
+                                        </MenuItem>
+                                      ))}
+                                    </Select>
+                                  </FormControl>
                                 </Box>
                               </Box>
                             )
@@ -1987,7 +2118,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             console.log(scopeOfWork)
 
                             return (
-                              <Box key={index}>
+                              <Box key={index + Math.random()}>
                                 <Box className={'sow-list-item'} component={'label'}>
                                   <Box className={'sow-list-item-type'}>
                                     <Box
@@ -2275,251 +2406,224 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         >
           <Box sx={{ mb: '20px' }}>
             <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
-              Add Scope of Work
+              {scopeOfWorkEditId ? 'Update' : 'Add'} Scope of Work
             </h2>
           </Box>
 
           <form>
             <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 5, mb: 5 }}>
-              <Box
-                sx={{
-                  width: '100%',
-                  '& .MuiInputBase-root': {
-                    border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
-                  }
-                }}
-              >
-                <label className='block text-sm'>
-                  <Dropdown
-                    name='phaseId'
-                    value={scopeOfWorkFormData.phaseId}
-                    onChange={handleScopeOfWorkSelectChange}
-                    dataList={scopeOfWorkPhaseList}
-                    label={'Phase'}
-                  />
-                  {!!errorMessage?.['serviceGroupId'] &&
-                    errorMessage?.['serviceGroupId']?.map((message: any, index: number) => {
-                      return (
-                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                          {message}
-                        </span>
-                      )
-                    })}
-                </label>
-              </Box>
+              {!scopeOfWorkEditId && (
+                <Box
+                  sx={{
+                    width: '100%',
+                    '& .MuiInputBase-root': {
+                      border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
+                    }
+                  }}
+                >
+                  <label className='block text-sm'>
+                    <Dropdown
+                      name='phaseId'
+                      value={scopeOfWorkFormData.phaseId}
+                      onChange={handleScopeOfWorkSelectChange}
+                      dataList={scopeOfWorkPhaseList}
+                      label={'Phase'}
+                    />
+                    {!!errorMessage?.['phaseId'] &&
+                      errorMessage?.['phaseId']?.map((message: any, index: number) => {
+                        return (
+                          <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                            {message}
+                          </span>
+                        )
+                      })}
+                  </label>
+                </Box>
+              )}
 
-              <Box sx={{ width: '100%' }}>
-                <Box sx={{ fontSize: '20px', fontWeight: 600, color: '#158ddf', marginBottom: '0.5rem' }}>SOW</Box>
-                {scopeOfWorkFormData?.sows?.map((scopeOfWork: TScopeOfWorkSingleFormData, index: number) => {
-                  return (
-                    <Box
-                      sx={{
-                        width: '100%'
-                      }}
-                      key={index}
-                    >
+              {scopeOfWorkEditId ? (
+                <>
+                  {' '}
+                  <Box
+                    sx={{
+                      width: '100%'
+                    }}
+                  >
+                    <label className='block text-sm'>
                       <TextField
-                        label={'SOW'}
+                        label={'Title'}
                         name='title'
-                        value={scopeOfWork?.title}
-                        onChange={e => {
-                          handleScopeOfWorkInputChange(index, e)
-                        }}
-                        placeholder={`SOW`}
+                        value={scopeOfWorkFormData?.title}
+                        onChange={handleScopeOfWorkInputChange}
+                        placeholder={`Title`}
                         fullWidth
                       />
                       {!!errorMessage?.['title'] &&
                         errorMessage?.['title']?.map((message: any, index: number) => {
                           return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
                             </span>
                           )
                         })}
-                    </Box>
-                  )
-                })}
-              </Box>
-            </Box>
-
-            {/* {serviceSOWEditDataId ? (
-                <>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                      </label>
-                      <RichTextEditor
-                        value={serviceSOWFormData.name}
-                        onBlur={newContent =>
-                          handleReachText(newContent, 'name', serviceSOWFormData, setServiceSOWFormData)
-                        }
+                    </label>
+                  </Box>
+                  {/* <Box
+                    sx={{
+                      width: '100%'
+                    }}
+                  >
+                    <label className='block text-sm'>
+                      <TextField
+                        label={'Order'}
+                        name='serial'
+                        value={scopeOfWorkFormData?.serial}
+                        onChange={handleScopeOfWorkInputChange}
+                        placeholder={`Order`}
+                        fullWidth
                       />
-                      {!!errorMessage?.['name'] &&
-                        errorMessage?.['name']?.map((message: any, index: number) => {
+                      {!!errorMessage?.['Order'] &&
+                        errorMessage?.['Order']?.map((message: any, index: number) => {
                           return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
                               {message}
                             </span>
                           )
                         })}
-                    </Box>
-                  </Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm'>
-                        <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                        <input
-                          className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                          placeholder='Examples: 1'
-                          name='order'
-                          value={serviceSOWFormData.order}
-                          onChange={e => {
-                            handleTextChange(e, serviceSOWFormData, setServiceSOWFormData)
-                          }}
-                        />
-                        {!!errorMessage?.['order'] &&
-                          errorMessage?.['order']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                  </Box>
+                    </label>
+                  </Box> */}
                 </>
               ) : (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 5,
-                    mb: 5,
-                    flexDirection: 'column'
-                  }}
-                >
-                  <>
-                    {serviceSOWFormData.scopes?.map((scope, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          width: '100%',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          p: '20px',
-                          padding: '24px'
-                        }}
-                      >
-                        <Box sx={{ width: '100%' }}>
-                          <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                            <Box sx={{ width: '100%' }}>
-                              <label className='block text-sm'>
-                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                              </label>
-
-                              <Box sx={{ width: '100%' }}>
-                                <RichTextEditor
-                                  value={scope.name}
-                                  onBlur={newContent =>
-                                    handleMultipleReachTextChange(
-                                      newContent,
-                                      'name',
-                                      index,
-                                      serviceSOWFormData,
-                                      setServiceSOWFormData,
-                                      'scopes'
-                                    )
-                                  }
-                                />
-                              </Box>
-
-                              {!!errorMessage?.[`names.${index}`] &&
-                                errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
-                                  return (
-                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                                      {String(message).replaceAll('names.0', 'name')}
-                                    </span>
-                                  )
-                                })}
-                            </Box>
-                          </Box>
-                          <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
-                            <Box sx={{ width: '100%' }}>
-                              <label className='block text-sm'>
-                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
-                                <input
-                                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                                  placeholder='Examples: 1'
-                                  name='order'
-                                  value={scope.order}
-                                  onChange={e => {
-                                    handleMultipleTextChange(
-                                      e,
-                                      serviceSOWFormData,
-                                      setServiceSOWFormData,
-                                      index,
-                                      'scopes'
-                                    )
-                                  }}
-                                />
-                              </label>
-                            </Box>
-                          </Box>
-                        </Box>
-                        <Button
-                          type='button'
-                          onClick={() => removeNameField(index, serviceSOWFormData, setServiceSOWFormData, 'scopes')}
-                          className='mt-1 p-0 bg-red-500 text-white rounded-md'
+                <Box sx={{ width: '100%' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      fontSize: '20px',
+                      fontWeight: 600,
+                      color: '#158ddf',
+                      marginBottom: '0.5rem'
+                    }}
+                  >
+                    SOW
+                    <Box
+                      sx={sowAddButtonSx}
+                      onClick={() => {
+                        handleAddNewSow()
+                      }}
+                    >
+                      <AddIcon fontSize='small' />
+                    </Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: '100%'
+                    }}
+                  >
+                    {scopeOfWorkFormData?.scopeOfWorks?.map((scopeOfWork: any, index: number) => {
+                      return (
+                        <Box
+                          key={index + Math.random()}
                           sx={{
-                            p: 0,
-                            border: '1px solid #dc2626',
-                            borderRadius: '50%',
-                            minWidth: 'auto',
-                            height: '35px',
-                            width: '35px',
-                            color: '#dc2626',
-                            ml: 2,
-                            '&:hover': {
-                              background: '#dc2626',
-                              color: '#fff'
-                            }
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '5px',
+                            width: '100%',
+                            marginBottom: '15px',
+                            border: '1px solid #ddd',
+                            padding: '10px',
+                            borderRadius: '5px'
                           }}
                         >
-                          <DeleteIcon />
-                        </Button>
-                      </Box>
-                    ))}
-                  </>
-
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <button
-                      type='button'
-                      onClick={() => {
-                        addSubField(serviceSOWFormData, setServiceSOWFormData, 'scopes', serviceSOWDefaultData.scopes)
-                      }}
-                      className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-blue'
-                    >
-                      <AddIcon /> Add Another Scope
-                    </button>
+                          <Box
+                            sx={{
+                              width: 'calc(100% - 140px)'
+                            }}
+                          >
+                            <TextField
+                              label={'Title'}
+                              name='title'
+                              value={scopeOfWork?.title}
+                              onChange={e => {
+                                handleScopeOfWorkMultipleInputChange(index, e)
+                              }}
+                              placeholder={`Title`}
+                              fullWidth
+                            />
+                            {!!errorMessage?.['title'] &&
+                              errorMessage?.['title']?.map((message: any, index: number) => {
+                                return (
+                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                    {message}
+                                  </span>
+                                )
+                              })}
+                          </Box>
+                          <Box
+                            sx={{
+                              width: '100px'
+                            }}
+                          >
+                            <TextField
+                              label={'Order'}
+                              name='serial'
+                              value={scopeOfWork?.serial}
+                              onChange={e => {
+                                handleScopeOfWorkMultipleInputChange(index, e)
+                              }}
+                              placeholder={`Order`}
+                              fullWidth
+                            />
+                            {!!errorMessage?.['serial'] &&
+                              errorMessage?.['serial']?.map((message: any, index: number) => {
+                                return (
+                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                    {message}
+                                  </span>
+                                )
+                              })}
+                          </Box>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '30px'
+                            }}
+                          >
+                            <Button
+                              onClick={e => {
+                                handleRemoveSow(index)
+                              }}
+                              sx={sowRemoveButtonSx}
+                            >
+                              <DeleteIcon fontSize='small' />
+                            </Button>
+                          </Box>
+                        </Box>
+                      )
+                    })}
                   </Box>
                 </Box>
-              )} */}
+              )}
+            </Box>
+
             <Box className='my-4 text-right'>
               <button
-                onClick={onServiceSOWClear}
+                onClick={handleServiceSOWModalClose}
                 type='button'
                 className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
               >
-                Close <ClearIcon />
+                <ClearIcon /> Cancel
               </button>
               <button
-                type='submit'
+                type='button'
+                onClick={handleSOWSaveOnClick}
                 className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
               >
                 <AddIcon />
-                Save
+                {scopeOfWorkEditId ? 'Update' : 'Save'}
               </button>
             </Box>
           </form>
