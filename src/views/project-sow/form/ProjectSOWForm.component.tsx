@@ -112,6 +112,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [scopeText, setScopeText] = useState<any>('')
   const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
   const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
+  const [tasksList, setTasksList] = useState<any>([])
 
   const [serviceSOWModalOpen, setServiceSowModalOpen] = useState<boolean>(false)
 
@@ -276,7 +277,37 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         return [...prevState, { employeeRoleId: roleId, associateId: userId }]
       }
     })
-    console.log(associatedUserWithRole)
+  }
+
+  const hamdleUpdateTeamAssignOnChange = (employeeRoleId: number, associateId: number) => {
+    setPreload(true)
+    apiRequest
+      .post('/team-review/update', { transcriptId, employeeRoleId, associateId })
+      .then(res => {
+        console.log(res)
+        setPreload(false)
+        getAssociatedUserWithRole(employeeRoleId, associateId)
+      })
+      .catch(error => {
+        setPreload(false)
+        setErrorMessage(error?.response?.data?.errors)
+        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+      })
+  }
+
+  const hamdleUpdateTaskAssignOnChange = (taskId: number, associateId: number) => {
+    setPreload(true)
+    apiRequest
+      .post(`/estimation-tasks/${taskId}/add-associate`, { associateId })
+      .then(res => {
+        console.log(res)
+        setPreload(false)
+      })
+      .catch(error => {
+        setPreload(false)
+        setErrorMessage(error?.response?.data?.errors)
+        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+      })
   }
 
   const [transcriptMeetingLinks, setTranscriptMeetingLinks] = useState<string[]>([''])
@@ -967,6 +998,21 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               answer: questionAnswer?.answer
             }))
           )
+
+          getEnableStep = 9
+        }
+
+        if (res?.data?.tasksData && res?.data?.tasksData?.projectTeams?.length) {
+          setAssociatedUserWithRole([
+            ...res?.data?.tasksData?.projectTeams?.map((projectTeam: any) => ({
+              employeeRoleId: projectTeam?.employeeRoleId,
+              associateId: projectTeam?.associateId
+            }))
+          ])
+          getEnableStep = 9
+        }
+        if (res?.data?.tasksData && res?.data?.tasksData?.tasks?.length) {
+          setTasksList(res?.data?.tasksData?.tasks)
 
           getEnableStep = 9
         }
@@ -2083,7 +2129,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                       labelId='associateId-label'
                                       id='associateId'
                                       onChange={event => {
-                                        getAssociatedUserWithRole(employeeRole?.id, Number(event?.target?.value))
+                                        hamdleUpdateTeamAssignOnChange(employeeRole?.id, Number(event?.target?.value))
                                       }}
                                       value={
                                         associatedUserWithRole?.find(
@@ -2113,9 +2159,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       <Box sx={scopeOfWorkListContainer}>
                         <Box sx={scopeOfWorkListSx}>
                           {serviceDeliverableGroupByScopeOfWorkId(
-                            deliverableData?.filter((deliverable: any) => !deliverable?.additionalServiceId)
-                          )?.map((scopeOfWork: any, index: number) => {
-                            console.log(scopeOfWork)
+                            tasksList?.filter((task: any) => !task?.additionalServiceId)
+                          )?.map((task: any, index: number) => {
+                            console.log(task)
 
                             return (
                               <Box key={index + Math.random()}>
@@ -2123,7 +2169,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   <Box className={'sow-list-item-type'}>
                                     <Box
                                       className={`item-type-common item-type-sow ${
-                                        !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
+                                        !task?.['additionalServiceId'] ? 'item-type-hive' : ''
                                       }`}
                                     >
                                       SOW
@@ -2132,25 +2178,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   <Box className={'sow-list-item-check'}>
                                     <Checkbox
                                       onChange={() => {
-                                        handleDeliverableCheckboxBySow(scopeOfWork?.deliverables)
+                                        handleDeliverableCheckboxBySow(task?.deliverables)
                                       }}
-                                      value={scopeOfWork?.id}
-                                      checked={isSowCheckedInDeliverable(
-                                        scopeOfWork?.deliverables,
-                                        selectedDeliverableData
-                                      )}
+                                      value={task?.id}
+                                      checked={isSowCheckedInDeliverable(task?.deliverables, selectedDeliverableData)}
                                     />
                                   </Box>
-                                  <Box className={'sow-list-item-title'}>{scopeOfWork?.title}</Box>
+                                  <Box className={'sow-list-item-title'}>{task?.title}</Box>
                                 </Box>
-                                {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
+                                {task?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
                                   return (
                                     <Box key={deliverableIndex}>
                                       <Box className={'sow-list-item'} component={'label'}>
                                         <Box className={'sow-list-item-type'}>
                                           <Box
                                             className={`item-type-common item-type-deliverable ${
-                                              !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
+                                              !task?.['additionalServiceId'] ? 'item-type-hive' : ''
                                             }`}
                                           >
                                             Deliverable
@@ -2169,7 +2212,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <Box className={'sow-list-item-type'}>
                                           <Box
                                             className={`item-type-common item-type-task ${
-                                              !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
+                                              !task?.['additionalServiceId'] ? 'item-type-hive' : ''
                                             }`}
                                           >
                                             Task
@@ -2185,8 +2228,31 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
                                         {selectedDeliverableData?.includes(deliverable?.['id']) && (
                                           <Box className={'sow-list-item-input'}>
-                                            <Dropdown dataList={teamUserList} />
-                                            <TextField className={'sow-list-item-text-input'} />
+                                            <Select
+                                              labelId='associateId-label'
+                                              id='associateId'
+                                              onChange={event => {
+                                                hamdleUpdateTaskAssignOnChange(
+                                                  deliverable?.['id'],
+                                                  Number(event?.target?.value)
+                                                )
+                                              }}
+                                              name={`associateId_${deliverable?.['id']}`}
+                                              value={deliverable?.associateId}
+                                              sx={{ width: '200px' }}
+                                            >
+                                              {teamUserList?.map((item: any) => (
+                                                <MenuItem value={item?.id} key={item?.id}>
+                                                  {item?.name}
+                                                </MenuItem>
+                                              ))}
+                                            </Select>
+
+                                            <TextField
+                                              className={'sow-list-item-text-input'}
+                                              value={deliverable?.estimateHours}
+                                              sx={{ width: '100px' }}
+                                            />
                                           </Box>
                                         )}
                                       </Box>
@@ -2194,7 +2260,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <Box className={'sow-list-item-type'}>
                                           <Box
                                             className={`item-type-common item-type-subtask ${
-                                              !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
+                                              !task?.['additionalServiceId'] ? 'item-type-hive' : ''
                                             }`}
                                           >
                                             Subtask

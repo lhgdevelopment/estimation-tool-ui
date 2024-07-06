@@ -191,10 +191,10 @@ export const teamReviewBoxSx: SxProps = {
       width: '50%',
       paddingRight: '10px',
       mb: '10px',
-      ':last-child': {
-        paddingRight: 0,
-        paddingLeft: '10px'
-      },
+      // ':last-child': {
+      //   paddingRight: 0,
+      //   paddingLeft: '10px'
+      // },
       // '& .team-review-team-need-item-title': {
       //   display: 'flex',
       //   width: '140px'
