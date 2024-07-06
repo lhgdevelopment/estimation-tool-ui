@@ -1,4 +1,6 @@
-export const formTitleSx = {
+import { SxProps } from '@mui/material'
+
+export const formTitleSx: SxProps = {
   fontSize: '20px',
   display: 'flex',
   mt: '20px',
@@ -18,7 +20,7 @@ export const scopeOfWorkListContainer = {
   borderRadius: '5px',
   p: 3
 }
-export const scopeOfWorkListSx = {
+export const scopeOfWorkListSx: SxProps = {
   '& .sow-list-item': {
     display: 'flex',
     alignItems: 'center',
@@ -83,7 +85,7 @@ export const scopeOfWorkListSx = {
   }
 }
 
-export const deliverableNoteAddButtonSx = {
+export const deliverableNoteAddButtonSx: SxProps = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -101,7 +103,7 @@ export const deliverableNoteAddButtonSx = {
   }
 }
 
-export const deliverableNoteItemSx = {
+export const deliverableNoteItemSx: SxProps = {
   display: 'flex',
   flexDirection: 'column',
   position: 'relative',
@@ -110,7 +112,7 @@ export const deliverableNoteItemSx = {
   mb: '30px'
 }
 
-export const deliverableNoteRemoveButtonSx = {
+export const deliverableNoteRemoveButtonSx: SxProps = {
   position: 'absolute',
   top: '-20px',
   right: '20px',
@@ -118,8 +120,8 @@ export const deliverableNoteRemoveButtonSx = {
   color: '#fff',
   '&:hover': { background: '#FF4C51' }
 }
-export const sectionTitleSx = { fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }
-export const sectionSubTitleSx = {
+export const sectionTitleSx: SxProps = { fontSize: '20px', fontWeight: '600', color: '#158ddf', mb: 2 }
+export const sectionSubTitleSx: SxProps = {
   display: 'flex',
   alignItems: 'center',
   fontSize: '14px',
@@ -128,7 +130,7 @@ export const sectionSubTitleSx = {
   mb: 4
 }
 
-export const sectionTitleAddButtonSx = {
+export const sectionTitleAddButtonSx: SxProps = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -146,7 +148,7 @@ export const sectionTitleAddButtonSx = {
   }
 }
 
-export const serviceQuestionItemSx = {
+export const serviceQuestionItemSx: SxProps = {
   width: 'calc(50% - 30px)',
   display: 'flex',
   flexWrap: 'wrap',
@@ -159,7 +161,7 @@ export const serviceQuestionItemSx = {
   borderRadius: '5px'
 }
 
-export const teamReviewBoxSx = {
+export const teamReviewBoxSx: SxProps = {
   display: 'flex',
   flexDirection: 'column',
   boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.1)',
@@ -193,21 +195,22 @@ export const teamReviewBoxSx = {
         paddingRight: 0,
         paddingLeft: '10px'
       },
-      '& .team-review-team-need-item-title': {
-        display: 'flex',
-        width: '140px'
-      },
+      // '& .team-review-team-need-item-title': {
+      //   display: 'flex',
+      //   width: '140px'
+      // },
       '& .team-review-team-need-item-input': {
-        width: 'calc(100% - 140px)',
-        '& .MuiSelect-select': {
-          p: '10px'
-        }
+        //width: 'calc(100% - 140px)',
+        width: '100%'
+        // '& .MuiSelect-select': {
+        //   p: '10px'
+        // }
       }
     }
   }
 }
 
-export const sowEstimationAccordionSectionSx = {
+export const sowEstimationAccordionSectionSx: SxProps = {
   mb: 5,
   boxShadow: '0px 0px 8px rgba(0, 0, 0, 0.1)',
   borderRadius: '10px',
@@ -221,7 +224,7 @@ export const sowEstimationAccordionSectionSx = {
   }
 }
 
-export const sowAddButtonSx = {
+export const sowAddButtonSx: SxProps = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -236,5 +239,19 @@ export const sowAddButtonSx = {
   cursor: 'pointer',
   '&:hover': {
     background: '#7e22ce'
+  }
+}
+
+export const sowRemoveButtonSx: SxProps = {
+  height: '30px',
+  width: '30px',
+  p: '0',
+  background: '#FF4C51',
+  minWidth: 'auto',
+  color: '#fff',
+  borderRadius: '50%',
+  cursor: 'pointer',
+  '&:hover': {
+    background: '#d32f2f'
   }
 }

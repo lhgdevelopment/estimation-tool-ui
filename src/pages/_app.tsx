@@ -78,7 +78,6 @@ const App = (props: ExtendedAppProps) => {
             <SettingsProvider>
               <SettingsConsumer>
                 {({ settings }) => {
-                  // @ts-ignore
                   return <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
                 }}
               </SettingsConsumer>
