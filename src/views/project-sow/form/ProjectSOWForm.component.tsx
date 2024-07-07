@@ -1,9 +1,5 @@
 import AddIcon from '@material-ui/icons/Add'
-import ClearIcon from '@material-ui/icons/Clear'
-import CheckIcon from '@mui/icons-material/Check'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
@@ -11,12 +7,10 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import {
   Accordion,
   Box,
-  Button,
   Checkbox,
   FormControl,
   InputLabel,
   MenuItem,
-  Modal,
   Select,
   SelectChangeEvent,
   Step,
@@ -45,10 +39,12 @@ import {
   sectionSubTitleSx,
   sectionTitleSx,
   serviceQuestionItemSx,
-  sowAddButtonSx,
-  sowRemoveButtonSx,
   teamReviewBoxSx
 } from '../ProjectSOW.style'
+import ProjectSOWOverviewFormComponent from './steps/overview/ProjectSOWOverview.component'
+import ProjectSOWProblemAndGoalsFormComponent from './steps/problemAndGoals/ProjectSOWProblemAndGoals.component'
+import ProjectSOWScopeOfWorkFormComponent from './steps/scopeOfWork/ProjectSOWScopeOfWork.component'
+import ProjectSOWSummeryFormComponent from './steps/summery/ProjectSOWSummery.component'
 import ProjectSOWTranscriptFormComponent from './steps/transcript/ProjectSOWTranscript.component'
 
 const steps = [
@@ -114,126 +110,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
   const [tasksList, setTasksList] = useState<any>([])
 
-  const [serviceSOWModalOpen, setServiceSowModalOpen] = useState<boolean>(false)
-
-  const handleServiceSOWModalOpen = () => {
-    setServiceSowModalOpen(true)
-  }
-  const handleServiceSOWModalClose = () => {
-    setServiceSowModalOpen(false)
-    handleSOWOnClear()
-  }
-
-  const [scopeOfWorkPhaseList, setScopeOfWorkPhaseList] = useState<any[]>([])
-
-  const scopeOfWorkDefaultData = {
-    phaseId: '',
-    title: '',
-    scopeOfWorks: [
-      {
-        title: '',
-        serial: ''
-      }
-    ]
-  }
-
-  const [scopeOfWorkFormData, setScopeOfWorkFormData] = useState<any>(scopeOfWorkDefaultData)
-  const [scopeOfWorkEditId, setScopeOfWorkEditId] = useState<any>(null)
-
-  const handleScopeOfWorkSelectChange = (e: SelectChangeEvent<any>) => {
-    setScopeOfWorkFormData({
-      ...scopeOfWorkFormData,
-      [e?.target?.name]: e?.target?.value
-    })
-  }
-
-  const handleAddNewSow = () => {
-    const scopeOfWorks = [...scopeOfWorkFormData.scopeOfWorks]
-    scopeOfWorks.push({
-      title: '',
-      order: ''
-    })
-    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, scopeOfWorks }))
-  }
-
-  const handleRemoveSow = (index: number) => {
-    const scopeOfWorks = [...scopeOfWorkFormData.scopeOfWorks]
-    scopeOfWorks.splice(index, 1)
-    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, scopeOfWorks }))
-  }
-
-  const handleScopeOfWorkMultipleInputChange = (index: number, event: any) => {
-    const { name, value } = event.target
-    const scopeOfWorks = [...scopeOfWorkFormData.scopeOfWorks]
-    scopeOfWorks[index][name] = value
-    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, scopeOfWorks }))
-  }
-
-  const handleScopeOfWorkInputChange = (event: any) => {
-    const { name, value } = event.target
-    const scopeOfWorks = scopeOfWorkFormData
-    scopeOfWorks[name] = value
-    setScopeOfWorkFormData(() => ({ ...scopeOfWorkFormData, ...scopeOfWorks }))
-  }
-
-  const handleSOWOnClear = () => {
-    setScopeOfWorkFormData(scopeOfWorkDefaultData)
-    setScopeOfWorkEditId(null)
-  }
-
-  const handleSOWOnEdit = (data: any) => {
-    const { id, title, serial } = data
-    setScopeOfWorkEditId(id)
-    setScopeOfWorkFormData({
-      title
-    })
-    handleServiceSOWModalOpen()
-  }
-
-  const handleSOWSaveOnClick = () => {
-    setPreload(true)
-    if (scopeOfWorkEditId) {
-      apiRequest
-        .post(`/scope-of-work/${scopeOfWorkEditId}`, { ...scopeOfWorkFormData })
-        .then(res => {
-          console.log(res)
-          setScopeOfWorkData((prevState: any[]) => [
-            ...prevState.map((sow: any) => {
-              if (sow?.id === scopeOfWorkEditId) return res.data
-
-              return sow
-            })
-          ])
-
-          setPreload(false)
-          enqueueSnackbar('Updatedf Successfully!', { variant: 'success' })
-          handleServiceSOWModalClose()
-        })
-        .catch(error => {
-          setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
-        })
-    } else {
-      apiRequest
-        .post('/scope-of-work/add-multi', { ...scopeOfWorkFormData, problemGoalId: problemGoalID })
-        .then(res => {
-          console.log(res)
-          setScopeOfWorkData((prevState: any[]) => [...res?.data, ...prevState])
-          setSelectedScopeOfWorkData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
-
-          setPreload(false)
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
-          handleServiceSOWModalClose()
-        })
-        .catch(error => {
-          setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
-        })
-    }
-  }
-
   const [additionalServiceScopeOfWorkData, setAdditionalServiceScopeOfWorkData] = useState<any>([])
   const [selectedAdditionalServiceScopeOfWorkData, setSelectedAdditionalServiceScopeOfWorkData] = useState<any>([])
   const [additionalServiceData, setAdditionalServiceData] = useState<any>([])
@@ -279,12 +155,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     })
   }
 
-  const hamdleUpdateTeamAssignOnChange = (employeeRoleId: number, associateId: number) => {
-    setPreload(true)
+  const handleUpdateTeamAssignOnChange = (employeeRoleId: number, associateId: number) => {
+    // setPreload(true)
     apiRequest
       .post('/team-review/update', { transcriptId, employeeRoleId, associateId })
       .then(res => {
-        console.log(res)
         setPreload(false)
         getAssociatedUserWithRole(employeeRoleId, associateId)
       })
@@ -295,12 +170,281 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
   }
 
-  const hamdleUpdateTaskAssignOnChange = (taskId: number, associateId: number) => {
-    setPreload(true)
+  const handleUpdateTaskCheckUnCheckForTaskOnChange = (taskId: number, isChecked: boolean) => {
+    setTasksList((prevState: any) => [
+      ...prevState.map((task: any) => (task.id === taskId ? { ...task, isChecked } : task))
+    ])
+    // setPreload(true)
+    if (isChecked) {
+      apiRequest
+        .post(`/estimation-tasks/checked`, {
+          problemGoalId: problemGoalID,
+          taskIds: [taskId]
+        })
+        .then(res => {
+          // setTasksList((prevState: any) => [...prevState.map((task: any) => (task.id === taskId ? res.data : task))])
+          setPreload(false)
+        })
+        .catch(error => {
+          setTasksList((prevState: any) => [
+            ...prevState.map((task: any) => (task.id === taskId ? { ...task, isChecked: !isChecked } : task))
+          ])
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    } else {
+      apiRequest
+        .post(`/estimation-tasks/un-checked`, {
+          problemGoalId: problemGoalID,
+          taskIds: [taskId]
+        })
+        .then(res => {
+          // setTasksList((prevState: any) => [...prevState.map((task: any) => (task.id === taskId ? res.data : task))])
+          setPreload(false)
+        })
+        .catch(error => {
+          setTasksList((prevState: any) => [
+            ...prevState.map((task: any) => (task.id === taskId ? { ...task, isChecked: !isChecked } : task))
+          ])
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    }
+  }
+
+  const handleUpdateTaskCheckUnCheckForParentTaskOnChange = (tasks: any, parentTaskId: number, isChecked: boolean) => {
+    const taskIds = [...tasks.map((task: any) => task.id), parentTaskId]
+
+    setTasksList((prevState: any) => [
+      ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked } : task))
+    ])
+    // setPreload(true)
+    if (isChecked) {
+      apiRequest
+        .post(`/estimation-tasks/checked`, {
+          problemGoalId: problemGoalID,
+          taskIds: taskIds
+        })
+        .then(res => {
+          // setTasksList((prevState: any) => [...prevState.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          setPreload(false)
+        })
+        .catch(error => {
+          setTasksList((prevState: any) => [
+            ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+          ])
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    } else {
+      apiRequest
+        .post(`/estimation-tasks/un-checked`, {
+          problemGoalId: problemGoalID,
+          taskIds: taskIds
+        })
+        .then(res => {
+          // setTasksList((prevState: any) => [...prevState.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          setPreload(false)
+        })
+        .catch(error => {
+          setTasksList((prevState: any) => [
+            ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+          ])
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    }
+  }
+
+  const handleUpdateTaskCheckUnCheckForDeliverablesOnChange = (tasks: any, isChecked: boolean) => {
+    const taskIds = getTaskIdsFromTaskSubTask(tasks)
+
+    setTasksList((prevState: any) => [
+      ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked } : task))
+    ])
+    // setPreload(true)
+    if (isChecked) {
+      apiRequest
+        .post(`/estimation-tasks/checked`, {
+          problemGoalId: problemGoalID,
+          taskIds: taskIds
+        })
+        .then(res => {
+          // setTasksList((prevState: any) => [...prevState.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          setPreload(false)
+        })
+        .catch(error => {
+          setTasksList((prevState: any) => [
+            ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+          ])
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    } else {
+      apiRequest
+        .post(`/estimation-tasks/un-checked`, {
+          problemGoalId: problemGoalID,
+          taskIds: taskIds
+        })
+        .then(res => {
+          // setTasksList((prevState: any) => [...prevState.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          setPreload(false)
+        })
+        .catch(error => {
+          setTasksList((prevState: any) => [
+            ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+          ])
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    }
+  }
+
+  const handleUpdateTaskCheckUnCheckForSOWOnChange = (deliverables: any, isChecked: boolean) => {
+    const taskIds = deliverables?.flatMap((deliverable: any) => getTaskIdsFromTaskSubTask(deliverable?.tasks))
+
+    setTasksList((prevState: any) => [
+      ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked } : task))
+    ])
+    // setPreload(true)
+    if (isChecked) {
+      apiRequest
+        .post(`/estimation-tasks/checked`, {
+          problemGoalId: problemGoalID,
+          taskIds: taskIds
+        })
+        .then(res => {
+          // setTasksList((prevState: any) => [...prevState.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          setPreload(false)
+        })
+        .catch(error => {
+          setTasksList((prevState: any) => [
+            ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+          ])
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    } else {
+      apiRequest
+        .post(`/estimation-tasks/un-checked`, {
+          problemGoalId: problemGoalID,
+          taskIds: taskIds
+        })
+        .then(res => {
+          // setTasksList((prevState: any) => [...prevState.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          setPreload(false)
+        })
+        .catch(error => {
+          setTasksList((prevState: any) => [
+            ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+          ])
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    }
+  }
+
+  const handleUpdateTaskCheckUnCheckForServiceOnChange = (scope_of_works: any, isChecked: boolean) => {
+    const taskIds = scope_of_works.flatMap((scope_of_work: any) =>
+      scope_of_work?.deliverables?.flatMap((deliverable: any) => getTaskIdsFromTaskSubTask(deliverable?.tasks))
+    )
+    console.log({ taskIds })
+
+    setTasksList((prevState: any) => [
+      ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked } : task))
+    ])
+    // setPreload(true)
+    if (isChecked) {
+      apiRequest
+        .post(`/estimation-tasks/checked`, {
+          problemGoalId: problemGoalID,
+          taskIds: taskIds
+        })
+        .then(res => {
+          // setTasksList((prevState: any) => [...prevState.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          setPreload(false)
+        })
+        .catch(error => {
+          setTasksList((prevState: any) => [
+            ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+          ])
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    } else {
+      apiRequest
+        .post(`/estimation-tasks/un-checked`, {
+          problemGoalId: problemGoalID,
+          taskIds: taskIds
+        })
+        .then(res => {
+          // setTasksList((prevState: any) => [...prevState.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          setPreload(false)
+        })
+        .catch(error => {
+          setTasksList((prevState: any) => [
+            ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+          ])
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    }
+  }
+
+  const getTaskIdsFromTaskSubTask = (tasks: any[]) => {
+    const taskIds: number[] = []
+
+    const collectIds = (taskList: any[]) => {
+      taskList.forEach((task: any) => {
+        taskIds.push(task.id)
+        if (task.sub_tasks && task.sub_tasks.length > 0) {
+          collectIds(task.sub_tasks)
+        }
+      })
+    }
+
+    collectIds(tasks)
+
+    return taskIds
+  }
+
+  const handleUpdateTaskAssignOnChange = (taskId: number, associateId: number) => {
+    setTasksList((prevState: any) => [
+      ...prevState.map((task: any) => (task.id === taskId ? { ...task, associateId } : task))
+    ])
+    // setPreload(true)
     apiRequest
       .post(`/estimation-tasks/${taskId}/add-associate`, { associateId })
       .then(res => {
-        console.log(res)
+        setTasksList((prevState: any) => [...prevState.map((task: any) => (task.id === taskId ? res.data : task))])
+        setPreload(false)
+      })
+      .catch(error => {
+        setPreload(false)
+        setErrorMessage(error?.response?.data?.errors)
+        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+      })
+  }
+
+  const handleUpdateTaskEstimateHoursOnChange = (taskId: number, estimateHours: number) => {
+    setTasksList((prevState: any) => [
+      ...prevState.map((task: any) => (task.id === taskId ? { ...task, estimateHours } : task))
+    ])
+    // setPreload(true)
+    apiRequest
+      .post(`/estimation-tasks/${taskId}/add-estimate-hours`, { estimateHours })
+      .then(res => {
+        setTasksList((prevState: any) => [...prevState.map((task: any) => (task.id === taskId ? res.data : task))])
         setPreload(false)
       })
       .catch(error => {
@@ -780,7 +924,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       apiRequest
         .get(`/estimation-tasks?problemGoalId=${problemGoalID}`)
         .then(res => {
-          console.log(res)
           if (res?.data?.tasks?.length) {
             setEstimationTaskData(res?.data?.tasks)
           } else {
@@ -1038,19 +1181,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
   }
 
-  const getScopeOfWorkPhaseList = async () => {
-    if (projectSOWFormData?.serviceId) {
-      await apiRequest
-        .get(`/service-groups?serviceId=${projectSOWFormData?.serviceId}`)
-        .then(res => {
-          setScopeOfWorkPhaseList(res?.data)
-        })
-        .catch(error => {
-          enqueueSnackbar(error?.message, { variant: 'error' })
-        })
-    }
-  }
-
   const getServiceQuestionList = async () => {
     if (projectSOWFormData?.serviceId) {
       await apiRequest
@@ -1210,6 +1340,56 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     return result
   }
 
+  function transformSubTaskTaskDeliverablesSowsData(data: any) {
+    const result: any = []
+
+    data.forEach((item: any) => {
+      const scopeOfWork = item?.deliverable?.scope_of_work
+      const deliverable = item?.deliverable
+
+      let scopeOfWorkEntry = result.find((entry: any) => entry.id === scopeOfWork?.id)
+
+      if (!scopeOfWorkEntry) {
+        scopeOfWorkEntry = {
+          ...scopeOfWork,
+          deliverables: []
+        }
+        result.push(scopeOfWorkEntry)
+      }
+
+      let deliverableEntry = scopeOfWorkEntry.deliverables.find((del: any) => del.id === deliverable.id)
+
+      if (!deliverableEntry) {
+        deliverableEntry = {
+          ...deliverable,
+          tasks: []
+        }
+        scopeOfWorkEntry.deliverables.push(deliverableEntry)
+      }
+
+      const task = {
+        ...item,
+        sub_tasks: []
+      }
+
+      if (item.estimationTasksParentId) {
+        const parentTask = deliverableEntry.tasks.find((task: any) => task.id === item.estimationTasksParentId)
+        if (parentTask) {
+          parentTask.sub_tasks.push(task)
+        } else {
+          // If the parent task is not found, add the task directly to the list of tasks
+          deliverableEntry.tasks.push(task)
+        }
+      } else {
+        deliverableEntry.tasks.push(task)
+      }
+    })
+
+    console.log('transformSubTaskTaskDeliverablesSowsData', result)
+
+    return result
+  }
+
   useEffect(() => {
     onClear()
     setEnabledStep(0)
@@ -1218,7 +1398,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     getUserList()
     getEmployeeRoleList()
     getServiceQuestionList()
-    getScopeOfWorkPhaseList()
   }, [])
 
   useEffect(() => {
@@ -1326,207 +1505,41 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 />
               )}
               {activeStep == 1 && (
-                <Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm' htmlFor={'#summaryText'}>
-                        <Box sx={{ ...formTitleSx, mt: 0 }}>
-                          {projectSOWFormData?.projectName} - Qualifying Meeting Summary
-                        </Box>
-                        <Box
-                          sx={{
-                            position: 'relative'
-                          }}
-                        >
-                          <MarkdownEditor modelValue={summaryText} onChange={setSummaryText} />
-                        </Box>
-
-                        {!!errorMessage?.['summaryText'] &&
-                          errorMessage?.['summaryText']?.map((message: any, index: number) => {
-                            return (
-                              <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                  </Box>
-                </Box>
+                <ProjectSOWSummeryFormComponent
+                  errorMessage={errorMessage}
+                  projectSOWFormData={projectSOWFormData}
+                  setSummaryText={setSummaryText}
+                  summaryText={summaryText}
+                ></ProjectSOWSummeryFormComponent>
               )}
               {activeStep == 2 && (
-                <Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                        <Box sx={{ ...formTitleSx, mt: 0 }}> {projectSOWFormData?.projectName}'s Problem & Goal</Box>
-                        <Box
-                          sx={{
-                            position: 'relative'
-                          }}
-                        >
-                          <MarkdownEditor modelValue={problemGoalText} onChange={setProblemGoalText} />
-                        </Box>
-                        {!!errorMessage?.problemGoalText &&
-                          errorMessage?.problemGoalText?.map((message: any, index: number) => {
-                            return (
-                              <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                  </Box>
-                </Box>
+                <ProjectSOWProblemAndGoalsFormComponent
+                  errorMessage={errorMessage}
+                  projectSOWFormData={projectSOWFormData}
+                  problemGoalText={problemGoalText}
+                  setProblemGoalText={setProblemGoalText}
+                ></ProjectSOWProblemAndGoalsFormComponent>
               )}
               {activeStep == 3 && (
-                <Box>
-                  <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                    <Box sx={{ width: '100%' }}>
-                      <label className='block text-sm' htmlFor={'#problemGoalText'}>
-                        <Box sx={{ ...formTitleSx, mt: 0 }}>Project Overview</Box>
-                        <Box
-                          sx={{
-                            position: 'relative'
-                          }}
-                        >
-                          <MarkdownEditor modelValue={overviewText} onChange={setOverviewText} />
-                        </Box>
-                        {!!errorMessage?.overviewText &&
-                          errorMessage?.overviewText?.map((message: any, index: number) => {
-                            return (
-                              <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                                {message}
-                              </span>
-                            )
-                          })}
-                      </label>
-                    </Box>
-                  </Box>
-                </Box>
+                <ProjectSOWOverviewFormComponent
+                  errorMessage={errorMessage}
+                  projectSOWFormData={projectSOWFormData}
+                  overviewText={overviewText}
+                  setOverviewText={setOverviewText}
+                ></ProjectSOWOverviewFormComponent>
               )}
               {activeStep == 4 && (
-                <Box>
-                  <Box sx={{ ...sectionTitleSx, display: 'flex' }}>
-                    Scope Of Work
-                    <Box
-                      sx={sowAddButtonSx}
-                      onClick={() => {
-                        handleServiceSOWModalOpen()
-                      }}
-                    >
-                      <AddIcon fontSize='small' />
-                    </Box>
-                  </Box>
-                  <Box sx={scopeOfWorkListContainer}>
-                    <Box sx={scopeOfWorkListSx}>
-                      {scopeOfWorkData?.map((scopeOfWork: any, index: number) => {
-                        return (
-                          <Box className={'sow-list-item'} key={index + Math.random()}>
-                            <Box className={'sow-list-item-sl'}>{index + 1}</Box>
-                            <Box className={'sow-list-item-type'}>
-                              <Box
-                                className={`item-type-common item-type-sow ${
-                                  !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
-                                }`}
-                              >
-                                SOW
-                              </Box>
-                            </Box>
-                            <Box className={'sow-list-item-check'}>
-                              <Checkbox
-                                onChange={handleScopeOfWorkCheckbox}
-                                value={scopeOfWork?.['id']}
-                                checked={selectedScopeOfWorkData?.includes(scopeOfWork?.['id'])}
-                              />
-                            </Box>
-                            <Box
-                              className={'sow-list-item-title'}
-                              sx={{
-                                color: !scopeOfWork?.['additionalServiceId'] ? '#903fe8' : '',
-                                opacity: selectedScopeOfWorkData?.includes(scopeOfWork?.['id']) ? 1 : 0.5
-                              }}
-                              component={selectedScopeOfWorkData?.includes(scopeOfWork?.['id']) ? 'span' : 'del'}
-                            >
-                              {scopeOfWork?.['title']}
-                            </Box>
-                            <Button
-                              sx={{
-                                ml: '5px',
-                                p: '2px',
-                                minWidth: 0,
-                                border: '2px solid #7e22ce',
-                                borderRadius: '5px'
-                              }}
-                              onClick={() => handleSOWOnEdit(scopeOfWork)}
-                            >
-                              <EditIcon
-                                sx={{ color: '#7e22ce', height: '14px !important', width: '14px !important' }}
-                              />
-                            </Button>
-                          </Box>
-                        )
-                      })}
-                      {/* selectedAdditionalServiceData */}
-                    </Box>
-                  </Box>
-                  <Box>
-                    <Box sx={sectionTitleSx}>Add Services</Box>
-                    <Box sx={{ py: 0, px: 5 }}>
-                      {serviceGroupByProjectTypeId(serviceList)?.map((projectType: any, index: number) => (
-                        <Box
-                          sx={{ display: 'flex', alignItems: 'center', mb: 2, fontWeight: '600' }}
-                          key={index + Math.random()}
-                        >
-                          <Box sx={{ mr: 2, color: '#777' }}>{projectType?.projectTypeName}</Box>
-                          <Box sx={{ my: 3 }}>
-                            {projectType?.services?.map((service: any) => (
-                              <Box
-                                sx={{
-                                  position: 'relative',
-                                  display: 'flex',
-                                  p: '5px 25px',
-                                  borderRadius: '15px',
-                                  fontSize: '14px',
-                                  lineHeight: '14px',
-                                  background: '#afaeb3',
-                                  color: '#fff',
-                                  cursor: 'pointer',
-                                  mb: 1,
-                                  '&.selected': {
-                                    background: '#31A0F6'
-                                  }
-                                }}
-                                key={index + Math.random()}
-                                className={`${selectedAdditionalServiceData?.includes(service?.id) ? 'selected' : ''}`}
-                                onClick={() => {
-                                  handleAdditionalServiceSelection(service?.id)
-                                }}
-                              >
-                                {selectedAdditionalServiceData.includes(service?.id) ? (
-                                  <CheckIcon
-                                    sx={{
-                                      position: 'absolute',
-                                      top: '50%',
-                                      left: '5px',
-                                      transform: 'translate(0, -50%)',
-                                      fontSize: '18px',
-                                      mr: 1
-                                    }}
-                                  />
-                                ) : (
-                                  <></>
-                                )}
-                                {service.name}
-                              </Box>
-                            ))}
-                          </Box>
-                        </Box>
-                      ))}
-                    </Box>
-                  </Box>
-                </Box>
+                <ProjectSOWScopeOfWorkFormComponent
+                  handleAdditionalServiceSelection={handleAdditionalServiceSelection}
+                  selectedAdditionalServiceData={selectedAdditionalServiceData}
+                  selectedScopeOfWorkData={selectedScopeOfWorkData}
+                  setSelectedScopeOfWorkData={setSelectedScopeOfWorkData}
+                  problemGoalID={problemGoalID}
+                  scopeOfWorkData={scopeOfWorkData}
+                  setScopeOfWorkData={setScopeOfWorkData}
+                  serviceList={serviceList}
+                  serviceId={projectSOWFormData.serviceId}
+                ></ProjectSOWScopeOfWorkFormComponent>
               )}
 
               {activeStep == 5 && (
@@ -1538,7 +1551,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         deliverableData?.filter((deliverable: any) => !deliverable?.additionalServiceId)
                       )?.map((scopeOfWork: any, index: number) => {
                         return (
-                          <Box key={index + Math.random()}>
+                          <Box key={index + 'deliverable'}>
                             <Box className={'sow-list-item'} component={'label'}>
                               <Box className={'sow-list-item-sl'}>{index + 1}</Box>
                               <Box className={'sow-list-item-type'}>
@@ -1595,7 +1608,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     <Box sx={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}>
                       {serviceQuestionList?.map((serviceQuestion: any, index: number) => {
                         return (
-                          <Box sx={serviceQuestionItemSx} key={index + Math.random()}>
+                          <Box sx={serviceQuestionItemSx} key={index + 'question'}>
                             <Box sx={{ width: '100%' }}>
                               <Box component='label' sx={{ mb: 2 }}>
                                 {`#${index + 1}. ${serviceQuestion.title} `}
@@ -1627,7 +1640,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     <Box>
                       {deliverableNotesData?.map((deliverableNote: any, index: number) => {
                         return (
-                          <Box sx={deliverableNoteItemSx} key={index + Math.random()}>
+                          <Box sx={deliverableNoteItemSx} key={index + 'deliverable'}>
                             <Box sx={{ width: '100%' }}>
                               <TextField
                                 label={'Meeting Link'}
@@ -1777,7 +1790,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             {!!errorMessage?.['company'] &&
                               errorMessage?.['company']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span key={index + 'msg'} className='text-xs text-red-600 dark:text-red-400'>
                                     {message}
                                   </span>
                                 )
@@ -1911,13 +1924,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         </Box>
                         <Box className='team-review-team-need-box'>
                           {employeeRoleData?.map((employeeRole: any, index: number) => {
-                            console.log(
-                              associatedUserWithRole?.find((item: any) => item?.employeeRoleId === employeeRole?.id)
-                                ?.associateId
-                            )
-
                             return (
-                              <Box className='team-review-team-need-item' key={index + Math.random()}>
+                              <Box className='team-review-team-need-item' key={index + 'team'}>
                                 <Box className='team-review-team-need-item-input'>
                                   <FormControl fullWidth>
                                     <InputLabel id='associateId-label'>{employeeRole?.name}</InputLabel>
@@ -1981,7 +1989,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             {!!errorMessage?.['company'] &&
                               errorMessage?.['company']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                                     {message}
                                   </span>
                                 )
@@ -2115,13 +2123,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         </Box>
                         <Box className='team-review-team-need-box'>
                           {employeeRoleData?.map((employeeRole: any, index: number) => {
-                            console.log(
-                              associatedUserWithRole?.find((item: any) => item?.employeeRoleId === employeeRole?.id)
-                                ?.associateId
-                            )
-
                             return (
-                              <Box className='team-review-team-need-item' key={index + Math.random()}>
+                              <Box className='team-review-team-need-item' key={index + 'team'}>
                                 <Box className='team-review-team-need-item-input'>
                                   <FormControl fullWidth>
                                     <InputLabel id='associateId-label'>{employeeRole?.name}</InputLabel>
@@ -2129,7 +2132,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                       labelId='associateId-label'
                                       id='associateId'
                                       onChange={event => {
-                                        hamdleUpdateTeamAssignOnChange(employeeRole?.id, Number(event?.target?.value))
+                                        handleUpdateTeamAssignOnChange(employeeRole?.id, Number(event?.target?.value))
                                       }}
                                       value={
                                         associatedUserWithRole?.find(
@@ -2158,129 +2161,171 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       <Box sx={sectionTitleSx}>SOWs, Deliverables, Tasks, and Subtasks</Box>
                       <Box sx={scopeOfWorkListContainer}>
                         <Box sx={scopeOfWorkListSx}>
-                          {serviceDeliverableGroupByScopeOfWorkId(
+                          {transformSubTaskTaskDeliverablesSowsData(
                             tasksList?.filter((task: any) => !task?.additionalServiceId)
-                          )?.map((task: any, index: number) => {
-                            console.log(task)
-
+                          )?.map((scope_of_work: any, index: number) => {
                             return (
-                              <Box key={index + Math.random()}>
+                              <Box key={index + 'task'}>
                                 <Box className={'sow-list-item'} component={'label'}>
                                   <Box className={'sow-list-item-type'}>
-                                    <Box
-                                      className={`item-type-common item-type-sow ${
-                                        !task?.['additionalServiceId'] ? 'item-type-hive' : ''
-                                      }`}
-                                    >
-                                      SOW
-                                    </Box>
+                                    <Box className={`item-type-common item-type-sow  item-type-hive`}>SOW</Box>
                                   </Box>
                                   <Box className={'sow-list-item-check'}>
                                     <Checkbox
-                                      onChange={() => {
-                                        handleDeliverableCheckboxBySow(task?.deliverables)
+                                      onChange={event => {
+                                        handleUpdateTaskCheckUnCheckForSOWOnChange(
+                                          scope_of_work?.deliverables,
+                                          event?.target?.checked
+                                        )
+                                        handleDeliverableCheckboxBySow(scope_of_work?.deliverables)
                                       }}
-                                      value={task?.id}
-                                      checked={isSowCheckedInDeliverable(task?.deliverables, selectedDeliverableData)}
+                                      value={scope_of_work?.id}
+                                      checked={scope_of_work?.deliverables?.some((deliverable: any) => {
+                                        return deliverable?.tasks?.some((task: any) => task.isChecked)
+                                      })}
                                     />
                                   </Box>
-                                  <Box className={'sow-list-item-title'}>{task?.title}</Box>
+                                  <Box className={'sow-list-item-title'}>{scope_of_work?.title}</Box>
                                 </Box>
-                                {task?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
+
+                                {scope_of_work?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
                                   return (
                                     <Box key={deliverableIndex}>
                                       <Box className={'sow-list-item'} component={'label'}>
                                         <Box className={'sow-list-item-type'}>
-                                          <Box
-                                            className={`item-type-common item-type-deliverable ${
-                                              !task?.['additionalServiceId'] ? 'item-type-hive' : ''
-                                            }`}
-                                          >
+                                          <Box className={`item-type-common item-type-deliverable item-type-hive`}>
                                             Deliverable
                                           </Box>
                                         </Box>
                                         <Box className={'sow-list-item-check'}>
                                           <Checkbox
-                                            onChange={handleDeliverableCheckbox}
+                                            onChange={event => {
+                                              handleDeliverableCheckbox(event)
+                                              handleUpdateTaskCheckUnCheckForDeliverablesOnChange(
+                                                deliverable?.tasks,
+                                                event.target.checked
+                                              )
+                                            }}
                                             value={deliverable?.['id']}
-                                            checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                            checked={deliverable?.tasks?.filter((task: any) => task.isChecked).length}
                                           />
                                         </Box>
                                         <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
                                       </Box>
-                                      <Box className={'sow-list-item'} component={'label'}>
-                                        <Box className={'sow-list-item-type'}>
-                                          <Box
-                                            className={`item-type-common item-type-task ${
-                                              !task?.['additionalServiceId'] ? 'item-type-hive' : ''
-                                            }`}
-                                          >
-                                            Task
-                                          </Box>
-                                        </Box>
-                                        <Box className={'sow-list-item-check'}>
-                                          <Checkbox
-                                            onChange={handleDeliverableCheckbox}
-                                            value={deliverable?.['id']}
-                                            checked={selectedDeliverableData?.includes(deliverable?.['id'])}
-                                          />
-                                        </Box>
-                                        <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
-                                        {selectedDeliverableData?.includes(deliverable?.['id']) && (
-                                          <Box className={'sow-list-item-input'}>
-                                            <Select
-                                              labelId='associateId-label'
-                                              id='associateId'
-                                              onChange={event => {
-                                                hamdleUpdateTaskAssignOnChange(
-                                                  deliverable?.['id'],
-                                                  Number(event?.target?.value)
-                                                )
-                                              }}
-                                              name={`associateId_${deliverable?.['id']}`}
-                                              value={deliverable?.associateId}
-                                              sx={{ width: '200px' }}
-                                            >
-                                              {teamUserList?.map((item: any) => (
-                                                <MenuItem value={item?.id} key={item?.id}>
-                                                  {item?.name}
-                                                </MenuItem>
-                                              ))}
-                                            </Select>
+                                      {deliverable?.tasks?.map((task: any, taskIndex: number) => {
+                                        return (
+                                          <Box key={taskIndex}>
+                                            <Box className={'sow-list-item'} component={'label'}>
+                                              <Box className={'sow-list-item-type'}>
+                                                <Box className={`item-type-common item-type-task item-type-hive`}>
+                                                  Task
+                                                </Box>
+                                              </Box>
+                                              <Box className={'sow-list-item-check'}>
+                                                <Checkbox
+                                                  onChange={() => {
+                                                    !task?.['sub_tasks']?.length
+                                                      ? handleUpdateTaskCheckUnCheckForTaskOnChange(
+                                                          task?.['id'],
+                                                          !task?.['isChecked']
+                                                        )
+                                                      : handleUpdateTaskCheckUnCheckForParentTaskOnChange(
+                                                          task?.['sub_tasks'],
+                                                          task?.['id'],
+                                                          !task?.['isChecked']
+                                                        )
+                                                  }}
+                                                  value={task?.['id']}
+                                                  checked={!!task?.['isChecked']}
+                                                />
+                                              </Box>
+                                              <Box className={'sow-list-item-title'}>{task?.['title']}</Box>
+                                              {task?.['isChecked'] && !task?.['sub_tasks']?.length && (
+                                                <Box className={'sow-list-item-input'}>
+                                                  <Select
+                                                    labelId='associateId-label'
+                                                    id='associateId'
+                                                    onChange={event => {
+                                                      handleUpdateTaskAssignOnChange(
+                                                        task?.['id'],
+                                                        Number(event?.target?.value)
+                                                      )
+                                                    }}
+                                                    name={`associateId_${task?.['id']}`}
+                                                    value={task?.associateId}
+                                                    sx={{ width: '200px' }}
+                                                  >
+                                                    {teamUserList?.map((item: any) => (
+                                                      <MenuItem value={item?.id} key={item?.id}>
+                                                        {item?.name}
+                                                      </MenuItem>
+                                                    ))}
+                                                  </Select>
 
-                                            <TextField
-                                              className={'sow-list-item-text-input'}
-                                              value={deliverable?.estimateHours}
-                                              sx={{ width: '100px' }}
-                                            />
+                                                  <TextField
+                                                    className={'sow-list-item-text-input'}
+                                                    value={task?.estimateHours}
+                                                    sx={{ width: '100px' }}
+                                                    onChange={event => {
+                                                      handleUpdateTaskEstimateHoursOnChange(
+                                                        task?.id,
+                                                        Number(event?.target?.value)
+                                                      )
+                                                    }}
+                                                    name={`estimateHours_${task?.id}`}
+                                                  />
+                                                </Box>
+                                              )}
+                                            </Box>
+                                            {task?.sub_tasks?.map((subTask: any, subTaskIndex: number) => (
+                                              <Box className={'sow-list-item'} component={'label'} key={subTaskIndex}>
+                                                <Box className={'sow-list-item-type'}>
+                                                  <Box className={`item-type-common item-type-task item-type-hive`}>
+                                                    Subtask
+                                                  </Box>
+                                                </Box>
+                                                <Box className={'sow-list-item-check'}>
+                                                  <Checkbox
+                                                    onChange={handleDeliverableCheckbox}
+                                                    value={subTask?.['id']}
+                                                    checked={!!subTask?.['isChecked']}
+                                                  />
+                                                </Box>
+                                                <Box className={'sow-list-item-title'}>{subTask?.['title']}</Box>
+                                                {subTask?.['isChecked'] && (
+                                                  <Box className={'sow-list-item-input'}>
+                                                    <Select
+                                                      labelId='associateId-label'
+                                                      id='associateId'
+                                                      onChange={event => {
+                                                        handleUpdateTaskAssignOnChange(
+                                                          subTask?.['id'],
+                                                          Number(event?.target?.value)
+                                                        )
+                                                      }}
+                                                      name={`associateId_${subTask?.['id']}`}
+                                                      value={subTask?.associateId}
+                                                      sx={{ width: '200px' }}
+                                                    >
+                                                      {teamUserList?.map((item: any) => (
+                                                        <MenuItem value={item?.id} key={item?.id}>
+                                                          {item?.name}
+                                                        </MenuItem>
+                                                      ))}
+                                                    </Select>
+
+                                                    <TextField
+                                                      className={'sow-list-item-text-input'}
+                                                      value={subTask?.estimateHours}
+                                                      sx={{ width: '100px' }}
+                                                    />
+                                                  </Box>
+                                                )}
+                                              </Box>
+                                            ))}
                                           </Box>
-                                        )}
-                                      </Box>
-                                      <Box className={'sow-list-item'} component={'label'}>
-                                        <Box className={'sow-list-item-type'}>
-                                          <Box
-                                            className={`item-type-common item-type-subtask ${
-                                              !task?.['additionalServiceId'] ? 'item-type-hive' : ''
-                                            }`}
-                                          >
-                                            Subtask
-                                          </Box>
-                                        </Box>
-                                        <Box className={'sow-list-item-check'}>
-                                          <Checkbox
-                                            onChange={handleDeliverableCheckbox}
-                                            value={deliverable?.['id']}
-                                            checked={selectedDeliverableData?.includes(deliverable?.['id'])}
-                                          />
-                                        </Box>
-                                        <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
-                                        {selectedDeliverableData?.includes(deliverable?.['id']) && (
-                                          <Box className={'sow-list-item-input'}>
-                                            <Dropdown dataList={teamUserList} />
-                                            <TextField className={'sow-list-item-text-input'} />
-                                          </Box>
-                                        )}
-                                      </Box>
+                                        )
+                                      })}
                                     </Box>
                                   )
                                 })}
@@ -2294,19 +2339,28 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       <Box sx={sectionTitleSx}>Added Services</Box>
                       <Box>
                         {scopeOfWorkGroupByAdditionalServiceId(
-                          serviceDeliverableGroupByScopeOfWorkId(
-                            deliverableData?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
+                          transformSubTaskTaskDeliverablesSowsData(
+                            tasksList?.filter((task: any) => task?.additionalServiceId)
                           )
                         )?.map((additionalService: any, additionalServiceIndex: number) => {
                           return (
                             <Box key={additionalServiceIndex}>
                               <Box sx={sectionSubTitleSx} component={'label'}>
                                 <Checkbox
-                                  onChange={() => {
-                                    handleDeliverableCheckboxByService(additionalService)
+                                  onChange={event => {
+                                    handleUpdateTaskCheckUnCheckForServiceOnChange(
+                                      additionalService?.scope_of_works,
+                                      event.target.checked
+                                    )
                                   }}
                                   value={additionalService?.id}
-                                  checked={isServiceCheckedInDeliverable(additionalService, selectedDeliverableData)}
+                                  checked={
+                                    additionalService?.scope_of_works.flatMap((scope_of_work: any) =>
+                                      scope_of_work?.deliverables?.flatMap((deliverable: any) =>
+                                        deliverable?.tasks?.filter((task: any) => task.isChecked)
+                                      )
+                                    ).length
+                                  }
                                   sx={{ p: 0, mr: 2 }}
                                 />
 
@@ -2314,68 +2368,185 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               </Box>
                               <Box sx={scopeOfWorkListContainer}>
                                 <Box sx={scopeOfWorkListSx}>
-                                  {additionalService?.scope_of_works?.map(
-                                    (scopeOfWork: any, scopeOfWorkIndex: number) => {
-                                      return (
-                                        <Box key={scopeOfWorkIndex}>
-                                          <Box className={'sow-list-item'} component={'label'}>
-                                            <Box className={'sow-list-item-type'}>
-                                              {/* {scopeOfWork?.['serviceDeliverablesId'] ? (
-                                                <Box className={'item-type-common item-type-hive'}>Hive</Box>
-                                              ) : (
-                                                <Box className={'item-type-common item-type-sow'}>SOW</Box>
-                                              )} */}
-                                              <Box
-                                                className={`item-type-common item-type-sow ${
-                                                  scopeOfWork?.['serviceDeliverablesId'] ? 'item-type-hive' : ''
-                                                }`}
-                                              >
-                                                SOW
-                                              </Box>
-                                            </Box>
-                                            <Box className={'sow-list-item-check'}>
-                                              <Checkbox
-                                                onChange={() => {
-                                                  handleDeliverableCheckboxBySow(scopeOfWork?.deliverables)
-                                                }}
-                                                value={scopeOfWork?.id}
-                                                checked={isSowCheckedInDeliverable(
-                                                  scopeOfWork?.deliverables,
-                                                  selectedDeliverableData
-                                                )}
-                                              />
-                                            </Box>
-                                            <Box className={'sow-list-item-title'}>{scopeOfWork?.title}</Box>
+                                  {additionalService?.scope_of_works.map((scope_of_work: any, index: number) => {
+                                    return (
+                                      <Box key={index + 'task'}>
+                                        <Box className={'sow-list-item'} component={'label'}>
+                                          <Box className={'sow-list-item-type'}>
+                                            <Box className={`item-type-common item-type-sow  item-type-hive`}>SOW</Box>
                                           </Box>
-                                          {scopeOfWork?.deliverables?.map(
-                                            (deliverable: any, deliverableIndex: number) => {
-                                              return (
-                                                <Box
-                                                  className={'sow-list-item'}
-                                                  key={deliverableIndex}
-                                                  component={'label'}
-                                                >
+                                          <Box className={'sow-list-item-check'}>
+                                            <Checkbox
+                                              onChange={event => {
+                                                handleUpdateTaskCheckUnCheckForSOWOnChange(
+                                                  scope_of_work?.deliverables,
+                                                  event?.target?.checked
+                                                )
+                                                handleDeliverableCheckboxBySow(scope_of_work?.deliverables)
+                                              }}
+                                              value={scope_of_work?.id}
+                                              checked={scope_of_work?.deliverables?.some((deliverable: any) => {
+                                                return deliverable?.tasks?.some((task: any) => task.isChecked)
+                                              })}
+                                            />
+                                          </Box>
+                                          <Box className={'sow-list-item-title'}>{scope_of_work?.title}</Box>
+                                        </Box>
+
+                                        {scope_of_work?.deliverables?.map(
+                                          (deliverable: any, deliverableIndex: number) => {
+                                            return (
+                                              <Box key={deliverableIndex}>
+                                                <Box className={'sow-list-item'} component={'label'}>
                                                   <Box className={'sow-list-item-type'}>
-                                                    <Box className={'item-type-common item-type-deliverable'}>
+                                                    <Box
+                                                      className={`item-type-common item-type-deliverable item-type-hive`}
+                                                    >
                                                       Deliverable
                                                     </Box>
                                                   </Box>
                                                   <Box className={'sow-list-item-check'}>
                                                     <Checkbox
-                                                      onChange={handleDeliverableCheckbox}
+                                                      onChange={event => {
+                                                        handleDeliverableCheckbox(event)
+                                                        handleUpdateTaskCheckUnCheckForDeliverablesOnChange(
+                                                          deliverable?.tasks,
+                                                          event.target.checked
+                                                        )
+                                                      }}
                                                       value={deliverable?.['id']}
-                                                      checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                                      checked={
+                                                        deliverable?.tasks?.filter((task: any) => task.isChecked).length
+                                                      }
                                                     />
                                                   </Box>
                                                   <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
                                                 </Box>
-                                              )
-                                            }
-                                          )}
-                                        </Box>
-                                      )
-                                    }
-                                  )}
+                                                {deliverable?.tasks?.map((task: any, taskIndex: number) => {
+                                                  return (
+                                                    <Box key={taskIndex}>
+                                                      <Box className={'sow-list-item'} component={'label'}>
+                                                        <Box className={'sow-list-item-type'}>
+                                                          <Box
+                                                            className={`item-type-common item-type-task item-type-hive`}
+                                                          >
+                                                            Task
+                                                          </Box>
+                                                        </Box>
+                                                        <Box className={'sow-list-item-check'}>
+                                                          <Checkbox
+                                                            onChange={() => {
+                                                              handleUpdateTaskCheckUnCheckForTaskOnChange(
+                                                                task?.['id'],
+                                                                !task?.['isChecked']
+                                                              )
+                                                            }}
+                                                            value={task?.['id']}
+                                                            checked={!!task?.['isChecked']}
+                                                          />
+                                                        </Box>
+                                                        <Box className={'sow-list-item-title'}>{task?.['title']}</Box>
+                                                        {task?.['isChecked'] && (
+                                                          <Box className={'sow-list-item-input'}>
+                                                            <Select
+                                                              labelId='associateId-label'
+                                                              id='associateId'
+                                                              onChange={event => {
+                                                                handleUpdateTaskAssignOnChange(
+                                                                  task?.['id'],
+                                                                  Number(event?.target?.value)
+                                                                )
+                                                              }}
+                                                              name={`associateId_${task?.['id']}`}
+                                                              value={task?.associateId}
+                                                              sx={{ width: '200px' }}
+                                                            >
+                                                              {teamUserList?.map((item: any) => (
+                                                                <MenuItem value={item?.id} key={item?.id}>
+                                                                  {item?.name}
+                                                                </MenuItem>
+                                                              ))}
+                                                            </Select>
+
+                                                            <TextField
+                                                              className={'sow-list-item-text-input'}
+                                                              value={task?.estimateHours}
+                                                              sx={{ width: '100px' }}
+                                                              onChange={event => {
+                                                                handleUpdateTaskEstimateHoursOnChange(
+                                                                  task?.id,
+                                                                  Number(event?.target?.value)
+                                                                )
+                                                              }}
+                                                              name={`estimateHours_${task?.id}`}
+                                                            />
+                                                          </Box>
+                                                        )}
+                                                      </Box>
+                                                      {task?.sub_tasks?.map((subTask: any, subTaskIndex: number) => (
+                                                        <Box
+                                                          className={'sow-list-item'}
+                                                          component={'label'}
+                                                          key={subTaskIndex}
+                                                        >
+                                                          <Box className={'sow-list-item-type'}>
+                                                            <Box
+                                                              className={`item-type-common item-type-task item-type-hive`}
+                                                            >
+                                                              Subtask
+                                                            </Box>
+                                                          </Box>
+                                                          <Box className={'sow-list-item-check'}>
+                                                            <Checkbox
+                                                              onChange={handleDeliverableCheckbox}
+                                                              value={subTask?.['id']}
+                                                              checked={!!subTask?.['isChecked']}
+                                                            />
+                                                          </Box>
+                                                          <Box className={'sow-list-item-title'}>
+                                                            {subTask?.['title']}
+                                                          </Box>
+                                                          {subTask?.['isChecked'] && (
+                                                            <Box className={'sow-list-item-input'}>
+                                                              <Select
+                                                                labelId='associateId-label'
+                                                                id='associateId'
+                                                                onChange={event => {
+                                                                  handleUpdateTaskAssignOnChange(
+                                                                    subTask?.['id'],
+                                                                    Number(event?.target?.value)
+                                                                  )
+                                                                }}
+                                                                name={`associateId_${subTask?.['id']}`}
+                                                                value={subTask?.associateId}
+                                                                sx={{ width: '200px' }}
+                                                              >
+                                                                {teamUserList?.map((item: any) => (
+                                                                  <MenuItem value={item?.id} key={item?.id}>
+                                                                    {item?.name}
+                                                                  </MenuItem>
+                                                                ))}
+                                                              </Select>
+
+                                                              <TextField
+                                                                className={'sow-list-item-text-input'}
+                                                                value={subTask?.estimateHours}
+                                                                sx={{ width: '100px' }}
+                                                              />
+                                                            </Box>
+                                                          )}
+                                                        </Box>
+                                                      ))}
+                                                    </Box>
+                                                  )
+                                                })}
+                                              </Box>
+                                            )
+                                          }
+                                        )}
+                                      </Box>
+                                    )
+                                  })}
                                 </Box>
                               </Box>
                             </Box>
@@ -2447,254 +2618,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           </React.Fragment>
         </Box>
       </Box>
-      <Modal
-        open={serviceSOWModalOpen}
-        onClose={handleServiceSOWModalClose}
-        aria-labelledby='service-modal-title'
-        aria-describedby='service-modal-description'
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center'
-        }}
-      >
-        <Box
-          className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '50%',
-            overflowY: 'auto',
-            p: '50px',
-            maxHeight: '100%',
-            '& form': { width: '100%', display: 'flex', flexDirection: 'column' }
-          }}
-        >
-          <Box sx={{ mb: '20px' }}>
-            <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
-              {scopeOfWorkEditId ? 'Update' : 'Add'} Scope of Work
-            </h2>
-          </Box>
-
-          <form>
-            <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 5, mb: 5 }}>
-              {!scopeOfWorkEditId && (
-                <Box
-                  sx={{
-                    width: '100%',
-                    '& .MuiInputBase-root': {
-                      border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
-                    }
-                  }}
-                >
-                  <label className='block text-sm'>
-                    <Dropdown
-                      name='phaseId'
-                      value={scopeOfWorkFormData.phaseId}
-                      onChange={handleScopeOfWorkSelectChange}
-                      dataList={scopeOfWorkPhaseList}
-                      label={'Phase'}
-                    />
-                    {!!errorMessage?.['phaseId'] &&
-                      errorMessage?.['phaseId']?.map((message: any, index: number) => {
-                        return (
-                          <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                            {message}
-                          </span>
-                        )
-                      })}
-                  </label>
-                </Box>
-              )}
-
-              {scopeOfWorkEditId ? (
-                <>
-                  {' '}
-                  <Box
-                    sx={{
-                      width: '100%'
-                    }}
-                  >
-                    <label className='block text-sm'>
-                      <TextField
-                        label={'Title'}
-                        name='title'
-                        value={scopeOfWorkFormData?.title}
-                        onChange={handleScopeOfWorkInputChange}
-                        placeholder={`Title`}
-                        fullWidth
-                      />
-                      {!!errorMessage?.['title'] &&
-                        errorMessage?.['title']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box>
-                  {/* <Box
-                    sx={{
-                      width: '100%'
-                    }}
-                  >
-                    <label className='block text-sm'>
-                      <TextField
-                        label={'Order'}
-                        name='serial'
-                        value={scopeOfWorkFormData?.serial}
-                        onChange={handleScopeOfWorkInputChange}
-                        placeholder={`Order`}
-                        fullWidth
-                      />
-                      {!!errorMessage?.['Order'] &&
-                        errorMessage?.['Order']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box> */}
-                </>
-              ) : (
-                <Box sx={{ width: '100%' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      fontSize: '20px',
-                      fontWeight: 600,
-                      color: '#158ddf',
-                      marginBottom: '0.5rem'
-                    }}
-                  >
-                    SOW
-                    <Box
-                      sx={sowAddButtonSx}
-                      onClick={() => {
-                        handleAddNewSow()
-                      }}
-                    >
-                      <AddIcon fontSize='small' />
-                    </Box>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      width: '100%'
-                    }}
-                  >
-                    {scopeOfWorkFormData?.scopeOfWorks?.map((scopeOfWork: any, index: number) => {
-                      return (
-                        <Box
-                          key={index + Math.random()}
-                          sx={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            gap: '5px',
-                            width: '100%',
-                            marginBottom: '15px',
-                            border: '1px solid #ddd',
-                            padding: '10px',
-                            borderRadius: '5px'
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: 'calc(100% - 140px)'
-                            }}
-                          >
-                            <TextField
-                              label={'Title'}
-                              name='title'
-                              value={scopeOfWork?.title}
-                              onChange={e => {
-                                handleScopeOfWorkMultipleInputChange(index, e)
-                              }}
-                              placeholder={`Title`}
-                              fullWidth
-                            />
-                            {!!errorMessage?.['title'] &&
-                              errorMessage?.['title']?.map((message: any, index: number) => {
-                                return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                                    {message}
-                                  </span>
-                                )
-                              })}
-                          </Box>
-                          <Box
-                            sx={{
-                              width: '100px'
-                            }}
-                          >
-                            <TextField
-                              label={'Order'}
-                              name='serial'
-                              value={scopeOfWork?.serial}
-                              onChange={e => {
-                                handleScopeOfWorkMultipleInputChange(index, e)
-                              }}
-                              placeholder={`Order`}
-                              fullWidth
-                            />
-                            {!!errorMessage?.['serial'] &&
-                              errorMessage?.['serial']?.map((message: any, index: number) => {
-                                return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                                    {message}
-                                  </span>
-                                )
-                              })}
-                          </Box>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              width: '30px'
-                            }}
-                          >
-                            <Button
-                              onClick={e => {
-                                handleRemoveSow(index)
-                              }}
-                              sx={sowRemoveButtonSx}
-                            >
-                              <DeleteIcon fontSize='small' />
-                            </Button>
-                          </Box>
-                        </Box>
-                      )
-                    })}
-                  </Box>
-                </Box>
-              )}
-            </Box>
-
-            <Box className='my-4 text-right'>
-              <button
-                onClick={handleServiceSOWModalClose}
-                type='button'
-                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-              >
-                <ClearIcon /> Cancel
-              </button>
-              <button
-                type='button'
-                onClick={handleSOWSaveOnClick}
-                className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-              >
-                <AddIcon />
-                {scopeOfWorkEditId ? 'Update' : 'Save'}
-              </button>
-            </Box>
-          </form>
-        </Box>
-      </Modal>
     </Box>
   )
 }

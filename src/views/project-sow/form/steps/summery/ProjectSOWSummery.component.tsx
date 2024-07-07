@@ -1,6 +1,7 @@
 import 'md-editor-rt/lib/style.css'
-import ProjectSOWTranscriptFormView from './ProjectSOWSummery.view'
+import { TProjectSOWSummeryFormComponentProps } from './ProjectSOWSummery.decorator'
+import ProjectSOWSummeryFormView from './ProjectSOWSummery.view'
 
-export default function ProjectSOWTranscriptFormComponent() {
-  return <ProjectSOWTranscriptFormView></ProjectSOWTranscriptFormView>
+export default function ProjectSOWSummeryFormComponent(props: TProjectSOWSummeryFormComponentProps) {
+  return <ProjectSOWSummeryFormView {...props}></ProjectSOWSummeryFormView>
 }
