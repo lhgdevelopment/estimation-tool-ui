@@ -1,17 +1,17 @@
 import Cookies from 'js-cookie'
 import React, { MouseEvent, ReactNode, useEffect, useState } from 'react'
 
+import LoadingButton from '@mui/lab/LoadingButton'
+import { Box, CircularProgress } from '@mui/material'
 import MuiCard, { CardProps } from '@mui/material/Card'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 import { styled } from '@mui/material/styles'
-
-import LoadingButton from '@mui/lab/LoadingButton'
-import { Box } from '@mui/material'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import BlankLayout from 'src/layouts/BlankLayout'
-// ** Styled Components
+
+// Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
   [theme.breakpoints.up('sm')]: { width: '28rem' }
 }))
@@ -45,34 +45,23 @@ const LoginPage = () => {
       ...formData,
       [e.target.name]: e.target.value
     })
-    console.log(formData)
   }
 
   const handleSubmit = async (e: React.FormEvent<any>) => {
+    e.preventDefault()
     setErrorMessage('')
     setPreload(true)
-    await axios
-      .post(`${process.env['API_BASE_URL']}/login`, formData)
-      .then(response => {
-        console.log(response)
-
-        const { token } = response.data
-
-        // Set the token in a cookie
-        Cookies.set('accessToken', token)
-
-        // Redirect to the desired page (e.g., /dashboard)
-        //  window.location.href = '/'
-        //console.log(router)
-
-        router.back()
-      })
-      .catch(error => {
-        setPreload(false)
-        // console.error('Login failed:', error)
-        setErrorMessage(error?.response?.data?.message)
-        enqueueSnackbar(error?.response?.data?.message || 'Login failed', { variant: 'error' })
-      })
+    try {
+      const response = await axios.post(`${process.env['API_BASE_URL']}/login`, formData)
+      const { token } = response.data
+      Cookies.set('accessToken', token)
+      router.back() // Redirect to previous page or another route upon successful login
+    } catch (error) {
+      setPreload(false)
+      const errorMessage = error?.response?.data?.message || 'Login failed'
+      setErrorMessage(errorMessage)
+      enqueueSnackbar(errorMessage, { variant: 'error' })
+    }
   }
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
@@ -81,9 +70,8 @@ const LoginPage = () => {
 
   useEffect(() => {
     const token = Cookies.get('accessToken')
-
     if (token) {
-      window.location.href = '/'
+      router.push('/') // Redirect to homepage if already logged in
     }
   }, [])
 
@@ -117,7 +105,7 @@ const LoginPage = () => {
                   placeholder='Jane Doe'
                   type='text'
                   name='email'
-                  onChange={e => handleTextChange(e)}
+                  onChange={handleTextChange}
                   disabled={preload}
                 />
               </label>
@@ -130,7 +118,7 @@ const LoginPage = () => {
                   placeholder='***************'
                   type='password'
                   name='password'
-                  onChange={e => handleTextChange(e)}
+                  onChange={handleTextChange}
                   disabled={preload}
                 />
               </label>
@@ -142,33 +130,12 @@ const LoginPage = () => {
                 onClick={handleSubmit}
                 className='block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
                 loading={preload}
-                loadingPosition='start'
+                startIcon={preload ? <CircularProgress size={20} color='inherit' /> : null}
                 variant='contained'
                 sx={{ mt: '15px' }}
               >
                 Log in
               </LoadingButton>
-
-              {/* <hr className='my-8' /> */}
-
-              {/* <p className='mt-4'>
-                <Box
-                  component={'a'}
-                  className='text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline'
-                  href='/auth/forgot-password'
-                >
-                  Forgot your password?
-                </Box>
-              </p>
-              <p className='mt-1'>
-                <Box
-                  component={'a'}
-                  className='text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline'
-                  href='/auth/create-account'
-                >
-                  Create account
-                </Box>
-              </p> */}
             </Box>
           </Box>
         </Box>
