@@ -343,7 +343,7 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                               name='serial'
                               value={scopeOfWork?.serial}
                               onChange={e => {
-                                handleScopeOfWorkMultipleInputChange(index, e)
+                                handleScopeOfWorkMultipleInputChange(e, index)
                               }}
                               placeholder={`Order`}
                               fullWidth
