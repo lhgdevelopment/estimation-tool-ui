@@ -926,6 +926,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .then(res => {
           if (res?.data?.tasks?.length) {
             setEstimationTaskData(res?.data?.tasks)
+            setPreload(false)
           } else {
             apiRequest
               .post(`/estimation-tasks`, { problemGoalId: problemGoalID })
@@ -2286,7 +2287,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                 </Box>
                                                 <Box className={'sow-list-item-check'}>
                                                   <Checkbox
-                                                    onChange={handleDeliverableCheckbox}
+                                                    onChange={() => {
+                                                      handleUpdateTaskCheckUnCheckForTaskOnChange(
+                                                        subTask?.['id'],
+                                                        !subTask?.['isChecked']
+                                                      )
+                                                    }}
                                                     value={subTask?.['id']}
                                                     checked={!!subTask?.['isChecked']}
                                                   />
@@ -2318,6 +2324,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                       className={'sow-list-item-text-input'}
                                                       value={subTask?.estimateHours}
                                                       sx={{ width: '100px' }}
+                                                      onChange={event => {
+                                                        handleUpdateTaskEstimateHoursOnChange(
+                                                          subTask?.id,
+                                                          Number(event?.target?.value)
+                                                        )
+                                                      }}
+                                                      name={`estimateHours_${subTask?.id}`}
                                                     />
                                                   </Box>
                                                 )}
@@ -2436,17 +2449,23 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                         <Box className={'sow-list-item-check'}>
                                                           <Checkbox
                                                             onChange={() => {
-                                                              handleUpdateTaskCheckUnCheckForTaskOnChange(
-                                                                task?.['id'],
-                                                                !task?.['isChecked']
-                                                              )
+                                                              !task?.['sub_tasks']?.length
+                                                                ? handleUpdateTaskCheckUnCheckForTaskOnChange(
+                                                                    task?.['id'],
+                                                                    !task?.['isChecked']
+                                                                  )
+                                                                : handleUpdateTaskCheckUnCheckForParentTaskOnChange(
+                                                                    task?.['sub_tasks'],
+                                                                    task?.['id'],
+                                                                    !task?.['isChecked']
+                                                                  )
                                                             }}
                                                             value={task?.['id']}
                                                             checked={!!task?.['isChecked']}
                                                           />
                                                         </Box>
                                                         <Box className={'sow-list-item-title'}>{task?.['title']}</Box>
-                                                        {task?.['isChecked'] && (
+                                                        {task?.['isChecked'] && !task?.['sub_tasks']?.length && (
                                                           <Box className={'sow-list-item-input'}>
                                                             <Select
                                                               labelId='associateId-label'
@@ -2498,7 +2517,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                           </Box>
                                                           <Box className={'sow-list-item-check'}>
                                                             <Checkbox
-                                                              onChange={handleDeliverableCheckbox}
+                                                              onChange={() => {
+                                                                handleUpdateTaskCheckUnCheckForTaskOnChange(
+                                                                  subTask?.['id'],
+                                                                  !subTask?.['isChecked']
+                                                                )
+                                                              }}
                                                               value={subTask?.['id']}
                                                               checked={!!subTask?.['isChecked']}
                                                             />
@@ -2532,6 +2556,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                 className={'sow-list-item-text-input'}
                                                                 value={subTask?.estimateHours}
                                                                 sx={{ width: '100px' }}
+                                                                onChange={event => {
+                                                                  handleUpdateTaskEstimateHoursOnChange(
+                                                                    subTask?.id,
+                                                                    Number(event?.target?.value)
+                                                                  )
+                                                                }}
+                                                                name={`estimateHours_${subTask?.id}`}
                                                               />
                                                             </Box>
                                                           )}
