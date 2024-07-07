@@ -2274,6 +2274,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                       )
                                                     }}
                                                     name={`estimateHours_${task?.id}`}
+                                                    inputProps={{
+                                                      maxLength: 3,
+                                                      pattern: '[0-9]*'
+                                                    }}
                                                   />
                                                 </Box>
                                               )}
@@ -2331,6 +2335,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                         )
                                                       }}
                                                       name={`estimateHours_${subTask?.id}`}
+                                                      inputProps={{
+                                                        maxLength: 3,
+                                                        pattern: '[0-9]*'
+                                                      }}
                                                     />
                                                   </Box>
                                                 )}
@@ -2498,6 +2506,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                 )
                                                               }}
                                                               name={`estimateHours_${task?.id}`}
+                                                              inputProps={{
+                                                                maxLength: 3,
+                                                                pattern: '[0-9]*'
+                                                              }}
                                                             />
                                                           </Box>
                                                         )}
@@ -2563,6 +2575,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                   )
                                                                 }}
                                                                 name={`estimateHours_${subTask?.id}`}
+                                                                inputProps={{
+                                                                  maxLength: 3,
+                                                                  pattern: '[0-9]*'
+                                                                }}
                                                               />
                                                             </Box>
                                                           )}

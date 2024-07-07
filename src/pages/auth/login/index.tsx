@@ -71,7 +71,7 @@ const LoginPage = () => {
         setPreload(false)
         // console.error('Login failed:', error)
         setErrorMessage(error?.response?.data?.message)
-        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        enqueueSnackbar(error?.response?.data?.message || 'Login failed', { variant: 'error' })
       })
   }
 
