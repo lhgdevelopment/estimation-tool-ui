@@ -1348,7 +1348,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       const scopeOfWork = item?.deliverable?.scope_of_work
       const deliverable = item?.deliverable
 
-      let scopeOfWorkEntry = result.find((entry: any) => entry.id === scopeOfWork?.id)
+      let scopeOfWorkEntry = result?.find((entry: any) => entry.id === scopeOfWork?.id)
 
       if (!scopeOfWorkEntry) {
         scopeOfWorkEntry = {
@@ -1358,14 +1358,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         result.push(scopeOfWorkEntry)
       }
 
-      let deliverableEntry = scopeOfWorkEntry.deliverables.find((del: any) => del.id === deliverable.id)
+      let deliverableEntry = scopeOfWorkEntry?.deliverables?.find((del: any) => del?.id === deliverable?.id)
 
       if (!deliverableEntry) {
         deliverableEntry = {
           ...deliverable,
           tasks: []
         }
-        scopeOfWorkEntry.deliverables.push(deliverableEntry)
+        scopeOfWorkEntry?.deliverables.push(deliverableEntry)
       }
 
       const task = {
@@ -1373,16 +1373,16 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         sub_tasks: []
       }
 
-      if (item.estimationTasksParentId) {
-        const parentTask = deliverableEntry.tasks.find((task: any) => task.id === item.estimationTasksParentId)
+      if (item?.estimationTasksParentId) {
+        const parentTask = deliverableEntry?.tasks?.find((task: any) => task?.id === item?.estimationTasksParentId)
         if (parentTask) {
-          parentTask.sub_tasks.push(task)
+          parentTask?.sub_tasks.push(task)
         } else {
           // If the parent task is not found, add the task directly to the list of tasks
-          deliverableEntry.tasks.push(task)
+          deliverableEntry?.tasks.push(task)
         }
       } else {
-        deliverableEntry.tasks.push(task)
+        deliverableEntry?.tasks.push(task)
       }
     })
 
