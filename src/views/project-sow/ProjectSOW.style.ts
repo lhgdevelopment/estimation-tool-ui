@@ -70,15 +70,16 @@ export const scopeOfWorkListSx: SxProps = {
     '& .sow-list-item-check': { mx: 2 },
     '& .sow-list-item-title': { lineHeight: 'normal', maxWidth: '500px' },
     '& .sow-list-item-input': {
+      ml: 5,
       display: 'flex',
       '& .MuiSelect-select': {
         p: '5px'
       },
       '& .sow-list-item-text-input': {
+        width: '50px',
         ml: '5px',
         '& .MuiInputBase-input': {
-          p: '5px',
-          width: '30px'
+          p: '5px'
         }
       }
     }
@@ -191,10 +192,10 @@ export const teamReviewBoxSx: SxProps = {
       width: '50%',
       paddingRight: '10px',
       mb: '10px',
-      ':last-child': {
-        paddingRight: 0,
-        paddingLeft: '10px'
-      },
+      // ':last-child': {
+      //   paddingRight: 0,
+      //   paddingLeft: '10px'
+      // },
       // '& .team-review-team-need-item-title': {
       //   display: 'flex',
       //   width: '140px'
