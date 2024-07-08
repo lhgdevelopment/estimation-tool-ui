@@ -51,17 +51,19 @@ const LoginPage = () => {
     e.preventDefault()
     setErrorMessage('')
     setPreload(true)
-    try {
-      const response = await axios.post(`${process.env['API_BASE_URL']}/login`, formData)
-      const { token } = response.data
-      Cookies.set('accessToken', token)
-      router.back() // Redirect to previous page or another route upon successful login
-    } catch (error) {
-      setPreload(false)
-      const errorMessage = error?.response?.data?.message || 'Login failed'
-      setErrorMessage(errorMessage)
-      enqueueSnackbar(errorMessage, { variant: 'error' })
-    }
+    axios
+      .post(`${process.env['API_BASE_URL']}/login`, formData)
+      .then(response => {
+        const { token } = response.data
+        Cookies.set('accessToken', token)
+        router.back() // Redirect to previous page or another route upon successful login
+      })
+      .catch(error => {
+        setPreload(false)
+        const errorMessage = error?.response?.data?.errors || 'Login failed'
+        setErrorMessage(errorMessage)
+        enqueueSnackbar(errorMessage, { variant: 'error' })
+      })
   }
 
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
