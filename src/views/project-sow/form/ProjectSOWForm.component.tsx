@@ -356,7 +356,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     const taskIds = scope_of_works.flatMap((scope_of_work: any) =>
       scope_of_work?.deliverables?.flatMap((deliverable: any) => getTaskIdsFromTaskSubTask(deliverable?.tasks))
     )
-    console.log({ taskIds })
+    // console.log({ taskIds })
 
     setTasksList((prevState: any) => [
       ...prevState.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked } : task))
@@ -528,11 +528,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }
 
   const handleNext = (type: 'SAVE' | 'NEXT' = 'NEXT') => {
-    setPreload(true)
+    setPreload(prevState => true)
     setErrorMessage({})
     const newActiveStep =
       isLastStep() && !allStepsCompleted() ? steps.findIndex((step, i) => !(i in completed)) : activeStep + 1
-    // console.log({ activeStep })
+
     if (activeStep === 0) {
       projectSOWFormData.meetingLinks = [...transcriptMeetingLinks]
       if (projectSOWID) {
@@ -903,16 +903,59 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           teams: [...associatedUserWithRole]
         })
         .then(res => {
-          setTimeout(() => {
-            if (type == 'NEXT') {
-              setActiveStep(newActiveStep)
-              if (enabledStep < newActiveStep) {
-                setEnabledStep(newActiveStep)
+          apiRequest
+            .get(`/estimation-tasks?problemGoalId=${problemGoalID}`)
+            .then(res2 => {
+              if (res?.data?.projectTeams?.length) {
+                setAssociatedUserWithRole([
+                  ...res?.data?.tasksData?.projectTeams?.map((projectTeam: any) => ({
+                    employeeRoleId: projectTeam?.employeeRoleId,
+                    associateId: projectTeam?.associateId
+                  }))
+                ])
               }
-            }
-            setPreload(false)
-            enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-          }, 1000)
+              if (res2?.data.tasks.length) {
+                setTasksList(res2?.data?.tasks)
+                setTimeout(() => {
+                  if (type == 'NEXT') {
+                    setActiveStep(newActiveStep)
+                    if (enabledStep < newActiveStep) {
+                      setEnabledStep(newActiveStep)
+                    }
+                  }
+                  setPreload(false)
+                  enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                }, 1000)
+              } else {
+                apiRequest
+                  .post(`/estimation-tasks/`, {
+                    problemGoalId: problemGoalID
+                  })
+                  .then(res3 => {
+                    setTasksList(res3?.data)
+                    setTimeout(() => {
+                      if (type == 'NEXT') {
+                        setActiveStep(newActiveStep)
+                        if (enabledStep < newActiveStep) {
+                          setEnabledStep(newActiveStep)
+                        }
+                      }
+                      setPreload(false)
+                      enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                    }, 1000)
+                  })
+                  .catch(error => {
+                    setPreload(false)
+                    setErrorMessage(error?.response?.data?.errors)
+                    enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                  })
+              }
+            })
+            .catch(error => {
+              setPreload(false)
+              setErrorMessage(error?.response?.data?.errors)
+              enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+            })
         })
         .catch(error => {
           setPreload(false)
@@ -1386,7 +1429,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       }
     })
 
-    console.log('transformSubTaskTaskDeliverablesSowsData', result)
+    // console.log('transformSubTaskTaskDeliverablesSowsData', result)
 
     return result
   }
