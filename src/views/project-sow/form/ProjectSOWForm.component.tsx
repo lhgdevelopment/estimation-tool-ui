@@ -2402,7 +2402,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                       </TableCell>
                                                       <TableCell align='left'>{task?.['title']}</TableCell>
                                                       <TableCell>
-                                                        {task?.['isChecked'] && !task?.['sub_tasks']?.length && (
+                                                        {!!task?.['isChecked'] && !task?.['sub_tasks']?.length && (
                                                           <Select
                                                             labelId='associateId-label'
                                                             id='associateId'
@@ -2425,7 +2425,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                         )}
                                                       </TableCell>
                                                       <TableCell>
-                                                        {task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
+                                                        {!!task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
                                                           <TextField
                                                             className={'sow-list-item-text-input'}
                                                             value={task?.estimateHours}
@@ -2713,7 +2713,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                               </TableCell>
                                                               <TableCell align='left'>{task?.['title']}</TableCell>
                                                               <TableCell>
-                                                                {task?.['isChecked'] &&
+                                                                {!!task?.['isChecked'] &&
                                                                   !task?.['sub_tasks']?.length && (
                                                                     <Select
                                                                       labelId='associateId-label'
@@ -2737,7 +2737,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                   )}
                                                               </TableCell>
                                                               <TableCell>
-                                                                {task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
+                                                                {!!task?.['isChecked'] &&
+                                                                !task?.['sub_tasks']?.length ? (
                                                                   <TextField
                                                                     className={'sow-list-item-text-input'}
                                                                     value={task?.estimateHours}
