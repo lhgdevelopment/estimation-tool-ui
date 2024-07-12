@@ -86,6 +86,63 @@ export const scopeOfWorkListSx: SxProps = {
   }
 }
 
+export const taskListContainer = {
+  display: 'flex',
+  gap: 5,
+  mb: 5,
+  overflow: 'hidden',
+  overflowY: 'auto',
+  height: '300px',
+  border: '1px solid #ecedee',
+  borderRadius: '5px',
+  p: 3,
+  '& thead': {
+    '& .MuiTableCell-root': {
+      p: 0,
+      px: 1
+    }
+  },
+  '& tbody': {
+    '& .MuiTableCell-root, .MuiTableCell-body:not(.MuiTableCell-sizeSmall):not(.MuiTableCell-paddingCheckbox):not(.MuiTableCell-paddingNone)':
+      {
+        p: 0,
+        px: 1
+      }
+  },
+  '& .MuiSelect-select': {
+    p: 1
+  },
+  '& .MuiInputBase-input': {
+    p: 1
+  },
+  '& .item-type-common': {
+    padding: '0px 20px',
+    borderRadius: '15px',
+    width: '130px',
+    textAlign: 'center',
+    border: '1px solid transparent',
+    '&.item-type-hive': {
+      border: '3px solid #9333ea'
+    },
+    '&.item-type-sow': {
+      background: '#215a6c',
+      color: '#fff'
+    },
+    '&.item-type-deliverable': {
+      background: '#c6dbe1',
+      color: '#215a6c'
+    },
+    '&.item-type-task': {
+      background: '#ffc8a9',
+      color: '#215a6c'
+    },
+    '&.item-type-subtask': {
+      background: '#ffe5a0',
+      color: '#215a6c'
+    }
+  }
+}
+
 export const deliverableNoteAddButtonSx: SxProps = {
   display: 'flex',
   alignItems: 'center',
