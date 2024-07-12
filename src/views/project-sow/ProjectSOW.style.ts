@@ -91,8 +91,7 @@ export const taskListContainer = {
   gap: 5,
   mb: 5,
   overflow: 'hidden',
-  overflowY: 'auto',
-  height: '500px',
+
   border: '1px solid #ecedee',
   borderRadius: '5px',
   p: 3,
