@@ -107,7 +107,10 @@ export const taskListContainer = {
       {
         p: 0,
         px: 1
-      }
+      },
+    '& .estimated-hours-sec': {
+      pl: '1px'
+    }
   },
   '& .MuiSelect-select': {
     p: 1

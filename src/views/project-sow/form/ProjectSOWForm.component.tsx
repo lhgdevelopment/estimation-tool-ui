@@ -436,6 +436,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       .then(res => {
         setTasksList((prevState: any) => [...prevState?.map((task: any) => (task.id === taskId ? res.data : task))])
         setPreload(false)
+        enqueueSnackbar('Task assigned successfully', { variant: 'success' })
       })
       .catch(error => {
         setPreload(false)
@@ -454,6 +455,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       .then(res => {
         setTasksList((prevState: any) => [...prevState?.map((task: any) => (task.id === taskId ? res.data : task))])
         setPreload(false)
+        enqueueSnackbar('Task estimate hours updated successfully', { variant: 'success' })
       })
       .catch(error => {
         setPreload(false)
@@ -1444,6 +1446,63 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     return result
   }
 
+  function calculateTotalHoursForScopOfWorks(scopeOfWork: any = []) {
+    function sumHours(tasks: any) {
+      let total = 0
+
+      tasks.forEach((task: any) => {
+        total += task?.estimateHours
+
+        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+          total += sumHours(task?.sub_tasks)
+        }
+      })
+
+      return total
+    }
+
+    let totalHours = 0
+
+    scopeOfWork.deliverables.forEach((deliverable: any) => {
+      deliverable.tasks?.forEach((task: any) => {
+        totalHours += task?.estimateHours
+
+        if (task?.sub_tasks && task?.sub_tasks?.length > 0) {
+          totalHours += sumHours(task?.sub_tasks)
+        }
+      })
+    })
+
+    return totalHours.toFixed(2)
+  }
+
+  function calculateTotalHoursForDeliverable(deliverables: any = []) {
+    function sumHours(tasks: any) {
+      let total = 0
+
+      tasks?.forEach((task: any) => {
+        total += task?.estimateHours
+
+        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+          total += sumHours(task?.sub_tasks)
+        }
+      })
+
+      return total
+    }
+
+    let totalHours = 0
+
+    deliverables.tasks.forEach((task: any) => {
+      totalHours += task?.estimateHours
+
+      if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+        totalHours += sumHours(task?.sub_tasks)
+      }
+    })
+
+    return totalHours.toFixed(2)
+  }
   useEffect(() => {
     onClear()
     setEnabledStep(0)
@@ -2216,7 +2275,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       <Box sx={taskListContainer}>
                         <Box>
                           <TableContainer component={Paper}>
-                            <Table sx={{ width: '100%' }} aria-label='simple table'>
+                            <Table sx={{ width: '100%' }} aria-label='simple table' stickyHeader>
                               <TableHead>
                                 <TableRow>
                                   <TableCell></TableCell>
@@ -2260,7 +2319,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         </TableCell>
                                         <TableCell align='left'>{scope_of_work?.title}</TableCell>
                                         <TableCell></TableCell>
-                                        <TableCell></TableCell>
+                                        <TableCell className={'estimated-hours-sec'}>
+                                          {calculateTotalHoursForScopOfWorks(scope_of_work)}h
+                                        </TableCell>
                                         <TableCell></TableCell>
                                         <TableCell></TableCell>
                                         <TableCell></TableCell>
@@ -2298,44 +2359,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                 </TableCell>
                                                 <TableCell align='left'>{deliverable?.['title']}</TableCell>
                                                 <TableCell></TableCell>
-                                                <TableCell></TableCell>
+                                                <TableCell className={'estimated-hours-sec'}>
+                                                  {calculateTotalHoursForDeliverable(deliverable)}h
+                                                </TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>
                                               </TableRow>
-                                              <TableRow
-                                                key={scope_of_work.name}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                              >
-                                                <TableCell scope='row'>
-                                                  <Checkbox
-                                                    onChange={event => {
-                                                      handleUpdateTaskCheckUnCheckForSOWOnChange(
-                                                        scope_of_work?.deliverables,
-                                                        event?.target?.checked
-                                                      )
-                                                      handleDeliverableCheckboxBySow(scope_of_work?.deliverables)
-                                                    }}
-                                                    value={scope_of_work?.id}
-                                                    checked={scope_of_work?.deliverables?.some((deliverable: any) => {
-                                                      return deliverable?.tasks?.some((task: any) => task.isChecked)
-                                                    })}
-                                                  />
-                                                </TableCell>
-                                                <TableCell align='right'>
-                                                  <Box className={`item-type-common item-type-sow  item-type-hive`}>
-                                                    SOW
-                                                  </Box>
-                                                </TableCell>
-                                                <TableCell align='left'>{scope_of_work?.title}</TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                              </TableRow>
+
                                               {deliverable?.tasks?.map((task: any, taskIndex: number) => {
                                                 return (
                                                   <>
@@ -2393,7 +2425,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                         )}
                                                       </TableCell>
                                                       <TableCell>
-                                                        {task?.['isChecked'] && !task?.['sub_tasks']?.length && (
+                                                        {task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
                                                           <TextField
                                                             className={'sow-list-item-text-input'}
                                                             value={task?.estimateHours}
@@ -2410,10 +2442,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                               pattern: '[0-9]*'
                                                             }}
                                                           />
+                                                        ) : (
+                                                          task?.sub_tasks?.reduce(
+                                                            (acc: number, subTask: any) => acc + subTask?.estimateHours,
+                                                            0
+                                                          )
                                                         )}
                                                       </TableCell>
                                                       <TableCell></TableCell>
-                                                      <TableCell>$0</TableCell>
+                                                      <TableCell>${task?.associate?.hourlyRate}</TableCell>
                                                       <TableCell>$0.00</TableCell>
                                                       <TableCell>$0.00</TableCell>
                                                     </TableRow>
@@ -2488,7 +2525,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                               )}
                                                           </TableCell>
                                                           <TableCell></TableCell>
-                                                          <TableCell>$0</TableCell>
+                                                          <TableCell>${task?.associate?.hourlyRate}</TableCell>
                                                           <TableCell>$0.00</TableCell>
                                                           <TableCell>$0.00</TableCell>
                                                         </TableRow>
@@ -2544,7 +2581,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               <Box sx={taskListContainer}>
                                 <Box>
                                   <TableContainer component={Paper}>
-                                    <Table sx={{ width: '100%' }} aria-label='simple table'>
+                                    <Table sx={{ width: '100%' }} aria-label='simple table' stickyHeader>
                                       <TableHead>
                                         <TableRow>
                                           <TableCell></TableCell>
@@ -2559,6 +2596,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         </TableRow>
                                       </TableHead>
                                       <TableBody>
+                                        {console.log(additionalService?.scope_of_works)}
                                         {additionalService?.scope_of_works?.map((scope_of_work: any, index: number) => {
                                           return (
                                             <>
@@ -2588,7 +2626,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                 </TableCell>
                                                 <TableCell align='left'>{scope_of_work?.title}</TableCell>
                                                 <TableCell></TableCell>
-                                                <TableCell></TableCell>
+                                                <TableCell>
+                                                  {calculateTotalHoursForScopOfWorks(scope_of_work)}h
+                                                </TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell></TableCell>
@@ -2627,52 +2667,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                         </TableCell>
                                                         <TableCell align='left'>{deliverable?.['title']}</TableCell>
                                                         <TableCell></TableCell>
-                                                        <TableCell></TableCell>
+                                                        <TableCell>
+                                                          {calculateTotalHoursForDeliverable(deliverable)}h
+                                                        </TableCell>
                                                         <TableCell></TableCell>
                                                         <TableCell></TableCell>
                                                         <TableCell></TableCell>
                                                         <TableCell></TableCell>
                                                       </TableRow>
-                                                      <TableRow
-                                                        key={scope_of_work.name}
-                                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                                      >
-                                                        <TableCell scope='row'>
-                                                          <Checkbox
-                                                            onChange={event => {
-                                                              handleUpdateTaskCheckUnCheckForSOWOnChange(
-                                                                scope_of_work?.deliverables,
-                                                                event?.target?.checked
-                                                              )
-                                                              handleDeliverableCheckboxBySow(
-                                                                scope_of_work?.deliverables
-                                                              )
-                                                            }}
-                                                            value={scope_of_work?.id}
-                                                            checked={scope_of_work?.deliverables?.some(
-                                                              (deliverable: any) => {
-                                                                return deliverable?.tasks?.some(
-                                                                  (task: any) => task.isChecked
-                                                                )
-                                                              }
-                                                            )}
-                                                          />
-                                                        </TableCell>
-                                                        <TableCell align='right'>
-                                                          <Box
-                                                            className={`item-type-common item-type-sow  item-type-hive`}
-                                                          >
-                                                            SOW
-                                                          </Box>
-                                                        </TableCell>
-                                                        <TableCell align='left'>{scope_of_work?.title}</TableCell>
-                                                        <TableCell></TableCell>
-                                                        <TableCell></TableCell>
-                                                        <TableCell></TableCell>
-                                                        <TableCell></TableCell>
-                                                        <TableCell></TableCell>
-                                                        <TableCell></TableCell>
-                                                      </TableRow>
+
                                                       {deliverable?.tasks?.map((task: any, taskIndex: number) => {
                                                         return (
                                                           <>
@@ -2731,28 +2734,33 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                   )}
                                                               </TableCell>
                                                               <TableCell>
-                                                                {task?.['isChecked'] &&
-                                                                  !task?.['sub_tasks']?.length && (
-                                                                    <TextField
-                                                                      className={'sow-list-item-text-input'}
-                                                                      value={task?.estimateHours}
-                                                                      sx={{ width: '100px' }}
-                                                                      onChange={event => {
-                                                                        handleUpdateTaskEstimateHoursOnChange(
-                                                                          task?.id,
-                                                                          Number(event?.target?.value)
-                                                                        )
-                                                                      }}
-                                                                      name={`estimateHours_${task?.id}`}
-                                                                      inputProps={{
-                                                                        maxLength: 3,
-                                                                        pattern: '[0-9]*'
-                                                                      }}
-                                                                    />
-                                                                  )}
+                                                                {task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
+                                                                  <TextField
+                                                                    className={'sow-list-item-text-input'}
+                                                                    value={task?.estimateHours}
+                                                                    sx={{ width: '100px' }}
+                                                                    onChange={event => {
+                                                                      handleUpdateTaskEstimateHoursOnChange(
+                                                                        task?.id,
+                                                                        Number(event?.target?.value)
+                                                                      )
+                                                                    }}
+                                                                    name={`estimateHours_${task?.id}`}
+                                                                    inputProps={{
+                                                                      maxLength: 3,
+                                                                      pattern: '[0-9]*'
+                                                                    }}
+                                                                  />
+                                                                ) : (
+                                                                  task?.sub_tasks?.reduce(
+                                                                    (acc: number, subTask: any) =>
+                                                                      acc + subTask?.estimateHours,
+                                                                    0
+                                                                  )
+                                                                )}
                                                               </TableCell>
                                                               <TableCell></TableCell>
-                                                              <TableCell>$0</TableCell>
+                                                              <TableCell>${task?.associate?.hourlyRate}</TableCell>
                                                               <TableCell>$0.00</TableCell>
                                                               <TableCell>$0.00</TableCell>
                                                             </TableRow>
@@ -2832,7 +2840,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                         )}
                                                                     </TableCell>
                                                                     <TableCell></TableCell>
-                                                                    <TableCell>$0</TableCell>
+                                                                    <TableCell>
+                                                                      ${task?.associate?.hourlyRate}
+                                                                    </TableCell>
                                                                     <TableCell>$0.00</TableCell>
                                                                     <TableCell>$0.00</TableCell>
                                                                   </TableRow>
