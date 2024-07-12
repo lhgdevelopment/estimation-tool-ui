@@ -21,6 +21,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
   TableRow,
   TextField
@@ -180,7 +181,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const handleUpdateTaskCheckUnCheckForTaskOnChange = (taskId: number, isChecked: boolean) => {
     setTasksList((prevState: any) => [
-      ...prevState?.map((task: any) => (task.id === taskId ? { ...task, isChecked } : task))
+      ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, isChecked } : task))
     ])
     // setPreload(true)
     if (isChecked) {
@@ -190,12 +191,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           taskIds: [taskId]
         })
         .then(res => {
-          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (task.id === taskId ? res.data : task))])
+          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (task?.id === taskId ? res.data : task))])
           setPreload(false)
         })
         .catch(error => {
           setTasksList((prevState: any) => [
-            ...prevState?.map((task: any) => (task.id === taskId ? { ...task, isChecked: !isChecked } : task))
+            ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
@@ -208,12 +209,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           taskIds: [taskId]
         })
         .then(res => {
-          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (task.id === taskId ? res.data : task))])
+          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (task?.id === taskId ? res.data : task))])
           setPreload(false)
         })
         .catch(error => {
           setTasksList((prevState: any) => [
-            ...prevState?.map((task: any) => (task.id === taskId ? { ...task, isChecked: !isChecked } : task))
+            ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
@@ -223,10 +224,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }
 
   const handleUpdateTaskCheckUnCheckForParentTaskOnChange = (tasks: any, parentTaskId: number, isChecked: boolean) => {
-    const taskIds = [...tasks?.map((task: any) => task.id), parentTaskId]
+    const taskIds = [...tasks?.map((task: any) => task?.id), parentTaskId]
 
     setTasksList((prevState: any) => [
-      ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked } : task))
+      ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
     // setPreload(true)
     if (isChecked) {
@@ -236,12 +237,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           taskIds: taskIds
         })
         .then(res => {
-          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
         .catch(error => {
           setTasksList((prevState: any) => [
-            ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+            ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
@@ -254,12 +255,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           taskIds: taskIds
         })
         .then(res => {
-          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
         .catch(error => {
           setTasksList((prevState: any) => [
-            ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+            ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
@@ -272,7 +273,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     const taskIds = getTaskIdsFromTaskSubTask(tasks)
 
     setTasksList((prevState: any) => [
-      ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked } : task))
+      ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
     // setPreload(true)
     if (isChecked) {
@@ -282,12 +283,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           taskIds: taskIds
         })
         .then(res => {
-          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
         .catch(error => {
           setTasksList((prevState: any) => [
-            ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+            ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
@@ -300,12 +301,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           taskIds: taskIds
         })
         .then(res => {
-          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
         .catch(error => {
           setTasksList((prevState: any) => [
-            ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+            ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
@@ -318,7 +319,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     const taskIds = deliverables?.flatMap((deliverable: any) => getTaskIdsFromTaskSubTask(deliverable?.tasks))
 
     setTasksList((prevState: any) => [
-      ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked } : task))
+      ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
     // setPreload(true)
     if (isChecked) {
@@ -328,12 +329,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           taskIds: taskIds
         })
         .then(res => {
-          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
         .catch(error => {
           setTasksList((prevState: any) => [
-            ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+            ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
@@ -346,12 +347,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           taskIds: taskIds
         })
         .then(res => {
-          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
         .catch(error => {
           setTasksList((prevState: any) => [
-            ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+            ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
@@ -367,7 +368,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     // console.log({ taskIds })
 
     setTasksList((prevState: any) => [
-      ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked } : task))
+      ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
     // setPreload(true)
     if (isChecked) {
@@ -377,12 +378,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           taskIds: taskIds
         })
         .then(res => {
-          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
         .catch(error => {
           setTasksList((prevState: any) => [
-            ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+            ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
@@ -395,12 +396,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           taskIds: taskIds
         })
         .then(res => {
-          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task.id) ? res.data : task))])
+          // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
         .catch(error => {
           setTasksList((prevState: any) => [
-            ...prevState?.map((task: any) => (taskIds.includes(task.id) ? { ...task, isChecked: !isChecked } : task))
+            ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
@@ -414,9 +415,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
     const collectIds = (taskList: any[]) => {
       taskList.forEach((task: any) => {
-        taskIds.push(task.id)
-        if (task.sub_tasks && task.sub_tasks.length > 0) {
-          collectIds(task.sub_tasks)
+        taskIds.push(task?.id)
+        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+          collectIds(task?.sub_tasks)
         }
       })
     }
@@ -428,13 +429,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const handleUpdateTaskAssignOnChange = (taskId: number, associateId: number) => {
     setTasksList((prevState: any) => [
-      ...prevState?.map((task: any) => (task.id === taskId ? { ...task, associateId } : task))
+      ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, associateId } : task))
     ])
     // setPreload(true)
     apiRequest
       .post(`/estimation-tasks/${taskId}/add-associate`, { associateId })
       .then(res => {
-        setTasksList((prevState: any) => [...prevState?.map((task: any) => (task.id === taskId ? res.data : task))])
+        setTasksList((prevState: any) => [...prevState?.map((task: any) => (task?.id === taskId ? res.data : task))])
         setPreload(false)
         enqueueSnackbar('Task assigned successfully', { variant: 'success' })
       })
@@ -447,13 +448,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   const handleUpdateTaskEstimateHoursOnChange = (taskId: number, estimateHours: number) => {
     setTasksList((prevState: any) => [
-      ...prevState?.map((task: any) => (task.id === taskId ? { ...task, estimateHours } : task))
+      ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, estimateHours } : task))
     ])
     // setPreload(true)
     apiRequest
       .post(`/estimation-tasks/${taskId}/add-estimate-hours`, { estimateHours })
       .then(res => {
-        setTasksList((prevState: any) => [...prevState?.map((task: any) => (task.id === taskId ? res.data : task))])
+        setTasksList((prevState: any) => [...prevState?.map((task: any) => (task?.id === taskId ? res.data : task))])
         setPreload(false)
         enqueueSnackbar('Task estimate hours updated successfully', { variant: 'success' })
       })
@@ -1446,7 +1447,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     return result
   }
 
-  function calculateTotalHoursForScopOfWorks(scopeOfWork: any = []) {
+  function calculateTotalHoursForScopOfWorks(scopeOfWork: any) {
     function sumHours(tasks: any) {
       let total = 0
 
@@ -1476,7 +1477,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     return totalHours.toFixed(2)
   }
 
-  function calculateTotalHoursForDeliverable(deliverables: any = []) {
+  function calculateTotalHoursForDeliverable(deliverables: any) {
     function sumHours(tasks: any) {
       let total = 0
 
@@ -1503,6 +1504,39 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
     return totalHours.toFixed(2)
   }
+
+  function calculateTotalHoursForAllSOWs(scope_of_works: any) {
+    function sumHours(tasks: any) {
+      let total = 0
+
+      tasks?.forEach((task: any) => {
+        total += task?.estimateHours
+
+        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+          total += sumHours(task?.sub_tasks)
+        }
+      })
+
+      return total
+    }
+
+    let totalHours = 0
+
+    scope_of_works?.forEach((sow: any) => {
+      sow?.deliverables?.forEach((deliverable: any) => {
+        deliverable?.tasks?.forEach((task: any) => {
+          totalHours += task?.estimateHours
+
+          if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+            totalHours += sumHours(task?.sub_tasks)
+          }
+        })
+      })
+    })
+
+    return totalHours.toFixed(2)
+  }
+
   useEffect(() => {
     onClear()
     setEnabledStep(0)
@@ -2274,8 +2308,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       <Box sx={sectionTitleSx}>SOWs, Deliverables, Tasks, and Subtasks</Box>
                       <Box sx={taskListContainer}>
                         <Box>
-                          <TableContainer component={Paper}>
-                            <Table sx={{ width: '100%' }} aria-label='simple table' stickyHeader>
+                          <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
+                            <Table sx={{ width: '100%' }} aria-label='sticky table' stickyHeader>
                               <TableHead>
                                 <TableRow>
                                   <TableCell></TableCell>
@@ -2310,7 +2344,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                             }}
                                             value={scope_of_work?.id}
                                             checked={scope_of_work?.deliverables?.some((deliverable: any) => {
-                                              return deliverable?.tasks?.some((task: any) => task.isChecked)
+                                              return deliverable?.tasks?.some((task: any) => task?.isChecked)
                                             })}
                                           />
                                         </TableCell>
@@ -2346,7 +2380,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                     }}
                                                     value={deliverable?.['id']}
                                                     checked={
-                                                      deliverable?.tasks?.filter((task: any) => task.isChecked).length
+                                                      deliverable?.tasks?.filter((task: any) => task?.isChecked).length
                                                     }
                                                   />
                                                 </TableCell>
@@ -2545,6 +2579,25 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   )
                                 })}
                               </TableBody>
+                              <TableFooter>
+                                <TableRow>
+                                  <TableCell></TableCell>
+                                  <TableCell align='right'></TableCell>
+                                  <TableCell align='center'></TableCell>
+                                  <TableCell align='right'>Total</TableCell>
+                                  <TableCell align='center'>
+                                    {calculateTotalHoursForAllSOWs(
+                                      transformSubTaskTaskDeliverablesSowsData(
+                                        tasksList?.filter((task: any) => !task?.additionalServiceId)
+                                      )
+                                    )}
+                                  </TableCell>
+                                  <TableCell align='center'></TableCell>
+                                  <TableCell align='center'>$0</TableCell>
+                                  <TableCell align='center'>$0.00</TableCell>
+                                  <TableCell align='center'>$0.00</TableCell>
+                                </TableRow>
+                              </TableFooter>
                             </Table>
                           </TableContainer>
                         </Box>
@@ -2572,7 +2625,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   checked={
                                     additionalService?.scope_of_works.flatMap((scope_of_work: any) =>
                                       scope_of_work?.deliverables?.flatMap((deliverable: any) =>
-                                        deliverable?.tasks?.filter((task: any) => task.isChecked)
+                                        deliverable?.tasks?.filter((task: any) => task?.isChecked)
                                       )
                                     ).length
                                   }
@@ -2583,8 +2636,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                               </Box>
                               <Box sx={taskListContainer}>
                                 <Box>
-                                  <TableContainer component={Paper}>
-                                    <Table sx={{ width: '100%' }} aria-label='simple table' stickyHeader>
+                                  <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
+                                    <Table sx={{ width: '100%' }} aria-label='sticky table' stickyHeader>
                                       <TableHead>
                                         <TableRow>
                                           <TableCell></TableCell>
@@ -2599,7 +2652,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         </TableRow>
                                       </TableHead>
                                       <TableBody>
-                                        {console.log(additionalService?.scope_of_works)}
                                         {additionalService?.scope_of_works?.map((scope_of_work: any, index: number) => {
                                           return (
                                             <>
@@ -2618,7 +2670,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                     }}
                                                     value={scope_of_work?.id}
                                                     checked={scope_of_work?.deliverables?.some((deliverable: any) => {
-                                                      return deliverable?.tasks?.some((task: any) => task.isChecked)
+                                                      return deliverable?.tasks?.some((task: any) => task?.isChecked)
                                                     })}
                                                   />
                                                 </TableCell>
@@ -2656,7 +2708,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                             }}
                                                             value={deliverable?.['id']}
                                                             checked={
-                                                              deliverable?.tasks?.filter((task: any) => task.isChecked)
+                                                              deliverable?.tasks?.filter((task: any) => task?.isChecked)
                                                                 .length
                                                             }
                                                           />
@@ -2866,6 +2918,21 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                           )
                                         })}
                                       </TableBody>
+                                      <TableFooter>
+                                        <TableRow>
+                                          <TableCell></TableCell>
+                                          <TableCell align='right'></TableCell>
+                                          <TableCell align='center'></TableCell>
+                                          <TableCell align='right'>Total</TableCell>
+                                          <TableCell align='center'>
+                                            {calculateTotalHoursForAllSOWs(additionalService?.scope_of_works)}
+                                          </TableCell>
+                                          <TableCell align='center'></TableCell>
+                                          <TableCell align='center'>$0</TableCell>
+                                          <TableCell align='center'>$0.00</TableCell>
+                                          <TableCell align='center'>$0.00</TableCell>
+                                        </TableRow>
+                                      </TableFooter>
                                     </Table>
                                   </TableContainer>
                                 </Box>
