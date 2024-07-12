@@ -2443,10 +2443,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                             }}
                                                           />
                                                         ) : (
-                                                          task?.sub_tasks?.reduce(
-                                                            (acc: number, subTask: any) => acc + subTask?.estimateHours,
-                                                            0
-                                                          )
+                                                          task?.sub_tasks
+                                                            ?.reduce(
+                                                              (acc: number, subTask: any) =>
+                                                                acc + subTask?.estimateHours,
+                                                              0
+                                                            )
+                                                            .toFixed(2)
                                                         )}
                                                       </TableCell>
                                                       <TableCell></TableCell>
@@ -2752,11 +2755,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                     }}
                                                                   />
                                                                 ) : (
-                                                                  task?.sub_tasks?.reduce(
-                                                                    (acc: number, subTask: any) =>
-                                                                      acc + subTask?.estimateHours,
-                                                                    0
-                                                                  )
+                                                                  task?.sub_tasks
+                                                                    ?.reduce(
+                                                                      (acc: number, subTask: any) =>
+                                                                        acc + subTask?.estimateHours,
+                                                                      0
+                                                                    )
+                                                                    .toFixed(2)
                                                                 )}
                                                               </TableCell>
                                                               <TableCell></TableCell>
