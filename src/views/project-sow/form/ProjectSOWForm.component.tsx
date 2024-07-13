@@ -34,26 +34,17 @@ import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
-import { MarkdownEditor } from 'src/@core/components/markdown-editor'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
-import { getShortStringNumber } from 'src/@core/utils/utils'
 import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
-import {
-  deliverableNoteItemSx,
-  formTitleSx,
-  scopeOfWorkListContainer,
-  scopeOfWorkListSx,
-  sectionSubTitleSx,
-  sectionTitleSx,
-  serviceQuestionItemSx,
-  taskListContainer,
-  teamReviewBoxSx
-} from '../ProjectSOW.style'
+import { formTitleSx, sectionSubTitleSx, sectionTitleSx, taskListContainer, teamReviewBoxSx } from '../ProjectSOW.style'
+import { scopeOfWorkGroupByAdditionalServiceId } from './ProjectSOWForm.decorator'
+import ProjectSOWDeliverableFormComponent from './steps/deliverable/ProjectSOWDeliverable.component'
 import ProjectSOWOverviewFormComponent from './steps/overview/ProjectSOWOverview.component'
 import ProjectSOWProblemAndGoalsFormComponent from './steps/problemAndGoals/ProjectSOWProblemAndGoals.component'
 import ProjectSOWScopeOfWorkFormComponent from './steps/scopeOfWork/ProjectSOWScopeOfWork.component'
 import ProjectSOWSummeryFormComponent from './steps/summery/ProjectSOWSummery.component'
+import ProjectSOWTeamReviewFormComponent from './steps/teamReview/ProjectSOWTeamReview.component'
 import ProjectSOWTranscriptFormComponent from './steps/transcript/ProjectSOWTranscript.component'
 
 const steps = [
@@ -138,7 +129,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [deliverableNotesData, setDeliverableNotesData] = useState<any[]>([deliverableNoteDefaultData])
 
   const [serviceList, setServiceList] = useState<any>([])
-  const [serviceQuestionList, setServiceQuestion] = useState<any>([])
+
   const [teamUserList, setTeamUserList] = useState<any>([])
 
   const [associatedUserWithRole, setAssociatedUserWithRole] = useState<
@@ -165,7 +156,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }
 
   const handleUpdateTeamAssignOnChange = (employeeRoleId: number, associateId: number) => {
-    // setPreload(true)
+    setPreload(true)
     apiRequest
       .post('/team-review/update', { transcriptId, employeeRoleId, associateId })
       .then(res => {
@@ -183,7 +174,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, isChecked } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     if (isChecked) {
       apiRequest
         .post(`/estimation-tasks/checked`, {
@@ -229,7 +220,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     if (isChecked) {
       apiRequest
         .post(`/estimation-tasks/checked`, {
@@ -275,7 +266,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     if (isChecked) {
       apiRequest
         .post(`/estimation-tasks/checked`, {
@@ -321,7 +312,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     if (isChecked) {
       apiRequest
         .post(`/estimation-tasks/checked`, {
@@ -370,7 +361,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     if (isChecked) {
       apiRequest
         .post(`/estimation-tasks/checked`, {
@@ -431,7 +422,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, associateId } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     apiRequest
       .post(`/estimation-tasks/${taskId}/add-associate`, { associateId })
       .then(res => {
@@ -450,7 +441,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, estimateHours } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     apiRequest
       .post(`/estimation-tasks/${taskId}/add-estimate-hours`, { estimateHours })
       .then(res => {
@@ -488,23 +479,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       ...projectSOWFormData,
       [e?.target?.name]: e?.target?.value
     })
-  }
-
-  const handleNotesInputChange = (index: number, event: any) => {
-    const { name, value } = event.target
-    const newNotes = [...deliverableNotesData]
-    newNotes[index][name] = value
-    setDeliverableNotesData(newNotes)
-  }
-
-  const handleServiceQuestionInputChange = (answer: string, questionId: any) => {
-    const index = deliverableServiceQuestionData.findIndex((item: any) => item.questionId === questionId)
-    if (index !== -1) {
-      deliverableServiceQuestionData[index].answer = answer
-      setDeliverableServiceQuestionData((prevState: any) => [...deliverableServiceQuestionData])
-    } else {
-      setDeliverableServiceQuestionData((prevState: any) => [...prevState, { questionId, answer }])
-    }
   }
 
   const handleDeliverableNoteAdd = () => {
@@ -1008,7 +982,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           console.log(error)
         })
     } else {
-      setPreload(false)
+      // setPreload(false)
     }
   }
 
@@ -1059,46 +1033,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         return [...prevState, ...deliverableIds]
       }
     })
-  }
-
-  const isSowCheckedInDeliverable = (deliverables: any, selectedDeliverableData: any) => {
-    return deliverables.every((deliverable: any) => selectedDeliverableData.includes(deliverable.id))
-  }
-
-  const handleDeliverableCheckboxByService = (additionalService: any) => {
-    const deliverables = additionalService?.scope_of_works?.flatMap(
-      (scopeOfWork: any) => scopeOfWork?.deliverables || []
-    )
-
-    const deliverableIds = deliverables?.map((deliverable: any) => Number(deliverable?.id)) || []
-
-    setSelectedDeliverableData((prevState: any) => {
-      let newState = [...prevState]
-
-      const allSelected = deliverableIds.every((id: any) => newState.includes(id))
-
-      if (allSelected) {
-        // Unselect all deliverables
-        newState = newState.filter((id: number) => !deliverableIds.includes(id))
-      } else {
-        // Select all deliverables
-        deliverableIds.forEach((id: number) => {
-          if (!newState.includes(id)) {
-            newState.push(id)
-          }
-        })
-      }
-
-      return newState
-    })
-  }
-
-  const isServiceCheckedInDeliverable = (additionalService: any, selectedDeliverableData: any) => {
-    const deliverables = additionalService?.scope_of_works?.flatMap(
-      (scopeOfWork: any) => scopeOfWork?.deliverables || []
-    )
-
-    return deliverables.every((deliverable: any) => selectedDeliverableData.includes(deliverable.id))
   }
 
   const getDetails = (id: string | null | undefined) => {
@@ -1238,19 +1172,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       })
   }
 
-  const getServiceQuestionList = async () => {
-    if (projectSOWFormData?.serviceId) {
-      await apiRequest
-        .get(`/questions?serviceId=${projectSOWFormData?.serviceId}`)
-        .then(res => {
-          setServiceQuestion(res?.data)
-        })
-        .catch(error => {
-          enqueueSnackbar(error?.message, { variant: 'error' })
-        })
-    }
-  }
-
   const getUserList = async () => {
     await apiRequest
       .get(`/associates`)
@@ -1332,69 +1253,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         projectName: projectName
       })
     }
-  }
-
-  function serviceGroupByProjectTypeId(data: any) {
-    const grouped = data?.reduce((acc: { [key: number]: any }, item: any) => {
-      const { projectTypeId, project_type } = item
-
-      if (!acc[projectTypeId]) {
-        acc[projectTypeId] = {
-          projectTypeName: project_type.name,
-          projectTypeId: projectTypeId,
-          services: []
-        }
-      }
-
-      acc[projectTypeId].services.push(item)
-
-      return acc
-    }, {})
-
-    return Object.values(grouped)
-  }
-
-  function serviceDeliverableGroupByScopeOfWorkId(data: any) {
-    const grouped = data?.reduce((acc: { [key: number]: any }, item: any) => {
-      const { scopeOfWorkId, scope_of_work } = item
-
-      if (!acc[scopeOfWorkId]) {
-        acc[scopeOfWorkId] = {
-          ...scope_of_work,
-          additional_service_info: item?.additional_service_info,
-          deliverables: []
-        }
-      }
-
-      acc[scopeOfWorkId].deliverables.push(item)
-
-      return acc
-    }, {})
-
-    return Object.values(grouped)
-  }
-
-  function scopeOfWorkGroupByAdditionalServiceId(data: any) {
-    const groupedData = data?.reduce((acc: { [key: number]: any }, item: any) => {
-      const key = item.additionalServiceId ?? ''
-
-      if (!acc[key]) {
-        acc[key] = []
-      }
-
-      acc[key].push(item)
-
-      return acc
-    }, {})
-
-    const result = Object.keys(groupedData)?.map(key => {
-      return {
-        ...groupedData[key][0]?.additional_service_info,
-        scope_of_works: groupedData[key]
-      }
-    })
-
-    return result
   }
 
   function transformSubTaskTaskDeliverablesSowsData(data: any) {
@@ -1544,12 +1402,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     getServiceList()
     getUserList()
     getEmployeeRoleList()
-    getServiceQuestionList()
   }, [])
-
-  useEffect(() => {
-    getServiceQuestionList()
-  }, [projectSOWFormData?.serviceId])
 
   useEffect(() => {
     getDetails(id as string)
@@ -1690,422 +1543,27 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
 
               {activeStep == 5 && (
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={sectionTitleSx}>Deliverable</Box>
-                  <Box sx={scopeOfWorkListContainer}>
-                    <Box sx={scopeOfWorkListSx}>
-                      {serviceDeliverableGroupByScopeOfWorkId(
-                        deliverableData?.filter((deliverable: any) => !deliverable?.additionalServiceId)
-                      )?.map((scopeOfWork: any, index: number) => {
-                        return (
-                          <Box key={index + 'deliverable'}>
-                            <Box className={'sow-list-item'} component={'label'}>
-                              <Box className={'sow-list-item-sl'}>{index + 1}</Box>
-                              <Box className={'sow-list-item-type'}>
-                                <Box
-                                  className={`item-type-common item-type-sow ${
-                                    !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
-                                  }`}
-                                >
-                                  SOW
-                                </Box>
-                              </Box>
-                              <Box className={'sow-list-item-check'}>
-                                <Checkbox
-                                  onChange={() => {
-                                    handleDeliverableCheckboxBySow(scopeOfWork?.deliverables)
-                                  }}
-                                  value={scopeOfWork?.id}
-                                  checked={isSowCheckedInDeliverable(
-                                    scopeOfWork?.deliverables,
-                                    selectedDeliverableData
-                                  )}
-                                />
-                              </Box>
-                              <Box className={'sow-list-item-title'}>{scopeOfWork?.title}</Box>
-                            </Box>
-                            {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
-                              return (
-                                <Box className={'sow-list-item'} key={deliverableIndex} component={'label'}>
-                                  <Box className={'sow-list-item-sl'}>{`${index + 1}.${deliverableIndex + 1}`}</Box>
-                                  <Box className={'sow-list-item-type'}>
-                                    <Box className={'item-type-common item-type-deliverable'}>Deliverable</Box>
-                                  </Box>
-                                  <Box className={'sow-list-item-check'}>
-                                    <Checkbox
-                                      onChange={handleDeliverableCheckbox}
-                                      value={deliverable?.['id']}
-                                      checked={selectedDeliverableData?.includes(deliverable?.['id'])}
-                                    />
-                                  </Box>
-                                  <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
-                                </Box>
-                              )
-                            })}
-                          </Box>
-                        )
-                      })}
-                    </Box>
-                  </Box>
-
-                  <Box sx={{ display: 'flex', flexDirection: 'column', mt: 5 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
-                      <Box sx={sectionTitleSx}>Service Question</Box>
-                    </Box>
-                    <Box sx={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}>
-                      {serviceQuestionList?.map((serviceQuestion: any, index: number) => {
-                        return (
-                          <Box sx={serviceQuestionItemSx} key={index + 'question'}>
-                            <Box sx={{ width: '100%' }}>
-                              <Box component='label' sx={{ mb: 2 }}>
-                                {`#${index + 1}. ${serviceQuestion.title} `}
-                              </Box>
-                              <TextField
-                                name='answer'
-                                value={
-                                  deliverableServiceQuestionData?.find(
-                                    (item: any) => item?.questionId === serviceQuestion?.id
-                                  )?.answer
-                                }
-                                onChange={e => {
-                                  handleServiceQuestionInputChange(e.target.value, serviceQuestion?.id)
-                                }}
-                                placeholder={`#${index + 1}. Service Related Questions Answer`}
-                                fullWidth
-                              />
-                            </Box>
-                          </Box>
-                        )
-                      })}
-                    </Box>
-                  </Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', mt: 5 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
-                      <Box sx={sectionTitleSx}>Project Notes</Box>
-                    </Box>
-
-                    <Box>
-                      {deliverableNotesData?.map((deliverableNote: any, index: number) => {
-                        return (
-                          <Box sx={deliverableNoteItemSx} key={index + 'deliverable'}>
-                            <Box sx={{ width: '100%' }}>
-                              <TextField
-                                label={'Meeting Link'}
-                                name='noteLink'
-                                value={deliverableNote?.noteLink}
-                                onChange={e => {
-                                  handleNotesInputChange(index, e)
-                                }}
-                                placeholder={`${getShortStringNumber(
-                                  index + 1
-                                )} Meeting Link: https://tldv.io/app/meetings/unique-meeting-id/`}
-                                fullWidth
-                              />
-                            </Box>
-                            <Box sx={{ width: '100%' }}>
-                              <TextField
-                                label={'Note'}
-                                name='note'
-                                value={deliverableNote?.note}
-                                onChange={e => {
-                                  handleNotesInputChange(index, e)
-                                }}
-                                placeholder={`Type any additional notes here that will help the estimating team`}
-                                fullWidth
-                              />
-                            </Box>
-                          </Box>
-                        )
-                      })}
-                    </Box>
-                  </Box>
-                  <Box>
-                    <Box sx={sectionTitleSx}>Added Services</Box>
-                    <Box>
-                      {scopeOfWorkGroupByAdditionalServiceId(
-                        serviceDeliverableGroupByScopeOfWorkId(
-                          deliverableData?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
-                        )
-                      )?.map((additionalService: any, additionalServiceIndex: number) => {
-                        return (
-                          <Box key={additionalServiceIndex}>
-                            <Box sx={sectionSubTitleSx} component={'label'}>
-                              <Checkbox
-                                onChange={() => {
-                                  handleDeliverableCheckboxByService(additionalService)
-                                }}
-                                value={additionalService?.id}
-                                checked={isServiceCheckedInDeliverable(additionalService, selectedDeliverableData)}
-                                sx={{ p: 0, mr: 2 }}
-                              />
-                              {additionalService?.name}
-                            </Box>
-                            <Box sx={scopeOfWorkListContainer}>
-                              <Box sx={scopeOfWorkListSx}>
-                                {additionalService?.scope_of_works?.map(
-                                  (scopeOfWork: any, scopeOfWorkIndex: number) => {
-                                    return (
-                                      <Box key={scopeOfWorkIndex}>
-                                        <Box className={'sow-list-item'} component={'label'}>
-                                          <Box className={'sow-list-item-type'}>
-                                            <Box
-                                              className={`item-type-common item-type-sow ${
-                                                !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
-                                              }`}
-                                            >
-                                              SOW
-                                            </Box>
-                                          </Box>
-                                          <Box className={'sow-list-item-check'}>
-                                            <Checkbox
-                                              onChange={() => {
-                                                handleDeliverableCheckboxBySow(scopeOfWork?.deliverables)
-                                              }}
-                                              value={scopeOfWork?.id}
-                                              checked={isSowCheckedInDeliverable(
-                                                scopeOfWork?.deliverables,
-                                                selectedDeliverableData
-                                              )}
-                                            />
-                                          </Box>
-                                          <Box className={'sow-list-item-title'}>{scopeOfWork?.title}</Box>
-                                        </Box>
-                                        {scopeOfWork?.deliverables?.map(
-                                          (deliverable: any, deliverableIndex: number) => {
-                                            return (
-                                              <Box
-                                                className={'sow-list-item'}
-                                                key={deliverableIndex}
-                                                component={'label'}
-                                              >
-                                                <Box className={'sow-list-item-type'}>
-                                                  <Box className={'item-type-common item-type-deliverable'}>
-                                                    Deliverable
-                                                  </Box>
-                                                </Box>
-                                                <Box className={'sow-list-item-check'}>
-                                                  <Checkbox
-                                                    onChange={handleDeliverableCheckbox}
-                                                    value={deliverable?.['id']}
-                                                    checked={selectedDeliverableData?.includes(deliverable?.['id'])}
-                                                  />
-                                                </Box>
-                                                <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
-                                              </Box>
-                                            )
-                                          }
-                                        )}
-                                      </Box>
-                                    )
-                                  }
-                                )}
-                              </Box>
-                            </Box>
-                          </Box>
-                        )
-                      })}
-                    </Box>
-                  </Box>
-                </Box>
+                <ProjectSOWDeliverableFormComponent
+                  deliverableData={deliverableData}
+                  projectSOWFormData={projectSOWFormData}
+                  deliverableNotesData={deliverableNotesData}
+                  deliverableServiceQuestionData={deliverableServiceQuestionData}
+                  selectedDeliverableData={selectedDeliverableData}
+                  setDeliverableNotesData={setDeliverableNotesData}
+                  setDeliverableServiceQuestionData={setDeliverableServiceQuestionData}
+                  setSelectedDeliverableData={setSelectedDeliverableData}
+                ></ProjectSOWDeliverableFormComponent>
               )}
               {activeStep == 6 && (
-                <Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Box sx={{ ...formTitleSx, mt: 0 }}>Team Review - {projectSOWFormData?.projectName}</Box>
-
-                    <Accordion sx={teamReviewBoxSx}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls='client-information-content'
-                        id='client-information-header'
-                      >
-                        Client Information
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                          <Box sx={{ width: '30%' }}>
-                            <TextField
-                              id='outlined-multiline-flexible'
-                              label='Company Name'
-                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600'
-                              }`}
-                              name='company'
-                              value={projectSOWFormData.company}
-                              disabled
-                            />
-                            {!!errorMessage?.['company'] &&
-                              errorMessage?.['company']?.map((message: any, index: number) => {
-                                return (
-                                  <span key={index + 'msg'} className='text-xs text-red-600 dark:text-red-400'>
-                                    {message}
-                                  </span>
-                                )
-                              })}
-                          </Box>
-                          <Box sx={{ width: '70%' }}>
-                            <TextField
-                              id='outlined-multiline-flexible'
-                              label='Website'
-                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                              }`}
-                              name='clientWebsite'
-                              value={projectSOWFormData.clientWebsite}
-                              disabled
-                            />
-                          </Box>
-                        </Box>
-                        <Box className='team-review-box-title'>Project Details</Box>
-                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                          <Box sx={{ width: '30%' }}>
-                            <Dropdown
-                              label={'Services'}
-                              url={'services'}
-                              name='serviceId'
-                              value={projectSOWFormData.serviceId}
-                              disabled
-                            />
-                          </Box>
-                          <Box sx={{ width: '70%' }}>
-                            <TextField
-                              id='outlined-multiline-flexible'
-                              label='Project Name'
-                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                              }`}
-                              name='projectName'
-                              value={projectSOWFormData.projectName}
-                              disabled
-                            />
-                          </Box>
-                        </Box>
-                        <Box className='team-review-box-title'>Qualifying Meeting Transcripts</Box>
-                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                          <Box sx={{ width: '50%' }}>
-                            <TextField
-                              id='outlined-multiline-flexible'
-                              label='Meeting Transcripts'
-                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                              }`}
-                              name='projectName'
-                              value={''}
-                              disabled
-                            />
-                          </Box>
-                          <Box sx={{ width: '50%' }}>
-                            <TextField
-                              id='outlined-multiline-flexible'
-                              label='Meeting Transcripts'
-                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                              }`}
-                              name='projectName'
-                              value={''}
-                              disabled
-                            />
-                          </Box>
-                        </Box>
-                        <Box className='team-review-box-title'>Account Manager Notes</Box>
-                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                          <Box sx={{ width: '50%' }}>
-                            <TextField
-                              id='outlined-multiline-flexible'
-                              label='Account Manager Notes'
-                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                              }`}
-                              name='projectName'
-                              value={''}
-                              disabled
-                            />
-                          </Box>
-                        </Box>
-                        <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-                          <Box sx={{ width: '100%' }}>
-                            <Box
-                              component={'textarea'}
-                              id='outlined-multiline-flexible'
-                              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                              }`}
-                              name='projectName'
-                              rows={5}
-                            />
-                          </Box>
-                        </Box>
-                      </AccordionDetails>
-                    </Accordion>
-
-                    <Accordion sx={teamReviewBoxSx}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls='problemAndGoal-content'
-                        id='problemAndGoal-header'
-                      >
-                        Problem & Goals
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <MdPreview modelValue={problemGoalText} />
-                      </AccordionDetails>
-                    </Accordion>
-
-                    <Accordion sx={teamReviewBoxSx}>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls='problemAndGoal-content'
-                        id='problemAndGoal-header'
-                      >
-                        Project Overview
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <MarkdownEditor modelValue={overviewText} onChange={setOverviewText} />
-                      </AccordionDetails>
-                    </Accordion>
-
-                    <Box sx={{ ...teamReviewBoxSx, p: '15px' }}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                        <Box sx={{ width: '100%' }}>
-                          <Box className='team-review-box-title'>Project Team Needed</Box>
-                        </Box>
-                        <Box className='team-review-team-need-box'>
-                          {employeeRoleData?.map((employeeRole: any, index: number) => {
-                            return (
-                              <Box className='team-review-team-need-item' key={index + 'team'}>
-                                <Box className='team-review-team-need-item-input'>
-                                  <FormControl fullWidth>
-                                    <InputLabel id='associateId-label'>{employeeRole?.name}</InputLabel>
-                                    <Select
-                                      labelId='associateId-label'
-                                      id='associateId'
-                                      onChange={event => {
-                                        getAssociatedUserWithRole(employeeRole?.id, Number(event?.target?.value))
-                                      }}
-                                      value={
-                                        associatedUserWithRole?.find(
-                                          (item: any) => item?.employeeRoleId === employeeRole?.id
-                                        )?.associateId || ''
-                                      }
-                                      name={`associateId_${employeeRole?.id}`}
-                                      label={employeeRole?.name}
-                                    >
-                                      {teamUserList?.map((item: any) => (
-                                        <MenuItem value={item?.id} key={item?.id}>
-                                          {item?.name}
-                                        </MenuItem>
-                                      ))}
-                                    </Select>
-                                  </FormControl>
-                                </Box>
-                              </Box>
-                            )
-                          })}
-                        </Box>
-                      </Box>
-                    </Box>
-                  </Box>
-                </Box>
+                <ProjectSOWTeamReviewFormComponent
+                  projectSOWFormData={projectSOWFormData}
+                  setOverviewText={setOverviewText}
+                  overviewText={overviewText}
+                  associatedUserWithRole={associatedUserWithRole}
+                  errorMessage={errorMessage}
+                  problemGoalText={problemGoalText}
+                  setAssociatedUserWithRole={setAssociatedUserWithRole}
+                ></ProjectSOWTeamReviewFormComponent>
               )}
               {activeStep == 7 && (
                 <Box>

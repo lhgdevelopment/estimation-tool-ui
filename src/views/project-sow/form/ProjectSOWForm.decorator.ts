@@ -32,6 +32,29 @@ export type TProjectSOwFormViewProps = {
   handleDeliverableNoteRemove: any
 }
 
+export function scopeOfWorkGroupByAdditionalServiceId(data: any) {
+  const groupedData = data?.reduce((acc: { [key: number]: any }, item: any) => {
+    const key = item.additionalServiceId ?? ''
+
+    if (!acc[key]) {
+      acc[key] = []
+    }
+
+    acc[key].push(item)
+
+    return acc
+  }, {})
+
+  const result = Object.keys(groupedData)?.map(key => {
+    return {
+      ...groupedData[key][0]?.additional_service_info,
+      scope_of_works: groupedData[key]
+    }
+  })
+
+  return result
+}
+
 export const kimaiUserData = [
   {
     id: 2,
