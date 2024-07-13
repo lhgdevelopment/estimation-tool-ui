@@ -156,7 +156,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   }
 
   const handleUpdateTeamAssignOnChange = (employeeRoleId: number, associateId: number) => {
-    // setPreload(true)
+    setPreload(true)
     apiRequest
       .post('/team-review/update', { transcriptId, employeeRoleId, associateId })
       .then(res => {
@@ -174,7 +174,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, isChecked } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     if (isChecked) {
       apiRequest
         .post(`/estimation-tasks/checked`, {
@@ -220,7 +220,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     if (isChecked) {
       apiRequest
         .post(`/estimation-tasks/checked`, {
@@ -266,7 +266,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     if (isChecked) {
       apiRequest
         .post(`/estimation-tasks/checked`, {
@@ -312,7 +312,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     if (isChecked) {
       apiRequest
         .post(`/estimation-tasks/checked`, {
@@ -361,7 +361,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     if (isChecked) {
       apiRequest
         .post(`/estimation-tasks/checked`, {
@@ -422,7 +422,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, associateId } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     apiRequest
       .post(`/estimation-tasks/${taskId}/add-associate`, { associateId })
       .then(res => {
@@ -441,7 +441,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, estimateHours } : task))
     ])
-    // setPreload(true)
+    setPreload(true)
     apiRequest
       .post(`/estimation-tasks/${taskId}/add-estimate-hours`, { estimateHours })
       .then(res => {
@@ -982,7 +982,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           console.log(error)
         })
     } else {
-      setPreload(false)
+      // setPreload(false)
     }
   }
 
