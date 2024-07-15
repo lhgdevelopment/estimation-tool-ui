@@ -1335,6 +1335,36 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     return totalHours.toFixed(2)
   }
 
+  function calculateTotalInternalCostForScopOfWorks(scopeOfWork: any) {
+    function sumHours(tasks: any) {
+      let total = 0
+
+      tasks.forEach((task: any) => {
+        total += task?.estimateHours * task?.associate?.hourlyRate
+
+        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+          total += sumHours(task?.sub_tasks)
+        }
+      })
+
+      return total
+    }
+
+    let totalHours = 0
+
+    scopeOfWork.deliverables.forEach((deliverable: any) => {
+      deliverable.tasks?.forEach((task: any) => {
+        totalHours += task?.estimateHours * task?.associate?.hourlyRate
+
+        if (task?.sub_tasks && task?.sub_tasks?.length > 0) {
+          totalHours += sumHours(task?.sub_tasks)
+        }
+      })
+    })
+
+    return totalHours.toFixed(2)
+  }
+
   function calculateTotalHoursForDeliverable(deliverables: any) {
     function sumHours(tasks: any) {
       let total = 0
@@ -1354,6 +1384,34 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
     deliverables.tasks.forEach((task: any) => {
       totalHours += task?.estimateHours
+
+      if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+        totalHours += sumHours(task?.sub_tasks)
+      }
+    })
+
+    return totalHours.toFixed(2)
+  }
+
+  function calculateTotalInternalCostForDeliverable(deliverables: any) {
+    function sumHours(tasks: any) {
+      let total = 0
+
+      tasks?.forEach((task: any) => {
+        total += task?.estimateHours * task?.associate?.hourlyRate
+
+        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+          total += sumHours(task?.sub_tasks)
+        }
+      })
+
+      return total
+    }
+
+    let totalHours = 0
+
+    deliverables.tasks.forEach((task: any) => {
+      totalHours += task?.estimateHours * task?.associate?.hourlyRate
 
       if (task?.sub_tasks && task?.sub_tasks.length > 0) {
         totalHours += sumHours(task?.sub_tasks)
@@ -1764,21 +1822,35 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Box sx={sectionTitleSx}>SOWs, Deliverables, Tasks, and Subtasks</Box>
-                      <Box sx={taskListContainer}>
+                      <Box sx={{ ...taskListContainer, mb: 0 }}>
                         <Box>
                           <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
                             <Table sx={{ width: '100%' }} aria-label='sticky table' stickyHeader>
                               <TableHead>
                                 <TableRow>
-                                  <TableCell></TableCell>
-                                  <TableCell align='right'></TableCell>
-                                  <TableCell align='center'>Deliverable & Timeline</TableCell>
-                                  <TableCell align='center'>Team Member</TableCell>
-                                  <TableCell align='center'>Hours</TableCell>
-                                  <TableCell align='center'>Timeline</TableCell>
-                                  <TableCell align='center'>Internal</TableCell>
-                                  <TableCell align='center'>Retails</TableCell>
-                                  <TableCell align='center'>Josh</TableCell>
+                                  <TableCell sx={{ width: '25px', p: 0 }}></TableCell>
+                                  <TableCell align='right' sx={{ width: '145px' }}></TableCell>
+                                  <TableCell align='center' sx={{ width: 'calc(100% - 615px)' }}>
+                                    Deliverable & Timeline
+                                  </TableCell>
+                                  <TableCell align='center' sx={{ width: '150px' }}>
+                                    Team Member
+                                  </TableCell>
+                                  <TableCell align='center' sx={{ width: '115px' }}>
+                                    Hours
+                                  </TableCell>
+                                  <TableCell align='center' sx={{ width: '70px' }}>
+                                    Timeline
+                                  </TableCell>
+                                  <TableCell align='center' sx={{ width: '90px' }}>
+                                    Internal
+                                  </TableCell>
+                                  <TableCell align='center' sx={{ width: '90px' }}>
+                                    Retails
+                                  </TableCell>
+                                  <TableCell align='center' sx={{ width: '70px' }}>
+                                    Josh
+                                  </TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
@@ -1811,13 +1883,19 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         </TableCell>
                                         <TableCell align='left'>{scope_of_work?.title}</TableCell>
                                         <TableCell></TableCell>
-                                        <TableCell className={'estimated-hours-sec'}>
+                                        <TableCell align='center' className={'estimated-hours-sec item-type-sow'}>
                                           {calculateTotalHoursForScopOfWorks(scope_of_work)}h
                                         </TableCell>
                                         <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell></TableCell>
+                                        <TableCell align='center' className={'item-type-sow'}>
+                                          ${calculateTotalInternalCostForScopOfWorks(scope_of_work)}
+                                        </TableCell>
+                                        <TableCell align='center' className={'item-type-sow'}>
+                                          $0.00
+                                        </TableCell>
+                                        <TableCell align='center' className={'item-type-sow'}>
+                                          $0.00
+                                        </TableCell>
                                       </TableRow>
                                       {scope_of_work?.deliverables?.map(
                                         (deliverable: any, deliverableIndex: number) => {
@@ -1851,13 +1929,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                 </TableCell>
                                                 <TableCell align='left'>{deliverable?.['title']}</TableCell>
                                                 <TableCell></TableCell>
-                                                <TableCell className={'estimated-hours-sec'}>
+                                                <TableCell
+                                                  align='center'
+                                                  className={'estimated-hours-sec item-type-deliverable'}
+                                                >
                                                   {calculateTotalHoursForDeliverable(deliverable)}h
                                                 </TableCell>
                                                 <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
+                                                <TableCell align='center' className={'item-type-deliverable'}>
+                                                  ${calculateTotalInternalCostForDeliverable(deliverable)}
+                                                </TableCell>
+                                                <TableCell align='center' className={'item-type-deliverable'}>
+                                                  $0.00
+                                                </TableCell>
+                                                <TableCell align='center' className={'item-type-deliverable'}>
+                                                  $0.00
+                                                </TableCell>
                                               </TableRow>
 
                                               {deliverable?.tasks?.map((task: any, taskIndex: number) => {
@@ -1896,6 +1983,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                       <TableCell>
                                                         {!!task?.['isChecked'] && !task?.['sub_tasks']?.length && (
                                                           <Select
+                                                            className={'team-select'}
                                                             labelId='associateId-label'
                                                             id='associateId'
                                                             onChange={event => {
@@ -1916,7 +2004,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                           </Select>
                                                         )}
                                                       </TableCell>
-                                                      <TableCell>
+                                                      <TableCell align='center' className={'item-type-task'}>
                                                         {!!task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
                                                           <TextField
                                                             className={'sow-list-item-text-input'}
@@ -1945,9 +2033,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                         )}
                                                       </TableCell>
                                                       <TableCell></TableCell>
-                                                      <TableCell>${task?.associate?.hourlyRate}</TableCell>
-                                                      <TableCell>$0.00</TableCell>
-                                                      <TableCell>$0.00</TableCell>
+                                                      <TableCell align='center' className={'item-type-task'}>
+                                                        ${task?.associate?.hourlyRate * task?.estimateHours}
+                                                      </TableCell>
+                                                      <TableCell align='center' className={'item-type-task'}>
+                                                        $0.00
+                                                      </TableCell>
+                                                      <TableCell align='center' className={'item-type-task'}>
+                                                        $0.00
+                                                      </TableCell>
                                                     </TableRow>
                                                     {task?.sub_tasks?.map((subTask: any, subTaskIndex: number) => {
                                                       return (
@@ -1978,6 +2072,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                           <TableCell>
                                                             {subTask?.['isChecked'] && (
                                                               <Select
+                                                                className={'team-select'}
                                                                 labelId='associateId-label'
                                                                 id='associateId'
                                                                 onChange={event => {
@@ -1998,7 +2093,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                               </Select>
                                                             )}
                                                           </TableCell>
-                                                          <TableCell>
+                                                          <TableCell className={'item-type-subtask'}>
                                                             {subTask?.['isChecked'] &&
                                                               !subTask?.['sub_tasks']?.length && (
                                                                 <TextField
@@ -2020,9 +2115,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                               )}
                                                           </TableCell>
                                                           <TableCell></TableCell>
-                                                          <TableCell>${task?.associate?.hourlyRate}</TableCell>
-                                                          <TableCell>$0.00</TableCell>
-                                                          <TableCell>$0.00</TableCell>
+                                                          <TableCell align='center' className={'item-type-subtask'}>
+                                                            ${task?.associate?.hourlyRate * subTask?.estimateHours}
+                                                          </TableCell>
+                                                          <TableCell align='center' className={'item-type-subtask'}>
+                                                            $0.00
+                                                          </TableCell>
+                                                          <TableCell align='center' className={'item-type-subtask'}>
+                                                            $0.00
+                                                          </TableCell>
                                                         </TableRow>
                                                       )
                                                     })}
@@ -2037,28 +2138,32 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   )
                                 })}
                               </TableBody>
-                              <TableFooter>
-                                <TableRow>
-                                  <TableCell></TableCell>
-                                  <TableCell align='right'></TableCell>
-                                  <TableCell align='center'></TableCell>
-                                  <TableCell align='right'>Total</TableCell>
-                                  <TableCell align='center'>
-                                    {calculateTotalHoursForAllSOWs(
-                                      transformSubTaskTaskDeliverablesSowsData(
-                                        tasksList?.filter((task: any) => !task?.additionalServiceId)
-                                      )
-                                    )}
-                                  </TableCell>
-                                  <TableCell align='center'></TableCell>
-                                  <TableCell align='center'>$0</TableCell>
-                                  <TableCell align='center'>$0.00</TableCell>
-                                  <TableCell align='center'>$0.00</TableCell>
-                                </TableRow>
-                              </TableFooter>
                             </Table>
                           </TableContainer>
                         </Box>
+                      </Box>
+                      <Box sx={{ px: 3, mb: 5 }}>
+                        <Table sx={{ '& td': { p: 2 } }}>
+                          <TableFooter>
+                            <TableRow>
+                              <TableCell sx={{ width: '50px', p: 0 }}></TableCell>
+                              <TableCell align='right' sx={{ width: '145px' }}></TableCell>
+                              <TableCell align='center' sx={{ width: 'calc(100% - 615px)' }}></TableCell>
+                              <TableCell align='center' sx={{ width: '150px' }}></TableCell>
+                              <TableCell align='center' sx={{ width: '115px' }}>
+                                {calculateTotalHoursForAllSOWs(
+                                  transformSubTaskTaskDeliverablesSowsData(
+                                    tasksList?.filter((task: any) => !task?.additionalServiceId)
+                                  )
+                                )}
+                              </TableCell>
+                              <TableCell align='center' sx={{ width: '70px' }}></TableCell>
+                              <TableCell align='center' sx={{ width: '90px' }}></TableCell>
+                              <TableCell align='center' sx={{ width: '90px' }}></TableCell>
+                              <TableCell align='center' sx={{ width: '70px' }}></TableCell>
+                            </TableRow>
+                          </TableFooter>
+                        </Table>
                       </Box>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -2139,13 +2244,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                 </TableCell>
                                                 <TableCell align='left'>{scope_of_work?.title}</TableCell>
                                                 <TableCell></TableCell>
-                                                <TableCell>
+                                                <TableCell align='center'>
                                                   {calculateTotalHoursForScopOfWorks(scope_of_work)}h
                                                 </TableCell>
                                                 <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell></TableCell>
+                                                <TableCell align='center'>
+                                                  ${calculateTotalInternalCostForScopOfWorks(scope_of_work)}
+                                                </TableCell>
+                                                <TableCell align='center'></TableCell>
+                                                <TableCell align='center'></TableCell>
                                               </TableRow>
                                               {scope_of_work?.deliverables?.map(
                                                 (deliverable: any, deliverableIndex: number) => {
@@ -2184,7 +2291,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                           {calculateTotalHoursForDeliverable(deliverable)}h
                                                         </TableCell>
                                                         <TableCell></TableCell>
-                                                        <TableCell></TableCell>
+                                                        <TableCell>
+                                                          ${calculateTotalInternalCostForDeliverable(deliverable)}
+                                                        </TableCell>
                                                         <TableCell></TableCell>
                                                         <TableCell></TableCell>
                                                       </TableRow>
@@ -2376,13 +2485,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                           )
                                         })}
                                       </TableBody>
+                                    </Table>
+                                    <Table>
                                       <TableFooter>
                                         <TableRow>
                                           <TableCell></TableCell>
                                           <TableCell align='right'></TableCell>
                                           <TableCell align='center'></TableCell>
                                           <TableCell align='right'>Total</TableCell>
-                                          <TableCell align='center'>
+                                          <TableCell>
                                             {calculateTotalHoursForAllSOWs(additionalService?.scope_of_works)}
                                           </TableCell>
                                           <TableCell align='center'></TableCell>
