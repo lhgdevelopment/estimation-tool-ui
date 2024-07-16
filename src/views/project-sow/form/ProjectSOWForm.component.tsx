@@ -1305,15 +1305,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     return result
   }
 
-  function calculateTotalHoursForScopOfWorks(scopeOfWork: any) {
+  function calculateTotalHoursForScopeOfWorks(scopeOfWork: any) {
     function sumHours(tasks: any) {
       let total = 0
 
       tasks.forEach((task: any) => {
-        total += task?.estimateHours
+        if (task?.isChecked) {
+          total += task?.estimateHours
 
-        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-          total += sumHours(task?.sub_tasks)
+          if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+            total += sumHours(task?.sub_tasks)
+          }
         }
       })
 
@@ -1324,10 +1326,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
     scopeOfWork.deliverables.forEach((deliverable: any) => {
       deliverable.tasks?.forEach((task: any) => {
-        totalHours += task?.estimateHours
+        if (task?.isChecked) {
+          totalHours += task?.estimateHours
 
-        if (task?.sub_tasks && task?.sub_tasks?.length > 0) {
-          totalHours += sumHours(task?.sub_tasks)
+          if (task?.sub_tasks && task?.sub_tasks?.length > 0) {
+            totalHours += sumHours(task?.sub_tasks)
+          }
         }
       })
     })
@@ -1335,15 +1339,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     return totalHours.toFixed(2)
   }
 
-  function calculateTotalInternalCostForScopOfWorks(scopeOfWork: any) {
+  function calculateTotalInternalCostForScopeOfWorks(scopeOfWork: any) {
     function sumHours(tasks: any) {
       let total = 0
 
       tasks.forEach((task: any) => {
-        total += task?.estimateHours * task?.associate?.hourlyRate
+        if (task?.isChecked) {
+          total += task?.estimateHours * task?.associate?.hourlyRate
 
-        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-          total += sumHours(task?.sub_tasks)
+          if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+            total += sumHours(task?.sub_tasks)
+          }
         }
       })
 
@@ -1354,10 +1360,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
     scopeOfWork.deliverables.forEach((deliverable: any) => {
       deliverable.tasks?.forEach((task: any) => {
-        totalHours += task?.estimateHours * task?.associate?.hourlyRate
+        if (task?.isChecked) {
+          totalHours += task?.estimateHours * task?.associate?.hourlyRate
 
-        if (task?.sub_tasks && task?.sub_tasks?.length > 0) {
-          totalHours += sumHours(task?.sub_tasks)
+          if (task?.sub_tasks && task?.sub_tasks?.length > 0) {
+            totalHours += sumHours(task?.sub_tasks)
+          }
         }
       })
     })
@@ -1370,10 +1378,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       let total = 0
 
       tasks?.forEach((task: any) => {
-        total += task?.estimateHours
+        if (task?.isChecked) {
+          total += task?.estimateHours
 
-        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-          total += sumHours(task?.sub_tasks)
+          if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+            total += sumHours(task?.sub_tasks)
+          }
         }
       })
 
@@ -1383,10 +1393,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     let totalHours = 0
 
     deliverables.tasks.forEach((task: any) => {
-      totalHours += task?.estimateHours
+      if (task?.isChecked) {
+        totalHours += task?.estimateHours
 
-      if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-        totalHours += sumHours(task?.sub_tasks)
+        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+          totalHours += sumHours(task?.sub_tasks)
+        }
       }
     })
 
@@ -1398,10 +1410,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       let total = 0
 
       tasks?.forEach((task: any) => {
-        total += task?.estimateHours * task?.associate?.hourlyRate
+        if (task?.isChecked) {
+          total += task?.estimateHours * task?.associate?.hourlyRate
 
-        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-          total += sumHours(task?.sub_tasks)
+          if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+            total += sumHours(task?.sub_tasks)
+          }
         }
       })
 
@@ -1411,10 +1425,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     let totalHours = 0
 
     deliverables.tasks.forEach((task: any) => {
-      totalHours += task?.estimateHours * task?.associate?.hourlyRate
+      if (task?.isChecked) {
+        totalHours += task?.estimateHours * task?.associate?.hourlyRate
 
-      if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-        totalHours += sumHours(task?.sub_tasks)
+        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+          totalHours += sumHours(task?.sub_tasks)
+        }
       }
     })
 
@@ -1426,10 +1442,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       let total = 0
 
       tasks?.forEach((task: any) => {
-        total += task?.estimateHours
+        if (task?.isChecked) {
+          total += task?.estimateHours
 
-        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-          total += sumHours(task?.sub_tasks)
+          if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+            total += sumHours(task?.sub_tasks)
+          }
         }
       })
 
@@ -1441,10 +1459,48 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     scope_of_works?.forEach((sow: any) => {
       sow?.deliverables?.forEach((deliverable: any) => {
         deliverable?.tasks?.forEach((task: any) => {
-          totalHours += task?.estimateHours
+          if (task?.isChecked) {
+            totalHours += task?.estimateHours
+
+            if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+              totalHours += sumHours(task?.sub_tasks)
+            }
+          }
+        })
+      })
+    })
+
+    return totalHours.toFixed(2)
+  }
+
+  function calculateTotalInternalCostForAllSOWs(scope_of_works: any) {
+    function sumHours(tasks: any) {
+      let total = 0
+
+      tasks?.forEach((task: any) => {
+        if (task?.isChecked) {
+          total += task?.estimateHours * task?.associate?.hourlyRate
 
           if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-            totalHours += sumHours(task?.sub_tasks)
+            total += sumHours(task?.sub_tasks)
+          }
+        }
+      })
+
+      return total
+    }
+
+    let totalHours = 0
+
+    scope_of_works?.forEach((sow: any) => {
+      sow?.deliverables?.forEach((deliverable: any) => {
+        deliverable?.tasks?.forEach((task: any) => {
+          if (task?.isChecked) {
+            totalHours += task?.estimateHours * task?.associate?.hourlyRate
+
+            if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+              totalHours += sumHours(task?.sub_tasks)
+            }
           }
         })
       })
@@ -1822,7 +1878,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Box sx={sectionTitleSx}>SOWs, Deliverables, Tasks, and Subtasks</Box>
-                      <Box sx={{ ...taskListContainer, mb: 0 }}>
+                      <Box sx={{ ...taskListContainer }}>
                         <Box>
                           <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
                             <Table sx={{ width: '100%' }} aria-label='sticky table' stickyHeader>
@@ -1884,11 +1940,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                         <TableCell align='left'>{scope_of_work?.title}</TableCell>
                                         <TableCell></TableCell>
                                         <TableCell align='center' className={'estimated-hours-sec item-type-sow'}>
-                                          {calculateTotalHoursForScopOfWorks(scope_of_work)}h
+                                          {calculateTotalHoursForScopeOfWorks(scope_of_work)}h
                                         </TableCell>
                                         <TableCell></TableCell>
                                         <TableCell align='center' className={'item-type-sow'}>
-                                          ${calculateTotalInternalCostForScopOfWorks(scope_of_work)}
+                                          ${calculateTotalInternalCostForScopeOfWorks(scope_of_work)}
                                         </TableCell>
                                         <TableCell align='center' className={'item-type-sow'}>
                                           $0.00
@@ -2004,7 +2060,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                           </Select>
                                                         )}
                                                       </TableCell>
-                                                      <TableCell align='center' className={'item-type-task'}>
+                                                      <TableCell
+                                                        align='center'
+                                                        className={task?.['sub_tasks']?.length ? 'item-type-task' : ''}
+                                                      >
                                                         {!!task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
                                                           <TextField
                                                             className={'sow-list-item-text-input'}
@@ -2024,23 +2083,50 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                           />
                                                         ) : (
                                                           task?.sub_tasks
-                                                            ?.reduce(
-                                                              (acc: number, subTask: any) =>
-                                                                acc + subTask?.estimateHours,
-                                                              0
-                                                            )
+                                                            ?.reduce((acc: number, subTask: any) => {
+                                                              if (subTask?.isChecked) {
+                                                                return acc + subTask?.estimateHours
+                                                              } else {
+                                                                return acc + 0
+                                                              }
+                                                            }, 0)
                                                             .toFixed(2)
                                                         )}
                                                       </TableCell>
                                                       <TableCell></TableCell>
-                                                      <TableCell align='center' className={'item-type-task'}>
-                                                        ${task?.associate?.hourlyRate * task?.estimateHours}
+                                                      <TableCell
+                                                        align='center'
+                                                        className={task?.['sub_tasks']?.length ? 'item-type-task' : ''}
+                                                      >
+                                                        {!!task?.['isChecked'] &&
+                                                          task?.['sub_tasks']?.length &&
+                                                          `$${task?.sub_tasks
+                                                            ?.reduce((acc: number, subTask: any) => {
+                                                              if (subTask?.isChecked) {
+                                                                return (
+                                                                  acc +
+                                                                  Number(
+                                                                    subTask?.estimateHours *
+                                                                      subTask?.associate?.hourlyRate
+                                                                  )
+                                                                )
+                                                              } else {
+                                                                return acc + 0
+                                                              }
+                                                            }, 0)
+                                                            .toFixed(2)}`}
                                                       </TableCell>
-                                                      <TableCell align='center' className={'item-type-task'}>
-                                                        $0.00
+                                                      <TableCell
+                                                        align='center'
+                                                        className={task?.['sub_tasks']?.length ? 'item-type-task' : ''}
+                                                      >
+                                                        {!!task?.['isChecked'] && `$0.00`}
                                                       </TableCell>
-                                                      <TableCell align='center' className={'item-type-task'}>
-                                                        $0.00
+                                                      <TableCell
+                                                        align='center'
+                                                        className={task?.['sub_tasks']?.length ? 'item-type-task' : ''}
+                                                      >
+                                                        {!!task?.['isChecked'] && `$0.00`}
                                                       </TableCell>
                                                     </TableRow>
                                                     {task?.sub_tasks?.map((subTask: any, subTaskIndex: number) => {
@@ -2070,7 +2156,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                           </TableCell>
                                                           <TableCell align='left'>{subTask?.['title']}</TableCell>
                                                           <TableCell>
-                                                            {subTask?.['isChecked'] && (
+                                                            {!!subTask?.['isChecked'] && (
                                                               <Select
                                                                 className={'team-select'}
                                                                 labelId='associateId-label'
@@ -2093,8 +2179,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                               </Select>
                                                             )}
                                                           </TableCell>
-                                                          <TableCell className={'item-type-subtask'}>
-                                                            {subTask?.['isChecked'] &&
+                                                          <TableCell>
+                                                            {!!subTask?.['isChecked'] &&
                                                               !subTask?.['sub_tasks']?.length && (
                                                                 <TextField
                                                                   className={'sow-list-item-text-input'}
@@ -2115,14 +2201,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                               )}
                                                           </TableCell>
                                                           <TableCell></TableCell>
-                                                          <TableCell align='center' className={'item-type-subtask'}>
-                                                            ${task?.associate?.hourlyRate * subTask?.estimateHours}
+                                                          <TableCell align='center'>
+                                                            {!!task?.['isChecked'] &&
+                                                              `$${
+                                                                task?.associate?.hourlyRate * subTask?.estimateHours
+                                                              }`}
                                                           </TableCell>
-                                                          <TableCell align='center' className={'item-type-subtask'}>
-                                                            $0.00
+                                                          <TableCell align='center'>
+                                                            {!!task?.['isChecked'] && `$0.00`}
                                                           </TableCell>
-                                                          <TableCell align='center' className={'item-type-subtask'}>
-                                                            $0.00
+                                                          <TableCell align='center'>
+                                                            {!!task?.['isChecked'] && `$0.00`}
                                                           </TableCell>
                                                         </TableRow>
                                                       )
@@ -2138,11 +2227,37 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   )
                                 })}
                               </TableBody>
+                              <TableFooter>
+                                <TableRow sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+                                  <TableCell sx={{ p: 0 }}></TableCell>
+                                  <TableCell align='right'></TableCell>
+                                  <TableCell align='center'></TableCell>
+                                  <TableCell align='right'>Total</TableCell>
+                                  <TableCell align='center'>
+                                    {calculateTotalHoursForAllSOWs(
+                                      transformSubTaskTaskDeliverablesSowsData(
+                                        tasksList?.filter((task: any) => task?.additionalServiceId)
+                                      )
+                                    )}
+                                  </TableCell>
+                                  <TableCell align='center'></TableCell>
+                                  <TableCell align='center'>
+                                    $
+                                    {calculateTotalInternalCostForAllSOWs(
+                                      transformSubTaskTaskDeliverablesSowsData(
+                                        tasksList?.filter((task: any) => task?.additionalServiceId)
+                                      )
+                                    )}
+                                  </TableCell>
+                                  <TableCell align='center'></TableCell>
+                                  <TableCell align='center'></TableCell>
+                                </TableRow>
+                              </TableFooter>
                             </Table>
                           </TableContainer>
                         </Box>
                       </Box>
-                      <Box sx={{ px: 3, mb: 5 }}>
+                      {/* <Box sx={{ px: 3, mb: 5 }}>
                         <Table sx={{ '& td': { p: 2 } }}>
                           <TableFooter>
                             <TableRow>
@@ -2164,7 +2279,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             </TableRow>
                           </TableFooter>
                         </Table>
-                      </Box>
+                      </Box> */}
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                       <Box sx={sectionTitleSx}>Added Services</Box>
@@ -2244,15 +2359,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                 </TableCell>
                                                 <TableCell align='left'>{scope_of_work?.title}</TableCell>
                                                 <TableCell></TableCell>
-                                                <TableCell align='center'>
-                                                  {calculateTotalHoursForScopOfWorks(scope_of_work)}h
+                                                <TableCell
+                                                  align='center'
+                                                  className={'estimated-hours-sec item-type-sow'}
+                                                >
+                                                  {calculateTotalHoursForScopeOfWorks(scope_of_work)}h
                                                 </TableCell>
                                                 <TableCell></TableCell>
-                                                <TableCell align='center'>
-                                                  ${calculateTotalInternalCostForScopOfWorks(scope_of_work)}
+                                                <TableCell align='center' className={'item-type-sow'}>
+                                                  ${calculateTotalInternalCostForScopeOfWorks(scope_of_work)}
                                                 </TableCell>
-                                                <TableCell align='center'></TableCell>
-                                                <TableCell align='center'></TableCell>
+                                                <TableCell align='center' className={'item-type-sow'}>
+                                                  $0.00
+                                                </TableCell>
+                                                <TableCell align='center' className={'item-type-sow'}>
+                                                  $0.00
+                                                </TableCell>
                                               </TableRow>
                                               {scope_of_work?.deliverables?.map(
                                                 (deliverable: any, deliverableIndex: number) => {
@@ -2287,15 +2409,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                         </TableCell>
                                                         <TableCell align='left'>{deliverable?.['title']}</TableCell>
                                                         <TableCell></TableCell>
-                                                        <TableCell>
+                                                        <TableCell
+                                                          align='center'
+                                                          className={'estimated-hours-sec item-type-deliverable'}
+                                                        >
                                                           {calculateTotalHoursForDeliverable(deliverable)}h
                                                         </TableCell>
                                                         <TableCell></TableCell>
-                                                        <TableCell>
+                                                        <TableCell align='center' className={'item-type-deliverable'}>
                                                           ${calculateTotalInternalCostForDeliverable(deliverable)}
                                                         </TableCell>
-                                                        <TableCell></TableCell>
-                                                        <TableCell></TableCell>
+                                                        <TableCell align='center' className={'item-type-deliverable'}>
+                                                          $0.00
+                                                        </TableCell>
+                                                        <TableCell align='center' className={'item-type-deliverable'}>
+                                                          $0.00
+                                                        </TableCell>
                                                       </TableRow>
 
                                                       {deliverable?.tasks?.map((task: any, taskIndex: number) => {
@@ -2335,6 +2464,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                 {!!task?.['isChecked'] &&
                                                                   !task?.['sub_tasks']?.length && (
                                                                     <Select
+                                                                      className={'team-select'}
                                                                       labelId='associateId-label'
                                                                       id='associateId'
                                                                       onChange={event => {
@@ -2355,7 +2485,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                     </Select>
                                                                   )}
                                                               </TableCell>
-                                                              <TableCell>
+                                                              <TableCell
+                                                                align='center'
+                                                                className={
+                                                                  task?.['sub_tasks']?.length ? 'item-type-task' : ''
+                                                                }
+                                                              >
                                                                 {!!task?.['isChecked'] &&
                                                                 !task?.['sub_tasks']?.length ? (
                                                                   <TextField
@@ -2376,18 +2511,57 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                   />
                                                                 ) : (
                                                                   task?.sub_tasks
-                                                                    ?.reduce(
-                                                                      (acc: number, subTask: any) =>
-                                                                        acc + subTask?.estimateHours,
-                                                                      0
-                                                                    )
+                                                                    ?.reduce((acc: number, subTask: any) => {
+                                                                      if (subTask?.isChecked) {
+                                                                        return acc + subTask?.estimateHours
+                                                                      } else {
+                                                                        return acc + 0
+                                                                      }
+                                                                    }, 0)
                                                                     .toFixed(2)
                                                                 )}
                                                               </TableCell>
                                                               <TableCell></TableCell>
-                                                              <TableCell>${task?.associate?.hourlyRate}</TableCell>
-                                                              <TableCell>$0.00</TableCell>
-                                                              <TableCell>$0.00</TableCell>
+                                                              <TableCell
+                                                                align='center'
+                                                                className={
+                                                                  task?.['sub_tasks']?.length ? 'item-type-task' : ''
+                                                                }
+                                                              >
+                                                                {!!task?.['isChecked'] &&
+                                                                  task?.['sub_tasks']?.length &&
+                                                                  `$${task?.sub_tasks
+                                                                    ?.reduce((acc: number, subTask: any) => {
+                                                                      if (subTask?.isChecked) {
+                                                                        return (
+                                                                          acc +
+                                                                          Number(
+                                                                            subTask?.estimateHours *
+                                                                              subTask?.associate?.hourlyRate
+                                                                          )
+                                                                        )
+                                                                      } else {
+                                                                        return acc + 0
+                                                                      }
+                                                                    }, 0)
+                                                                    .toFixed(2)}`}
+                                                              </TableCell>
+                                                              <TableCell
+                                                                align='center'
+                                                                className={
+                                                                  task?.['sub_tasks']?.length ? 'item-type-task' : ''
+                                                                }
+                                                              >
+                                                                {!!task?.['isChecked'] && `$0.00`}
+                                                              </TableCell>
+                                                              <TableCell
+                                                                align='center'
+                                                                className={
+                                                                  task?.['sub_tasks']?.length ? 'item-type-task' : ''
+                                                                }
+                                                              >
+                                                                {!!task?.['isChecked'] && `$0.00`}
+                                                              </TableCell>
                                                             </TableRow>
                                                             {task?.sub_tasks?.map(
                                                               (subTask: any, subTaskIndex: number) => {
@@ -2421,8 +2595,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                       {subTask?.['title']}
                                                                     </TableCell>
                                                                     <TableCell>
-                                                                      {subTask?.['isChecked'] && (
+                                                                      {!!subTask?.['isChecked'] && (
                                                                         <Select
+                                                                          className={'team-select'}
                                                                           labelId='associateId-label'
                                                                           id='associateId'
                                                                           onChange={event => {
@@ -2444,7 +2619,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                       )}
                                                                     </TableCell>
                                                                     <TableCell>
-                                                                      {subTask?.['isChecked'] &&
+                                                                      {!!subTask?.['isChecked'] &&
                                                                         !subTask?.['sub_tasks']?.length && (
                                                                           <TextField
                                                                             className={'sow-list-item-text-input'}
@@ -2465,11 +2640,19 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                         )}
                                                                     </TableCell>
                                                                     <TableCell></TableCell>
-                                                                    <TableCell>
-                                                                      ${task?.associate?.hourlyRate}
+                                                                    <TableCell align='center'>
+                                                                      {!!task?.['isChecked'] &&
+                                                                        `$${
+                                                                          task?.associate?.hourlyRate *
+                                                                          subTask?.estimateHours
+                                                                        }`}
                                                                     </TableCell>
-                                                                    <TableCell>$0.00</TableCell>
-                                                                    <TableCell>$0.00</TableCell>
+                                                                    <TableCell align='center'>
+                                                                      {!!task?.['isChecked'] && `$0.00`}
+                                                                    </TableCell>
+                                                                    <TableCell align='center'>
+                                                                      {!!task?.['isChecked'] && `$0.00`}
+                                                                    </TableCell>
                                                                   </TableRow>
                                                                 )
                                                               }
@@ -2485,21 +2668,30 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                           )
                                         })}
                                       </TableBody>
-                                    </Table>
-                                    <Table>
                                       <TableFooter>
-                                        <TableRow>
-                                          <TableCell></TableCell>
+                                        <TableRow sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+                                          <TableCell sx={{ p: 0 }}></TableCell>
                                           <TableCell align='right'></TableCell>
                                           <TableCell align='center'></TableCell>
                                           <TableCell align='right'>Total</TableCell>
-                                          <TableCell>
-                                            {calculateTotalHoursForAllSOWs(additionalService?.scope_of_works)}
+                                          <TableCell align='center'>
+                                            {calculateTotalHoursForAllSOWs(
+                                              transformSubTaskTaskDeliverablesSowsData(
+                                                tasksList?.filter((task: any) => !task?.additionalServiceId)
+                                              )
+                                            )}
                                           </TableCell>
                                           <TableCell align='center'></TableCell>
-                                          <TableCell align='center'>$0</TableCell>
-                                          <TableCell align='center'>$0.00</TableCell>
-                                          <TableCell align='center'>$0.00</TableCell>
+                                          <TableCell align='center'>
+                                            $
+                                            {calculateTotalInternalCostForAllSOWs(
+                                              transformSubTaskTaskDeliverablesSowsData(
+                                                tasksList?.filter((task: any) => !task?.additionalServiceId)
+                                              )
+                                            )}
+                                          </TableCell>
+                                          <TableCell align='center'></TableCell>
+                                          <TableCell align='center'></TableCell>
                                         </TableRow>
                                       </TableFooter>
                                     </Table>
