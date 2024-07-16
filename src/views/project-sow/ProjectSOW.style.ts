@@ -132,20 +132,20 @@ export const taskListContainer = {
     border: '3px solid #9333ea'
   },
   '& .item-type-sow': {
-    background: '#215a6c',
-    color: '#fff'
+    background: '#215a6c !important',
+    color: '#fff !important'
   },
   '& .item-type-deliverable': {
-    background: '#c6dbe1',
-    color: '#215a6c'
+    background: '#c6dbe1 !important',
+    color: '#215a6c !important'
   },
   '& .item-type-task': {
-    background: '#ffc8a9',
-    color: '#215a6c'
+    background: '#ffc8a9 !important',
+    color: '#215a6c !important'
   },
   '& .item-type-subtask': {
-    background: '#ffe5a0',
-    color: '#215a6c'
+    background: '#ffe5a0 !important',
+    color: '#215a6c !important'
   }
 }
 
