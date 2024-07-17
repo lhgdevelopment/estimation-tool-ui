@@ -111,6 +111,19 @@ export const taskListContainer = {
       pl: '1px'
     }
   },
+  '& tfoot': {
+    left: 0,
+    bottom: 0,
+    zIndex: 2,
+    position: 'sticky',
+    backgroundColor: '#fff',
+    boxShadow: '-10px 7px 5px 5px #333',
+    '& td': {
+      color: '#000',
+      fontSize: '16px',
+      fontWeight: 600
+    }
+  },
   '& .team-select': {
     width: '150px'
   },
