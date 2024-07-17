@@ -747,60 +747,57 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           serviceIds: [...selectedAdditionalServiceData]
         })
         .then(res => {
-          if (res && type == 'NEXT') {
-            apiRequest
-              .get(`/deliverables?problemGoalId=${problemGoalID}`)
-              .then(res2 => {
-                if (res2?.data?.deliverables.length) {
-                  setDeliverableData(res2?.data?.deliverables)
-                  setSelectedDeliverableData(res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
-                  if (res2?.data?.deliverableNotes?.length) {
-                    setDeliverableNotesData(res2?.data?.deliverableNotes)
-                  } else {
-                    setDeliverableNotesData([deliverableNoteDefaultData])
-                  }
-                  setTimeout(() => {
-                    if (type == 'NEXT') {
-                      setActiveStep(newActiveStep)
-                      if (enabledStep < newActiveStep) {
-                        setEnabledStep(newActiveStep)
-                      }
-                    }
-                    setPreload(false)
-                    enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-                  }, 1000)
+          console.log(res)
+          apiRequest
+            .get(`/deliverables?problemGoalId=${problemGoalID}`)
+            .then(res2 => {
+              if (res2?.data?.deliverables.length) {
+                setDeliverableData(res2?.data?.deliverables)
+                setSelectedDeliverableData(res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
+                if (res2?.data?.deliverableNotes?.length) {
+                  setDeliverableNotesData(res2?.data?.deliverableNotes)
                 } else {
-                  apiRequest
-                    .post(`/deliverables`, { problemGoalId: problemGoalID })
-                    .then(res3 => {
-                      setDeliverableData(res3?.data?.deliverable)
-                      setSelectedDeliverableData(res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
-                      setTimeout(() => {
-                        if (type == 'NEXT') {
-                          setActiveStep(newActiveStep)
-                          if (enabledStep < newActiveStep) {
-                            setEnabledStep(newActiveStep)
-                          }
-                        }
-                        setPreload(false)
-                        enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-                      }, 1000)
-                    })
-                    .catch(error => {
-                      setPreload(false)
-                      setErrorMessage(error?.response?.data?.errors)
-                      enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
-                    })
+                  setDeliverableNotesData([deliverableNoteDefaultData])
                 }
-              })
-              .catch(error => {
-                setPreload(false)
-                setErrorMessage(error?.response?.data?.errors)
-                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
-              })
-          } else {
-            setPreload(false)
-          }
+                setTimeout(() => {
+                  if (type == 'NEXT') {
+                    setActiveStep(newActiveStep)
+                    if (enabledStep < newActiveStep) {
+                      setEnabledStep(newActiveStep)
+                    }
+                  }
+                  setPreload(false)
+                  enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                }, 1000)
+              } else {
+                apiRequest
+                  .post(`/deliverables`, { problemGoalId: problemGoalID })
+                  .then(res3 => {
+                    setDeliverableData(res3?.data?.deliverable)
+                    setSelectedDeliverableData(res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
+                    setTimeout(() => {
+                      if (type == 'NEXT') {
+                        setActiveStep(newActiveStep)
+                        if (enabledStep < newActiveStep) {
+                          setEnabledStep(newActiveStep)
+                        }
+                      }
+                      setPreload(false)
+                      enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                    }, 1000)
+                  })
+                  .catch(error => {
+                    setPreload(false)
+                    setErrorMessage(error?.response?.data?.errors)
+                    enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                  })
+              }
+            })
+            .catch(error => {
+              setPreload(false)
+              setErrorMessage(error?.response?.data?.errors)
+              enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+            })
         })
         .catch(error => {
           setPreload(false)
@@ -1912,7 +1909,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                       <TableCell align='center'>Timeline</TableCell>
                                       <TableCell align='center'>Internal</TableCell>
                                       <TableCell align='center'>Retails</TableCell>
-                                      <TableCell align='center'>Josh</TableCell>
                                     </TableRow>
                                   </TableHead>
                                   <TableBody>
@@ -1955,9 +1951,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                             <TableCell></TableCell>
                                             <TableCell align='center' className={'item-type-sow'}>
                                               ${calculateTotalInternalCostForScopeOfWorks(scope_of_work)}
-                                            </TableCell>
-                                            <TableCell align='center' className={'item-type-sow'}>
-                                              $0.00
                                             </TableCell>
                                             <TableCell align='center' className={'item-type-sow'}>
                                               $0.00
@@ -2009,9 +2002,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                     <TableCell></TableCell>
                                                     <TableCell align='center' className={'item-type-deliverable'}>
                                                       ${calculateTotalInternalCostForDeliverable(deliverable)}
-                                                    </TableCell>
-                                                    <TableCell align='center' className={'item-type-deliverable'}>
-                                                      $0.00
                                                     </TableCell>
                                                     <TableCell align='center' className={'item-type-deliverable'}>
                                                       $0.00
@@ -2148,14 +2138,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                           >
                                                             {!!task?.['isChecked'] && `$0.00`}
                                                           </TableCell>
-                                                          <TableCell
-                                                            align='center'
-                                                            className={
-                                                              task?.['sub_tasks']?.length ? 'item-type-task' : ''
-                                                            }
-                                                          >
-                                                            {!!task?.['isChecked'] && `$0.00`}
-                                                          </TableCell>
                                                         </TableRow>
                                                         {task?.sub_tasks?.map((subTask: any, subTaskIndex: number) => {
                                                           return (
@@ -2195,12 +2177,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                     id='associateId'
                                                                     onChange={event => {
                                                                       handleUpdateTaskAssignOnChange(
-                                                                        task?.['id'],
+                                                                        subTask?.['id'],
                                                                         Number(event?.target?.value)
                                                                       )
                                                                     }}
-                                                                    name={`associateId_${task?.['id']}`}
-                                                                    value={task?.associateId}
+                                                                    name={`associateId_${subTask?.['id']}`}
+                                                                    value={subTask?.associateId}
                                                                     sx={{ width: '200px' }}
                                                                   >
                                                                     {teamUserList?.map((item: any) => (
@@ -2242,9 +2224,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                               <TableCell align='center'>
                                                                 {!!task?.['isChecked'] && `$0.00`}
                                                               </TableCell>
-                                                              <TableCell align='center'>
-                                                                {!!task?.['isChecked'] && `$0.00`}
-                                                              </TableCell>
                                                             </TableRow>
                                                           )
                                                         })}
@@ -2279,7 +2258,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                           )
                                         )}
                                       </TableCell>
-                                      <TableCell align='center'>$0.00</TableCell>
                                       <TableCell align='center'>$0.00</TableCell>
                                     </TableRow>
                                   </TableFooter>
@@ -2345,7 +2323,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                               <TableCell align='center'>Timeline</TableCell>
                                               <TableCell align='center'>Internal</TableCell>
                                               <TableCell align='center'>Retails</TableCell>
-                                              <TableCell align='center'>Josh</TableCell>
                                             </TableRow>
                                           </TableHead>
                                           <TableBody>
@@ -2398,9 +2375,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                       <TableCell></TableCell>
                                                       <TableCell align='center' className={'item-type-sow'}>
                                                         ${calculateTotalInternalCostForScopeOfWorks(scope_of_work)}
-                                                      </TableCell>
-                                                      <TableCell align='center' className={'item-type-sow'}>
-                                                        $0.00
                                                       </TableCell>
                                                       <TableCell align='center' className={'item-type-sow'}>
                                                         $0.00
@@ -2458,12 +2432,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                 className={'item-type-deliverable'}
                                                               >
                                                                 ${calculateTotalInternalCostForDeliverable(deliverable)}
-                                                              </TableCell>
-                                                              <TableCell
-                                                                align='center'
-                                                                className={'item-type-deliverable'}
-                                                              >
-                                                                $0.00
                                                               </TableCell>
                                                               <TableCell
                                                                 align='center'
@@ -2615,16 +2583,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                     >
                                                                       {!!task?.['isChecked'] && `$0.00`}
                                                                     </TableCell>
-                                                                    <TableCell
-                                                                      align='center'
-                                                                      className={
-                                                                        task?.['sub_tasks']?.length
-                                                                          ? 'item-type-task'
-                                                                          : ''
-                                                                      }
-                                                                    >
-                                                                      {!!task?.['isChecked'] && `$0.00`}
-                                                                    </TableCell>
                                                                   </TableRow>
                                                                   {task?.sub_tasks?.map(
                                                                     (subTask: any, subTaskIndex: number) => {
@@ -2671,12 +2629,12 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                                 id='associateId'
                                                                                 onChange={event => {
                                                                                   handleUpdateTaskAssignOnChange(
-                                                                                    task?.['id'],
+                                                                                    subTask?.['id'],
                                                                                     Number(event?.target?.value)
                                                                                   )
                                                                                 }}
-                                                                                name={`associateId_${task?.['id']}`}
-                                                                                value={task?.associateId}
+                                                                                name={`associateId_${subTask?.['id']}`}
+                                                                                value={subTask?.associateId}
                                                                                 sx={{ width: '200px' }}
                                                                               >
                                                                                 {teamUserList?.map((item: any) => (
@@ -2722,9 +2680,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                                           <TableCell align='center'>
                                                                             {!!task?.['isChecked'] && `$0.00`}
                                                                           </TableCell>
-                                                                          <TableCell align='center'>
-                                                                            {!!task?.['isChecked'] && `$0.00`}
-                                                                          </TableCell>
                                                                         </TableRow>
                                                                       )
                                                                     }
@@ -2764,7 +2719,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                                 )}
                                               </TableCell>
                                               <TableCell align='center'>$0.00</TableCell>
-                                              <TableCell align='center'>$0.00</TableCell>
                                             </TableRow>
                                           </TableFooter>
                                         </Table>
@@ -2797,7 +2751,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   <TableCell align='center'>Timeline</TableCell>
                                   <TableCell align='center'>Internal</TableCell>
                                   <TableCell align='center'>Retails</TableCell>
-                                  <TableCell align='center'>Josh</TableCell>
                                 </TableRow>
                               </TableHead>
 
@@ -2815,7 +2768,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                       transformSubTaskTaskDeliverablesSowsData(tasksList)
                                     )}
                                   </TableCell>
-                                  <TableCell align='center'>$0.00</TableCell>
                                   <TableCell align='center'>$0.00</TableCell>
                                 </TableRow>
                               </TableFooter>
