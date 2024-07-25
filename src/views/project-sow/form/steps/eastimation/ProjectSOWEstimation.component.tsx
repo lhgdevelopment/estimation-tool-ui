@@ -1,6 +1,7 @@
 import 'md-editor-rt/lib/style.css'
-import { enqueueSnackbar } from 'notistack'
+import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
+import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWEstimationFormComponentProps } from './ProjectSOWEstimation.decorator'
 import ProjectSOWEstimationFormView from './ProjectSOWEstimation.view'
@@ -20,6 +21,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     projectSOWFormData
   } = props
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [preload, setPreload] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<any>({})
   const [employeeRoleData, setEmployeeRole] = useState<any>([])
@@ -383,25 +385,28 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
   }, [])
 
   return (
-    <ProjectSOWEstimationFormView
-      associatedUserWithRole={associatedUserWithRole}
-      handleUpdateTeamAssignOnChange={handleUpdateTeamAssignOnChange}
-      handleUpdateTaskAssignOnChange={handleUpdateTaskAssignOnChange}
-      handleUpdateTaskCheckUnCheckForDeliverablesOnChange={handleUpdateTaskCheckUnCheckForDeliverablesOnChange}
-      handleUpdateTaskCheckUnCheckForSOWOnChange={handleUpdateTaskCheckUnCheckForSOWOnChange}
-      handleUpdateTaskCheckUnCheckForTaskOnChange={handleUpdateTaskCheckUnCheckForTaskOnChange}
-      handleUpdateTaskCheckUnCheckForParentTaskOnChange={handleUpdateTaskCheckUnCheckForParentTaskOnChange}
-      handleUpdateTaskEstimateHoursOnChange={handleUpdateTaskEstimateHoursOnChange}
-      handleUpdateTaskCheckUnCheckForServiceOnChange={handleUpdateTaskCheckUnCheckForServiceOnChange}
-      employeeRoleData={employeeRoleData}
-      errorMessage={errorMessage}
-      handleDeliverableCheckbox={handleDeliverableCheckbox}
-      handleDeliverableCheckboxBySow={handleDeliverableCheckboxBySow}
-      overviewText={overviewText}
-      problemGoalText={problemGoalText}
-      projectSOWFormData={projectSOWFormData}
-      tasksList={tasksList}
-      teamUserList={teamUserList}
-    ></ProjectSOWEstimationFormView>
+    <>
+      {!!preload && <Preloader close={!preload} />}
+      <ProjectSOWEstimationFormView
+        associatedUserWithRole={associatedUserWithRole}
+        handleUpdateTeamAssignOnChange={handleUpdateTeamAssignOnChange}
+        handleUpdateTaskAssignOnChange={handleUpdateTaskAssignOnChange}
+        handleUpdateTaskCheckUnCheckForDeliverablesOnChange={handleUpdateTaskCheckUnCheckForDeliverablesOnChange}
+        handleUpdateTaskCheckUnCheckForSOWOnChange={handleUpdateTaskCheckUnCheckForSOWOnChange}
+        handleUpdateTaskCheckUnCheckForTaskOnChange={handleUpdateTaskCheckUnCheckForTaskOnChange}
+        handleUpdateTaskCheckUnCheckForParentTaskOnChange={handleUpdateTaskCheckUnCheckForParentTaskOnChange}
+        handleUpdateTaskEstimateHoursOnChange={handleUpdateTaskEstimateHoursOnChange}
+        handleUpdateTaskCheckUnCheckForServiceOnChange={handleUpdateTaskCheckUnCheckForServiceOnChange}
+        employeeRoleData={employeeRoleData}
+        errorMessage={errorMessage}
+        handleDeliverableCheckbox={handleDeliverableCheckbox}
+        handleDeliverableCheckboxBySow={handleDeliverableCheckboxBySow}
+        overviewText={overviewText}
+        problemGoalText={problemGoalText}
+        projectSOWFormData={projectSOWFormData}
+        tasksList={tasksList}
+        teamUserList={teamUserList}
+      ></ProjectSOWEstimationFormView>
+    </>
   )
 }

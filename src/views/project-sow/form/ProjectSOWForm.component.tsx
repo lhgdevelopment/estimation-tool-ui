@@ -292,14 +292,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           ?.map((scopeOfWork: any) => scopeOfWork?.id)
                       )
 
-                      setSelectedAdditionalServiceScopeOfWorkData(
-                        res3?.data
-                          ?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
-                          ?.map((scopeOfWork: any) => scopeOfWork?.id)
-                      )
-                      setAdditionalServiceScopeOfWorkData(
-                        res3?.data?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
-                      )
+                      // setSelectedAdditionalServiceScopeOfWorkData(
+                      //   res3?.data
+                      //     ?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
+                      //     ?.map((scopeOfWork: any) => scopeOfWork?.id)
+                      // )
+                      // setAdditionalServiceScopeOfWorkData(
+                      //   res3?.data?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
+                      // )
                       setTimeout(() => {
                         if (type == 'NEXT') {
                           setActiveStep(newActiveStep)
