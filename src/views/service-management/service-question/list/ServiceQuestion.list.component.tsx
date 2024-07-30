@@ -1,5 +1,5 @@
 import { Box, Button, TextField } from '@mui/material'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import NoDataComponent from 'src/@core/components/no-data-component'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
@@ -88,9 +88,9 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
     })
   }
 
-  // useEffect(() => {
-  //   getList()
-  // }, [editDataId, filterData])
+  useEffect(() => {
+    getList()
+  }, [filterData])
 
   return (
     <Fragment>

@@ -30,7 +30,7 @@ type SelectPropsWithISelectProps = SelectProps & ISelectProps
 
 export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => {
   const {
-    placeholder, 
+    placeholder,
     url,
     isEnumField = false,
     dataList = [],
