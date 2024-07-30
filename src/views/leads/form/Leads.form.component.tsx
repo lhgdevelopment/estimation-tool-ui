@@ -2,7 +2,7 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
@@ -144,143 +144,119 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>First Name</span>
-                <input
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['firstName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  // placeholder='Enter First name'
-                  name='firstName'
-                  value={formData.firstName}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['firstName'] &&
-                  errorMessage?.['firstName']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'First Name'}
+                name='firstName'
+                value={formData.firstName}
+                onChange={handleTextChange}
+                error={errorMessage?.['firstName']}
+                fullWidth
+              />
+
+              {!!errorMessage?.['firstName'] &&
+                errorMessage?.['firstName']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Last Name</span>
-                <input
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['lastName'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  // placeholder='Enter Last name'
-                  name='lastName'
-                  value={formData.lastName}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['lastName'] &&
-                  errorMessage?.['lastName']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Last Name'}
+                name='lastName'
+                value={formData.lastName}
+                onChange={handleTextChange}
+                error={errorMessage?.['lastName']}
+                fullWidth
+              />
+              {!!errorMessage?.['lastName'] &&
+                errorMessage?.['lastName']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
           </Box>
 
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Company</span>
-                <input
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['company'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  // placeholder='Enter company name'
-                  name='company'
-                  value={formData.company}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['company'] &&
-                  errorMessage?.['company']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Company'}
+                name='company'
+                value={formData.company}
+                onChange={handleTextChange}
+                error={errorMessage?.['company']}
+                fullWidth
+              />
+              {!!errorMessage?.['company'] &&
+                errorMessage?.['company']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Phone</span>
-                <input
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['phone'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  // placeholder='Enter Phone'
-                  name='phone'
-                  value={formData.phone}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['phone'] &&
-                  errorMessage?.['phone']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Phone'}
+                name='phone'
+                value={formData.phone}
+                onChange={handleTextChange}
+                error={errorMessage?.['phone']}
+                fullWidth
+              />
+              {!!errorMessage?.['phone'] &&
+                errorMessage?.['phone']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
           </Box>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Email</span>
-                <input
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['email'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  // placeholder='Enter Email'
-                  name='email'
-                  value={formData.email}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['email'] &&
-                  errorMessage?.['email']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Email'}
+                name='email'
+                value={formData.email}
+                onChange={handleTextChange}
+                error={errorMessage?.['email']}
+                fullWidth
+              />
+              {!!errorMessage?.['email'] &&
+                errorMessage?.['email']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
-
-                <Dropdown
-                  url='project-type'
-                  name='projectTypeId'
-                  value={formData.projectTypeId}
-                  onChange={handleSelectChange}
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectTypeId'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  placeholder=''
-                />
-                {!!errorMessage?.['projectTypeId'] &&
-                  errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <Dropdown
+                label={'Project Type'}
+                url='project-type'
+                name='projectTypeId'
+                value={formData.projectTypeId}
+                onChange={handleSelectChange}
+                placeholder=''
+                error={!!errorMessage?.['projectTypeId']}
+              />
+              {!!errorMessage?.['projectTypeId'] &&
+                errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
           </Box>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>

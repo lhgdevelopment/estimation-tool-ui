@@ -89,7 +89,7 @@ export default function HourlyRatesListComponent(props: THourlyRatesComponent) {
 
   useEffect(() => {
     getList()
-  }, [editDataId, filterData])
+  }, [filterData])
 
   return (
     <Fragment>

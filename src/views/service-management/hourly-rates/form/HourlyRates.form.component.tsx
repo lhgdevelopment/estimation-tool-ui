@@ -2,7 +2,7 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -99,45 +99,40 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Role Name</span>
-                <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  // placeholder='Enter role name'
-                  name='name'
-                  value={formData.name}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['name'] &&
-                  errorMessage?.['name']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Role Name'}
+                name='name'
+                value={formData.name}
+                onChange={handleTextChange}
+                error={errorMessage?.['name']}
+                fullWidth
+              />
+              {!!errorMessage?.['name'] &&
+                errorMessage?.['name']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
             <Box sx={{ width: '100%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hourly Rate</span>
-                <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  // placeholder='Enter hourly rate'
-                  name='average_hourly'
-                  value={formData.average_hourly}
-                  onChange={handleTextChange}
-                  type='number'
-                />
-                {!!errorMessage?.['average_hourly'] &&
-                  errorMessage?.['average_hourly']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Hourly Rate'}
+                name='average_hourly'
+                value={formData.average_hourly}
+                onChange={handleTextChange}
+                error={errorMessage?.['average_hourly']}
+                fullWidth
+              />
+              {!!errorMessage?.['average_hourly'] &&
+                errorMessage?.['average_hourly']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
           </Box>
 
