@@ -16,7 +16,8 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
   const defaultData = {
     name: '',
     type: null,
-    prompt: ''
+    prompt: '',
+    serial: ''
   }
 
   const [promptsPromptsFormData, setPromptsFormData] = useState(defaultData)
@@ -79,7 +80,8 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     setPromptsFormData({
       name: editData?.['name'],
       type: editData?.['type'],
-      prompt: editData?.['prompt']
+      prompt: editData?.['prompt'],
+      serial: editData?.['serial']
     })
   }, [editDataId, editData])
 
@@ -118,6 +120,10 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               <label className='block text-sm'>
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Type</span>
                 <Dropdown
+                  optionConfig={{
+                    title: 'title',
+                    id: 'id'
+                  }}
                   isEnumField
                   dataList={promptsTypeList}
                   name='type'
@@ -126,6 +132,27 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                 />
                 {!!errorMessage?.['type'] &&
                   errorMessage?.['type']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
+              </label>
+            </Box>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Serial</span>
+                <input
+                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  placeholder='Enter serial'
+                  name='serial'
+                  value={promptsPromptsFormData.serial}
+                  onChange={handleTextChange}
+                  type="number"
+                />
+                {!!errorMessage?.['serial'] &&
+                  errorMessage?.['serial']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}

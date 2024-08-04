@@ -83,6 +83,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                   <TableCell className='px-4 py-3' sx={{ width: '100%' }}>
                     Prompt
                   </TableCell>
+                  <TableCell className='px-4 py-3'>serial</TableCell>
                   <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
                     Actions
                   </TableCell>
@@ -129,7 +130,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                           )}
                         </Box>
                       </TableCell>
-
+                      <TableCell className='px-4 py-3 text-sm'>{data?.serial}</TableCell>
                       <TableCell className='px-4 py-3'>
                         <Box className='flex items-center justify-end space-x-1 text-sm'>
                           <button
@@ -160,6 +161,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                           </button>
                         </Box>
                       </TableCell>
+
                     </TableRow>
                   )
                 })}
