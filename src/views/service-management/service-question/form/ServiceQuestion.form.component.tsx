@@ -15,7 +15,7 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
 
   const defaultData = {
     title: '',
-    serviceId: ''
+    serviceIds: []
   }
 
   const [formData, setFormData] = useState(defaultData)
@@ -82,7 +82,7 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
   useEffect(() => {
     setFormData({
       title: editData?.['title'],
-      serviceId: editData?.['serviceId']
+      serviceIds: editData?.['serviceIds']
     })
   }, [editDataId, editData])
 
@@ -99,45 +99,42 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Title</span>
-                <TextField
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  // placeholder='Enter role name'
-                  name='title'
-                  value={formData.title}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['title'] &&
-                  errorMessage?.['title']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Title'}
+                name='title'
+                value={formData.title}
+                onChange={handleTextChange}
+                error={errorMessage?.['title']}
+                fullWidth
+              />
+              {!!errorMessage?.['title'] &&
+                errorMessage?.['title']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service</span>
-                <Dropdown
-                  url={'services'}
-                  name='serviceId'
-                  value={formData.serviceId}
-                  onChange={e => {
-                    handleSelectChange(e)
-                  }}
-                />
-                {!!errorMessage?.['serviceId'] &&
-                  errorMessage?.['serviceId']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <Dropdown
+                label={'Service'}
+                url='services'
+                name='serviceIds'
+                value={formData.serviceIds}
+                onChange={handleSelectChange}
+                placeholder=''
+                error={!!errorMessage?.['serviceIds']}
+                multiple
+              />
+              {!!errorMessage?.['serviceIds'] &&
+                errorMessage?.['serviceIds']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
           </Box>
 

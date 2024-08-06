@@ -1,6 +1,18 @@
 import VisibilityIcon from '@mui/icons-material/Visibility'
-import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import {
+  Box,
+  Button,
+  Pagination,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material'
 import Link from 'next/link'
+import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import { TableSx } from 'src/@core/theme/tableStyle'
@@ -12,13 +24,11 @@ import { TLeadsComponent } from '../Leads.decorator'
 export default function LeadsListComponent(props: TLeadsComponent) {
   const { listData, setListData } = props
 
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
-  const [preloader, setPreloader] = useState<boolean>(false)
-  const [expendedRow, setExpended] = useState('')
-  const handleRowExpendable = (id: any) => {
-    setExpended(prevState => id)
-  }
+  const [preload, setPreload] = useState<boolean>(false)
 
   const defaultData = {
     firstName: '',
@@ -46,6 +56,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
   }
 
   const getList = (page = 1) => {
+    setPreload(true)
     apiRequest
       .get(
         `/leads?page=${page}&firstName=${filterData?.firstName}&lastName=${filterData?.lastName}&company=${filterData?.company}&phone=${filterData?.phone}&email=${filterData?.email}`
@@ -55,7 +66,11 @@ export default function LeadsListComponent(props: TLeadsComponent) {
         setListData(res?.data)
         setCurrentPage(paginationData?.['current_page'])
         setTotalPages(Math.ceil(paginationData?.['total'] / 10))
-        setPreloader(false)
+        setPreload(false)
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        setPreload(false)
       })
   }
 
@@ -102,7 +117,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
     boxShadow: 24,
     p: 4
   }
-  if (preloader) {
+  if (preload) {
     return <UiSkeleton />
   }
 
@@ -286,67 +301,16 @@ export default function LeadsListComponent(props: TLeadsComponent) {
             </Box>
           )}
         </Box>
-        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
-          <span className='flex items-center col-span-3'>
-            Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
-            {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}
-          </span>
-          <span className='col-span-2'></span>
-          {/* <!-- Pagination --> */}
-          <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
-            <nav aria-label='Table navigation'>
-              <ul className='inline-flex items-center'>
-                <li>
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    className={`px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple ${
-                      currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    aria-label='Previous'
-                    disabled={currentPage === 1}
-                  >
-                    <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
-                      <path
-                        d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
-                        clipRule='evenodd'
-                        fillRule='evenodd'
-                      ></path>
-                    </svg>
-                  </button>
-                </li>
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <li key={index}>
-                    <button
-                      onClick={() => handlePageChange(index + 1)}
-                      className={`px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple ${
-                        currentPage === index + 1 ? 'bg-purple-600 text-white' : ''
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
-                <li>
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    className={`px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple ${
-                      currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    aria-label='Next'
-                    disabled={currentPage === totalPages}
-                  >
-                    <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
-                      <path
-                        d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
-                        clipRule='evenodd'
-                        fillRule='evenodd'
-                      ></path>
-                    </svg>
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </span>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 4 }}>
+          <Pagination
+            count={totalPages}
+            color='primary'
+            shape='rounded'
+            onChange={(e, value) => {
+              getList(value)
+            }}
+            defaultPage={currentPage}
+          />
         </Box>
       </Box>
     </Fragment>

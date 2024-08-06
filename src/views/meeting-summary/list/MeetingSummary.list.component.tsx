@@ -38,11 +38,11 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
     setExpended(prevState => id)
   }
 
-  const defaultData = {
+  const defaultFilterData = {
     meetingName: ''
   }
 
-  const [filterData, setFilterData] = useState(defaultData)
+  const [filterData, setFilterData] = useState(defaultFilterData)
 
   const handleFilterChange = () => {
     getList()
@@ -68,17 +68,12 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
         setListData(res?.data)
         setCurrentPage(paginationData?.['current_page'])
         setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+        setPreload(false)
       })
       .catch(error => {
         enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
-      })
-      .finally(() => {
         setPreload(false)
       })
-  }
-
-  const handlePageChange = (newPage: number) => {
-    getList(newPage)
   }
 
   const onStatusChange = (data: any) => {
@@ -351,6 +346,7 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
           </TableContainer>
           {!listData?.length && <NoDataComponent />}
         </Box>
+
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 4 }}>
           <Pagination
             count={totalPages}

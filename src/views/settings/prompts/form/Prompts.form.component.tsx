@@ -2,7 +2,7 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
@@ -20,19 +20,19 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     serial: ''
   }
 
-  const [promptsPromptsFormData, setPromptsFormData] = useState(defaultData)
+  const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
-    setPromptsFormData({
-      ...promptsPromptsFormData,
+    setFormData({
+      ...formData,
       [e.target.name]: e.target.value
     })
   }
 
   const handleSelectChange = (e: any) => {
-    setPromptsFormData({
-      ...promptsPromptsFormData,
+    setFormData({
+      ...formData,
       [e?.target?.name]: e?.target?.value
     })
   }
@@ -41,7 +41,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     e.preventDefault()
     if (editDataId) {
       apiRequest
-        .put(`/prompts/${editDataId}`, promptsPromptsFormData)
+        .put(`/prompts/${editDataId}`, formData)
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
@@ -62,7 +62,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
         })
     } else {
       apiRequest
-        .post('/prompts', promptsPromptsFormData)
+        .post('/prompts', formData)
         .then(res => {
           setListData((prevState: []) => [...prevState, res?.data])
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -77,7 +77,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
   }
 
   useEffect(() => {
-    setPromptsFormData({
+    setFormData({
       name: editData?.['name'],
       type: editData?.['type'],
       prompt: editData?.['prompt'],
@@ -86,7 +86,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
   }, [editDataId, editData])
 
   const onClear = () => {
-    setPromptsFormData(prevState => defaultData)
+    setFormData(prevState => defaultData)
     setEditDataId(null)
     setEditData({})
   }
@@ -97,24 +97,22 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter prompt name'
-                  name='name'
-                  value={promptsPromptsFormData.name}
-                  onChange={handleTextChange}
-                />
-                {!!errorMessage?.['name'] &&
-                  errorMessage?.['name']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Role Name'}
+                name='name'
+                value={formData.name}
+                onChange={handleTextChange}
+                error={errorMessage?.['name']}
+                fullWidth
+              />
+              {!!errorMessage?.['name'] &&
+                errorMessage?.['name']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
             <Box sx={{ width: '50%' }}>
               <label className='block text-sm'>
@@ -127,7 +125,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                   isEnumField
                   dataList={promptsTypeList}
                   name='type'
-                  value={promptsPromptsFormData.type}
+                  value={formData.type}
                   onChange={handleSelectChange}
                 />
                 {!!errorMessage?.['type'] &&
@@ -147,9 +145,9 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Enter serial'
                   name='serial'
-                  value={promptsPromptsFormData.serial}
+                  value={formData.serial}
                   onChange={handleTextChange}
-                  type="number"
+                  type='number'
                 />
                 {!!errorMessage?.['serial'] &&
                   errorMessage?.['serial']?.map((message: any, index: number) => {
@@ -171,7 +169,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                   placeholder='Examples: Prompt content'
                   name='prompt'
                   rows={10}
-                  value={promptsPromptsFormData.prompt}
+                  value={formData.prompt}
                   onChange={handleTextChange}
                 />
                 {!!errorMessage?.['prompt'] &&
