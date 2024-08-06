@@ -16,21 +16,22 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
   const defaultData = {
     name: '',
     type: null,
-    prompt: ''
+    prompt: '',
+    serial: ''
   }
 
-  const [formData, setPromptsFormData] = useState(defaultData)
+  const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
-    setPromptsFormData({
+    setFormData({
       ...formData,
       [e.target.name]: e.target.value
     })
   }
 
   const handleSelectChange = (e: any) => {
-    setPromptsFormData({
+    setFormData({
       ...formData,
       [e?.target?.name]: e?.target?.value
     })
@@ -76,15 +77,16 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
   }
 
   useEffect(() => {
-    setPromptsFormData({
+    setFormData({
       name: editData?.['name'],
       type: editData?.['type'],
-      prompt: editData?.['prompt']
+      prompt: editData?.['prompt'],
+      serial: editData?.['serial']
     })
   }, [editDataId, editData])
 
   const onClear = () => {
-    setPromptsFormData(prevState => defaultData)
+    setFormData(prevState => defaultData)
     setEditDataId(null)
     setEditData({})
   }
@@ -113,23 +115,49 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                 })}
             </Box>
             <Box sx={{ width: '50%' }}>
-              <Dropdown
-                label={'Type'}
-                dataList={promptsTypeList}
-                name='type'
-                value={formData.type}
-                onChange={handleSelectChange}
-                placeholder=''
-                error={!!errorMessage?.['type']?.length}
-              />
-              {!!errorMessage?.['type'] &&
-                errorMessage?.['type']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+              <label className='block text-sm'>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Type</span>
+                <Dropdown
+                  optionConfig={{
+                    title: 'title',
+                    id: 'id'
+                  }}
+                  isEnumField
+                  dataList={promptsTypeList}
+                  name='type'
+                  value={formData.type}
+                  onChange={handleSelectChange}
+                />
+                {!!errorMessage?.['type'] &&
+                  errorMessage?.['type']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
+              </label>
+            </Box>
+            <Box sx={{ width: '50%' }}>
+              <label className='block text-sm'>
+                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Serial</span>
+                <input
+                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                  placeholder='Enter serial'
+                  name='serial'
+                  value={formData.serial}
+                  onChange={handleTextChange}
+                  type='number'
+                />
+                {!!errorMessage?.['serial'] &&
+                  errorMessage?.['serial']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
+              </label>
             </Box>
           </Box>
           <Box sx={{ display: 'flex', gap: 5 }}>
