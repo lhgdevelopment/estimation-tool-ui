@@ -24,7 +24,7 @@ import {
 
 export default function ProjectSOWDeliverableFormView(props: TProjectSOWDeliverableFormViewProps) {
   const {
-    deliverableData,
+    deliverableDataList,
     handleDeliverableCheckboxBySow,
     isSowCheckedInDeliverable,
     selectedDeliverableData,
@@ -70,7 +70,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
       <Box sx={scopeOfWorkListContainer}>
         <Box sx={scopeOfWorkListSx}>
           {serviceDeliverableGroupByScopeOfWorkId(
-            deliverableData?.filter((deliverable: any) => !deliverable?.additionalServiceId)
+            deliverableDataList?.filter((deliverable: any) => !deliverable?.additionalServiceId)
           )?.map((scopeOfWork: any, index: number) => {
             return (
               <Box key={index + 'deliverable'}>
@@ -219,7 +219,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
         <Box>
           {scopeOfWorkGroupByAdditionalServiceId(
             serviceDeliverableGroupByScopeOfWorkId(
-              deliverableData?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
+              deliverableDataList?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
             )
           )?.map((additionalService: any, additionalServiceIndex: number) => {
             return (

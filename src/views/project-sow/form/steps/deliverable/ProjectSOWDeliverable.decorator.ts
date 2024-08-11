@@ -14,7 +14,7 @@ export type TProjectSOWDeliverableFormComponentProps = {
 }
 
 export type TProjectSOWDeliverableFormViewProps = {
-  deliverableData: any
+  deliverableDataList: any
   selectedDeliverableData: any
   deliverableServiceQuestionData: any
   deliverableNotesData: any

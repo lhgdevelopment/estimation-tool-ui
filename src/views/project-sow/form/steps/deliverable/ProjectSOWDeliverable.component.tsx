@@ -283,13 +283,13 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
       apiRequest
         .post(`/scope-of-work/${scopeOfWorkEditId}`, { ...scopeOfWorkFormData })
         .then(res => {
-          // setScopeOfWorkData((prevState: any[]) => [
-          //   ...prevState.map((sow: any) => {
-          //     if (sow?.id === scopeOfWorkEditId) return res.data
+          setDeliverableDataList((prevState: any[]) => [
+            ...prevState.map((deliverable: any) => {
+              if (deliverable?.scopeOfWorkId === scopeOfWorkEditId) return { ...deliverable, scope_of_work: res.data }
 
-          //     return sow
-          //   })
-          // ])
+              return deliverable
+            })
+          ])
 
           setPreload(false)
           enqueueSnackbar('Updatedf Successfully!', { variant: 'success' })
@@ -373,7 +373,7 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
 
   return (
     <ProjectSOWDeliverableFormView
-      deliverableData={deliverableDataList}
+      deliverableDataList={deliverableDataList}
       deliverableNotesData={deliverableNotesData}
       deliverableServiceQuestionData={deliverableServiceQuestionData}
       selectedDeliverableData={selectedDeliverableData}
