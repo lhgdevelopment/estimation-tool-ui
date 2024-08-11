@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from '@mui/material'
+import { Box, Button, Chip, TextField } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import NoDataComponent from 'src/@core/components/no-data-component'
@@ -170,7 +170,11 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
                         {data?.title}
                       </Box>
                       <Box component={'td'} className='px-4 py-3 text-sm'>
-                        {data?.service_info?.name}
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                          {data?.serviceRelations?.map((service: any, index: number) => {
+                            return <Chip key={index} label={service?.name} color='primary' sx={{ m: 1 }} />
+                          })}
+                        </Box>
                       </Box>
 
                       <Box component={'td'} className='px-4 py-3'>

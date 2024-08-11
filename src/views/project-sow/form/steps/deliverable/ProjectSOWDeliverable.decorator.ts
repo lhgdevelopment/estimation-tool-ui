@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import { ChangeEvent, Dispatch, SetStateAction } from 'react'
 
 export type TProjectSOWDeliverableFormComponentProps = {
   projectSOWFormData: any
@@ -9,6 +9,8 @@ export type TProjectSOWDeliverableFormComponentProps = {
   setSelectedDeliverableData: Dispatch<SetStateAction<any>>
   setDeliverableServiceQuestionData: Dispatch<SetStateAction<any>>
   setDeliverableNotesData: Dispatch<SetStateAction<any>>
+  serviceId: string
+  problemGoalID: string
 }
 
 export type TProjectSOWDeliverableFormViewProps = {
@@ -24,6 +26,32 @@ export type TProjectSOWDeliverableFormViewProps = {
   handleNotesInputChange: (index: number, event: any) => void
   handleDeliverableCheckboxByService: (additionalService: any) => void
   isServiceCheckedInDeliverable: (additionalService: any, selectedDeliverableData: any) => any
+  scopeOfWorkEditId: string
+  serviceSOWModalOpen: boolean
+  handleServiceSOWModalClose: () => void
+  scopeOfWorkFormData: any
+  handleScopeOfWorkSelectChange: (additionalService: any, selectedDeliverableData: any) => any
+  scopeOfWorkPhaseList: any[]
+  errorMessage: any
+  handleScopeOfWorkInputChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => any
+  handleAddNewSow: () => void
+  handleScopeOfWorkMultipleInputChange: (additionalService: any, selectedDeliverableData: any) => void
+  handleRemoveSow: (id: any) => void
+  handleSOWSaveOnClick: () => void
+  handleSOWOnClear: () => void
+  handleSOWOnEdit: (data: any) => void
+  serviceDeliverableModalOpen: boolean
+  handleDeliverableInputChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => any
+  handleAddNewDeliverable: () => void
+  handleDeliverableMultipleInputChange: (additionalService: any, selectedDeliverableData: any) => void
+  handleRemoveDeliverable: (id: any) => void
+  handleDeliverableSaveOnClick: () => void
+  handleDeliverableOnClear: () => void
+  handleDeliverableOnEdit: (data: any) => void
+  handleServiceDeliverableModalClose: () => void
+  deliverableEditId: string
+  deliverableFormData: any
+  handleDeliverableSelectChange: (additionalService: any, selectedDeliverableData: any) => any
 }
 
 export function serviceGroupByProjectTypeId(data: any) {

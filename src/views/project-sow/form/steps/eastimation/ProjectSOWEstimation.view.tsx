@@ -459,7 +459,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                 task?.sub_tasks
                                                   ?.reduce((acc: number, subTask: any) => {
                                                     if (subTask?.isChecked) {
-                                                      return acc + subTask?.estimateHours
+                                                      return acc + Number(subTask?.estimateHours)
                                                     } else {
                                                       return acc + 0
                                                     }
@@ -478,10 +478,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                 `$${task?.sub_tasks
                                                   ?.reduce((acc: number, subTask: any) => {
                                                     if (subTask?.isChecked) {
-                                                      return (
-                                                        acc +
-                                                        Number(subTask?.estimateHours * subTask?.associate?.hourlyRate)
-                                                      )
+                                                      return acc + Number(subTask?.estimateHours * subTask?.hourlyRate)
                                                     } else {
                                                       return acc + 0
                                                     }
@@ -568,7 +565,10 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                 <TableCell></TableCell>
                                                 <TableCell align='center'>
                                                   {!!task?.['isChecked'] &&
-                                                    `$${task?.associate?.hourlyRate * subTask?.estimateHours}`}
+                                                    `$${(
+                                                      Number(task?.associate?.hourlyRate ?? 0) *
+                                                      Number(subTask?.estimateHours)
+                                                    ).toFixed(2)}`}
                                                 </TableCell>
                                                 <TableCell align='center'>{!!task?.['isChecked'] && `$0.00`}</TableCell>
                                               </TableRow>
@@ -874,10 +874,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                               if (subTask?.isChecked) {
                                                                 return (
                                                                   acc +
-                                                                  Number(
-                                                                    subTask?.estimateHours *
-                                                                      subTask?.associate?.hourlyRate
-                                                                  )
+                                                                  Number(subTask?.estimateHours * subTask?.hourlyRate)
                                                                 )
                                                               } else {
                                                                 return acc + 0
@@ -976,9 +973,10 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                           <TableCell></TableCell>
                                                           <TableCell align='center'>
                                                             {!!task?.['isChecked'] &&
-                                                              `$${
-                                                                task?.associate?.hourlyRate * subTask?.estimateHours
-                                                              }`}
+                                                              `$${Number(
+                                                                Number(task?.associate?.hourlyRate) *
+                                                                  Number(subTask?.estimateHours)
+                                                              ).toFixed(2)}`}
                                                           </TableCell>
                                                           <TableCell align='center'>
                                                             {!!task?.['isChecked'] && `$0.00`}
@@ -1063,7 +1061,8 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                       </TableCell>
                       <TableCell align='center'></TableCell>
                       <TableCell align='center'>
-                        ${calculateTotalInternalCostForAllSOWs(transformSubTaskTaskDeliverablesSowsData(tasksList))}
+                        {console.log(tasksList)}$
+                        {calculateTotalInternalCostForAllSOWs(transformSubTaskTaskDeliverablesSowsData(tasksList))}
                       </TableCell>
                       <TableCell align='center'>$0.00</TableCell>
                     </TableRow>

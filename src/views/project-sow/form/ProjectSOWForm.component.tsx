@@ -48,7 +48,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const { listData, setListData, isEdit = false } = props
 
   const projectSOWDefaultData = {
-    serviceId: null,
+    serviceId: '',
     projectName: '',
     company: '',
     clientPhone: '',
@@ -347,6 +347,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             .get(`/deliverables?problemGoalId=${problemGoalID}`)
             .then(res2 => {
               if (res2?.data?.deliverables.length) {
+                console.log('1', res2?.data)
                 setDeliverableData(res2?.data?.deliverables)
                 setSelectedDeliverableData(res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
                 if (res2?.data?.deliverableNotes?.length) {
@@ -368,6 +369,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 apiRequest
                   .post(`/deliverables`, { problemGoalId: problemGoalID })
                   .then(res3 => {
+                    console.log('2', res3?.data)
                     setDeliverableData(res3?.data?.deliverable)
                     setSelectedDeliverableData(res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
                     setTimeout(() => {
@@ -937,6 +939,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   setDeliverableServiceQuestionData={setDeliverableServiceQuestionData}
                   selectedDeliverableData={selectedDeliverableData}
                   setSelectedDeliverableData={setSelectedDeliverableData}
+                  problemGoalID={problemGoalID}
+                  serviceId={projectSOWFormData.serviceId}
                 ></ProjectSOWDeliverableFormComponent>
               )}
               {activeStep == 6 && (
