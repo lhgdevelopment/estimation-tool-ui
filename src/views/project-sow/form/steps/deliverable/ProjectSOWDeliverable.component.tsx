@@ -2,7 +2,6 @@ import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
-import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWDeliverableFormComponentProps } from './ProjectSOWDeliverable.decorator'
 import ProjectSOWDeliverableFormView from './ProjectSOWDeliverable.view'
@@ -126,42 +125,42 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
 
   const handleDeliverableSelectChange = (e: SelectChangeEvent<any>) => {
     setDeliverableFormData({
-      ...scopeOfWorkFormData,
+      ...deliverableFormData,
       [e?.target?.name]: e?.target?.value
     })
   }
 
   const handleAddNewDeliverable = () => {
-    const scopeOfWorks = [...scopeOfWorkFormData.scopeOfWorks]
-    scopeOfWorks.push({
+    const deliverables = [...deliverableFormData.deliverables]
+    deliverables.push({
       title: '',
       order: ''
     })
-    setDeliverableFormData(() => ({ ...scopeOfWorkFormData, scopeOfWorks }))
+    setDeliverableFormData(() => ({ ...deliverableFormData, deliverables }))
   }
 
   const handleRemoveDeliverable = (index: number) => {
-    const scopeOfWorks = [...scopeOfWorkFormData.scopeOfWorks]
-    scopeOfWorks.splice(index, 1)
-    setDeliverableFormData(() => ({ ...scopeOfWorkFormData, scopeOfWorks }))
+    const deliverables = [...deliverableFormData.deliverables]
+    deliverables.splice(index, 1)
+    setDeliverableFormData(() => ({ ...deliverableFormData, deliverables }))
   }
 
   const handleDeliverableMultipleInputChange = (event: any, index: number) => {
     const { name, value } = event.target
-    const scopeOfWorks = [...scopeOfWorkFormData.scopeOfWorks]
-    scopeOfWorks[index][name] = value
-    setDeliverableFormData(() => ({ ...scopeOfWorkFormData, scopeOfWorks }))
+    const deliverables = [...deliverableFormData.deliverables]
+    deliverables[index][name] = value
+    setDeliverableFormData(() => ({ ...deliverableFormData, deliverables }))
   }
 
   const handleDeliverableInputChange = (event: any) => {
     const { name, value } = event.target
-    const scopeOfWorks = scopeOfWorkFormData
-    scopeOfWorks[name] = value
-    setDeliverableFormData(() => ({ ...scopeOfWorkFormData, ...scopeOfWorks }))
+    const deliverables = deliverableFormData
+    deliverables[name] = value
+    setDeliverableFormData(() => ({ ...deliverableFormData, ...deliverables }))
   }
 
   const handleDeliverableOnClear = () => {
-    setDeliverableFormData(scopeOfWorkDefaultData)
+    setDeliverableFormData(deliverableDefaultData)
     setDeliverableEditId(null)
   }
 
@@ -367,12 +366,9 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     setDeliverableDataList([...deliverableData])
   }, [projectSOWFormData?.serviceId, deliverableData])
 
-  if (preload) {
-    return <Preloader close={!preload} />
-  }
-
   return (
     <ProjectSOWDeliverableFormView
+      preload={preload}
       deliverableDataList={deliverableDataList}
       deliverableNotesData={deliverableNotesData}
       deliverableServiceQuestionData={deliverableServiceQuestionData}

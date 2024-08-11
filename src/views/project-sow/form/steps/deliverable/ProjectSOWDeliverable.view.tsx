@@ -5,6 +5,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Box, Button, Checkbox, Modal, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { Dropdown } from 'src/@core/components/dropdown'
+import Preloader from 'src/@core/components/preloader'
 import { getShortStringNumber } from 'src/@core/utils/utils'
 import {
   deliverableNoteItemSx,
@@ -24,6 +25,7 @@ import {
 
 export default function ProjectSOWDeliverableFormView(props: TProjectSOWDeliverableFormViewProps) {
   const {
+    preload,
     deliverableDataList,
     handleDeliverableCheckboxBySow,
     isSowCheckedInDeliverable,
@@ -66,6 +68,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      {preload && <Preloader close={!preload} />}
       <Box sx={sectionTitleSx}>Deliverable</Box>
       <Box sx={scopeOfWorkListContainer}>
         <Box sx={scopeOfWorkListSx}>

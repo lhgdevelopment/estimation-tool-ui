@@ -14,6 +14,7 @@ export type TProjectSOWDeliverableFormComponentProps = {
 }
 
 export type TProjectSOWDeliverableFormViewProps = {
+  preload: boolean
   deliverableDataList: any
   selectedDeliverableData: any
   deliverableServiceQuestionData: any

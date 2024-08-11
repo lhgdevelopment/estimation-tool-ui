@@ -1,11 +1,17 @@
+import AddIcon from '@material-ui/icons/Add'
+import ClearIcon from '@material-ui/icons/Clear'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Accordion,
   Box,
+  Button,
   Checkbox,
   FormControl,
   InputLabel,
   MenuItem,
+  Modal,
   Paper,
   Select,
   Table,
@@ -25,6 +31,8 @@ import { Dropdown } from 'src/@core/components/dropdown'
 import {
   formTitleSx,
   sectionSubTitleSx,
+  sowAddButtonSx,
+  sowRemoveButtonSx,
   taskListContainer,
   teamReviewBoxSx
 } from 'src/views/project-sow/ProjectSOW.style'
@@ -59,7 +67,18 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
     handleUpdateTaskCheckUnCheckForTaskOnChange,
     handleUpdateTaskCheckUnCheckForParentTaskOnChange,
     handleUpdateTaskAssignOnChange,
-    handleUpdateTaskCheckUnCheckForServiceOnChange
+    handleUpdateTaskCheckUnCheckForServiceOnChange,
+    serviceTaskModalOpen,
+    handleTaskInputChange,
+    handleAddNewTask,
+    handleTaskMultipleInputChange,
+    handleRemoveTask,
+    handleTaskSaveOnClick,
+    handleTaskOnClear,
+    handleTaskOnEdit,
+    handleServiceTaskModalClose,
+    taskEditId,
+    taskFormData
   } = props
 
   return (
@@ -408,7 +427,31 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                               </Box>
                                             </TableCell>
                                             <TableCell align='left'>
-                                              <Box dangerouslySetInnerHTML={{ __html: task?.title }}></Box>{' '}
+                                              <Box sx={{ display: 'flex' }}>
+                                                <Box
+                                                  dangerouslySetInnerHTML={{
+                                                    __html: task?.title
+                                                  }}
+                                                ></Box>
+                                                <Button
+                                                  sx={{
+                                                    ml: '5px',
+                                                    p: '2px',
+                                                    minWidth: 0,
+                                                    border: '2px solid #7e22ce',
+                                                    borderRadius: '5px'
+                                                  }}
+                                                  onClick={() => handleTaskOnEdit(task)}
+                                                >
+                                                  <EditIcon
+                                                    sx={{
+                                                      color: '#7e22ce',
+                                                      height: '14px !important',
+                                                      width: '14px !important'
+                                                    }}
+                                                  />
+                                                </Button>
+                                              </Box>
                                             </TableCell>
                                             <TableCell>
                                               {!!task?.['isChecked'] && !task?.['sub_tasks']?.length && (
@@ -516,7 +559,31 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                   </Box>
                                                 </TableCell>
                                                 <TableCell align='left'>
-                                                  <Box dangerouslySetInnerHTML={{ __html: subTask?.title }}></Box>{' '}
+                                                  <Box sx={{ display: 'flex' }}>
+                                                    <Box
+                                                      dangerouslySetInnerHTML={{
+                                                        __html: subTask?.title
+                                                      }}
+                                                    ></Box>
+                                                    <Button
+                                                      sx={{
+                                                        ml: '5px',
+                                                        p: '2px',
+                                                        minWidth: 0,
+                                                        border: '2px solid #7e22ce',
+                                                        borderRadius: '5px'
+                                                      }}
+                                                      onClick={() => handleTaskOnEdit(subTask)}
+                                                    >
+                                                      <EditIcon
+                                                        sx={{
+                                                          color: '#7e22ce',
+                                                          height: '14px !important',
+                                                          width: '14px !important'
+                                                        }}
+                                                      />
+                                                    </Button>
+                                                  </Box>
                                                 </TableCell>
                                                 <TableCell>
                                                   {!!subTask?.['isChecked'] && (
@@ -798,11 +865,31 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                         </Box>
                                                       </TableCell>
                                                       <TableCell align='left'>
-                                                        <Box
-                                                          dangerouslySetInnerHTML={{
-                                                            __html: task?.title
-                                                          }}
-                                                        ></Box>
+                                                        <Box sx={{ display: 'flex' }}>
+                                                          <Box
+                                                            dangerouslySetInnerHTML={{
+                                                              __html: task?.title
+                                                            }}
+                                                          ></Box>
+                                                          <Button
+                                                            sx={{
+                                                              ml: '5px',
+                                                              p: '2px',
+                                                              minWidth: 0,
+                                                              border: '2px solid #7e22ce',
+                                                              borderRadius: '5px'
+                                                            }}
+                                                            onClick={() => handleTaskOnEdit(task)}
+                                                          >
+                                                            <EditIcon
+                                                              sx={{
+                                                                color: '#7e22ce',
+                                                                height: '14px !important',
+                                                                width: '14px !important'
+                                                              }}
+                                                            />
+                                                          </Button>
+                                                        </Box>
                                                       </TableCell>
                                                       <TableCell>
                                                         {!!task?.['isChecked'] && !task?.['sub_tasks']?.length && (
@@ -919,11 +1006,31 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                             </Box>
                                                           </TableCell>
                                                           <TableCell align='left'>
-                                                            <Box
-                                                              dangerouslySetInnerHTML={{
-                                                                __html: subTask?.title
-                                                              }}
-                                                            ></Box>
+                                                            <Box sx={{ display: 'flex' }}>
+                                                              <Box
+                                                                dangerouslySetInnerHTML={{
+                                                                  __html: subTask?.title
+                                                                }}
+                                                              ></Box>
+                                                              <Button
+                                                                sx={{
+                                                                  ml: '5px',
+                                                                  p: '2px',
+                                                                  minWidth: 0,
+                                                                  border: '2px solid #7e22ce',
+                                                                  borderRadius: '5px'
+                                                                }}
+                                                                onClick={() => handleTaskOnEdit(subTask)}
+                                                              >
+                                                                <EditIcon
+                                                                  sx={{
+                                                                    color: '#7e22ce',
+                                                                    height: '14px !important',
+                                                                    width: '14px !important'
+                                                                  }}
+                                                                />
+                                                              </Button>
+                                                            </Box>
                                                           </TableCell>
                                                           <TableCell>
                                                             {!!subTask?.['isChecked'] && (
@@ -1061,8 +1168,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                       </TableCell>
                       <TableCell align='center'></TableCell>
                       <TableCell align='center'>
-                        {console.log(tasksList)}$
-                        {calculateTotalInternalCostForAllSOWs(transformSubTaskTaskDeliverablesSowsData(tasksList))}
+                        ${calculateTotalInternalCostForAllSOWs(transformSubTaskTaskDeliverablesSowsData(tasksList))}
                       </TableCell>
                       <TableCell align='center'>$0.00</TableCell>
                     </TableRow>
@@ -1073,6 +1179,232 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
           </Box>
         </Box>
       </Box>
+      <Modal
+        open={serviceTaskModalOpen}
+        onClose={handleServiceTaskModalClose}
+        aria-labelledby='service-task-modal-title'
+        aria-describedby='service-task-modal-description'
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Box
+          className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '50%',
+            overflowY: 'auto',
+            p: '50px',
+            maxHeight: '100%',
+            '& form': { width: '100%', display: 'flex', flexDirection: 'column' }
+          }}
+        >
+          <Box sx={{ mb: '20px' }}>
+            <h2 id='service-task-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
+              {taskEditId ? 'Update' : 'Add'} Task
+            </h2>
+          </Box>
+          <form>
+            <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 5, mb: 5 }}>
+              {!taskEditId && (
+                <Box
+                  sx={{
+                    width: '100%',
+                    '& .MuiInputBase-root': {
+                      border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
+                    }
+                  }}
+                >
+                  {/* <label className='block text-sm'>
+                    <Dropdown
+                      name='phaseId'
+                      value={taskFormData.phaseId}
+                      onChange={handleTaskSelectChange}
+                      dataList={sowPhaseList}
+                      label={'Phase'}
+                    />
+                    {!!errorMessage?.['phaseId'] &&
+                      errorMessage?.['phaseId']?.map((message: any, index: number) => {
+                        return (
+                          <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                            {message}
+                          </span>
+                        )
+                      })}
+                  </label> */}
+                </Box>
+              )}
+
+              {taskEditId ? (
+                <>
+                  <Box
+                    sx={{
+                      width: '100%'
+                    }}
+                  >
+                    <label className='block text-sm'>
+                      <TextField
+                        label={'Title'}
+                        name='title'
+                        value={taskFormData?.title}
+                        onChange={handleTaskInputChange}
+                        placeholder={`Title`}
+                        fullWidth
+                      />
+                      {!!errorMessage?.['title'] &&
+                        errorMessage?.['title']?.map((message: any, index: number) => {
+                          return (
+                            <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                              {message}
+                            </span>
+                          )
+                        })}
+                    </label>
+                  </Box>
+                </>
+              ) : (
+                <Box sx={{ width: '100%' }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      fontSize: '20px',
+                      fontWeight: 600,
+                      color: '#158ddf',
+                      marginBottom: '0.5rem'
+                    }}
+                  >
+                    Task
+                    <Box
+                      sx={sowAddButtonSx}
+                      onClick={() => {
+                        handleAddNewTask()
+                      }}
+                    >
+                      <AddIcon fontSize='small' />
+                    </Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      width: '100%'
+                    }}
+                  >
+                    {taskFormData?.tasks?.map((task: any, index: number) => {
+                      return (
+                        <Box
+                          key={index}
+                          sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '5px',
+                            width: '100%',
+                            marginBottom: '15px',
+                            border: '1px solid #ddd',
+                            padding: '10px',
+                            borderRadius: '5px'
+                          }}
+                        >
+                          <Box
+                            sx={{
+                              width: 'calc(100% - 140px)'
+                            }}
+                          >
+                            <TextField
+                              label={'Title'}
+                              name='title'
+                              value={task?.title}
+                              onChange={e => {
+                                handleTaskMultipleInputChange(e, index)
+                              }}
+                              placeholder={`Title`}
+                              fullWidth
+                            />
+                            {!!errorMessage?.['title'] &&
+                              errorMessage?.['title']?.map((message: any, index: number) => {
+                                return (
+                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                    {message}
+                                  </span>
+                                )
+                              })}
+                          </Box>
+                          <Box
+                            sx={{
+                              width: '100px'
+                            }}
+                          >
+                            <TextField
+                              label={'Order'}
+                              name='serial'
+                              value={task?.serial}
+                              onChange={e => {
+                                handleTaskMultipleInputChange(e, index)
+                              }}
+                              placeholder={`Order`}
+                              fullWidth
+                            />
+                            {!!errorMessage?.['serial'] &&
+                              errorMessage?.['serial']?.map((message: any, index: number) => {
+                                return (
+                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                    {message}
+                                  </span>
+                                )
+                              })}
+                          </Box>
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              width: '30px'
+                            }}
+                          >
+                            <Button
+                              onClick={e => {
+                                handleRemoveTask(index)
+                              }}
+                              sx={sowRemoveButtonSx}
+                            >
+                              <DeleteIcon fontSize='small' />
+                            </Button>
+                          </Box>
+                        </Box>
+                      )
+                    })}
+                  </Box>
+                </Box>
+              )}
+            </Box>
+
+            <Box className='my-4 text-right'>
+              <button
+                onClick={() => {
+                  handleServiceTaskModalClose()
+                }}
+                type='button'
+                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+              >
+                <ClearIcon /> Cancel
+              </button>
+              <button
+                type='button'
+                onClick={() => {
+                  handleTaskSaveOnClick()
+                }}
+                className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+              >
+                <AddIcon />
+                {taskEditId ? 'Update' : 'Save'}
+              </button>
+            </Box>
+          </form>
+        </Box>
+      </Modal>
     </Box>
   )
 }

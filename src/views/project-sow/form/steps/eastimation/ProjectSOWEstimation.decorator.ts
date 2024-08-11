@@ -1,4 +1,4 @@
-import { Dispatch } from 'react'
+import { ChangeEvent, Dispatch } from 'react'
 
 export type TProjectSOWEstimationFormComponentProps = {
   associatedUserWithRole: any[]
@@ -33,6 +33,18 @@ export type TProjectSOWEstimationFormViewProps = {
   handleUpdateTaskCheckUnCheckForParentTaskOnChange: (tasks: any, parentTaskId: number, isChecked: boolean) => void
   handleUpdateTaskAssignOnChange: (taskId: number, associateId: number) => void
   handleUpdateTaskCheckUnCheckForServiceOnChange: (scope_of_works: any, isChecked: boolean) => void
+  serviceTaskModalOpen: boolean
+  handleTaskInputChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => any
+  handleAddNewTask: () => void
+  handleTaskMultipleInputChange: (additionalService: any, selectedTaskData: any) => void
+  handleRemoveTask: (id: any) => void
+  handleTaskSaveOnClick: () => void
+  handleTaskOnClear: () => void
+  handleTaskOnEdit: (data: any) => void
+  handleServiceTaskModalClose: () => void
+  handleTaskSelectChange: (additionalService: any, selectedTaskData: any) => any
+  taskEditId: string
+  taskFormData: any
 }
 
 export function serviceGroupByProjectTypeId(data: any) {
@@ -226,8 +238,6 @@ export function calculateTotalHoursForDeliverable(deliverables: any) {
 }
 
 export function calculateTotalInternalCostForDeliverable(deliverables: any) {
-  console.log({ deliverables })
-
   function sumHours(tasks: any) {
     let total = 0
 

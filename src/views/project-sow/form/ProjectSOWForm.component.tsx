@@ -342,12 +342,10 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           serviceIds: [...selectedAdditionalServiceData]
         })
         .then(res => {
-          console.log(res)
           apiRequest
             .get(`/deliverables?problemGoalId=${problemGoalID}`)
             .then(res2 => {
               if (res2?.data?.deliverables.length) {
-                console.log('1', res2?.data)
                 setDeliverableData(res2?.data?.deliverables)
                 setSelectedDeliverableData(res2?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
                 if (res2?.data?.deliverableNotes?.length) {
@@ -369,7 +367,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 apiRequest
                   .post(`/deliverables`, { problemGoalId: problemGoalID })
                   .then(res3 => {
-                    console.log('2', res3?.data)
                     setDeliverableData(res3?.data?.deliverable)
                     setSelectedDeliverableData(res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
                     setTimeout(() => {
