@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
@@ -25,6 +26,80 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
   const [preload, setPreload] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<any>({})
   const [employeeRoleData, setEmployeeRole] = useState<any>([])
+  const [taskListState, setTaskListState] = useState<any>([])
+
+  const taskDefaultData = {
+    // taskId: '',
+    title: '',
+    tasks: [
+      {
+        title: '',
+        serial: ''
+      }
+    ]
+  }
+  const [taskFormData, setTaskFormData] = useState<any>(taskDefaultData)
+  const [taskEditId, setTaskEditId] = useState<any>(null)
+  const [serviceTaskModalOpen, setServiceTaskModalOpen] = useState<boolean>(false)
+
+  const handleServiceTaskModalOpen = () => {
+    setServiceTaskModalOpen(true)
+  }
+  const handleServiceTaskModalClose = () => {
+    setServiceTaskModalOpen(false)
+    handleTaskOnClear()
+  }
+
+  const handleTaskSelectChange = (e: SelectChangeEvent<any>) => {
+    setTaskFormData({
+      ...taskFormData,
+      [e?.target?.name]: e?.target?.value
+    })
+  }
+
+  const handleAddNewTask = () => {
+    const tasks = [...taskFormData.tasks]
+    tasks.push({
+      title: '',
+      order: ''
+    })
+    setTaskFormData(() => ({ ...taskFormData, tasks }))
+  }
+
+  const handleRemoveTask = (index: number) => {
+    const tasks = [...taskFormData.tasks]
+    tasks.splice(index, 1)
+    setTaskFormData(() => ({ ...taskFormData, tasks }))
+  }
+
+  const handleTaskMultipleInputChange = (event: any, index: number) => {
+    const { name, value } = event.target
+    const tasks = [...taskFormData.tasks]
+    tasks[index][name] = value
+    setTaskFormData(() => ({ ...taskFormData, tasks }))
+  }
+
+  const handleTaskInputChange = (event: any) => {
+    const { name, value } = event.target
+    const tasks = taskFormData
+    tasks[name] = value
+    setTaskFormData(() => ({ ...taskFormData, ...tasks }))
+  }
+
+  const handleTaskOnClear = () => {
+    setTaskFormData(taskDefaultData)
+    setTaskEditId(null)
+  }
+
+  const handleTaskOnEdit = (data: any) => {
+    const { id, title, serial } = data
+    setTaskEditId(id)
+    setTaskFormData({
+      title
+    })
+    handleServiceTaskModalOpen()
+  }
+
   const getAssociatedUserWithRole = (roleId: number, userId: number) => {
     setAssociatedUserWithRole((prevState: any) => {
       if (prevState.some((item: any) => item.employeeRoleId === roleId)) {
@@ -365,6 +440,51 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     })
   }
 
+  const handleTaskSaveOnClick = () => {
+    setPreload(true)
+    if (taskEditId) {
+      apiRequest
+        .post(`/estimation-tasks/${taskEditId}`, { ...taskFormData })
+        .then(res => {
+          setTaskListState((prevState: any[]) => [
+            ...prevState.map((task: any) => {
+              console.log({ task })
+              console.log({ prevState })
+
+              if (task?.id === taskEditId) return { ...task, title: res.data?.title }
+
+              return task
+            })
+          ])
+
+          setPreload(false)
+          enqueueSnackbar('Updatedf Successfully!', { variant: 'success' })
+          handleServiceTaskModalClose()
+        })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    } else {
+      apiRequest
+        .post('/estimation-tasks/add-multi', { ...taskFormData, problemGoalId: problemGoalID })
+        .then(res => {
+          // setScopeOfWorkData((prevState: any[]) => [...res?.data, ...prevState])
+          // setSelectedScopeOfWorkData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
+
+          setPreload(false)
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          handleServiceTaskModalClose()
+        })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    }
+  }
+
   const getEmployeeRoleList = async () => {
     await apiRequest
       .get(`/employee-roles`)
@@ -382,7 +502,8 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
 
   useEffect(() => {
     getEmployeeRoleList()
-  }, [])
+    setTaskListState(tasksList)
+  }, [tasksList])
 
   return (
     <>
@@ -404,8 +525,20 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
         overviewText={overviewText}
         problemGoalText={problemGoalText}
         projectSOWFormData={projectSOWFormData}
-        tasksList={tasksList}
+        tasksList={taskListState}
         teamUserList={teamUserList}
+        taskEditId={taskEditId}
+        taskFormData={taskFormData}
+        handleAddNewTask={handleAddNewTask}
+        handleRemoveTask={handleRemoveTask}
+        handleServiceTaskModalClose={handleServiceTaskModalClose}
+        handleTaskInputChange={handleTaskInputChange}
+        handleTaskMultipleInputChange={handleTaskMultipleInputChange}
+        handleTaskOnClear={handleTaskOnClear}
+        handleTaskOnEdit={handleTaskOnEdit}
+        handleTaskSaveOnClick={handleTaskSaveOnClick}
+        handleTaskSelectChange={handleTaskSelectChange}
+        serviceTaskModalOpen={serviceTaskModalOpen}
       ></ProjectSOWEstimationFormView>
     </>
   )

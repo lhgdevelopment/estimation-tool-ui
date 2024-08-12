@@ -5,6 +5,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import { Box, Button, Checkbox, Modal, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { Dropdown } from 'src/@core/components/dropdown'
+import Preloader from 'src/@core/components/preloader'
 import { getShortStringNumber } from 'src/@core/utils/utils'
 import {
   deliverableNoteItemSx,
@@ -24,6 +25,7 @@ import {
 
 export default function ProjectSOWDeliverableFormView(props: TProjectSOWDeliverableFormViewProps) {
   const {
+    preload,
     deliverableDataList,
     handleDeliverableCheckboxBySow,
     isSowCheckedInDeliverable,
@@ -61,12 +63,27 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
     handleServiceDeliverableModalClose,
     deliverableEditId,
     deliverableFormData,
-    handleDeliverableSelectChange
+    handleServiceDeliverableModalOpen,
+    problemGoalId,
+    scopeOfWorkData
   } = props
+
+  console.log({ scopeOfWorkData })
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      <Box sx={sectionTitleSx}>Deliverable</Box>
+      {preload && <Preloader close={!preload} />}
+      <Box sx={{ ...sectionTitleSx, display: 'flex' }}>
+        Deliverable
+        <Box
+          sx={sowAddButtonSx}
+          onClick={() => {
+            handleServiceDeliverableModalOpen()
+          }}
+        >
+          <AddIcon fontSize='small' />
+        </Box>
+      </Box>
       <Box sx={scopeOfWorkListContainer}>
         <Box sx={scopeOfWorkListSx}>
           {serviceDeliverableGroupByScopeOfWorkId(
@@ -423,7 +440,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                         >
                           <Box
                             sx={{
-                              width: 'calc(100% - 140px)'
+                              width: '50%'
                             }}
                           >
                             <TextField
@@ -436,8 +453,8 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                               placeholder={`Title`}
                               fullWidth
                             />
-                            {!!errorMessage?.['title'] &&
-                              errorMessage?.['title']?.map((message: any, index: number) => {
+                            {!!!!errorMessage?.['deliverables']?.[index]?.['title'] &&
+                              errorMessage?.['deliverables']?.[index]?.['title']?.map((message: any, index: number) => {
                                 return (
                                   <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
                                     {message}
@@ -447,27 +464,32 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                           </Box>
                           <Box
                             sx={{
-                              width: '100px'
+                              width: 'calc(50% - 40px)'
                             }}
                           >
-                            <TextField
-                              label={'Order'}
-                              name='serial'
-                              value={deliverable?.serial}
+                            <Dropdown
+                              label={'Scope Of Work'}
+                              dataList={scopeOfWorkData}
+                              name='scopeOfWorkId'
+                              value={deliverable.scopeOfWorkId}
                               onChange={e => {
                                 handleDeliverableMultipleInputChange(e, index)
                               }}
-                              placeholder={`Order`}
-                              fullWidth
+                              optionConfig={{ title: 'title', id: 'id' }}
                             />
-                            {!!errorMessage?.['serial'] &&
-                              errorMessage?.['serial']?.map((message: any, index: number) => {
-                                return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                                    {message}
-                                  </span>
-                                )
-                              })}
+                            {!!errorMessage?.['deliverables']?.[index]?.['scopeOfWorkId'] &&
+                              errorMessage?.['deliverables']?.[index]?.['scopeOfWorkId']?.map(
+                                (message: any, index: number) => {
+                                  return (
+                                    <span
+                                      key={index + Math.random()}
+                                      className='text-xs text-red-600 dark:text-red-400'
+                                    >
+                                      {message}
+                                    </span>
+                                  )
+                                }
+                              )}
                           </Box>
                           <Box
                             sx={{

@@ -241,30 +241,6 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                         })}
                     </label>
                   </Box>
-                  {/* <Box
-                    sx={{
-                      width: '100%'
-                    }}
-                  >
-                    <label className='block text-sm'>
-                      <TextField
-                        label={'Order'}
-                        name='serial'
-                        value={scopeOfWorkFormData?.serial}
-                        onChange={handleScopeOfWorkInputChange}
-                        placeholder={`Order`}
-                        fullWidth
-                      />
-                      {!!errorMessage?.['Order'] &&
-                        errorMessage?.['Order']?.map((message: any, index: number) => {
-                          return (
-                            <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                              {message}
-                            </span>
-                          )
-                        })}
-                    </label>
-                  </Box> */}
                 </>
               ) : (
                 <Box sx={{ width: '100%' }}>
