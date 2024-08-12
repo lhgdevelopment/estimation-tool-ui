@@ -17,7 +17,8 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     setDeliverableServiceQuestionData,
     setDeliverableNotesData,
     serviceId,
-    problemGoalID
+    problemGoalID,
+    scopeOfWorkData
   } = props
 
   const [preload, setPreload] = useState<boolean>(false)
@@ -106,7 +107,7 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     deliverables: [
       {
         title: '',
-        serial: ''
+        scopeOfWorkId: ''
       }
     ]
   }
@@ -123,18 +124,11 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     handleDeliverableOnClear()
   }
 
-  const handleDeliverableSelectChange = (e: SelectChangeEvent<any>) => {
-    setDeliverableFormData({
-      ...deliverableFormData,
-      [e?.target?.name]: e?.target?.value
-    })
-  }
-
   const handleAddNewDeliverable = () => {
     const deliverables = [...deliverableFormData.deliverables]
     deliverables.push({
       title: '',
-      order: ''
+      scopeOfWorkId: ''
     })
     setDeliverableFormData(() => ({ ...deliverableFormData, deliverables }))
   }
@@ -343,10 +337,9 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
         })
     } else {
       apiRequest
-        .post('/deliverables/add-multi', { ...deliverableFormData, problemGoalId: problemGoalID })
+        .post('/deliverables/add-multi', { ...deliverableFormData })
         .then(res => {
-          // setScopeOfWorkData((prevState: any[]) => [...res?.data, ...prevState])
-          // setSelectedScopeOfWorkData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
+          setDeliverableDataList((prevState: any[]) => [...res?.data, ...prevState])
 
           setPreload(false)
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -406,7 +399,9 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
       handleServiceDeliverableModalClose={handleServiceDeliverableModalClose}
       deliverableEditId={deliverableEditId}
       deliverableFormData={deliverableFormData}
-      handleDeliverableSelectChange={handleDeliverableSelectChange}
+      handleServiceDeliverableModalOpen={handleServiceDeliverableModalOpen}
+      problemGoalId={problemGoalID}
+      scopeOfWorkData={scopeOfWorkData}
     ></ProjectSOWDeliverableFormView>
   )
 }

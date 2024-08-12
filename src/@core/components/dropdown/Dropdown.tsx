@@ -15,6 +15,7 @@ export interface DropdownRef {
 interface ISelectProps {
   label?: string
   url?: string
+  queryParam?: string[]
   isEnumField?: boolean
   searchable?: boolean
   searchPlaceholder?: string
@@ -35,6 +36,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     isEnumField = false,
     dataList = [],
     optionConfig = { title: 'name', id: 'id' },
+    queryParam = [],
     multiple = false,
     searchable = true,
     searchPlaceholder = 'Type to search...',
@@ -60,7 +62,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     setPreloader(true)
     if (!dataList.length && url) {
       apiRequest
-        .get(`/${url}?per_page=1000`)
+        .get(`/${url}?${queryParam.join('&')}&per_page=1000`)
         .then(res => {
           const fetchedOptions =
             res?.data?.map((item: any) => ({
@@ -72,7 +74,9 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
           setPreloader(false)
         })
         .catch(() => {
-          getList()
+          // setTimeout(() => {
+          //   getList()
+          // }, 10000)
         })
     } else if (dataList.length) {
       const fetchedOptions =

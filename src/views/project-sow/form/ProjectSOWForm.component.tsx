@@ -938,6 +938,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   setSelectedDeliverableData={setSelectedDeliverableData}
                   problemGoalID={problemGoalID}
                   serviceId={projectSOWFormData.serviceId}
+                  scopeOfWorkData={scopeOfWorkData}
                 ></ProjectSOWDeliverableFormComponent>
               )}
               {activeStep == 6 && (

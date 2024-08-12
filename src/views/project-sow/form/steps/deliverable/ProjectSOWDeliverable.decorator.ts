@@ -11,6 +11,7 @@ export type TProjectSOWDeliverableFormComponentProps = {
   setDeliverableNotesData: Dispatch<SetStateAction<any>>
   serviceId: string
   problemGoalID: string
+  scopeOfWorkData: any
 }
 
 export type TProjectSOWDeliverableFormViewProps = {
@@ -50,9 +51,11 @@ export type TProjectSOWDeliverableFormViewProps = {
   handleDeliverableOnClear: () => void
   handleDeliverableOnEdit: (data: any) => void
   handleServiceDeliverableModalClose: () => void
+  handleServiceDeliverableModalOpen: () => void
   deliverableEditId: string
   deliverableFormData: any
-  handleDeliverableSelectChange: (additionalService: any, selectedDeliverableData: any) => any
+  problemGoalId: string
+  scopeOfWorkData: any
 }
 
 export function serviceGroupByProjectTypeId(data: any) {
