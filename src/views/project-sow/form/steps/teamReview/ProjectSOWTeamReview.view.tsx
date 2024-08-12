@@ -35,7 +35,7 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ ...formTitleSx, mt: 0 }}>Team Review - {projectSOWFormData?.projectName}</Box>
 
-        <Accordion sx={teamReviewBoxSx}>
+        <Accordion sx={teamReviewBoxSx} defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls='client-information-content'
@@ -160,7 +160,7 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
           </AccordionDetails>
         </Accordion>
 
-        <Accordion sx={teamReviewBoxSx}>
+        <Accordion sx={teamReviewBoxSx} defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls='problemAndGoal-content'
@@ -173,7 +173,7 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
           </AccordionDetails>
         </Accordion>
 
-        <Accordion sx={teamReviewBoxSx}>
+        <Accordion sx={teamReviewBoxSx} defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls='problemAndGoal-content'

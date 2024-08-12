@@ -334,7 +334,6 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     const taskIds = scope_of_works.flatMap((scope_of_work: any) =>
       scope_of_work?.deliverables?.flatMap((deliverable: any) => getTaskIdsFromTaskSubTask(deliverable?.tasks))
     )
-    // console.log({ taskIds })
 
     setTasksList((prevState: any) => [
       ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked } : task))
@@ -448,9 +447,6 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
         .then(res => {
           setTaskListState((prevState: any[]) => [
             ...prevState.map((task: any) => {
-              console.log({ task })
-              console.log({ prevState })
-
               if (task?.id === taskEditId) return { ...task, title: res.data?.title }
 
               return task
