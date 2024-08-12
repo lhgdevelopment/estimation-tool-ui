@@ -86,7 +86,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
       <Box sx={{ display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ ...formTitleSx, mt: 0 }}>Estimation - {projectSOWFormData?.projectName}</Box>
 
-        <Accordion sx={teamReviewBoxSx}>
+        <Accordion sx={teamReviewBoxSx} defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls='client-information-content'
@@ -211,7 +211,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
           </AccordionDetails>
         </Accordion>
 
-        <Accordion sx={teamReviewBoxSx}>
+        <Accordion sx={teamReviewBoxSx} defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls='problemAndGoal-content'
@@ -224,7 +224,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
           </AccordionDetails>
         </Accordion>
 
-        <Accordion sx={teamReviewBoxSx}>
+        <Accordion sx={teamReviewBoxSx} defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls='problemAndGoal-content'
@@ -236,7 +236,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
             <MdPreview modelValue={overviewText} />
           </AccordionDetails>
         </Accordion>
-        <Accordion sx={teamReviewBoxSx}>
+        <Accordion sx={teamReviewBoxSx} defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls='problemAndGoal-content'
@@ -283,7 +283,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
             </Box>
           </AccordionDetails>
         </Accordion>
-        <Accordion sx={teamReviewBoxSx}>
+        <Accordion sx={teamReviewBoxSx} defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls='problemAndGoal-content'
@@ -521,7 +521,11 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                 `$${task?.sub_tasks
                                                   ?.reduce((acc: number, subTask: any) => {
                                                     if (subTask?.isChecked) {
-                                                      return acc + Number(subTask?.estimateHours * subTask?.hourlyRate)
+                                                      return (
+                                                        acc +
+                                                        Number(subTask?.estimateHours ?? 0) *
+                                                          Number(subTask?.associate?.hourlyRate ?? 0)
+                                                      )
                                                     } else {
                                                       return acc + 0
                                                     }
@@ -631,9 +635,9 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                 </TableCell>
                                                 <TableCell></TableCell>
                                                 <TableCell align='center'>
-                                                  {!!task?.['isChecked'] &&
+                                                  {!!subTask?.['isChecked'] &&
                                                     `$${(
-                                                      Number(task?.associate?.hourlyRate ?? 0) *
+                                                      Number(subTask?.associate?.hourlyRate ?? 0) *
                                                       Number(subTask?.estimateHours)
                                                     ).toFixed(2)}`}
                                                 </TableCell>
@@ -656,18 +660,14 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                           <TableCell sx={{ p: 0 }} colSpan={3}></TableCell>
                           <TableCell align='right'>Total</TableCell>
                           <TableCell align='center'>
-                            {calculateTotalHoursForAllSOWs(
-                              transformSubTaskTaskDeliverablesSowsData(
-                                tasksList?.filter((task: any) => task?.additionalServiceId)
-                              )
-                            )}
+                            {calculateTotalHoursForAllSOWs(tasksList?.filter((task: any) => task?.additionalServiceId))}
                           </TableCell>
                           <TableCell align='center'></TableCell>
                           <TableCell align='center'>
                             $
                             {calculateTotalInternalCostForAllSOWs(
                               transformSubTaskTaskDeliverablesSowsData(
-                                tasksList?.filter((task: any) => task?.additionalServiceId)
+                                tasksList?.filter((task: any) => !!task?.additionalServiceId)
                               )
                             )}
                           </TableCell>
@@ -682,7 +682,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
           </AccordionDetails>
         </Accordion>
 
-        <Accordion sx={teamReviewBoxSx}>
+        <Accordion sx={teamReviewBoxSx} defaultExpanded={true}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls='problemAndGoal-content'
@@ -961,7 +961,8 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                               if (subTask?.isChecked) {
                                                                 return (
                                                                   acc +
-                                                                  Number(subTask?.estimateHours * subTask?.hourlyRate)
+                                                                  Number(subTask?.estimateHours ?? 0) *
+                                                                    Number(subTask?.associate?.hourlyRate ?? 0)
                                                                 )
                                                               } else {
                                                                 return acc + 0
@@ -1109,11 +1110,11 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                   <TableCell align='center'></TableCell>
                                   <TableCell align='right'>Total</TableCell>
                                   <TableCell align='center'>
-                                    {calculateTotalHoursForAllSOWs(
+                                    {/* {calculateTotalHoursForAllSOWs(
                                       transformSubTaskTaskDeliverablesSowsData(
                                         tasksList?.filter((task: any) => !task?.additionalServiceId)
                                       )
-                                    )}
+                                    )} */}
                                   </TableCell>
                                   <TableCell align='center'></TableCell>
                                   <TableCell align='center'>
@@ -1164,7 +1165,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                       <TableCell sx={{ p: 0 }} colSpan={3}></TableCell>
                       <TableCell align='right'>Total</TableCell>
                       <TableCell align='center'>
-                        {calculateTotalHoursForAllSOWs(transformSubTaskTaskDeliverablesSowsData(tasksList))}
+                        {/* {calculateTotalHoursForAllSOWs(transformSubTaskTaskDeliverablesSowsData(tasksList))} */}
                       </TableCell>
                       <TableCell align='center'></TableCell>
                       <TableCell align='center'>
@@ -1217,25 +1218,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                       border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
                     }
                   }}
-                >
-                  {/* <label className='block text-sm'>
-                    <Dropdown
-                      name='phaseId'
-                      value={taskFormData.phaseId}
-                      onChange={handleTaskSelectChange}
-                      dataList={sowPhaseList}
-                      label={'Phase'}
-                    />
-                    {!!errorMessage?.['phaseId'] &&
-                      errorMessage?.['phaseId']?.map((message: any, index: number) => {
-                        return (
-                          <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                            {message}
-                          </span>
-                        )
-                      })}
-                  </label> */}
-                </Box>
+                ></Box>
               )}
 
               {taskEditId ? (

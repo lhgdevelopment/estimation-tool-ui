@@ -177,7 +177,7 @@ export function calculateTotalInternalCostForScopeOfWorks(scopeOfWork: any) {
 
     tasks.forEach((task: any) => {
       if (task?.isChecked) {
-        total += Number(task?.estimateHours) * Number(task?.hourlyRate)
+        total += Number(task?.estimateHours) * Number(task?.associate?.hourlyRate ?? 0)
 
         if (task?.sub_tasks && task?.sub_tasks.length > 0) {
           total += sumHours(task?.sub_tasks)
@@ -193,7 +193,7 @@ export function calculateTotalInternalCostForScopeOfWorks(scopeOfWork: any) {
   scopeOfWork.deliverables.forEach((deliverable: any) => {
     deliverable.tasks?.forEach((task: any) => {
       if (task?.isChecked) {
-        totalHours += task?.estimateHours * task?.hourlyRate
+        totalHours += task?.estimateHours * task?.associate?.hourlyRate ?? 0
 
         if (task?.sub_tasks && task?.sub_tasks?.length > 0) {
           totalHours += sumHours(task?.sub_tasks)
@@ -243,7 +243,7 @@ export function calculateTotalInternalCostForDeliverable(deliverables: any) {
 
     tasks?.forEach((task: any) => {
       if (task?.isChecked) {
-        total += Number(task?.estimateHours) * Number(task?.hourlyRate)
+        total += Number(task?.estimateHours) * Number(task?.associate?.hourlyRate ?? 0)
 
         if (task?.sub_tasks && task?.sub_tasks.length > 0) {
           total += sumHours(task?.sub_tasks)
@@ -258,7 +258,7 @@ export function calculateTotalInternalCostForDeliverable(deliverables: any) {
 
   deliverables.tasks.forEach((task: any) => {
     if (task?.isChecked) {
-      totalHours += task?.estimateHours * task?.hourlyRate
+      totalHours += Number(task?.estimateHours) * Number(task?.associate?.hourlyRate ?? 0)
 
       if (task?.sub_tasks && task?.sub_tasks.length > 0) {
         totalHours += sumHours(task?.sub_tasks)
@@ -269,40 +269,28 @@ export function calculateTotalInternalCostForDeliverable(deliverables: any) {
   return totalHours.toFixed(2)
 }
 
-export function calculateTotalHoursForAllSOWs(scope_of_works: any) {
-  function sumHours(tasks: any) {
-    let total = 0
+export function calculateTotalHoursForAllSOWs(tasksList: any) {
+  console.log(tasksList)
+  let total = 0
+  tasksList?.forEach((task: any) => {
+    if (task?.isChecked) {
+      total += Number(task?.estimateHours ?? 0)
 
-    tasks?.forEach((task: any) => {
-      if (task?.isChecked) {
-        total += task?.estimateHours
+      if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+        let subTaskTotal = 0
 
-        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-          total += sumHours(task?.sub_tasks)
-        }
-      }
-    })
-
-    return total
-  }
-
-  let totalHours = 0
-
-  scope_of_works?.forEach((sow: any) => {
-    sow?.deliverables?.forEach((deliverable: any) => {
-      deliverable?.tasks?.forEach((task: any) => {
-        if (task?.isChecked) {
-          totalHours += task?.estimateHours
-
-          if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-            totalHours += sumHours(task?.sub_tasks)
+        task?.sub_tasks?.forEach((subTask: any) => {
+          if (subTask?.isChecked) {
+            subTaskTotal += Number(subTask?.estimateHours ?? 0)
           }
-        }
-      })
-    })
+        })
+
+        total += subTaskTotal
+      }
+    }
   })
 
-  return totalHours.toFixed(2)
+  return total.toFixed(2)
 }
 
 export function calculateTotalInternalCostForAllSOWs(scope_of_works: any) {
@@ -311,7 +299,7 @@ export function calculateTotalInternalCostForAllSOWs(scope_of_works: any) {
 
     tasks?.forEach((task: any) => {
       if (task?.isChecked) {
-        total += Number(task?.estimateHours) * Number(task?.hourlyRate)
+        total += Number(task?.estimateHours) * Number(task?.associate?.hourlyRate ?? 0)
 
         if (task?.sub_tasks && task?.sub_tasks.length > 0) {
           total += sumHours(task?.sub_tasks)
@@ -328,7 +316,7 @@ export function calculateTotalInternalCostForAllSOWs(scope_of_works: any) {
     sow?.deliverables?.forEach((deliverable: any) => {
       deliverable?.tasks?.forEach((task: any) => {
         if (task?.isChecked) {
-          totalHours += Number(task?.estimateHours) * Number(task?.hourlyRate)
+          totalHours += Number(task?.estimateHours) * Number(task?.associate?.hourlyRate ?? 0)
 
           if (task?.sub_tasks && task?.sub_tasks.length > 0) {
             totalHours += sumHours(task?.sub_tasks)

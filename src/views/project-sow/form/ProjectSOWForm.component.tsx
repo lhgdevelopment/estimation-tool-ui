@@ -14,6 +14,7 @@ import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
 import ProjectSOWDeliverableFormComponent from './steps/deliverable/ProjectSOWDeliverable.component'
 import ProjectSOWEstimationFormComponent from './steps/eastimation/ProjectSOWEstimation.component'
 import ProjectSOWOverviewFormComponent from './steps/overview/ProjectSOWOverview.component'
+import ProjectSOWPhaseFormComponent from './steps/phase/ProjectSOWPhase.component'
 import ProjectSOWProblemAndGoalsFormComponent from './steps/problemAndGoals/ProjectSOWProblemAndGoals.component'
 import ProjectSOWScopeOfWorkFormComponent from './steps/scopeOfWork/ProjectSOWScopeOfWork.component'
 import ProjectSOWSummeryFormComponent from './steps/summery/ProjectSOWSummery.component'
@@ -25,6 +26,7 @@ const steps = [
   'Summary',
   'Problems & Goals',
   'Overview',
+  'Phase',
   'SOW',
   'Deliverables',
   'Team Review',
@@ -400,6 +402,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         })
     }
     if (activeStep === 5) {
+    }
+    if (activeStep === 6) {
       apiRequest
         .post(`/deliverables-select/`, {
           problemGoalId: problemGoalID,
@@ -472,7 +476,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         })
     }
 
-    if (activeStep === 6) {
+    if (activeStep === 7) {
       apiRequest
         .post(`/team-review/`, {
           transcriptId,
@@ -539,7 +543,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
-    if (activeStep === 7) {
+    if (activeStep === 8) {
       apiRequest
         .get(`/estimation-tasks?problemGoalId=${problemGoalID}`)
         .then(res => {
@@ -913,6 +917,20 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 ></ProjectSOWOverviewFormComponent>
               )}
               {activeStep == 4 && (
+                <ProjectSOWPhaseFormComponent
+                  handleAdditionalServiceSelection={handleAdditionalServiceSelection}
+                  selectedAdditionalServiceData={selectedAdditionalServiceData}
+                  selectedScopeOfWorkData={selectedScopeOfWorkData}
+                  setSelectedScopeOfWorkData={setSelectedScopeOfWorkData}
+                  problemGoalID={problemGoalID}
+                  phaseData={scopeOfWorkData}
+                  setScopeOfWorkData={setScopeOfWorkData}
+                  serviceList={serviceList}
+                  serviceId={projectSOWFormData.serviceId}
+                ></ProjectSOWPhaseFormComponent>
+              )}
+
+              {activeStep == 5 && (
                 <ProjectSOWScopeOfWorkFormComponent
                   handleAdditionalServiceSelection={handleAdditionalServiceSelection}
                   selectedAdditionalServiceData={selectedAdditionalServiceData}
@@ -926,7 +944,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 ></ProjectSOWScopeOfWorkFormComponent>
               )}
 
-              {activeStep == 5 && (
+              {activeStep == 6 && (
                 <ProjectSOWDeliverableFormComponent
                   deliverableData={deliverableData}
                   projectSOWFormData={projectSOWFormData}
@@ -941,7 +959,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   scopeOfWorkData={scopeOfWorkData}
                 ></ProjectSOWDeliverableFormComponent>
               )}
-              {activeStep == 6 && (
+              {activeStep == 7 && (
                 <ProjectSOWTeamReviewFormComponent
                   projectSOWFormData={projectSOWFormData}
                   setOverviewText={setOverviewText}
@@ -952,7 +970,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   setAssociatedUserWithRole={setAssociatedUserWithRole}
                 ></ProjectSOWTeamReviewFormComponent>
               )}
-              {activeStep == 7 && (
+              {activeStep == 8 && (
                 <ProjectSOWEstimationFormComponent
                   associatedUserWithRole={associatedUserWithRole}
                   setSelectedDeliverableData={setSelectedDeliverableData}
@@ -967,8 +985,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   transcriptId={transcriptId}
                 ></ProjectSOWEstimationFormComponent>
               )}
-              {activeStep == 8 && <Box>Review</Box>}
-              {activeStep == 9 && <Box>Approval</Box>}
+              {activeStep == 9 && <Box>Review</Box>}
+              {activeStep == 10 && <Box>Approval</Box>}
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
