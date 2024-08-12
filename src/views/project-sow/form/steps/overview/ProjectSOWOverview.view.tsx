@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { MarkdownEditor } from 'src/@core/components/markdown-editor'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import { formTitleSx } from 'src/views/project-sow/ProjectSOW.style'
 import { TProjectSOWOverviewFormViewProps } from './ProjectSOWOverview.decorator'
 
@@ -18,7 +18,7 @@ export default function ProjectSOWOverviewFormView(props: TProjectSOWOverviewFor
                 position: 'relative'
               }}
             >
-              <MarkdownEditor modelValue={overviewText} onChange={setOverviewText} />
+              <RichTextEditor value={overviewText} onChange={setOverviewText} />
             </Box>
             {!!errorMessage?.overviewText &&
               errorMessage?.overviewText?.map((message: any, index: number) => {

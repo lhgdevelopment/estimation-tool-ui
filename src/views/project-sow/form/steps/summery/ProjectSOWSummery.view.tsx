@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { MarkdownEditor } from 'src/@core/components/markdown-editor'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import { formTitleSx } from 'src/views/project-sow/ProjectSOW.style'
 import { TProjectSOWSummeryFormViewProps } from './ProjectSOWSummery.decorator'
 
@@ -18,7 +18,7 @@ export default function ProjectSOWSummeryFormView(props: TProjectSOWSummeryFormV
                 position: 'relative'
               }}
             >
-              <MarkdownEditor modelValue={summaryText} onChange={setSummaryText} />
+              <RichTextEditor value={summaryText} onChange={setSummaryText} />
             </Box>
 
             {!!errorMessage?.['summaryText'] &&

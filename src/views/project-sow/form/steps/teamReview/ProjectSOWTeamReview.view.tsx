@@ -13,7 +13,7 @@ import {
 import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { Dropdown } from 'src/@core/components/dropdown'
-import { MarkdownEditor } from 'src/@core/components/markdown-editor'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import { formTitleSx, teamReviewBoxSx } from 'src/views/project-sow/ProjectSOW.style'
 import { TProjectSOWTeamReviewFormViewProps } from './ProjectSOWTeamReview.decorator'
 
@@ -182,7 +182,7 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
             Project Overview
           </AccordionSummary>
           <AccordionDetails>
-            <MarkdownEditor modelValue={overviewText} onChange={setOverviewText} />
+            <RichTextEditor value={overviewText} onChange={setOverviewText} />
           </AccordionDetails>
         </Accordion>
 
