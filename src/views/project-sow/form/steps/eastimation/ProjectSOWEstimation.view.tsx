@@ -60,7 +60,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
     employeeRoleData,
     associatedUserWithRole,
     teamUserList,
-    tasksList,
+    taskList,
     handleUpdateTaskCheckUnCheckForSOWOnChange,
     handleUpdateTaskCheckUnCheckForDeliverablesOnChange,
     handleUpdateTaskEstimateHoursOnChange,
@@ -314,7 +314,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                       </TableHead>
                       <TableBody>
                         {transformSubTaskTaskDeliverablesSowsData(
-                          tasksList?.filter((task: any) => !task?.additionalServiceId)
+                          taskList?.filter((task: any) => !task?.additionalServiceId)
                         )?.map((scope_of_work: any, index: number) => {
                           return (
                             <>
@@ -657,18 +657,18 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                       </TableBody>
                       <TableFooter>
                         <TableRow sx={{ fontWeight: 'bold', fontSize: '16px' }}>
-                          <TableCell sx={{ p: 0 }} colSpan={3}></TableCell>
+                          <TableCell colSpan={3}></TableCell>
                           <TableCell align='right'>Total</TableCell>
                           <TableCell align='center'>
-                            {calculateTotalHoursForAllSOWs(tasksList?.filter((task: any) => task?.additionalServiceId))}
+                            {calculateTotalHoursForAllSOWs(
+                              taskList?.filter((task: any) => !task?.additionalServiceId && task?.isChecked)
+                            )}
                           </TableCell>
                           <TableCell align='center'></TableCell>
                           <TableCell align='center'>
                             $
                             {calculateTotalInternalCostForAllSOWs(
-                              transformSubTaskTaskDeliverablesSowsData(
-                                tasksList?.filter((task: any) => !!task?.additionalServiceId)
-                              )
+                              taskList?.filter((task: any) => !task?.additionalServiceId && task?.isChecked)
                             )}
                           </TableCell>
                           <TableCell align='center'>$0.00</TableCell>
@@ -695,7 +695,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
               {/* <Box sx={sectionTitleSx}>Added Services</Box> */}
               <Box>
                 {scopeOfWorkGroupByAdditionalServiceId(
-                  transformSubTaskTaskDeliverablesSowsData(tasksList?.filter((task: any) => task?.additionalServiceId))
+                  transformSubTaskTaskDeliverablesSowsData(taskList?.filter((task: any) => task?.additionalServiceId))
                 )?.map((additionalService: any, additionalServiceIndex: number) => {
                   return (
                     <Box key={additionalServiceIndex}>
@@ -1105,24 +1105,18 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                               </TableBody>
                               <TableFooter>
                                 <TableRow sx={{ fontWeight: 'bold', fontSize: '16px' }}>
-                                  <TableCell sx={{ p: 0 }}></TableCell>
-                                  <TableCell align='right'></TableCell>
-                                  <TableCell align='center'></TableCell>
+                                  <TableCell colSpan={3}></TableCell>
                                   <TableCell align='right'>Total</TableCell>
                                   <TableCell align='center'>
-                                    {/* {calculateTotalHoursForAllSOWs(
-                                      transformSubTaskTaskDeliverablesSowsData(
-                                        tasksList?.filter((task: any) => !task?.additionalServiceId)
-                                      )
-                                    )} */}
+                                    {calculateTotalHoursForAllSOWs(
+                                      taskList?.filter((task: any) => !!task?.additionalServiceId && task?.isChecked)
+                                    )}
                                   </TableCell>
                                   <TableCell align='center'></TableCell>
                                   <TableCell align='center'>
                                     $
                                     {calculateTotalInternalCostForAllSOWs(
-                                      transformSubTaskTaskDeliverablesSowsData(
-                                        tasksList?.filter((task: any) => !task?.additionalServiceId)
-                                      )
+                                      taskList?.filter((task: any) => !!task?.additionalServiceId && task?.isChecked)
                                     )}
                                   </TableCell>
                                   <TableCell align='center'>$0.00</TableCell>
@@ -1165,11 +1159,11 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                       <TableCell sx={{ p: 0 }} colSpan={3}></TableCell>
                       <TableCell align='right'>Total</TableCell>
                       <TableCell align='center'>
-                        {/* {calculateTotalHoursForAllSOWs(transformSubTaskTaskDeliverablesSowsData(tasksList))} */}
+                        {calculateTotalHoursForAllSOWs(taskList?.filter((task: any) => task?.isChecked))}
                       </TableCell>
                       <TableCell align='center'></TableCell>
                       <TableCell align='center'>
-                        ${calculateTotalInternalCostForAllSOWs(transformSubTaskTaskDeliverablesSowsData(tasksList))}
+                        {calculateTotalInternalCostForAllSOWs(taskList?.filter((task: any) => task?.isChecked))}
                       </TableCell>
                       <TableCell align='center'>$0.00</TableCell>
                     </TableRow>

@@ -5,7 +5,7 @@ export type TProjectSOWEstimationFormComponentProps = {
   setAssociatedUserWithRole: Dispatch<any>
   transcriptId: string
   problemGoalID: string
-  tasksList: any[]
+  taskList: any[]
   setTasksList: Dispatch<any>
   teamUserList: any[]
   setSelectedDeliverableData: Dispatch<any>
@@ -25,7 +25,7 @@ export type TProjectSOWEstimationFormViewProps = {
   employeeRoleData: any[]
   associatedUserWithRole: any[]
   teamUserList: any[]
-  tasksList: any[]
+  taskList: any[]
   handleUpdateTaskCheckUnCheckForSOWOnChange: (deliverables: any, isChecked: boolean) => void
   handleUpdateTaskCheckUnCheckForDeliverablesOnChange: (tasks: any, isChecked: boolean) => void
   handleUpdateTaskEstimateHoursOnChange: (taskId: number, estimateHours: number) => void
@@ -92,7 +92,7 @@ export function serviceDeliverableGroupByScopeOfWorkId(data: any) {
 export function transformSubTaskTaskDeliverablesSowsData(data: any) {
   const result: any = []
 
-  data.forEach((item: any) => {
+  data?.forEach((item: any) => {
     const scopeOfWork = item?.deliverable?.scope_of_work
     const deliverable = item?.deliverable
 
@@ -269,61 +269,33 @@ export function calculateTotalInternalCostForDeliverable(deliverables: any) {
   return totalHours.toFixed(2)
 }
 
-export function calculateTotalHoursForAllSOWs(tasksList: any) {
-  console.log(tasksList)
+export function calculateTotalHoursForAllSOWs(taskList: any) {
+  console.log(taskList)
   let total = 0
-  tasksList?.forEach((task: any) => {
-    if (task?.isChecked) {
-      total += Number(task?.estimateHours ?? 0)
+  taskList?.forEach((task: any) => {
+    total += Number(task?.estimateHours ?? 0)
 
-      if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-        let subTaskTotal = 0
+    // if (task?.sub_tasks && task?.sub_tasks.length > 0) {
+    //   let subTaskTotal = 0
 
-        task?.sub_tasks?.forEach((subTask: any) => {
-          if (subTask?.isChecked) {
-            subTaskTotal += Number(subTask?.estimateHours ?? 0)
-          }
-        })
+    //   task?.sub_tasks?.forEach((subTask: any) => {
+    //     if (subTask?.isChecked) {
+    //       subTaskTotal += Number(subTask?.estimateHours ?? 0)
+    //     }
+    //   })
 
-        total += subTaskTotal
-      }
-    }
+    //   total += subTaskTotal
+    // }
   })
 
   return total.toFixed(2)
 }
 
-export function calculateTotalInternalCostForAllSOWs(scope_of_works: any) {
-  function sumHours(tasks: any) {
-    let total = 0
-
-    tasks?.forEach((task: any) => {
-      if (task?.isChecked) {
-        total += Number(task?.estimateHours) * Number(task?.associate?.hourlyRate ?? 0)
-
-        if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-          total += sumHours(task?.sub_tasks)
-        }
-      }
-    })
-
-    return total
-  }
-
+export function calculateTotalInternalCostForAllSOWs(taskList: any) {
   let totalHours = 0
 
-  scope_of_works?.forEach((sow: any) => {
-    sow?.deliverables?.forEach((deliverable: any) => {
-      deliverable?.tasks?.forEach((task: any) => {
-        if (task?.isChecked) {
-          totalHours += Number(task?.estimateHours) * Number(task?.associate?.hourlyRate ?? 0)
-
-          if (task?.sub_tasks && task?.sub_tasks.length > 0) {
-            totalHours += sumHours(task?.sub_tasks)
-          }
-        }
-      })
-    })
+  taskList?.forEach((task: any) => {
+    totalHours += Number(task?.estimateHours ?? 0) * Number(task?.associate?.hourlyRate ?? 0)
   })
 
   return totalHours.toFixed(2)
