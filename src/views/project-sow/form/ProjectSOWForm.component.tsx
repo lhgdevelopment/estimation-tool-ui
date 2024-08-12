@@ -78,7 +78,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [overviewText, setOverviewText] = useState<any>('')
   const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
   const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
-  const [tasksList, setTasksList] = useState<any>([])
+  const [taskList, setTasksList] = useState<any>([])
 
   const [selectedAdditionalServiceData, setSelectedAdditionalServiceData] = useState<any>([])
   const [deliverableData, setDeliverableData] = useState<any>([])
@@ -979,7 +979,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   problemGoalText={problemGoalText}
                   projectSOWFormData={projectSOWFormData}
                   setAssociatedUserWithRole={setAssociatedUserWithRole}
-                  tasksList={tasksList}
+                  taskList={taskList}
                   setTasksList={setTasksList}
                   teamUserList={teamUserList}
                   transcriptId={transcriptId}

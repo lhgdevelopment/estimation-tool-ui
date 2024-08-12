@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { MarkdownEditor } from 'src/@core/components/markdown-editor'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import { formTitleSx } from 'src/views/project-sow/ProjectSOW.style'
 import { TProjectSOWProblemAndGoalsFormViewProps } from './ProjectSOWProblemAndGoals.decorator'
 
@@ -18,7 +18,7 @@ export default function ProjectSOWProblemAndGoalsFormView(props: TProjectSOWProb
                 position: 'relative'
               }}
             >
-              <MarkdownEditor modelValue={problemGoalText} onChange={setProblemGoalText} />
+              <RichTextEditor value={problemGoalText} onChange={setProblemGoalText} />
             </Box>
             {!!errorMessage?.problemGoalText &&
               errorMessage?.problemGoalText?.map((message: any, index: number) => {

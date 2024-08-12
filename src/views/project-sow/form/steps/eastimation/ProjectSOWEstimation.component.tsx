@@ -13,7 +13,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     setAssociatedUserWithRole,
     transcriptId,
     problemGoalID,
-    tasksList,
+    taskList,
     setTasksList,
     teamUserList,
     setSelectedDeliverableData,
@@ -498,8 +498,8 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
 
   useEffect(() => {
     getEmployeeRoleList()
-    setTaskListState(tasksList)
-  }, [tasksList])
+    setTaskListState(taskList)
+  }, [taskList])
 
   return (
     <>
@@ -521,7 +521,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
         overviewText={overviewText}
         problemGoalText={problemGoalText}
         projectSOWFormData={projectSOWFormData}
-        tasksList={taskListState}
+        taskList={taskListState}
         teamUserList={teamUserList}
         taskEditId={taskEditId}
         taskFormData={taskFormData}
