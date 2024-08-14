@@ -93,7 +93,6 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
 
           return updatedList
         })
-        onClear()
         enqueueSnackbar('Updated Successfully!', { variant: 'success' })
       })
       .catch(error => {
