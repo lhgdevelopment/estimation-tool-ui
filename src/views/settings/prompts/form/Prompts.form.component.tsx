@@ -17,7 +17,8 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     name: '',
     type: null,
     prompt: '',
-    serial: ''
+    serial: '',
+    action_type: ''
   }
 
   const [formData, setFormData] = useState(defaultData)
@@ -49,12 +50,11 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
-
-            onClear()
 
             return updatedList
           })
+          onClear()
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -66,7 +66,6 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
         .then(res => {
           setListData((prevState: []) => [...prevState, res?.data])
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
-
           onClear()
         })
         .catch(error => {
@@ -81,7 +80,8 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
       name: editData?.['name'],
       type: editData?.['type'],
       prompt: editData?.['prompt'],
-      serial: editData?.['serial']
+      serial: editData?.['serial'],
+      action_type: editData?.['action_type']
     })
   }, [editDataId, editData])
 
@@ -115,49 +115,65 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                 })}
             </Box>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Type</span>
-                <Dropdown
-                  optionConfig={{
-                    title: 'title',
-                    id: 'id'
-                  }}
-                  isEnumField
-                  dataList={promptsTypeList}
-                  name='type'
-                  value={formData.type}
-                  onChange={handleSelectChange}
-                />
-                {!!errorMessage?.['type'] &&
-                  errorMessage?.['type']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <Dropdown
+                optionConfig={{
+                  title: 'title',
+                  id: 'id'
+                }}
+                dataList={promptsTypeList}
+                label='Type'
+                name='type'
+                value={formData.type}
+                onChange={handleSelectChange}
+              />
+              {!!errorMessage?.['type'] &&
+                errorMessage?.['type']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '50%' }}>
+              <TextField
+                label={'Serial'}
+                name='serial'
+                value={formData.serial}
+                onChange={handleTextChange}
+                error={errorMessage?.['serial']}
+                fullWidth
+              />
+              {!!errorMessage?.['serial'] &&
+                errorMessage?.['serial']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
             <Box sx={{ width: '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Serial</span>
-                <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter serial'
-                  name='serial'
-                  value={formData.serial}
-                  onChange={handleTextChange}
-                  type='number'
-                />
-                {!!errorMessage?.['serial'] &&
-                  errorMessage?.['serial']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <Dropdown
+                dataList={[
+                  { id: 'input-only', name: 'Input Only' },
+                  { id: 'expected-output', name: 'Expected Output' }
+                ]}
+                label='Action Type'
+                name='action_type'
+                value={formData.action_type}
+                onChange={handleSelectChange}
+              />
+              {!!errorMessage?.['action_type'] &&
+                errorMessage?.['action_type']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
           </Box>
           <Box sx={{ display: 'flex', gap: 5 }}>

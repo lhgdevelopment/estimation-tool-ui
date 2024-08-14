@@ -53,12 +53,11 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
             if (editedHourlyRatesIndex !== -1) {
               updatedList[editedHourlyRatesIndex] = res?.data
             }
-            enqueueSnackbar('Created Successfully!', { variant: 'success' })
-
-            onClear()
 
             return updatedList
           })
+          onClear()
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)

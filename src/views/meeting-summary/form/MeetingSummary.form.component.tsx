@@ -83,13 +83,12 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
-
-            onClear()
-            setPreload(false)
 
             return updatedList
           })
+          setPreload(false)
+          onClear()
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           router.push('/meeting-summary/')
         })
         .catch(error => {

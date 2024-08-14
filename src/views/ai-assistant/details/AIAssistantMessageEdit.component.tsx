@@ -48,14 +48,15 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
-            onClear()
 
             return {
               ...prevState,
               messages: updatedList
             }
           })
+          onClear()
+
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setPreload(false)

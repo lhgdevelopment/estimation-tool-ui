@@ -50,11 +50,11 @@ export default function UsersFormComponent(props: TUsersComponent) {
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
 
             return updatedList
           })
           onClear()
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)

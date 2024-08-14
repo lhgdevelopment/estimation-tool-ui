@@ -79,11 +79,11 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
-            router.push('/settings/update-log/')
 
             return updatedList
           })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          router.push('/settings/update-log/')
         })
         .catch(error => {
           setPreload(false)

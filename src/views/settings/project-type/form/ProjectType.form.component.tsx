@@ -41,10 +41,9 @@ export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
               updatedList[editedServiceIndex] = res?.data
             }
 
-            onClear()
-
             return updatedList
           })
+          onClear()
           enqueueSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
