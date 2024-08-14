@@ -16,7 +16,6 @@ interface ISelectProps {
   label?: string
   url?: string
   queryParam?: string[]
-  isEnumField?: boolean
   searchable?: boolean
   searchPlaceholder?: string
   optionConfig?: TOptionConfig
@@ -33,7 +32,6 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
   const {
     placeholder,
     url,
-    isEnumField = false,
     dataList = [],
     optionConfig = { title: 'name', id: 'id' },
     queryParam = [],

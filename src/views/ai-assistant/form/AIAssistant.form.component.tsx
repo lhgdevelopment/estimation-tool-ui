@@ -57,17 +57,16 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
-            console.log(editedServiceIndex)
 
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
-            onClear()
-            setPreload(false)
 
             return updatedList
           })
+          onClear()
+          setPreload(false)
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setPreload(false)

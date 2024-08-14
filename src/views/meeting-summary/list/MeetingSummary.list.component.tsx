@@ -90,10 +90,11 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
           if (editedServiceIndex !== -1) {
             updatedList[editedServiceIndex] = res?.data
           }
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
 
           return updatedList
         })
+        onClear()
+        enqueueSnackbar('Updated Successfully!', { variant: 'success' })
       })
       .catch(error => {
         enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })

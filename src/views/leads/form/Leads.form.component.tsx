@@ -75,12 +75,12 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
-            onClear()
-            setPreload(false)
 
             return updatedList
           })
+          onClear()
+          setPreload(false)
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
           router.push('/leads/')
         })
         .catch(error => {

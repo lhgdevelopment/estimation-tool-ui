@@ -45,13 +45,12 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
-            roleModalClose()
-            enqueueSnackbar('Updated Successfully!', { variant: 'success' })
 
             return updatedList
           })
-
+          roleModalClose()
           onClear()
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)

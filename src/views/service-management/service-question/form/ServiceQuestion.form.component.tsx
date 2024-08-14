@@ -54,10 +54,10 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
             if (editedServiceQuestionIndex !== -1) {
               updatedList[editedServiceQuestionIndex] = res?.data
             }
-            onClear()
 
             return updatedList
           })
+          onClear()
           enqueueSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
