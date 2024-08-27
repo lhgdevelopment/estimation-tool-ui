@@ -3,7 +3,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Checkbox, TextField } from '@mui/material'
-import { ExposeParam, MdEditor } from 'md-editor-rt'
+import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -11,6 +11,7 @@ import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
+import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TMeetingSummaryComponent } from '../MeetingSummary.decorator'
 
@@ -282,13 +283,8 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm' htmlFor={'#summaryText'}>
                   <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Summary Text</span>
+                  <RichTextEditor value={summaryText} onChange={setSummaryText} />
 
-                  <MdEditor
-                    ref={summaryTextEditorRef}
-                    modelValue={summaryText}
-                    onChange={setSummaryText}
-                    language='en-US'
-                  />
                   {!!errorMessage?.['summaryText'] &&
                     errorMessage?.['summaryText']?.map((message: any, index: number) => {
                       return (
