@@ -79,7 +79,7 @@ export function addTargetBlankToMarkdownLinks(markdownText = '') {
   const regex = /\[([^\]]+)\]\(([^)]+)\)/g
 
   // Replace each Markdown link with the link including target="_blank"
-  const modifiedText = markdownText.replace(regex, function (match, text, url) {
+  const modifiedText = markdownText?.replace(regex, function (match, text, url) {
     return '<a href="' + url + '" target="_blank">' + text + '</a>'
   })
 
