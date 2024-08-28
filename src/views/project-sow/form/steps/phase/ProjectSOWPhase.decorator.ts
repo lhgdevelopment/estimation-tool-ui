@@ -3,10 +3,10 @@ import { Dispatch } from 'react'
 
 export type TProjectSOWPhaseFormComponentProps = {
   phaseData: any
-  setScopeOfWorkData: Dispatch<any>
+  setPhaseData: Dispatch<any>
   problemGoalID: any
-  selectedScopeOfWorkData: any
-  setSelectedScopeOfWorkData: Dispatch<any>
+  selectedPhaseData: any
+  setSelectedPhaseData: Dispatch<any>
   selectedAdditionalServiceData: any
   handleAdditionalServiceSelection: (id: any) => void
   serviceList: any
@@ -14,9 +14,9 @@ export type TProjectSOWPhaseFormComponentProps = {
 }
 
 export type TProjectSOWPhaseFormViewProps = {
-  handleScopeOfWorkCheckbox: () => void
+  handlePhaseCheckbox: () => void
   phaseData: any
-  selectedScopeOfWorkData: any
+  selectedPhaseData: any
   handleServicePhaseModalOpen: () => void
   handlePhaseOnEdit: (data: any) => void
   serviceGroupByProjectTypeId: (data: any) => any[]
@@ -28,12 +28,12 @@ export type TProjectSOWPhaseFormViewProps = {
   errorMessage: any
   phaseEditId: any
   phaseFormData: any
-  handleScopeOfWorkInputChange: (event: any) => void
+  handlePhaseInputChange: (event: any) => void
   handlePhaseSaveOnClick: () => void
-  handleScopeOfWorkSelectChange: (e: SelectChangeEvent<any>) => void
+  handlePhaseSelectChange: (e: SelectChangeEvent<any>) => void
   handleAddNewSow: () => void
   phasePhaseList: any[]
-  handleScopeOfWorkMultipleInputChange: (event: any, index: number) => void
+  handlePhaseMultipleInputChange: (event: any, index: number) => void
   handleRemoveSow: (index: number) => void
   handlePhaseOnClear: () => void
 }

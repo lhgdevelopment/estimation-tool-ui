@@ -9,10 +9,10 @@ import ProjectSOWPhaseFormView from './ProjectSOWPhase.view'
 export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseFormComponentProps) {
   const {
     phaseData,
-    setScopeOfWorkData,
+    setPhaseData,
     problemGoalID,
-    selectedScopeOfWorkData,
-    setSelectedScopeOfWorkData,
+    selectedPhaseData,
+    setSelectedPhaseData,
     selectedAdditionalServiceData,
     handleAdditionalServiceSelection,
     serviceList,
@@ -31,9 +31,9 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
     setServiceSowModalOpen(false)
     handlePhaseOnClear()
   }
-  const handleScopeOfWorkCheckbox: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhaseCheckbox: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { checked, value } = e.target
-    setSelectedScopeOfWorkData((prevState: any) => {
+    setSelectedPhaseData((prevState: any) => {
       if (checked) {
         return [...prevState, Number(value)]
       } else {
@@ -42,10 +42,9 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
     })
   }
 
-  const [phasePhaseList, setScopeOfWorkPhaseList] = useState<any[]>([])
+  const [phasePhaseList, setPhasePhaseList] = useState<any[]>([])
 
   const phaseDefaultData = {
-    phaseId: '',
     title: '',
     phases: [
       {
@@ -55,11 +54,11 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
     ]
   }
 
-  const [phaseFormData, setScopeOfWorkFormData] = useState<any>(phaseDefaultData)
-  const [phaseEditId, setScopeOfWorkEditId] = useState<any>(null)
+  const [phaseFormData, setPhaseFormData] = useState<any>(phaseDefaultData)
+  const [phaseEditId, setPhaseEditId] = useState<any>(null)
 
-  const handleScopeOfWorkSelectChange = (e: SelectChangeEvent<any>) => {
-    setScopeOfWorkFormData({
+  const handlePhaseSelectChange = (e: SelectChangeEvent<any>) => {
+    setPhaseFormData({
       ...phaseFormData,
       [e?.target?.name]: e?.target?.value
     })
@@ -69,40 +68,40 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
     const phases = [...phaseFormData.phases]
     phases.push({
       title: '',
-      order: ''
+      serial: ''
     })
-    setScopeOfWorkFormData(() => ({ ...phaseFormData, phases }))
+    setPhaseFormData(() => ({ ...phaseFormData, phases }))
   }
 
   const handleRemoveSow = (index: number) => {
     const phases = [...phaseFormData.phases]
     phases.splice(index, 1)
-    setScopeOfWorkFormData(() => ({ ...phaseFormData, phases }))
+    setPhaseFormData(() => ({ ...phaseFormData, phases }))
   }
 
-  const handleScopeOfWorkMultipleInputChange = (event: any, index: number) => {
+  const handlePhaseMultipleInputChange = (event: any, index: number) => {
     const { name, value } = event.target
     const phases = [...phaseFormData.phases]
     phases[index][name] = value
-    setScopeOfWorkFormData(() => ({ ...phaseFormData, phases }))
+    setPhaseFormData(() => ({ ...phaseFormData, phases }))
   }
 
-  const handleScopeOfWorkInputChange = (event: any) => {
+  const handlePhaseInputChange = (event: any) => {
     const { name, value } = event.target
     const phases = phaseFormData
     phases[name] = value
-    setScopeOfWorkFormData(() => ({ ...phaseFormData, ...phases }))
+    setPhaseFormData(() => ({ ...phaseFormData, ...phases }))
   }
 
   const handlePhaseOnClear = () => {
-    setScopeOfWorkFormData(phaseDefaultData)
-    setScopeOfWorkEditId(null)
+    setPhaseFormData(phaseDefaultData)
+    setPhaseEditId(null)
   }
 
   const handlePhaseOnEdit = (data: any) => {
     const { id, title, serial } = data
-    setScopeOfWorkEditId(id)
-    setScopeOfWorkFormData({
+    setPhaseEditId(id)
+    setPhaseFormData({
       title
     })
     handleServicePhaseModalOpen()
@@ -112,9 +111,9 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
     setPreload(true)
     if (phaseEditId) {
       apiRequest
-        .post(`/scope-of-work/${phaseEditId}`, { ...phaseFormData })
+        .post(`/phase/${phaseEditId}`, { ...phaseFormData })
         .then(res => {
-          setScopeOfWorkData((prevState: any[]) => [
+          setPhaseData((prevState: any[]) => [
             ...prevState.map((sow: any) => {
               if (sow?.id === phaseEditId) return res.data
 
@@ -133,10 +132,10 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
         })
     } else {
       apiRequest
-        .post('/scope-of-work/add-multi', { ...phaseFormData, problemGoalId: problemGoalID })
+        .post('/phase/add-multi', { ...phaseFormData, problemGoalId: problemGoalID })
         .then(res => {
-          setScopeOfWorkData((prevState: any[]) => [...res?.data, ...prevState])
-          setSelectedScopeOfWorkData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
+          setPhaseData((prevState: any[]) => [...res?.data, ...prevState])
+          setSelectedPhaseData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
 
           setPreload(false)
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -169,12 +168,12 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
     return Object.values(grouped)
   }
 
-  const getScopeOfWorkPhaseList = async () => {
+  const getPhasePhaseList = async () => {
     if (serviceId) {
       await apiRequest
         .get(`/service-groups?serviceId=${serviceId}`)
         .then(res => {
-          setScopeOfWorkPhaseList(res?.data)
+          setPhasePhaseList(res?.data)
         })
         .catch(error => {
           enqueueSnackbar(error?.message, { variant: 'error' })
@@ -183,15 +182,15 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
   }
 
   useEffect(() => {
-    getScopeOfWorkPhaseList()
+    getPhasePhaseList()
   }, [])
 
   return (
     <ProjectSOWPhaseFormView
       phaseData={phaseData}
-      selectedScopeOfWorkData={selectedScopeOfWorkData}
+      selectedPhaseData={selectedPhaseData}
       handleServicePhaseModalOpen={handleServicePhaseModalOpen}
-      handleScopeOfWorkCheckbox={handleScopeOfWorkCheckbox}
+      handlePhaseCheckbox={handlePhaseCheckbox}
       handlePhaseOnEdit={handlePhaseOnEdit}
       serviceGroupByProjectTypeId={serviceGroupByProjectTypeId}
       selectedAdditionalServiceData={selectedAdditionalServiceData}
@@ -202,12 +201,12 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
       errorMessage={errorMessage}
       phaseEditId={phaseEditId}
       phaseFormData={phaseFormData}
-      handleScopeOfWorkInputChange={handleScopeOfWorkInputChange}
+      handlePhaseInputChange={handlePhaseInputChange}
       handlePhaseSaveOnClick={handlePhaseSaveOnClick}
-      handleScopeOfWorkSelectChange={handleScopeOfWorkSelectChange}
+      handlePhaseSelectChange={handlePhaseSelectChange}
       handleAddNewSow={handleAddNewSow}
       phasePhaseList={phasePhaseList}
-      handleScopeOfWorkMultipleInputChange={handleScopeOfWorkMultipleInputChange}
+      handlePhaseMultipleInputChange={handlePhaseMultipleInputChange}
       handleRemoveSow={handleRemoveSow}
       handlePhaseOnClear={handlePhaseOnClear}
     ></ProjectSOWPhaseFormView>
