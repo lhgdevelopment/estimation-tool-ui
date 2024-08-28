@@ -98,7 +98,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <TextField
-                label={'Role Name'}
+                label={'Name'}
                 name='name'
                 value={formData.name}
                 onChange={handleTextChange}

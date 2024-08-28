@@ -3,7 +3,6 @@ import ClearIcon from '@material-ui/icons/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, Button, Checkbox, Modal, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { Dropdown } from 'src/@core/components/dropdown'
 import {
   scopeOfWorkListContainer,
   scopeOfWorkListSx,
@@ -16,9 +15,9 @@ import { TProjectSOWPhaseFormViewProps } from './ProjectSOWPhase.decorator'
 export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewProps) {
   const {
     phaseData,
-    selectedScopeOfWorkData,
+    selectedPhaseData,
     handleServicePhaseModalOpen,
-    handleScopeOfWorkCheckbox,
+    handlePhaseCheckbox,
     handlePhaseOnEdit,
     serviceGroupByProjectTypeId,
     selectedAdditionalServiceData,
@@ -29,12 +28,12 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
     errorMessage,
     phaseEditId,
     phaseFormData,
-    handleScopeOfWorkInputChange,
+    handlePhaseInputChange,
     handlePhaseSaveOnClick,
-    handleScopeOfWorkSelectChange,
+    handlePhaseSelectChange,
     handleAddNewSow,
     phasePhaseList,
-    handleScopeOfWorkMultipleInputChange,
+    handlePhaseMultipleInputChange,
     handleRemoveSow
   } = props
 
@@ -42,14 +41,14 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
     <Box>
       <Box sx={{ ...sectionTitleSx, display: 'flex' }}>
         Phase
-        {/* <Box
+        <Box
           sx={sowAddButtonSx}
           onClick={() => {
             handleServicePhaseModalOpen()
           }}
         >
           <AddIcon fontSize='small' />
-        </Box> */}
+        </Box>
       </Box>
       <Box sx={scopeOfWorkListContainer}>
         <Box sx={scopeOfWorkListSx}>
@@ -68,18 +67,18 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                 </Box>
                 <Box className={'sow-list-item-check'}>
                   <Checkbox
-                    onChange={handleScopeOfWorkCheckbox}
+                    onChange={handlePhaseCheckbox}
                     value={phase?.['id']}
-                    checked={selectedScopeOfWorkData?.includes(phase?.['id'])}
+                    checked={selectedPhaseData?.includes(phase?.['id'])}
                   />
                 </Box>
                 <Box
                   className={'sow-list-item-title'}
                   sx={{
                     color: !phase?.['additionalServiceId'] ? '#903fe8' : '',
-                    opacity: selectedScopeOfWorkData?.includes(phase?.['id']) ? 1 : 0.5
+                    opacity: selectedPhaseData?.includes(phase?.['id']) ? 1 : 0.5
                   }}
-                  component={selectedScopeOfWorkData?.includes(phase?.['id']) ? 'span' : 'del'}
+                  component={selectedPhaseData?.includes(phase?.['id']) ? 'span' : 'del'}
                 >
                   {phase?.['title']}
                 </Box>
@@ -127,41 +126,12 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
         >
           <Box sx={{ mb: '20px' }}>
             <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
-              {phaseEditId ? 'Update' : 'Add'} Scope of Work
+              {phaseEditId ? 'Update' : 'Add'} Phase
             </h2>
           </Box>
 
           <form>
             <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 5, mb: 5 }}>
-              {!phaseEditId && (
-                <Box
-                  sx={{
-                    width: '100%',
-                    '& .MuiInputBase-root': {
-                      border: errorMessage?.['serviceId'] ? '1px solid #dc2626' : ''
-                    }
-                  }}
-                >
-                  <label className='block text-sm'>
-                    <Dropdown
-                      name='phaseId'
-                      value={phaseFormData.phaseId}
-                      onChange={handleScopeOfWorkSelectChange}
-                      dataList={phasePhaseList}
-                      label={'Phase'}
-                    />
-                    {!!errorMessage?.['phaseId'] &&
-                      errorMessage?.['phaseId']?.map((message: any, index: number) => {
-                        return (
-                          <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                            {message}
-                          </span>
-                        )
-                      })}
-                  </label>
-                </Box>
-              )}
-
               {phaseEditId ? (
                 <>
                   <Box
@@ -174,7 +144,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                         label={'Title'}
                         name='title'
                         value={phaseFormData?.title}
-                        onChange={handleScopeOfWorkInputChange}
+                        onChange={handlePhaseInputChange}
                         placeholder={`Title`}
                         fullWidth
                       />
@@ -242,7 +212,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                               name='title'
                               value={phase?.title}
                               onChange={e => {
-                                handleScopeOfWorkMultipleInputChange(e, index)
+                                handlePhaseMultipleInputChange(e, index)
                               }}
                               placeholder={`Title`}
                               fullWidth
@@ -266,7 +236,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                               name='serial'
                               value={phase?.serial}
                               onChange={e => {
-                                handleScopeOfWorkMultipleInputChange(e, index)
+                                handlePhaseMultipleInputChange(e, index)
                               }}
                               placeholder={`Order`}
                               fullWidth

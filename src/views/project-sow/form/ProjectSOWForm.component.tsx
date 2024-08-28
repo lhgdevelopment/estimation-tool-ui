@@ -76,6 +76,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [problemGoalText, setProblemGoalText] = useState<any>('')
   const [overviewTextID, setOverviewTextID] = useState<any>(null)
   const [overviewText, setOverviewText] = useState<any>('')
+  const [phasesData, setPhasesData] = useState<any>([])
+  const [selectedPhasesData, setSelectedPhasesData] = useState<any>([])
   const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
   const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
   const [taskList, setTasksList] = useState<any>([])
@@ -263,16 +265,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         .then(res => {
           if (res?.data && type == 'NEXT') {
             apiRequest
-              .get(`/scope-of-work?problemGoalId=${problemGoalID}`)
+              .get(`/phase?problemGoalId=${problemGoalID}`)
               .then(res2 => {
-                if (res2?.data?.scopeOfWorks.length) {
-                  setScopeOfWorkData(res2?.data?.scopeOfWorks)
-                  setSelectedScopeOfWorkData(res2?.data?.scopeOfWorks?.map((scopeOfWork: any) => scopeOfWork?.id))
-                  setSelectedAdditionalServiceData(
-                    res2?.data?.additionalServices?.map(
-                      (additionalService: any) => additionalService?.selectedServiceId
-                    )
-                  )
+                console.log(res2?.data)
+                if (res2?.data?.phases.length) {
+                  setPhasesData([...res2?.data?.phases])
+                  setSelectedPhasesData(res2?.data?.phases?.map((phase: any) => phase?.id))
+
                   setTimeout(() => {
                     if (type == 'NEXT') {
                       setActiveStep(newActiveStep)
@@ -285,23 +284,14 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   }, 1000)
                 } else {
                   apiRequest
-                    .post(`/scope-of-work`, { problemGoalID })
+                    .post(`/phase`, { problemGoalID })
                     .then(res3 => {
-                      setScopeOfWorkData(res3?.data?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId))
-                      setSelectedScopeOfWorkData(
-                        res3?.data
-                          ?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
-                          ?.map((scopeOfWork: any) => scopeOfWork?.id)
+                      console.log('res3', res3?.data)
+                      setPhasesData(res3?.data?.filter((phase: any) => !phase?.additionalServiceId))
+                      setSelectedPhasesData(
+                        res3?.data?.filter((phase: any) => !phase?.additionalServiceId)?.map((phase: any) => phase?.id)
                       )
 
-                      // setSelectedAdditionalServiceScopeOfWorkData(
-                      //   res3?.data
-                      //     ?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
-                      //     ?.map((scopeOfWork: any) => scopeOfWork?.id)
-                      // )
-                      // setAdditionalServiceScopeOfWorkData(
-                      //   res3?.data?.filter((scopeOfWork: any) => !!scopeOfWork?.additionalServiceId)
-                      // )
                       setTimeout(() => {
                         if (type == 'NEXT') {
                           setActiveStep(newActiveStep)
