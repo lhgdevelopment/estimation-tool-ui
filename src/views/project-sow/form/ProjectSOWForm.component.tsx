@@ -910,11 +910,11 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 <ProjectSOWPhaseFormComponent
                   handleAdditionalServiceSelection={handleAdditionalServiceSelection}
                   selectedAdditionalServiceData={selectedAdditionalServiceData}
-                  selectedScopeOfWorkData={selectedScopeOfWorkData}
-                  setSelectedScopeOfWorkData={setSelectedScopeOfWorkData}
+                  selectedPhaseData={selectedScopeOfWorkData}
+                  setSelectedPhaseData={setSelectedScopeOfWorkData}
                   problemGoalID={problemGoalID}
                   phaseData={scopeOfWorkData}
-                  setScopeOfWorkData={setScopeOfWorkData}
+                  setPhaseData={setScopeOfWorkData}
                   serviceList={serviceList}
                   serviceId={projectSOWFormData.serviceId}
                 ></ProjectSOWPhaseFormComponent>

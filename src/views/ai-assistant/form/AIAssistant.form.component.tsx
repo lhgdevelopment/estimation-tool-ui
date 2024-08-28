@@ -2,7 +2,7 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
@@ -110,49 +110,41 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: editDataId ? '100%' : '50%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                <input
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['name'] ? 'border-red-600' : 'dark:border-gray-600 '
-                  }`}
-                  placeholder='Enter Name Here...'
-                  name='name'
-                  value={formData.name}
-                  onChange={handleTextChange}
+              <TextField
+                label={'Name'}
+                name='name'
+                value={formData.name}
+                onChange={handleTextChange}
+                error={errorMessage?.['name']}
+                fullWidth
+              />
+              {!!errorMessage?.['name'] &&
+                errorMessage?.['name']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
+            </Box>
+            {!editDataId && (
+              <Box sx={{ width: '50%' }}>
+                <Dropdown
+                  label='Type'
+                  url={'prompts'}
+                  name='prompt_id'
+                  value={formData.prompt_id}
+                  onChange={handleSelectChange}
                 />
-                {!!errorMessage?.['name'] &&
-                  errorMessage?.['name']?.map((message: any, index: number) => {
+
+                {!!errorMessage?.['prompt_id'] &&
+                  errorMessage?.['prompt_id']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                         {message}
                       </span>
                     )
                   })}
-              </label>
-            </Box>
-            {!editDataId && (
-              <Box sx={{ width: '50%' }}>
-                <label className='block text-sm'>
-                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Prompt</span>
-                  <Dropdown
-                    url={'prompts'}
-                    name='prompt_id'
-                    value={formData.prompt_id}
-                    onChange={handleSelectChange}
-                    className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                      errorMessage?.['prompt_id'] ? 'border-red-600' : 'dark:border-gray-600 '
-                    }`}
-                  />
-                  {!!errorMessage?.['prompt_id'] &&
-                    errorMessage?.['prompt_id']?.map((message: any, index: number) => {
-                      return (
-                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                          {message}
-                        </span>
-                      )
-                    })}
-                </label>
               </Box>
             )}
           </Box>
