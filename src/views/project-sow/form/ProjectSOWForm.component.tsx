@@ -77,7 +77,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
   const [overviewTextID, setOverviewTextID] = useState<any>(null)
   const [overviewText, setOverviewText] = useState<any>('')
   const [phasesData, setPhasesData] = useState<any>([])
-  const [selectedPhasesData, setSelectedPhasesData] = useState<any>([])
   const [scopeOfWorkData, setScopeOfWorkData] = useState<any>([])
   const [selectedScopeOfWorkData, setSelectedScopeOfWorkData] = useState<any>([])
   const [taskList, setTasksList] = useState<any>([])
@@ -270,8 +269,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                 console.log(res2?.data)
                 if (res2?.data?.phases.length) {
                   setPhasesData([...res2?.data?.phases])
-                  setSelectedPhasesData(res2?.data?.phases?.map((phase: any) => phase?.id))
-
                   setTimeout(() => {
                     if (type == 'NEXT') {
                       setActiveStep(newActiveStep)
@@ -286,11 +283,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   apiRequest
                     .post(`/phase`, { problemGoalID })
                     .then(res3 => {
-                      console.log('res3', res3?.data)
-                      setPhasesData(res3?.data?.filter((phase: any) => !phase?.additionalServiceId))
-                      setSelectedPhasesData(
-                        res3?.data?.filter((phase: any) => !phase?.additionalServiceId)?.map((phase: any) => phase?.id)
-                      )
+                      setPhasesData(res3?.data)
 
                       setTimeout(() => {
                         if (type == 'NEXT') {
@@ -645,6 +638,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           getEnableStep = 3
         }
 
+        if (res?.data?.phaseData && res?.data?.phaseData?.phases?.length) {
+          setPhasesData([...res?.data?.phaseData?.phases])
+          // setSelectedScopeOfWorkData(
+          //   res?.data?.scopeOfWorksData?.scopeOfWorks
+          //     ?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
+          //     ?.map((scopeOfWork: any) => scopeOfWork?.id)
+          // )
+
+          getEnableStep = 4
+        }
+
         if (res?.data?.scopeOfWorksData && res?.data?.scopeOfWorksData?.scopeOfWorks?.length) {
           setScopeOfWorkData(
             res?.data?.scopeOfWorksData?.scopeOfWorks?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
@@ -655,16 +659,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               ?.map((scopeOfWork: any) => scopeOfWork?.id)
           )
 
-          // console.log({ additionalServiceScopeOfWorkData })
-          // console.log({ selectedAdditionalServiceScopeOfWorkData })
-
           setSelectedAdditionalServiceData(
             res?.data?.scopeOfWorksData?.additionalServices?.map(
               (additionalService: any) => additionalService?.selectedServiceId
             )
           )
 
-          getEnableStep = 4
+          getEnableStep = 5
         }
 
         // console.log(res?.data?.deliverablesData?.deliverables)
@@ -908,15 +909,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
               {activeStep == 4 && (
                 <ProjectSOWPhaseFormComponent
-                  handleAdditionalServiceSelection={handleAdditionalServiceSelection}
-                  selectedAdditionalServiceData={selectedAdditionalServiceData}
-                  selectedPhaseData={selectedScopeOfWorkData}
-                  setSelectedPhaseData={setSelectedScopeOfWorkData}
                   problemGoalID={problemGoalID}
-                  phaseData={scopeOfWorkData}
+                  phaseData={phasesData}
                   setPhaseData={setScopeOfWorkData}
-                  serviceList={serviceList}
-                  serviceId={projectSOWFormData.serviceId}
                 ></ProjectSOWPhaseFormComponent>
               )}
 

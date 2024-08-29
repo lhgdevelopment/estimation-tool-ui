@@ -1,28 +1,17 @@
 import { SelectChangeEvent } from '@mui/material'
-import { Dispatch } from 'react'
+import { Dispatch, MutableRefObject } from 'react'
 
 export type TProjectSOWPhaseFormComponentProps = {
   phaseData: any
   setPhaseData: Dispatch<any>
   problemGoalID: any
-  selectedPhaseData: any
-  setSelectedPhaseData: Dispatch<any>
-  selectedAdditionalServiceData: any
-  handleAdditionalServiceSelection: (id: any) => void
-  serviceList: any
-  serviceId: any
 }
 
 export type TProjectSOWPhaseFormViewProps = {
-  handlePhaseCheckbox: () => void
+  handlePhaseCheckbox: (event: any, id: number) => void
   phaseData: any
-  selectedPhaseData: any
   handleServicePhaseModalOpen: () => void
   handlePhaseOnEdit: (data: any) => void
-  serviceGroupByProjectTypeId: (data: any) => any[]
-  selectedAdditionalServiceData: any
-  handleAdditionalServiceSelection: (data: any) => void
-  serviceList: any
   servicePhaseModalOpen: boolean
   handleServicePhaseModalClose: () => void
   errorMessage: any
@@ -32,8 +21,9 @@ export type TProjectSOWPhaseFormViewProps = {
   handlePhaseSaveOnClick: () => void
   handlePhaseSelectChange: (e: SelectChangeEvent<any>) => void
   handleAddNewSow: () => void
-  phasePhaseList: any[]
   handlePhaseMultipleInputChange: (event: any, index: number) => void
   handleRemoveSow: (index: number) => void
+  handlePhaseSlOnChange: (sl: number, id: number) => void
   handlePhaseOnClear: () => void
+  slInputRefs: MutableRefObject<{ [key: number]: HTMLInputElement | null }>
 }
