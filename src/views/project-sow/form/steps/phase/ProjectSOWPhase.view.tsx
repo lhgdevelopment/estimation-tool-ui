@@ -1,7 +1,7 @@
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Box, Button, Checkbox, Modal, TextField } from '@mui/material'
+import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import {
   scopeOfWorkListContainer,
@@ -12,17 +12,14 @@ import {
 } from 'src/views/project-sow/ProjectSOW.style'
 import { TProjectSOWPhaseFormViewProps } from './ProjectSOWPhase.decorator'
 
+import EditIcon from '@mui/icons-material/Edit'
+
 export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewProps) {
   const {
     phaseData,
-    selectedPhaseData,
     handleServicePhaseModalOpen,
     handlePhaseCheckbox,
     handlePhaseOnEdit,
-    serviceGroupByProjectTypeId,
-    selectedAdditionalServiceData,
-    handleAdditionalServiceSelection,
-    serviceList,
     servicePhaseModalOpen,
     handleServicePhaseModalClose,
     errorMessage,
@@ -32,9 +29,10 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
     handlePhaseSaveOnClick,
     handlePhaseSelectChange,
     handleAddNewSow,
-    phasePhaseList,
     handlePhaseMultipleInputChange,
-    handleRemoveSow
+    handleRemoveSow,
+    handlePhaseSlOnChange,
+    slInputRefs
   } = props
 
   return (
@@ -52,51 +50,56 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
       </Box>
       <Box sx={scopeOfWorkListContainer}>
         <Box sx={scopeOfWorkListSx}>
-          {phaseData?.map((phase: any, index: number) => {
-            return (
-              <Box className={'sow-list-item'} key={index + Math.random()}>
-                <Box className={'sow-list-item-sl'}>{index + 1}</Box>
-                <Box className={'sow-list-item-type'}>
-                  <Box
-                    className={`item-type-common item-type-sow ${
-                      !phase?.['additionalServiceId'] ? 'item-type-hive' : ''
-                    }`}
-                  >
-                    Phase
+          {phaseData
+            ?.sort((a: any, b: any) => (a?.serial > b?.serial ? 1 : -1))
+            ?.map((phase: any, index: number) => {
+              return (
+                <Box className={'sow-list-item'} key={index + Math.random()}>
+                  <Box className={'sow-list-item-sl'}>
+                    <input
+                      ref={el => (slInputRefs.current[phase.id] = el)}
+                      className={'sow-list-item-sl-number'}
+                      value={phase?.['serial']}
+                      onChange={event => {
+                        const serial = parseInt(event.target.value ?? 0, 10)
+                        handlePhaseSlOnChange(serial, phase?.['id'])
+                      }}
+                      type={'number'}
+                    />
                   </Box>
+                  <Box className={'sow-list-item-type'}>
+                    <Box className={`item-type-common item-type-phase`}>Phase</Box>
+                  </Box>
+                  <Box className={'sow-list-item-check'}>
+                    <Checkbox
+                      onChange={event => {
+                        handlePhaseCheckbox(event, phase?.['id'])
+                      }}
+                      value={phase?.['id']}
+                      checked={phase?.['isChecked']}
+                    />
+                  </Box>
+                  <Box
+                    className={'sow-list-item-title'}
+                    sx={{
+                      color: !phase?.['additionalServiceId'] ? '#903fe8' : '',
+                      opacity: phase?.['isChecked'] ? 1 : 0.5
+                    }}
+                    component={phase?.['isChecked'] ? 'span' : 'del'}
+                  >
+                    {phase?.['title']}
+                  </Box>
+                  <Button className='sow-list-item-edit-btn' onClick={() => handlePhaseOnEdit(phase)}>
+                    <EditIcon />
+                  </Button>
+                  {phase?.['isPreloading'] && (
+                    <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
+                      <CircularProgress color='secondary' size={12} />
+                    </Stack>
+                  )}
                 </Box>
-                <Box className={'sow-list-item-check'}>
-                  <Checkbox
-                    onChange={handlePhaseCheckbox}
-                    value={phase?.['id']}
-                    checked={selectedPhaseData?.includes(phase?.['id'])}
-                  />
-                </Box>
-                <Box
-                  className={'sow-list-item-title'}
-                  sx={{
-                    color: !phase?.['additionalServiceId'] ? '#903fe8' : '',
-                    opacity: selectedPhaseData?.includes(phase?.['id']) ? 1 : 0.5
-                  }}
-                  component={selectedPhaseData?.includes(phase?.['id']) ? 'span' : 'del'}
-                >
-                  {phase?.['title']}
-                </Box>
-                {/* <Button
-                  sx={{
-                    ml: '5px',
-                    p: '2px',
-                    minWidth: 0,
-                    border: '2px solid #7e22ce',
-                    borderRadius: '5px'
-                  }}
-                  onClick={() => handlePhaseOnEdit(phase)}
-                >
-                  <EditIcon sx={{ color: '#7e22ce', height: '14px !important', width: '14px !important' }} />
-                </Button> */}
-              </Box>
-            )
-          })}
+              )
+            })}
           {/* selectedAdditionalServiceData */}
         </Box>
       </Box>

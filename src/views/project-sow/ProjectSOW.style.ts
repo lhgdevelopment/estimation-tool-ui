@@ -15,7 +15,7 @@ export const scopeOfWorkListContainer = {
   mb: 5,
   overflow: 'hidden',
   overflowY: 'auto',
-  height: '300px',
+  height: 'auto',
   border: '1px solid #ecedee',
   borderRadius: '5px',
   p: 3
@@ -28,26 +28,32 @@ export const scopeOfWorkListSx: SxProps = {
     fontWeight: 600,
     color: '#777778',
     cursor: 'pointer',
-    mb: '10px',
+    mb: '5px',
     flexWrap: 'wrap',
     '& .sow-list-item-sl': {
-      width: '50px',
-      border: '1px solid #777778',
-      borderRadius: '15px',
-      textAlign: 'center',
-      padding: '5px 0',
-      lineHeight: 'normal',
-      marginRight: '10px'
+      '.sow-list-item-sl-number': {
+        width: '50px',
+        border: '1px solid #777778',
+        borderRadius: '15px',
+        textAlign: 'center',
+        padding: '5px 0',
+        lineHeight: 'normal',
+        marginRight: '10px'
+      }
     },
     '& .sow-list-item-type': {
       '& .item-type-common': {
-        padding: '5px 20px',
+        padding: '3px 10px',
         borderRadius: '15px',
-        width: '130px',
+        width: '100px',
         textAlign: 'center',
         border: '1px solid transparent',
         '&.item-type-hive': {
           border: '3px solid #9333ea'
+        },
+        '&.item-type-phase': {
+          background: '#bee1f6',
+          color: '#158ddf'
         },
         '&.item-type-sow': {
           background: '#215a6c',
@@ -67,7 +73,7 @@ export const scopeOfWorkListSx: SxProps = {
         }
       }
     },
-    '& .sow-list-item-check': { mx: 2 },
+    '& .sow-list-item-check': { mx: 2, '& .MuiButtonBase-root': { p: 0 } },
     '& .sow-list-item-title': { lineHeight: 'normal', maxWidth: '500px' },
     '& .sow-list-item-input': {
       ml: 5,
@@ -81,6 +87,24 @@ export const scopeOfWorkListSx: SxProps = {
         '& .MuiInputBase-input': {
           p: '5px'
         }
+      }
+    },
+    '& .sow-list-item-edit-btn': {
+      ml: '5px',
+      p: '2px',
+      minWidth: 0,
+      borderRadius: '5px',
+      opacity: 0,
+      transition: 'all 0.3s ease-in-out',
+      '& .MuiSvgIcon-root': {
+        color: '#7e22ce',
+        height: '14px !important',
+        width: '14px !important'
+      }
+    },
+    '&:hover': {
+      '& .sow-list-item-edit-btn': {
+        opacity: 1
       }
     }
   }
@@ -137,7 +161,7 @@ export const taskListContainer = {
   '& .item-type-common': {
     padding: '0px 20px',
     borderRadius: '15px',
-    width: '130px',
+    width: '100px',
     textAlign: 'center',
     border: '1px solid transparent'
   },

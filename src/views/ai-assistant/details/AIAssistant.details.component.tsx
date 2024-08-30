@@ -1,5 +1,5 @@
 import NorthEastIcon from '@mui/icons-material/North'
-import { Box, Button, Modal, SelectChangeEvent } from '@mui/material'
+import { Box, Button, Modal, SelectChangeEvent, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { useSnackbar } from 'notistack'
@@ -7,7 +7,6 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
-import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
 import AIAssistantMessagesComponent from './AIAssistantMessages.component'
@@ -172,7 +171,7 @@ export default function AIAssistantDetailsComponent() {
         <Box className='container px-6 mx-auto' sx={{ height: 'calc(100vh - 100px)', position: 'relative' }}>
           <Box
             sx={{
-              height: 'calc(100% - 390px)',
+              height: 'calc(100% - 315px)',
               pr: '24px',
               overflow: 'hidden',
               overflowY: 'auto'
@@ -233,31 +232,15 @@ export default function AIAssistantDetailsComponent() {
                 position: 'relative'
               }}
             >
-              {/* <Box
-                component={'textarea'}
-                className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
-                }`}
-                placeholder='Chat Prompt...'
+              <TextField
+                label={'Message'}
                 name='message_content'
                 value={conversationFormData.message_content}
                 onChange={handleTextChange}
-                onKeyDown={handleKeyDown}
-                sx={{
-                  paddingBottom: '0.875rem',
-                  paddingTop: '0.875rem',
-                  paddingLeft: '1rem',
-                  margin: '0',
-                  borderWidth: '0',
-                  overflow: 'hidden',
-                  resize: 'none'
-                }}
-                disabled={messagePreload}
-              ></Box> */}
-              <RichTextEditor
-                value={conversationFormData.message_content}
-                onBlur={newContent => handleReachText(newContent, 'message_content')}
-                onChange={handleKeyDown}
+                error={errorMessage?.['message_content']}
+                fullWidth
+                multiline
+                rows={4}
               />
 
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>

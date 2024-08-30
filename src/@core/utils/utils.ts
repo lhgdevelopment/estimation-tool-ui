@@ -99,3 +99,14 @@ export function getShortStringNumber(num: number) {
     return `${num}${suffixes[lastDigit] || suffixes[0]}`
   }
 }
+
+type DebouncedFunction<T extends (...args: any[]) => any> = (...args: Parameters<T>) => void
+
+export const debounce = <T extends (...args: any[]) => any>(func: T, delay: number): DebouncedFunction<T> => {
+  let timeoutId: NodeJS.Timeout
+
+  return (...args: Parameters<T>) => {
+    if (timeoutId) clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => func(...args), delay)
+  }
+}
