@@ -13,9 +13,7 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
   const [preload, setPreload] = useState<boolean>(false)
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [errorMessage, setErrorMessage] = useState<any>({})
-  const [phaseDataList, setPhaseDataList] = useState<any[]>(
-    phaseData?.sort((a: any, b: any) => (a?.serial > b?.serial ? 1 : -1))
-  )
+  const [phaseDataList, setPhaseDataList] = useState<any[]>(phaseData?.sort((a: any, b: any) => a?.serial - b?.serial))
   const [servicePhaseModalOpen, setServiceSowModalOpen] = useState<boolean>(false)
 
   const [phasePhaseList, setPhasePhaseList] = useState<any[]>([])
@@ -43,13 +41,36 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
     handlePhaseOnClear()
   }
 
-  const handlePhaseCheckbox: any = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
-    const { checked, value } = e.target
-    console.log(checked)
+  const handlePhaseCheckbox = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    const { checked } = e.target
 
-    setPhaseDataList((prevState: any[]) =>
-      prevState?.map((phase: any) => (phase?.id === id ? { ...phase, isChecked: !!checked } : phase))
-    )
+    // Update state and immediately access the updated state in the callback
+    setPhaseDataList((prevState: any[]) => {
+      const updatedList = prevState.map((phase: any) =>
+        phase?.id === id ? { ...phase, isChecked: !!checked, isPreloading: true } : phase
+      )
+
+      // Make API request with the updated list
+      apiRequest
+        .post(`/phase-select/`, {
+          problemGoalId: problemGoalID,
+          phaseIds: updatedList.filter(phase => phase?.isChecked).map(phase => phase?.id)
+        })
+        .then(res => {
+          console.log(res)
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+        })
+        .catch(error => {
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+        .finally(() => {
+          setPhaseDataList(prevList =>
+            prevList.map((phase: any) => (phase?.id === id ? { ...phase, isPreloading: false } : phase))
+          )
+        })
+
+      return updatedList
+    })
   }
 
   const debouncedSetPhaseSlOnChange = useCallback(
@@ -64,7 +85,9 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
         })
         .finally(() => {
           setPhaseDataList((prevState: any[]) =>
-            prevState.map((phase: any) => (phase?.id === id ? { ...phase, serial: sl, isPreloading: false } : phase))
+            prevState
+              ?.sort((a: any, b: any) => a?.serial - b?.serial)
+              .map((phase: any) => (phase?.id === id ? { ...phase, serial: sl, isPreloading: false } : phase))
           )
         })
     }, 1000),
