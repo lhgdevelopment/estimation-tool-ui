@@ -8,7 +8,6 @@ import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
-import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
 
@@ -59,14 +58,15 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
             const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
 
             if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res?.data
+              updatedList[editedServiceIndex]['name'] = res?.data?.name
             }
 
             return updatedList
           })
-          onClear()
+
           setPreload(false)
           enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          onClear()
         })
         .catch(error => {
           setPreload(false)
@@ -91,7 +91,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
 
   useEffect(() => {
     setFormData({
-      name: editData?.['name'],
+      name: editData?.['name'] ?? '',
       prompt_id: '',
       message_content: ''
     })
@@ -102,6 +102,8 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
     setEditDataId(null)
     setEditData({})
   }
+
+  console.log({ formData })
 
   return (
     <Fragment>
@@ -151,12 +153,15 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
           {!editDataId && (
             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
               <Box sx={{ width: '100%' }}>
-                <label className='block text-sm'>
-                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Message</span>
-                </label>
-                <RichTextEditor
+                <TextField
+                  label={'Message'}
+                  name='message_content'
                   value={formData.message_content}
-                  onBlur={newContent => handleReachText(newContent, 'message_content')}
+                  onChange={handleTextChange}
+                  error={errorMessage?.['message_content']}
+                  fullWidth
+                  multiline
+                  rows={4}
                 />
                 {!!errorMessage?.['message_content'] &&
                   errorMessage?.['message_content']?.map((message: any, index: number) => {

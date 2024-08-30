@@ -1,9 +1,8 @@
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { Dispatch, useState } from 'react'
-import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import apiRequest from 'src/@core/utils/axios-config'
 
 type TAIAssistantMessagesEditComponentProps = {
@@ -93,13 +92,15 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
           <form onSubmit={onSubmit}>
             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
               <Box sx={{ width: '100%' }}>
-                <label className='block text-sm'>
-                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Message</span>
-                </label>
-
-                <RichTextEditor
+                <TextField
+                  label={'Message'}
+                  name='message_content'
                   value={formData.message_content}
-                  onBlur={newContent => handleReachText(newContent, 'message_content')}
+                  onChange={handleTextChange}
+                  error={errorMessage?.['message_content']}
+                  fullWidth
+                  multiline
+                  rows={4}
                 />
                 {!!errorMessage?.['message_content'] &&
                   errorMessage?.['message_content']?.map((message: any, index: number) => {

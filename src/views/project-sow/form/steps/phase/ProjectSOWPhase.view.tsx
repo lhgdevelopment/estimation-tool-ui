@@ -51,7 +51,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
       <Box sx={scopeOfWorkListContainer}>
         <Box sx={scopeOfWorkListSx}>
           {phaseData
-            ?.sort((a, b) => (a?.serial > b?.serial ? 1 : -1))
+            ?.sort((a: any, b: any) => (a?.serial > b?.serial ? 1 : -1))
             ?.map((phase: any, index: number) => {
               return (
                 <Box className={'sow-list-item'} key={index + Math.random()}>

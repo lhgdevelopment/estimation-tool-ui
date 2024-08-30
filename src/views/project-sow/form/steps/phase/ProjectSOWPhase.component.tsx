@@ -13,7 +13,9 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
   const [preload, setPreload] = useState<boolean>(false)
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [errorMessage, setErrorMessage] = useState<any>({})
-  const [phaseDataList, setPhaseDataList] = useState<any[]>(phaseData)
+  const [phaseDataList, setPhaseDataList] = useState<any[]>(
+    phaseData?.sort((a: any, b: any) => (a?.serial > b?.serial ? 1 : -1))
+  )
   const [servicePhaseModalOpen, setServiceSowModalOpen] = useState<boolean>(false)
 
   const [phasePhaseList, setPhasePhaseList] = useState<any[]>([])
@@ -40,19 +42,31 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
     setServiceSowModalOpen(false)
     handlePhaseOnClear()
   }
+
   const handlePhaseCheckbox: any = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
     const { checked, value } = e.target
+    console.log(checked)
 
     setPhaseDataList((prevState: any[]) =>
-      prevState.map((phase: any) => (phase?.id === id ? { ...phase, isChecked: !!checked } : phase))
+      prevState?.map((phase: any) => (phase?.id === id ? { ...phase, isChecked: !!checked } : phase))
     )
   }
 
   const debouncedSetPhaseSlOnChange = useCallback(
     debounce((sl: number, id: number) => {
-      setPhaseDataList((prevState: any[]) =>
-        prevState.map((phase: any) => (phase?.id === id ? { ...phase, serial: sl, isPreloading: false } : phase))
-      )
+      apiRequest
+        .patch(`/phase/${id}/serial`, { serial: sl })
+        .then(res => {
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+        })
+        .catch(error => {
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+        .finally(() => {
+          setPhaseDataList((prevState: any[]) =>
+            prevState.map((phase: any) => (phase?.id === id ? { ...phase, serial: sl, isPreloading: false } : phase))
+          )
+        })
     }, 1000),
     []
   )
