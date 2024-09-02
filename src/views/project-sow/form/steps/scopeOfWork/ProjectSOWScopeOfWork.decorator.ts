@@ -1,5 +1,5 @@
 import { SelectChangeEvent } from '@mui/material'
-import { Dispatch } from 'react'
+import { Dispatch, MutableRefObject } from 'react'
 
 export type TProjectSOWScopeOfWorkFormComponentProps = {
   scopeOfWorkData: any
@@ -14,9 +14,8 @@ export type TProjectSOWScopeOfWorkFormComponentProps = {
 }
 
 export type TProjectSOWScopeOfWorkFormViewProps = {
-  handleScopeOfWorkCheckbox: () => void
+  handleScopeOfWorkCheckbox: (event: any, id: number) => void
   scopeOfWorkData: any
-  selectedScopeOfWorkData: any
   handleServiceSOWModalOpen: () => void
   handleSOWOnEdit: (data: any) => void
   serviceGroupByProjectTypeId: (data: any) => any[]
@@ -36,4 +35,6 @@ export type TProjectSOWScopeOfWorkFormViewProps = {
   handleScopeOfWorkMultipleInputChange: (event: any, index: number) => void
   handleRemoveSow: (index: number) => void
   handleSOWOnClear: () => void
+  handleScopeOfWorkSlOnChange: (sl: number, id: number) => void
+  slInputRefs: MutableRefObject<{ [key: number]: HTMLInputElement | null }>
 }

@@ -91,9 +91,11 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
           )?.map((scopeOfWork: any, index: number) => {
             return (
               <Box key={index + 'deliverable'}>
-                <Box className={'sow-list-item'} component={'label'}>
-                  <Box className={'sow-list-item-sl'}>{index + 1}</Box>
-                  <Box className={'sow-list-item-type'}>
+                <Box className={'common-task-list-item'} component={'label'}>
+                  <Box className={'common-task-list-item-sl'}>
+                    <input className={'common-task-list-item-sl-number'} value={scopeOfWork?.['serial']} disabled />
+                  </Box>
+                  <Box className={'common-task-list-item-type'}>
                     <Box
                       className={`item-type-common item-type-sow ${
                         !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
@@ -102,7 +104,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                       SOW
                     </Box>
                   </Box>
-                  <Box className={'sow-list-item-check'}>
+                  <Box className={'common-task-list-item-check'}>
                     <Checkbox
                       onChange={() => {
                         handleDeliverableCheckboxBySow(scopeOfWork?.deliverables)
@@ -111,46 +113,45 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                       checked={isSowCheckedInDeliverable(scopeOfWork?.deliverables, selectedDeliverableData)}
                     />
                   </Box>
-                  <Box className={'sow-list-item-title'}>{scopeOfWork?.title}</Box>
-                  <Button
-                    sx={{
-                      ml: '5px',
-                      p: '2px',
-                      minWidth: 0,
-                      border: '2px solid #7e22ce',
-                      borderRadius: '5px'
-                    }}
-                    onClick={() => handleSOWOnEdit(scopeOfWork)}
-                  >
-                    <EditIcon sx={{ color: '#7e22ce', height: '14px !important', width: '14px !important' }} />
+                  <Box className={'common-task-list-item-title'}>{scopeOfWork?.title}</Box>
+
+                  <Button className='common-task-list-item-edit-btn' onClick={() => handleSOWOnEdit(scopeOfWork)}>
+                    <EditIcon />
                   </Button>
                 </Box>
                 {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
                   return (
-                    <Box className={'sow-list-item'} key={deliverableIndex} component={'label'}>
-                      <Box className={'sow-list-item-sl'}>{`${index + 1}.${deliverableIndex + 1}`}</Box>
-                      <Box className={'sow-list-item-type'}>
-                        <Box className={'item-type-common item-type-deliverable'}>Deliverable</Box>
+                    <Box className={'common-task-list-item'} key={deliverableIndex} component={'label'}>
+                      <Box className={'common-task-list-item-sl'}>
+                        <input
+                          className={'common-task-list-item-sl-number'}
+                          value={`${index + 1}.${deliverableIndex + 1}`}
+                          disabled
+                        />
                       </Box>
-                      <Box className={'sow-list-item-check'}>
+                      <Box className={'common-task-list-item-type'}>
+                        <Box
+                          className={`item-type-common item-type-deliverable ${
+                            !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
+                          }`}
+                        >
+                          Deliverable
+                        </Box>
+                      </Box>
+                      <Box className={'common-task-list-item-check'}>
                         <Checkbox
                           onChange={handleDeliverableCheckbox}
                           value={deliverable?.['id']}
                           checked={selectedDeliverableData?.includes(deliverable?.['id'])}
                         />
                       </Box>
-                      <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                      <Box className={'common-task-list-item-title'}>{deliverable?.['title']}</Box>
+
                       <Button
-                        sx={{
-                          ml: '5px',
-                          p: '2px',
-                          minWidth: 0,
-                          border: '2px solid #7e22ce',
-                          borderRadius: '5px'
-                        }}
+                        className='common-task-list-item-edit-btn'
                         onClick={() => handleDeliverableOnEdit(deliverable)}
                       >
-                        <EditIcon sx={{ color: '#7e22ce', height: '14px !important', width: '14px !important' }} />
+                        <EditIcon />
                       </Button>
                     </Box>
                   )
@@ -257,8 +258,8 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                     {additionalService?.scope_of_works?.map((scopeOfWork: any, scopeOfWorkIndex: number) => {
                       return (
                         <Box key={scopeOfWorkIndex}>
-                          <Box className={'sow-list-item'} component={'label'}>
-                            <Box className={'sow-list-item-type'}>
+                          <Box className={'common-task-list-item'} component={'label'}>
+                            <Box className={'common-task-list-item-type'}>
                               <Box
                                 className={`item-type-common item-type-sow ${
                                   !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
@@ -267,7 +268,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                 SOW
                               </Box>
                             </Box>
-                            <Box className={'sow-list-item-check'}>
+                            <Box className={'common-task-list-item-check'}>
                               <Checkbox
                                 onChange={() => {
                                   handleDeliverableCheckboxBySow(scopeOfWork?.deliverables)
@@ -276,22 +277,22 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                 checked={isSowCheckedInDeliverable(scopeOfWork?.deliverables, selectedDeliverableData)}
                               />
                             </Box>
-                            <Box className={'sow-list-item-title'}>{scopeOfWork?.title}</Box>
+                            <Box className={'common-task-list-item-title'}>{scopeOfWork?.title}</Box>
                           </Box>
                           {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
                             return (
-                              <Box className={'sow-list-item'} key={deliverableIndex} component={'label'}>
-                                <Box className={'sow-list-item-type'}>
+                              <Box className={'common-task-list-item'} key={deliverableIndex} component={'label'}>
+                                <Box className={'common-task-list-item-type'}>
                                   <Box className={'item-type-common item-type-deliverable'}>Deliverable</Box>
                                 </Box>
-                                <Box className={'sow-list-item-check'}>
+                                <Box className={'common-task-list-item-check'}>
                                   <Checkbox
                                     onChange={handleDeliverableCheckbox}
                                     value={deliverable?.['id']}
                                     checked={selectedDeliverableData?.includes(deliverable?.['id'])}
                                   />
                                 </Box>
-                                <Box className={'sow-list-item-title'}>{deliverable?.['title']}</Box>
+                                <Box className={'common-task-list-item-title'}>{deliverable?.['title']}</Box>
                               </Box>
                             )
                           })}

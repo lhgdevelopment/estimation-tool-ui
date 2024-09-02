@@ -972,52 +972,51 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               )}
               {activeStep == 9 && <Box>Review</Box>}
               {activeStep == 10 && <Box>Approval</Box>}
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Box className='my-4 text-right'>
-                {!id && (
-                  <button
-                    onClick={onClear}
-                    type='button'
-                    className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-                  >
-                    Clear <PlaylistRemoveIcon />
-                  </button>
-                )}
-                {activeStep != 0 && (
-                  <button
-                    onClick={() => {
-                      handleNext('SAVE')
-                    }}
-                    className='mr-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-                  >
-                    {activeStep != totalSteps() && (
-                      <>
-                        {id ? 'Update ' : 'Save '}
+              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                <Box sx={{ flex: '1 1 auto' }} />
+                <Box className='my-4 text-right'>
+                  {!id && (
+                    <button
+                      onClick={onClear}
+                      type='button'
+                      className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                    >
+                      Clear <PlaylistRemoveIcon />
+                    </button>
+                  )}
+                  {activeStep != 0 && (
+                    <button
+                      onClick={() => {
+                        handleNext('SAVE')
+                      }}
+                      className='mr-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                    >
+                      {activeStep != totalSteps() && (
+                        <>
+                          {id ? 'Update ' : 'Save '}
 
-                        {id ? <EditNoteIcon /> : <AddIcon />}
-                      </>
-                    )}
-                    {activeStep == totalSteps() && (
-                      <>
-                        Finish <CheckCircleIcon />
-                      </>
-                    )}
-                  </button>
-                )}
-                {activeStep != totalSteps() && (
-                  <button
-                    onClick={() => {
-                      handleNext()
-                    }}
-                    className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
-                  >
-                    Next <NavigateNextIcon />
-                  </button>
-                )}
-              </Box>
-              {/* {activeStep !== steps.length &&
+                          {id ? <EditNoteIcon /> : <AddIcon />}
+                        </>
+                      )}
+                      {activeStep == totalSteps() && (
+                        <>
+                          Finish <CheckCircleIcon />
+                        </>
+                      )}
+                    </button>
+                  )}
+                  {activeStep != totalSteps() && (
+                    <button
+                      onClick={() => {
+                        handleNext()
+                      }}
+                      className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+                    >
+                      Next <NavigateNextIcon />
+                    </button>
+                  )}
+                </Box>
+                {/* {activeStep !== steps.length &&
               (completed[activeStep] ? (
                 <Typography variant='caption' sx={{ display: 'inline-block' }}>
                   Step {activeStep + 1} already completed
@@ -1027,6 +1026,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   {completedSteps() === totalSteps() - 1 ? 'Finish' : 'Complete Step'}
                 </Button>
               ))} */}
+              </Box>
             </Box>
           </React.Fragment>
         </Box>

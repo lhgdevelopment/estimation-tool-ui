@@ -3,7 +3,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import { Box, Button, Checkbox, Modal, TextField } from '@mui/material'
+import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { Dropdown } from 'src/@core/components/dropdown'
 import {
@@ -18,7 +18,6 @@ import { TProjectSOWScopeOfWorkFormViewProps } from './ProjectSOWScopeOfWork.dec
 export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfWorkFormViewProps) {
   const {
     scopeOfWorkData,
-    selectedScopeOfWorkData,
     handleServiceSOWModalOpen,
     handleScopeOfWorkCheckbox,
     handleSOWOnEdit,
@@ -37,7 +36,9 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
     handleAddNewSow,
     scopeOfWorkPhaseList,
     handleScopeOfWorkMultipleInputChange,
-    handleRemoveSow
+    handleRemoveSow,
+    handleScopeOfWorkSlOnChange,
+    slInputRefs
   } = props
 
   return (
@@ -57,9 +58,22 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
         <Box sx={scopeOfWorkListSx}>
           {scopeOfWorkData?.map((scopeOfWork: any, index: number) => {
             return (
-              <Box className={'sow-list-item'} key={index + Math.random()}>
-                <Box className={'sow-list-item-sl'}>{index + 1}</Box>
-                <Box className={'sow-list-item-type'}>
+              <Box className={'common-task-list-item'} key={index + Math.random()}>
+                <Box className={'common-task-list-item-sl'}>
+                  <Box className={'common-task-list-item-sl'}>
+                    <input
+                      ref={el => (slInputRefs.current[scopeOfWork.id] = el)}
+                      className={'common-task-list-item-sl-number'}
+                      value={scopeOfWork?.['serial']}
+                      onChange={event => {
+                        const serial = parseInt(event.target.value ?? 0, 10)
+                        handleScopeOfWorkSlOnChange(serial, scopeOfWork?.['id'])
+                      }}
+                      type={'number'}
+                    />
+                  </Box>
+                </Box>
+                <Box className={'common-task-list-item-type'}>
                   <Box
                     className={`item-type-common item-type-sow ${
                       !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
@@ -68,35 +82,32 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                     SOW
                   </Box>
                 </Box>
-                <Box className={'sow-list-item-check'}>
+                <Box className={'common-task-list-item-check'}>
                   <Checkbox
-                    onChange={handleScopeOfWorkCheckbox}
+                    onChange={event => handleScopeOfWorkCheckbox(event, scopeOfWork?.['id'])}
                     value={scopeOfWork?.['id']}
-                    checked={selectedScopeOfWorkData?.includes(scopeOfWork?.['id'])}
+                    checked={scopeOfWork?.['isChecked']}
                   />
                 </Box>
                 <Box
-                  className={'sow-list-item-title'}
+                  className={'common-task-list-item-title'}
                   sx={{
                     color: !scopeOfWork?.['additionalServiceId'] ? '#903fe8' : '',
-                    opacity: selectedScopeOfWorkData?.includes(scopeOfWork?.['id']) ? 1 : 0.5
+                    opacity: scopeOfWork?.['isChecked'] ? 1 : 0.5
                   }}
-                  component={selectedScopeOfWorkData?.includes(scopeOfWork?.['id']) ? 'span' : 'del'}
+                  component={scopeOfWork?.['isChecked'] ? 'span' : 'del'}
                 >
                   {scopeOfWork?.['title']}
                 </Box>
-                <Button
-                  sx={{
-                    ml: '5px',
-                    p: '2px',
-                    minWidth: 0,
-                    border: '2px solid #7e22ce',
-                    borderRadius: '5px'
-                  }}
-                  onClick={() => handleSOWOnEdit(scopeOfWork)}
-                >
-                  <EditIcon sx={{ color: '#7e22ce', height: '14px !important', width: '14px !important' }} />
+
+                <Button className='common-task-list-item-edit-btn' onClick={() => handleSOWOnEdit(scopeOfWork)}>
+                  <EditIcon />
                 </Button>
+                {scopeOfWork?.['isPreloading'] && (
+                  <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
+                    <CircularProgress color='secondary' size={12} />
+                  </Stack>
+                )}
               </Box>
             )
           })}

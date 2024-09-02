@@ -1,8 +1,9 @@
 import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useSnackbar } from 'notistack'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
+import { debounce } from 'src/@core/utils/utils'
 import { TProjectSOWScopeOfWorkFormComponentProps } from './ProjectSOWScopeOfWork.decorator'
 import ProjectSOWScopeOfWorkFormView from './ProjectSOWScopeOfWork.view'
 
@@ -11,8 +12,6 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
     scopeOfWorkData,
     setScopeOfWorkData,
     problemGoalID,
-    selectedScopeOfWorkData,
-    setSelectedScopeOfWorkData,
     selectedAdditionalServiceData,
     handleAdditionalServiceSelection,
     serviceList,
@@ -24,28 +23,12 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
   const [errorMessage, setErrorMessage] = useState<any>({})
   const [serviceSOWModalOpen, setServiceSowModalOpen] = useState<boolean>(false)
 
-  const handleServiceSOWModalOpen = () => {
-    setServiceSowModalOpen(true)
-  }
-  const handleServiceSOWModalClose = () => {
-    setServiceSowModalOpen(false)
-    handleSOWOnClear()
-  }
-  const handleScopeOfWorkCheckbox: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { checked, value } = e.target
-    setSelectedScopeOfWorkData((prevState: any) => {
-      if (checked) {
-        return [...prevState, Number(value)]
-      } else {
-        return prevState.filter((item: any) => item !== Number(value))
-      }
-    })
-  }
+  const slInputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({})
 
   const [scopeOfWorkPhaseList, setScopeOfWorkPhaseList] = useState<any[]>([])
 
   const scopeOfWorkDefaultData = {
-    phaseId: '',
+    scopeOfWorkId: '',
     title: '',
     scopeOfWorks: [
       {
@@ -57,6 +40,90 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
 
   const [scopeOfWorkFormData, setScopeOfWorkFormData] = useState<any>(scopeOfWorkDefaultData)
   const [scopeOfWorkEditId, setScopeOfWorkEditId] = useState<any>(null)
+
+  const handleServiceSOWModalOpen = () => {
+    setServiceSowModalOpen(true)
+  }
+  const handleServiceSOWModalClose = () => {
+    setServiceSowModalOpen(false)
+    handleSOWOnClear()
+  }
+
+  const handleScopeOfWorkCheckbox = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+    const { checked } = e.target
+
+    // Update state and immediately access the updated state in the callback
+    setScopeOfWorkData((prevState: any[]) => {
+      console.log(prevState)
+
+      const updatedList = prevState.map((scopeOfWork: any) =>
+        scopeOfWork?.id === id ? { ...scopeOfWork, isChecked: !!checked, isPreloading: true } : scopeOfWork
+      )
+
+      // Make API request with the updated list
+      apiRequest
+        .post(`/scope-of-work-select/`, {
+          problemGoalId: problemGoalID,
+          scopeOfWorkIds: updatedList.filter(scopeOfWork => scopeOfWork?.isChecked).map(scopeOfWork => scopeOfWork?.id),
+          serviceIds: selectedAdditionalServiceData
+        })
+        .then(res => {
+          console.log(res)
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+        })
+        .catch(error => {
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+        .finally(() => {
+          setScopeOfWorkData((prevList: any) =>
+            prevList.map((scopeOfWork: any) =>
+              scopeOfWork?.id === id ? { ...scopeOfWork, isPreloading: false } : scopeOfWork
+            )
+          )
+        })
+
+      return updatedList
+    })
+  }
+
+  const debouncedSetScopeOfWorkSlOnChange = useCallback(
+    debounce((sl: number, id: number) => {
+      apiRequest
+        .patch(`/scope-of-work/${id}/serial`, { serial: sl })
+        .then(res => {
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+        })
+        .catch(error => {
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+        .finally(() => {
+          setScopeOfWorkData((prevState: any[]) =>
+            prevState
+              ?.sort((a: any, b: any) => a?.serial - b?.serial)
+              .map((scopeOfWork: any) =>
+                scopeOfWork?.id === id ? { ...scopeOfWork, serial: sl, isPreloading: false } : scopeOfWork
+              )
+          )
+        })
+    }, 1000),
+    []
+  )
+
+  const handleScopeOfWorkSlOnChange = (sl: number, id: number) => {
+    setScopeOfWorkData((prevState: any[]) =>
+      prevState?.map((scopeOfWork: any) =>
+        scopeOfWork?.id === id ? { ...scopeOfWork, serial: sl, isPreloading: true } : scopeOfWork
+      )
+    )
+
+    if (slInputRefs.current[id]) {
+      setTimeout(() => {
+        slInputRefs.current[id]?.focus()
+      }, 100)
+    }
+
+    debouncedSetScopeOfWorkSlOnChange(sl, id)
+  }
 
   const handleScopeOfWorkSelectChange = (e: SelectChangeEvent<any>) => {
     setScopeOfWorkFormData({
@@ -136,7 +203,6 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
         .post('/scope-of-work/add-multi', { ...scopeOfWorkFormData, problemGoalId: problemGoalID })
         .then(res => {
           setScopeOfWorkData((prevState: any[]) => [...res?.data, ...prevState])
-          setSelectedScopeOfWorkData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
 
           setPreload(false)
           enqueueSnackbar('Created Successfully!', { variant: 'success' })
@@ -189,7 +255,6 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
   return (
     <ProjectSOWScopeOfWorkFormView
       scopeOfWorkData={scopeOfWorkData}
-      selectedScopeOfWorkData={selectedScopeOfWorkData}
       handleServiceSOWModalOpen={handleServiceSOWModalOpen}
       handleScopeOfWorkCheckbox={handleScopeOfWorkCheckbox}
       handleSOWOnEdit={handleSOWOnEdit}
@@ -210,6 +275,8 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
       handleScopeOfWorkMultipleInputChange={handleScopeOfWorkMultipleInputChange}
       handleRemoveSow={handleRemoveSow}
       handleSOWOnClear={handleSOWOnClear}
+      slInputRefs={slInputRefs}
+      handleScopeOfWorkSlOnChange={handleScopeOfWorkSlOnChange}
     ></ProjectSOWScopeOfWorkFormView>
   )
 }

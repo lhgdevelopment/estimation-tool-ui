@@ -401,6 +401,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                         <>
                                           <TableRow
                                             key={taskIndex}
+                                            className={'task-item'}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                           >
                                             <TableCell scope='row'>
@@ -427,29 +428,17 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                               </Box>
                                             </TableCell>
                                             <TableCell align='left'>
-                                              <Box sx={{ display: 'flex' }}>
+                                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                 <Box
                                                   dangerouslySetInnerHTML={{
                                                     __html: task?.title
                                                   }}
                                                 ></Box>
                                                 <Button
-                                                  sx={{
-                                                    ml: '5px',
-                                                    p: '2px',
-                                                    minWidth: 0,
-                                                    border: '2px solid #7e22ce',
-                                                    borderRadius: '5px'
-                                                  }}
+                                                  className='common-task-list-item-edit-btn'
                                                   onClick={() => handleTaskOnEdit(task)}
                                                 >
-                                                  <EditIcon
-                                                    sx={{
-                                                      color: '#7e22ce',
-                                                      height: '14px !important',
-                                                      width: '14px !important'
-                                                    }}
-                                                  />
+                                                  <EditIcon />
                                                 </Button>
                                               </Box>
                                             </TableCell>
@@ -483,7 +472,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                             >
                                               {!!task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
                                                 <TextField
-                                                  className={'sow-list-item-text-input'}
+                                                  className={'common-task-list-item-text-input'}
                                                   value={task?.estimateHours}
                                                   sx={{ width: '100px' }}
                                                   onChange={event => {
@@ -543,6 +532,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                             return (
                                               <TableRow
                                                 key={subTaskIndex}
+                                                className={'task-item'}
                                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                               >
                                                 <TableCell scope='row'>
@@ -563,29 +553,18 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                   </Box>
                                                 </TableCell>
                                                 <TableCell align='left'>
-                                                  <Box sx={{ display: 'flex' }}>
+                                                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                     <Box
                                                       dangerouslySetInnerHTML={{
                                                         __html: subTask?.title
                                                       }}
                                                     ></Box>
+
                                                     <Button
-                                                      sx={{
-                                                        ml: '5px',
-                                                        p: '2px',
-                                                        minWidth: 0,
-                                                        border: '2px solid #7e22ce',
-                                                        borderRadius: '5px'
-                                                      }}
+                                                      className='common-task-list-item-edit-btn'
                                                       onClick={() => handleTaskOnEdit(subTask)}
                                                     >
-                                                      <EditIcon
-                                                        sx={{
-                                                          color: '#7e22ce',
-                                                          height: '14px !important',
-                                                          width: '14px !important'
-                                                        }}
-                                                      />
+                                                      <EditIcon />
                                                     </Button>
                                                   </Box>
                                                 </TableCell>
@@ -616,7 +595,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                 <TableCell>
                                                   {!!subTask?.['isChecked'] && !subTask?.['sub_tasks']?.length && (
                                                     <TextField
-                                                      className={'sow-list-item-text-input'}
+                                                      className={'common-task-list-item-text-input'}
                                                       value={subTask?.estimateHours}
                                                       sx={{ width: '100px' }}
                                                       onChange={event => {
@@ -835,6 +814,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                   <>
                                                     <TableRow
                                                       key={taskIndex}
+                                                      className={'task-item'}
                                                       sx={{
                                                         '&:last-child td, &:last-child th': { border: 0 }
                                                       }}
@@ -865,29 +845,18 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                         </Box>
                                                       </TableCell>
                                                       <TableCell align='left'>
-                                                        <Box sx={{ display: 'flex' }}>
+                                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                           <Box
                                                             dangerouslySetInnerHTML={{
                                                               __html: task?.title
                                                             }}
                                                           ></Box>
+
                                                           <Button
-                                                            sx={{
-                                                              ml: '5px',
-                                                              p: '2px',
-                                                              minWidth: 0,
-                                                              border: '2px solid #7e22ce',
-                                                              borderRadius: '5px'
-                                                            }}
+                                                            className='common-task-list-item-edit-btn'
                                                             onClick={() => handleTaskOnEdit(task)}
                                                           >
-                                                            <EditIcon
-                                                              sx={{
-                                                                color: '#7e22ce',
-                                                                height: '14px !important',
-                                                                width: '14px !important'
-                                                              }}
-                                                            />
+                                                            <EditIcon />
                                                           </Button>
                                                         </Box>
                                                       </TableCell>
@@ -921,7 +890,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                       >
                                                         {!!task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
                                                           <TextField
-                                                            className={'sow-list-item-text-input'}
+                                                            className={'common-task-list-item-text-input'}
                                                             value={task?.estimateHours}
                                                             sx={{ width: '100px' }}
                                                             onChange={event => {
@@ -981,6 +950,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                       return (
                                                         <TableRow
                                                           key={subTaskIndex}
+                                                          className={'task-item'}
                                                           sx={{
                                                             '&:last-child td, &:last-child th': {
                                                               border: 0
@@ -1007,29 +977,18 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                             </Box>
                                                           </TableCell>
                                                           <TableCell align='left'>
-                                                            <Box sx={{ display: 'flex' }}>
+                                                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
                                                               <Box
                                                                 dangerouslySetInnerHTML={{
                                                                   __html: subTask?.title
                                                                 }}
                                                               ></Box>
+
                                                               <Button
-                                                                sx={{
-                                                                  ml: '5px',
-                                                                  p: '2px',
-                                                                  minWidth: 0,
-                                                                  border: '2px solid #7e22ce',
-                                                                  borderRadius: '5px'
-                                                                }}
+                                                                className='common-task-list-item-edit-btn'
                                                                 onClick={() => handleTaskOnEdit(subTask)}
                                                               >
-                                                                <EditIcon
-                                                                  sx={{
-                                                                    color: '#7e22ce',
-                                                                    height: '14px !important',
-                                                                    width: '14px !important'
-                                                                  }}
-                                                                />
+                                                                <EditIcon />
                                                               </Button>
                                                             </Box>
                                                           </TableCell>
@@ -1061,7 +1020,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                             {!!subTask?.['isChecked'] &&
                                                               !subTask?.['sub_tasks']?.length && (
                                                                 <TextField
-                                                                  className={'sow-list-item-text-input'}
+                                                                  className={'common-task-list-item-text-input'}
                                                                   value={subTask?.estimateHours}
                                                                   sx={{ width: '100px' }}
                                                                   onChange={event => {
