@@ -177,11 +177,11 @@ export default function UsersFormComponent(props: TUsersComponent) {
             <Box sx={{ width: '50%' }}>
               <TextField
                 id='outlined-multiline-flexible'
-                label='Password'
+                label='Confirm Password'
                 className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
                   errorMessage?.['password_confirmation'] ? 'border-red-600' : 'dark:border-gray-600'
                 }`}
-                placeholder='Password'
+                placeholder='Confirm Password'
                 name='password_confirmation'
                 value={formData.password_confirmation}
                 onChange={handleTextChange}

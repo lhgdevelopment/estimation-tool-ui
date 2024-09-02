@@ -17,50 +17,33 @@ type TNavigation = {
   icon?: OverridableComponent<SvgIconTypeMap>
   path: string
   subMenu?: TSubMenu[]
+  accessBy?: string[]
 }
 type TSubMenu = {
   title: string
   icon?: OverridableComponent<SvgIconTypeMap>
   path?: string
+  accessBy?: string[]
 }
 const navigation: TNavigation[] = [
-  // {
-  //   title: 'Projects',
-  //   icon: ShoppingCartIcon,
-  //   path: '/Project',
-  //   component: 'button'
-  // },
-
-  // {
-  //   title: 'Website Component Categories',
-  //   icon: CategoryIcon,
-  //   path: '/website-component-categories'
-  // },
-  // {
-  //   title: 'Website Component',
-  //   icon: DashboardIcon,
-  //   path: '/website-component'
-  // },
-  // {
-  //   title: 'Project Components',
-  //   icon: DashboardCustomizeIcon,
-  //   path: '/project-component'
-  // },
   {
     title: 'Project SOW',
     icon: BiotechIcon,
-    path: '/project-summary'
+    path: '/project-summary',
+    accessBy: ['Admin']
   },
 
   {
     title: 'Meeting Summary',
     icon: SpeakerNotesIcon,
-    path: '/meeting-summary'
+    path: '/meeting-summary',
+    accessBy: ['Admin']
   },
   {
     title: 'Leads',
     icon: LeaderboardIcon,
-    path: '/leads'
+    path: '/leads',
+    accessBy: ['Admin']
   },
 
   // {
@@ -72,46 +55,25 @@ const navigation: TNavigation[] = [
     title: 'Service Management',
     icon: EngineeringIcon,
     path: 'service-management',
+    accessBy: ['Admin'],
     subMenu: [
-      // {
-      //   title: 'Service',
-      //   icon: SettingsEthernetIcon,
-      //   path: '/service-management/service'
-      // },
-      // {
-      //   title: 'Groups',
-      //   icon: SettingsEthernetIcon,
-      //   path: '/service-management/service-groups'
-      // },
-      // {
-      //   title: 'SOWs',
-      //   icon: SettingsEthernetIcon,
-      //   path: '/service-management/service-scopes'
-      // },
-      // {
-      //   title: 'Deliverables',
-      //   icon: SettingsEthernetIcon,
-      //   path: '/service-management/service-deliverables'
-      // },
-      // {
-      //   title: 'Tasks',
-      //   icon: SettingsEthernetIcon,
-      //   path: '/service-management/service-deliverable-tasks'
-      // },
       {
         title: 'Hourly Rates',
         icon: BadgeIcon,
-        path: '/service-management/hourly-rates'
+        path: '/service-management/hourly-rates',
+        accessBy: ['Admin']
       },
       {
         title: 'Services',
         icon: SettingsEthernetIcon,
-        path: '/service-management/service-tree'
+        path: '/service-management/service-tree',
+        accessBy: ['Admin']
       },
       {
         title: 'Questions',
         icon: SettingsEthernetIcon,
-        path: '/service-management/service-question'
+        path: '/service-management/service-question',
+        accessBy: ['Admin']
       }
     ]
   },
@@ -119,27 +81,32 @@ const navigation: TNavigation[] = [
     title: 'Setings',
     icon: SettingsIcon,
     path: 'settings',
+    accessBy: ['Admin'],
     subMenu: [
       {
         title: 'AI Prompts',
         icon: SettingsEthernetIcon,
-        path: '/settings/prompts'
+        path: '/settings/prompts',
+        accessBy: ['Admin']
       },
 
       {
         title: 'Meeting Type',
         icon: SettingsEthernetIcon,
-        path: '/settings/meeting-type'
+        path: '/settings/meeting-type',
+        accessBy: ['Admin']
       },
       {
         title: 'Project Type',
         icon: SettingsEthernetIcon,
-        path: '/settings/project-type'
+        path: '/settings/project-type',
+        accessBy: ['Admin']
       },
       {
         title: 'Update Log',
         icon: EventRepeatIcon,
-        path: '/settings/update-log'
+        path: '/settings/update-log',
+        accessBy: ['Admin']
       }
     ]
   },
@@ -147,16 +114,19 @@ const navigation: TNavigation[] = [
     title: 'User Management',
     icon: GroupsIcon,
     path: '/user-management',
+    accessBy: ['Admin'],
     subMenu: [
       {
         title: 'Role & Permission',
         icon: SettingsEthernetIcon,
-        path: '/user-management/role-permission'
+        path: '/user-management/role-permission',
+        accessBy: ['Admin']
       },
       {
         title: 'User',
         icon: SettingsEthernetIcon,
-        path: '/user-management/users'
+        path: '/user-management/users',
+        accessBy: ['Admin']
       }
     ]
   },
