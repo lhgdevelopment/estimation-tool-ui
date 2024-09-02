@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, MutableRefObject, SetStateAction } from 'react'
+import { ChangeEvent, Dispatch, SetStateAction } from 'react'
 
 export type TProjectSOWDeliverableFormComponentProps = {
   projectSOWFormData: any
@@ -56,7 +56,6 @@ export type TProjectSOWDeliverableFormViewProps = {
   deliverableFormData: any
   problemGoalId: string
   scopeOfWorkData: any
-  slInputRefs: MutableRefObject<{ [key: number]: HTMLInputElement | null }>
 }
 
 export function serviceGroupByProjectTypeId(data: any) {
