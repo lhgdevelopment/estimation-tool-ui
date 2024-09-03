@@ -24,10 +24,10 @@ export default function ProjectSOWDetailsComponent() {
   const scopeTextRef = useRef<HTMLDivElement>(null)
   const deliverablesRef = useRef<HTMLDivElement>(null)
 
-  const [preload, setPreload] = useState<boolean>(true)
+  const [preload, setPreload] = useState<boolean>(false)
   const [detailsData, setDetailsData] = useState<any>(null)
   const getDetails = async () => {
-    setPreload(true)
+    // setPreload(true)
     await apiRequest
       .get(`/project-summery/${router?.query?.['id']}`)
       .then(res => {
@@ -37,7 +37,7 @@ export default function ProjectSOWDetailsComponent() {
         enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
       .finally(() => {
-        setPreload(false)
+        // setPreload(false)
       })
   }
 
