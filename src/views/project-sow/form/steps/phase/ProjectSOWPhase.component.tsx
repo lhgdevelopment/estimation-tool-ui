@@ -115,7 +115,7 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
     })
   }
 
-  const handleAddNewSow = () => {
+  const handleAddNewPhase = () => {
     const phases = [...phaseFormData.phases]
     phases.push({
       title: '',
@@ -124,7 +124,7 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
     setPhaseFormData(() => ({ ...phaseFormData, phases }))
   }
 
-  const handleRemoveSow = (index: number) => {
+  const handleRemovePhase = (index: number) => {
     const phases = [...phaseFormData.phases]
     phases.splice(index, 1)
     setPhaseFormData(() => ({ ...phaseFormData, phases }))
@@ -213,9 +213,9 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
       handlePhaseInputChange={handlePhaseInputChange}
       handlePhaseSaveOnClick={handlePhaseSaveOnClick}
       handlePhaseSelectChange={handlePhaseSelectChange}
-      handleAddNewSow={handleAddNewSow}
+      handleAddNewPhase={handleAddNewPhase}
       handlePhaseMultipleInputChange={handlePhaseMultipleInputChange}
-      handleRemoveSow={handleRemoveSow}
+      handleRemovePhase={handleRemovePhase}
       handlePhaseSlOnChange={handlePhaseSlOnChange}
       handlePhaseOnClear={handlePhaseOnClear}
       slInputRefs={slInputRefs}

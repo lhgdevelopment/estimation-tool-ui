@@ -28,9 +28,9 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
     handlePhaseInputChange,
     handlePhaseSaveOnClick,
     handlePhaseSelectChange,
-    handleAddNewSow,
+    handleAddNewPhase,
     handlePhaseMultipleInputChange,
-    handleRemoveSow,
+    handleRemovePhase,
     handlePhaseSlOnChange,
     slInputRefs
   } = props
@@ -175,7 +175,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                     <Box
                       sx={sowAddButtonSx}
                       onClick={() => {
-                        handleAddNewSow()
+                        handleAddNewPhase()
                       }}
                     >
                       <AddIcon fontSize='small' />
@@ -261,7 +261,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                           >
                             <Button
                               onClick={e => {
-                                handleRemoveSow(index)
+                                handleRemovePhase(index)
                               }}
                               sx={sowRemoveButtonSx}
                             >
