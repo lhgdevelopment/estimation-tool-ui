@@ -620,48 +620,103 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                             borderRadius: '5px'
                           }}
                         >
-                          <Box
-                            sx={{
-                              width: '50%'
-                            }}
-                          >
-                            <TextField
-                              label={'Title'}
-                              name='title'
-                              value={deliverable?.title}
-                              onChange={e => {
-                                handleDeliverableMultipleInputChange(e, index)
+                          <Box sx={{ display: 'flex', width: '100%' }}>
+                            <Box
+                              sx={{
+                                width: 'calc(100% - 40px)',
+                                mb: 2,
+                                mr: 1
                               }}
-                              placeholder={`Title`}
-                              fullWidth
-                            />
-                            {!!!!errorMessage?.['deliverables']?.[index]?.['title'] &&
-                              errorMessage?.['deliverables']?.[index]?.['title']?.map((message: any, index: number) => {
-                                return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
-                                    {message}
-                                  </span>
-                                )
-                              })}
+                            >
+                              <Dropdown
+                                label={'Scope Of Work'}
+                                dataList={scopeOfWorkData}
+                                name='scopeOfWorkId'
+                                value={deliverable.scopeOfWorkId}
+                                onChange={e => {
+                                  handleDeliverableMultipleInputChange(e, index)
+                                }}
+                                optionConfig={{ title: 'title', id: 'id' }}
+                              />
+                              {!!errorMessage?.['deliverables']?.[index]?.['scopeOfWorkId'] &&
+                                errorMessage?.['deliverables']?.[index]?.['scopeOfWorkId']?.map(
+                                  (message: any, index: number) => {
+                                    return (
+                                      <span
+                                        key={index + Math.random()}
+                                        className='text-xs text-red-600 dark:text-red-400'
+                                      >
+                                        {message}
+                                      </span>
+                                    )
+                                  }
+                                )}
+                            </Box>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                width: '30px'
+                              }}
+                            >
+                              <Button
+                                onClick={e => {
+                                  handleRemoveDeliverable(index)
+                                }}
+                                sx={sowRemoveButtonSx}
+                              >
+                                <DeleteIcon fontSize='small' />
+                              </Button>
+                            </Box>
                           </Box>
-                          <Box
-                            sx={{
-                              width: 'calc(50% - 40px)'
-                            }}
-                          >
-                            <Dropdown
-                              label={'Scope Of Work'}
-                              dataList={scopeOfWorkData}
-                              name='scopeOfWorkId'
-                              value={deliverable.scopeOfWorkId}
-                              onChange={e => {
-                                handleDeliverableMultipleInputChange(e, index)
+                          <Box sx={{ display: 'flex', width: '100%' }}>
+                            <Box
+                              sx={{
+                                width: 'calc(100% - 100px)'
                               }}
-                              optionConfig={{ title: 'title', id: 'id' }}
-                            />
-                            {!!errorMessage?.['deliverables']?.[index]?.['scopeOfWorkId'] &&
-                              errorMessage?.['deliverables']?.[index]?.['scopeOfWorkId']?.map(
-                                (message: any, index: number) => {
+                            >
+                              <TextField
+                                label={'Title'}
+                                name='title'
+                                value={deliverable?.title}
+                                onChange={e => {
+                                  handleDeliverableMultipleInputChange(e, index)
+                                }}
+                                placeholder={`Title`}
+                                fullWidth
+                              />
+                              {!!!!errorMessage?.['deliverables']?.[index]?.['title'] &&
+                                errorMessage?.['deliverables']?.[index]?.['title']?.map(
+                                  (message: any, index: number) => {
+                                    return (
+                                      <span
+                                        key={index + Math.random()}
+                                        className='text-xs text-red-600 dark:text-red-400'
+                                      >
+                                        {message}
+                                      </span>
+                                    )
+                                  }
+                                )}
+                            </Box>
+                            <Box
+                              sx={{
+                                width: '100px'
+                              }}
+                            >
+                              <TextField
+                                label={'Order'}
+                                name='serial'
+                                value={deliverable?.serial}
+                                onChange={e => {
+                                  handleDeliverableMultipleInputChange(e, index)
+                                }}
+                                placeholder={`Order`}
+                                fullWidth
+                              />
+                              {!!errorMessage?.['serial'] &&
+                                errorMessage?.['serial']?.map((message: any, index: number) => {
                                   return (
                                     <span
                                       key={index + Math.random()}
@@ -670,25 +725,8 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                       {message}
                                     </span>
                                   )
-                                }
-                              )}
-                          </Box>
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              width: '30px'
-                            }}
-                          >
-                            <Button
-                              onClick={e => {
-                                handleRemoveDeliverable(index)
-                              }}
-                              sx={sowRemoveButtonSx}
-                            >
-                              <DeleteIcon fontSize='small' />
-                            </Button>
+                                })}
+                            </Box>
                           </Box>
                         </Box>
                       )

@@ -111,7 +111,8 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     deliverables: [
       {
         title: '',
-        scopeOfWorkId: ''
+        scopeOfWorkId: '',
+        serial: ''
       }
     ]
   }
