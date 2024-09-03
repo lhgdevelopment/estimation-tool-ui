@@ -4,7 +4,6 @@ import { Box } from '@mui/material'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
-import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -27,7 +26,7 @@ export default function ProjectSOWDetailsComponent() {
   const [preload, setPreload] = useState<boolean>(false)
   const [detailsData, setDetailsData] = useState<any>(null)
   const getDetails = async () => {
-    // setPreload(true)
+    setPreload(true)
     await apiRequest
       .get(`/project-summery/${router?.query?.['id']}`)
       .then(res => {
@@ -37,7 +36,7 @@ export default function ProjectSOWDetailsComponent() {
         enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
       .finally(() => {
-        // setPreload(false)
+        setPreload(false)
       })
   }
 
@@ -104,7 +103,7 @@ export default function ProjectSOWDetailsComponent() {
               <AccordionDetails>
                 <Box sx={sowBodySx}>
                   <Box ref={summaryTextRef}>
-                    <MdPreview modelValue={detailsData?.['summaryText']} />
+                    <Box dangerouslySetInnerHTML={{ __html: detailsData?.['summaryText'] }}></Box>
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={summaryTextRef?.current?.innerText} />
@@ -139,9 +138,11 @@ export default function ProjectSOWDetailsComponent() {
               <AccordionDetails>
                 <Box sx={sowBodySx}>
                   <Box ref={problemGoalTextRef}>
-                    <MdPreview
-                      modelValue={detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
-                    />
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html: detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']
+                      }}
+                    ></Box>
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={problemGoalTextRef?.current?.innerText} />
@@ -176,13 +177,14 @@ export default function ProjectSOWDetailsComponent() {
               <AccordionDetails>
                 <Box sx={sowBodySx}>
                   <Box ref={overviewTextRef}>
-                    <MdPreview
-                      modelValue={
-                        detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.[
-                          'overviewText'
-                        ]
-                      }
-                    />
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.[
+                            'overviewText'
+                          ]
+                      }}
+                    ></Box>
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={overviewTextRef?.current?.innerText} />
@@ -215,12 +217,14 @@ export default function ProjectSOWDetailsComponent() {
               <AccordionDetails>
                 <Box sx={sowBodySx}>
                   <Box ref={scopeTextRef}>
-                    <MdPreview
-                      modelValue={
-                        detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']
-                      }
-                    />
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']
+                      }}
+                    ></Box>
                   </Box>
+
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={scopeTextRef?.current?.innerText} />
                     <Link href={`/project-summary/edit/${detailsData?.id}?step=4`} passHref>
