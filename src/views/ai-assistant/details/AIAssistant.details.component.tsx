@@ -241,7 +241,7 @@ export default function AIAssistantDetailsComponent() {
                 fullWidth
                 multiline
                 rows={4}
-                onKeyPress={e => {
+                onKeyDown={e => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault()
                     onSubmit()
