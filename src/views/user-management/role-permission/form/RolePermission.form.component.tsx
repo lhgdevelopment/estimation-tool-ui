@@ -1,7 +1,7 @@
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
-import { Box } from '@mui/material'
+import { Box, TextField } from '@mui/material'
 import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -92,10 +92,13 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
-                <input
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Enter Role Name'
+                <TextField
+                  id='outlined-multiline-flexible'
+                  label='Name'
+                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['name'] ? 'border-red-600' : 'dark:border-gray-600'
+                  }`}
+                  placeholder='Name'
                   name='name'
                   value={rolesFormData.name}
                   onChange={handleTextChange}

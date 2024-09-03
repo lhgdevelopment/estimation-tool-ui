@@ -21,7 +21,7 @@ export const scopeOfWorkListContainer = {
   p: 3
 }
 export const scopeOfWorkListSx: SxProps = {
-  '& .sow-list-item': {
+  '& .common-task-list-item': {
     display: 'flex',
     alignItems: 'center',
     fontSize: '12px',
@@ -30,8 +30,8 @@ export const scopeOfWorkListSx: SxProps = {
     cursor: 'pointer',
     mb: '5px',
     flexWrap: 'wrap',
-    '& .sow-list-item-sl': {
-      '.sow-list-item-sl-number': {
+    '& .common-task-list-item-sl': {
+      '.common-task-list-item-sl-number': {
         width: '50px',
         border: '1px solid #777778',
         borderRadius: '15px',
@@ -41,7 +41,7 @@ export const scopeOfWorkListSx: SxProps = {
         marginRight: '10px'
       }
     },
-    '& .sow-list-item-type': {
+    '& .common-task-list-item-type': {
       '& .item-type-common': {
         padding: '3px 10px',
         borderRadius: '15px',
@@ -49,7 +49,7 @@ export const scopeOfWorkListSx: SxProps = {
         textAlign: 'center',
         border: '1px solid transparent',
         '&.item-type-hive': {
-          border: '3px solid #9333ea'
+          border: '2px solid #9333ea'
         },
         '&.item-type-phase': {
           background: '#bee1f6',
@@ -73,15 +73,15 @@ export const scopeOfWorkListSx: SxProps = {
         }
       }
     },
-    '& .sow-list-item-check': { mx: 2, '& .MuiButtonBase-root': { p: 0 } },
-    '& .sow-list-item-title': { lineHeight: 'normal', maxWidth: '500px' },
-    '& .sow-list-item-input': {
+    '& .common-task-list-item-check': { mx: 2, '& .MuiButtonBase-root': { p: 0 } },
+    '& .common-task-list-item-title': { lineHeight: 'normal', maxWidth: '500px' },
+    '& .common-task-list-item-input': {
       ml: 5,
       display: 'flex',
       '& .MuiSelect-select': {
         p: '5px'
       },
-      '& .sow-list-item-text-input': {
+      '& .common-task-list-item-text-input': {
         width: '50px',
         ml: '5px',
         '& .MuiInputBase-input': {
@@ -89,21 +89,21 @@ export const scopeOfWorkListSx: SxProps = {
         }
       }
     },
-    '& .sow-list-item-edit-btn': {
+    '& .common-task-list-item-btn': {
       ml: '5px',
-      p: '2px',
+      p: '3px',
       minWidth: 0,
       borderRadius: '5px',
       opacity: 0,
       transition: 'all 0.3s ease-in-out',
       '& .MuiSvgIcon-root': {
         color: '#7e22ce',
-        height: '14px !important',
-        width: '14px !important'
+        height: '16px !important',
+        width: '16px !important'
       }
     },
     '&:hover': {
-      '& .sow-list-item-edit-btn': {
+      '& .common-task-list-item-btn': {
         opacity: 1
       }
     }
@@ -159,26 +159,53 @@ export const taskListContainer = {
     textAlign: 'center '
   },
   '& .item-type-common': {
-    padding: '0px 20px',
+    padding: '0px 10px',
     borderRadius: '15px',
     width: '100px',
     textAlign: 'center',
     border: '1px solid transparent'
   },
+  '.task-item': {
+    '& .common-task-list-item-btn': {
+      ml: '5px',
+      p: '2px',
+      minWidth: 0,
+      borderRadius: '5px',
+      opacity: 0,
+      transition: 'all 0.3s ease-in-out',
+      height: '20px !important',
+      width: '20px !important',
+      '& .MuiSvgIcon-root': {
+        color: '#7e22ce',
+        height: '14px !important',
+        width: '14px !important'
+      }
+    },
+    '&:hover': {
+      '& .common-task-list-item-btn': {
+        opacity: 1
+      }
+    }
+  },
+
   '& .item-type-hive': {
-    border: '3px solid #9333ea'
+    border: '2px solid #9333ea'
+  },
+  '& .item-type-phase': {
+    background: '#bee1f6',
+    color: '#158ddf'
   },
   '& .item-type-sow': {
-    background: '#215a6c !important',
-    color: '#fff !important'
+    background: '#215a6c',
+    color: '#fff'
   },
   '& .item-type-deliverable': {
-    background: '#c6dbe1 !important',
-    color: '#215a6c !important'
+    background: '#c6dbe1',
+    color: '#215a6c'
   },
   '& .item-type-task': {
-    background: '#ffc8a9 !important',
-    color: '#215a6c !important'
+    background: '#ffc8a9',
+    color: '#215a6c'
   },
   '& .item-type-subtask': {
     background: '#ffe5a0 !important',
@@ -257,7 +284,7 @@ export const serviceQuestionItemSx: SxProps = {
   gap: 2,
   mb: '15px',
   padding: '15px',
-  m: '15px',
+  m: '10px',
   border: '1px solid #ecedee',
   borderRadius: '5px'
 }

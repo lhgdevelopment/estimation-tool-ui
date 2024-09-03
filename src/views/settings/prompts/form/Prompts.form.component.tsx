@@ -53,8 +53,9 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
 
             return updatedList
           })
-          onClear()
+
           enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          onClear()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -180,13 +181,14 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
                 <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Prompt</span>
-                <textarea
+                <TextField
                   className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
                   placeholder='Examples: Prompt content'
                   name='prompt'
                   rows={10}
                   value={formData.prompt}
                   onChange={handleTextChange}
+                  multiline
                 />
                 {!!errorMessage?.['prompt'] &&
                   errorMessage?.['prompt']?.map((message: any, index: number) => {

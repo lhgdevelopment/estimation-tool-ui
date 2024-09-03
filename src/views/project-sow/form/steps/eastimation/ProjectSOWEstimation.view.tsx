@@ -3,17 +3,20 @@ import ClearIcon from '@material-ui/icons/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import SyncIcon from '@mui/icons-material/Sync'
 import {
   Accordion,
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
   Modal,
   Paper,
   Select,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -36,16 +39,10 @@ import {
   taskListContainer,
   teamReviewBoxSx
 } from 'src/views/project-sow/ProjectSOW.style'
-import { scopeOfWorkGroupByAdditionalServiceId } from '../../ProjectSOWForm.decorator'
 import {
   calculateTotalHoursForAllSOWs,
-  calculateTotalHoursForDeliverable,
-  calculateTotalHoursForScopeOfWorks,
   calculateTotalInternalCostForAllSOWs,
-  calculateTotalInternalCostForDeliverable,
-  calculateTotalInternalCostForScopeOfWorks,
-  TProjectSOWEstimationFormViewProps,
-  transformSubTaskTaskDeliverablesSowsData
+  TProjectSOWEstimationFormViewProps
 } from './ProjectSOWEstimation.decorator'
 
 export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimationFormViewProps) {
@@ -78,7 +75,12 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
     handleTaskOnEdit,
     handleServiceTaskModalClose,
     taskEditId,
-    taskFormData
+    taskFormData,
+    additionalServiceData,
+    deliverableData,
+    phaseData,
+    scopeOfWorkData,
+    handleGenerateTaskWithAI
   } = props
 
   return (
@@ -313,347 +315,415 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {transformSubTaskTaskDeliverablesSowsData(
-                          taskList?.filter((task: any) => !task?.additionalServiceId)
-                        )?.map((scope_of_work: any, index: number) => {
-                          return (
-                            <>
-                              <TableRow
-                                key={scope_of_work.name}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                              >
-                                <TableCell scope='row'>
-                                  <Checkbox
-                                    onChange={event => {
-                                      handleUpdateTaskCheckUnCheckForSOWOnChange(
-                                        scope_of_work?.deliverables,
-                                        event?.target?.checked
-                                      )
-                                      handleDeliverableCheckboxBySow(scope_of_work?.deliverables)
-                                    }}
-                                    value={scope_of_work?.id}
-                                    checked={scope_of_work?.deliverables?.some((deliverable: any) => {
-                                      return deliverable?.tasks?.some((task: any) => task?.isChecked)
-                                    })}
-                                  />
-                                </TableCell>
-                                <TableCell align='right'>
-                                  <Box className={`item-type-common item-type-sow  item-type-hive`}>SOW</Box>
-                                </TableCell>
-                                <TableCell align='left'>
-                                  <Box dangerouslySetInnerHTML={{ __html: scope_of_work?.title }}></Box>
-                                </TableCell>
-                                <TableCell></TableCell>
-                                <TableCell align='center' className={'estimated-hours-sec item-type-sow'}>
-                                  {calculateTotalHoursForScopeOfWorks(scope_of_work)}h
-                                </TableCell>
-                                <TableCell></TableCell>
-                                <TableCell align='center' className={'item-type-sow'}>
-                                  ${calculateTotalInternalCostForScopeOfWorks(scope_of_work)}
-                                </TableCell>
-                                <TableCell align='center' className={'item-type-sow'}>
-                                  $0.00
-                                </TableCell>
-                              </TableRow>
-                              {scope_of_work?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
-                                return (
-                                  <>
-                                    <TableRow
-                                      key={deliverableIndex}
-                                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                    >
-                                      <TableCell scope='row'>
-                                        <Checkbox
-                                          onChange={event => {
-                                            handleDeliverableCheckbox(event)
-                                            handleUpdateTaskCheckUnCheckForDeliverablesOnChange(
-                                              deliverable?.tasks,
-                                              event.target.checked
-                                            )
-                                          }}
-                                          value={deliverable?.['id']}
-                                          checked={deliverable?.tasks?.filter((task: any) => task?.isChecked).length}
-                                        />
-                                      </TableCell>
-                                      <TableCell align='right'>
-                                        <Box className={`item-type-common item-type-deliverable item-type-hive`}>
-                                          Deliverable
-                                        </Box>
-                                      </TableCell>
-                                      <TableCell align='left'>
-                                        <Box dangerouslySetInnerHTML={{ __html: deliverable?.title }}></Box>{' '}
-                                      </TableCell>
-                                      <TableCell></TableCell>
-                                      <TableCell align='center' className={'estimated-hours-sec item-type-deliverable'}>
-                                        {calculateTotalHoursForDeliverable(deliverable)}h
-                                      </TableCell>
-                                      <TableCell></TableCell>
-                                      <TableCell align='center' className={'item-type-deliverable'}>
-                                        ${calculateTotalInternalCostForDeliverable(deliverable)}
-                                      </TableCell>
-                                      <TableCell align='center' className={'item-type-deliverable'}>
-                                        $0.00
-                                      </TableCell>
-                                    </TableRow>
-
-                                    {deliverable?.tasks?.map((task: any, taskIndex: number) => {
+                        {phaseData
+                          ?.filter((phase: any) => !phase?.additionalServiceId)
+                          ?.map((phase: any, index: number) => {
+                            return (
+                              <>
+                                <TableRow key={phase.name} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                                  <TableCell scope='row'>
+                                    <Checkbox value={phase?.id} checked={phase?.isChecked} disabled />
+                                  </TableCell>
+                                  <TableCell align='right'>
+                                    <Box className={`item-type-common item-type-phase item-type-hive`}>Phase</Box>
+                                  </TableCell>
+                                  <TableCell align='left'>
+                                    <Box dangerouslySetInnerHTML={{ __html: phase?.title }}></Box>
+                                  </TableCell>
+                                  <TableCell></TableCell>
+                                  <TableCell align='center' className={'estimated-hours-sec item-type-phase'}>
+                                    {/* {calculateTotalHoursForScopeOfWorks(phase)}h */}
+                                  </TableCell>
+                                  <TableCell></TableCell>
+                                  <TableCell align='center' className={'item-type-phase'}>
+                                    {/* ${calculateTotalInternalCostForScopeOfWorks(phase)} */}
+                                  </TableCell>
+                                  <TableCell align='center' className={'item-type-phase'}>
+                                    $0.00
+                                  </TableCell>
+                                </TableRow>
+                                <>
+                                  {scopeOfWorkData
+                                    ?.filter((sow: any) => sow?.phaseId == phase?.id)
+                                    ?.map((scopeOfWork: any, index: number) => {
                                       return (
                                         <>
                                           <TableRow
-                                            key={taskIndex}
+                                            key={scopeOfWork.name}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                           >
                                             <TableCell scope='row'>
                                               <Checkbox
-                                                onChange={() => {
-                                                  !task?.['sub_tasks']?.length
-                                                    ? handleUpdateTaskCheckUnCheckForTaskOnChange(
-                                                        task?.['id'],
-                                                        !task?.['isChecked']
-                                                      )
-                                                    : handleUpdateTaskCheckUnCheckForParentTaskOnChange(
-                                                        task?.['sub_tasks'],
-                                                        task?.['id'],
-                                                        !task?.['isChecked']
-                                                      )
-                                                }}
-                                                value={task?.['id']}
-                                                checked={!!task?.['isChecked']}
+                                                value={scopeOfWork?.id}
+                                                checked={scopeOfWork?.isChecked}
+                                                disabled
                                               />
                                             </TableCell>
                                             <TableCell align='right'>
-                                              <Box className={`item-type-common item-type-task item-type-hive`}>
-                                                Task
+                                              <Box className={`item-type-common item-type-sow  item-type-hive`}>
+                                                SOW
                                               </Box>
                                             </TableCell>
                                             <TableCell align='left'>
-                                              <Box sx={{ display: 'flex' }}>
-                                                <Box
-                                                  dangerouslySetInnerHTML={{
-                                                    __html: task?.title
-                                                  }}
-                                                ></Box>
-                                                <Button
-                                                  sx={{
-                                                    ml: '5px',
-                                                    p: '2px',
-                                                    minWidth: 0,
-                                                    border: '2px solid #7e22ce',
-                                                    borderRadius: '5px'
-                                                  }}
-                                                  onClick={() => handleTaskOnEdit(task)}
-                                                >
-                                                  <EditIcon
-                                                    sx={{
-                                                      color: '#7e22ce',
-                                                      height: '14px !important',
-                                                      width: '14px !important'
-                                                    }}
-                                                  />
-                                                </Button>
-                                              </Box>
-                                            </TableCell>
-                                            <TableCell>
-                                              {!!task?.['isChecked'] && !task?.['sub_tasks']?.length && (
-                                                <Select
-                                                  className={'team-select'}
-                                                  labelId='associateId-label'
-                                                  id='associateId'
-                                                  onChange={event => {
-                                                    handleUpdateTaskAssignOnChange(
-                                                      task?.['id'],
-                                                      Number(event?.target?.value)
-                                                    )
-                                                  }}
-                                                  name={`associateId_${task?.['id']}`}
-                                                  value={task?.associateId}
-                                                  sx={{ width: '200px' }}
-                                                >
-                                                  {teamUserList?.map((item: any) => (
-                                                    <MenuItem value={item?.id} key={item?.id}>
-                                                      {item?.name}
-                                                    </MenuItem>
-                                                  ))}
-                                                </Select>
-                                              )}
-                                            </TableCell>
-                                            <TableCell
-                                              align='center'
-                                              className={task?.['sub_tasks']?.length ? 'item-type-task' : ''}
-                                            >
-                                              {!!task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
-                                                <TextField
-                                                  className={'sow-list-item-text-input'}
-                                                  value={task?.estimateHours}
-                                                  sx={{ width: '100px' }}
-                                                  onChange={event => {
-                                                    handleUpdateTaskEstimateHoursOnChange(
-                                                      task?.id,
-                                                      Number(event?.target?.value)
-                                                    )
-                                                  }}
-                                                  name={`estimateHours_${task?.id}`}
-                                                  inputProps={{
-                                                    maxLength: 3,
-                                                    pattern: '[0-9]*'
-                                                  }}
-                                                />
-                                              ) : (
-                                                task?.sub_tasks
-                                                  ?.reduce((acc: number, subTask: any) => {
-                                                    if (subTask?.isChecked) {
-                                                      return acc + Number(subTask?.estimateHours)
-                                                    } else {
-                                                      return acc + 0
-                                                    }
-                                                  }, 0)
-                                                  .toFixed(2)
-                                              )}
-                                              h
+                                              <Box dangerouslySetInnerHTML={{ __html: scopeOfWork?.title }}></Box>
                                             </TableCell>
                                             <TableCell></TableCell>
-                                            <TableCell
-                                              align='center'
-                                              className={task?.['sub_tasks']?.length ? 'item-type-task' : ''}
-                                            >
-                                              {!!task?.['isChecked'] &&
-                                                task?.['sub_tasks']?.length &&
-                                                `$${task?.sub_tasks
-                                                  ?.reduce((acc: number, subTask: any) => {
-                                                    if (subTask?.isChecked) {
-                                                      return (
-                                                        acc +
-                                                        Number(subTask?.estimateHours ?? 0) *
-                                                          Number(subTask?.associate?.hourlyRate ?? 0)
-                                                      )
-                                                    } else {
-                                                      return acc + 0
-                                                    }
-                                                  }, 0)
-                                                  .toFixed(2)}`}
+                                            <TableCell align='center' className={'estimated-hours-sec item-type-sow'}>
+                                              {/* {calculateTotalHoursForScopeOfWorks(scopeOfWork)}h */}
                                             </TableCell>
-                                            <TableCell
-                                              align='center'
-                                              className={task?.['sub_tasks']?.length ? 'item-type-task' : ''}
-                                            >
-                                              {!!task?.['isChecked'] && `$0.00`}
+                                            <TableCell></TableCell>
+                                            <TableCell align='center' className={'item-type-sow'}>
+                                              {/* ${calculateTotalInternalCostForScopeOfWorks(scopeOfWork)} */}
+                                            </TableCell>
+                                            <TableCell align='center' className={'item-type-sow'}>
+                                              $0.00
                                             </TableCell>
                                           </TableRow>
-                                          {task?.sub_tasks?.map((subTask: any, subTaskIndex: number) => {
-                                            return (
-                                              <TableRow
-                                                key={subTaskIndex}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                              >
-                                                <TableCell scope='row'>
-                                                  <Checkbox
-                                                    onChange={() => {
-                                                      handleUpdateTaskCheckUnCheckForTaskOnChange(
-                                                        subTask?.['id'],
-                                                        !subTask?.['isChecked']
-                                                      )
-                                                    }}
-                                                    value={subTask?.['id']}
-                                                    checked={!!subTask?.['isChecked']}
-                                                  />
-                                                </TableCell>
-                                                <TableCell align='right'>
-                                                  <Box className={`item-type-common item-type-subtask item-type-hive`}>
-                                                    Subtask
-                                                  </Box>
-                                                </TableCell>
-                                                <TableCell align='left'>
-                                                  <Box sx={{ display: 'flex' }}>
-                                                    <Box
-                                                      dangerouslySetInnerHTML={{
-                                                        __html: subTask?.title
-                                                      }}
-                                                    ></Box>
-                                                    <Button
-                                                      sx={{
-                                                        ml: '5px',
-                                                        p: '2px',
-                                                        minWidth: 0,
-                                                        border: '2px solid #7e22ce',
-                                                        borderRadius: '5px'
-                                                      }}
-                                                      onClick={() => handleTaskOnEdit(subTask)}
-                                                    >
-                                                      <EditIcon
-                                                        sx={{
-                                                          color: '#7e22ce',
-                                                          height: '14px !important',
-                                                          width: '14px !important'
-                                                        }}
-                                                      />
-                                                    </Button>
-                                                  </Box>
-                                                </TableCell>
-                                                <TableCell>
-                                                  {!!subTask?.['isChecked'] && (
-                                                    <Select
-                                                      className={'team-select'}
-                                                      labelId='associateId-label'
-                                                      id='associateId'
-                                                      onChange={event => {
-                                                        handleUpdateTaskAssignOnChange(
-                                                          subTask?.['id'],
-                                                          Number(event?.target?.value)
-                                                        )
-                                                      }}
-                                                      name={`associateId_${subTask?.['id']}`}
-                                                      value={subTask?.associateId}
-                                                      sx={{ width: '200px' }}
-                                                    >
-                                                      {teamUserList?.map((item: any) => (
-                                                        <MenuItem value={item?.id} key={item?.id}>
-                                                          {item?.name}
-                                                        </MenuItem>
-                                                      ))}
-                                                    </Select>
-                                                  )}
-                                                </TableCell>
-                                                <TableCell>
-                                                  {!!subTask?.['isChecked'] && !subTask?.['sub_tasks']?.length && (
-                                                    <TextField
-                                                      className={'sow-list-item-text-input'}
-                                                      value={subTask?.estimateHours}
-                                                      sx={{ width: '100px' }}
-                                                      onChange={event => {
-                                                        handleUpdateTaskEstimateHoursOnChange(
-                                                          subTask?.id,
-                                                          Number(event?.target?.value)
-                                                        )
-                                                      }}
-                                                      name={`estimateHours_${subTask?.id}`}
-                                                      inputProps={{
-                                                        maxLength: 3,
-                                                        pattern: '[0-9]*'
-                                                      }}
-                                                    />
-                                                  )}
-                                                </TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell align='center'>
-                                                  {!!subTask?.['isChecked'] &&
-                                                    `$${(
-                                                      Number(subTask?.associate?.hourlyRate ?? 0) *
-                                                      Number(subTask?.estimateHours)
-                                                    ).toFixed(2)}`}
-                                                </TableCell>
-                                                <TableCell align='center'>{!!task?.['isChecked'] && `$0.00`}</TableCell>
-                                              </TableRow>
+                                          {deliverableData
+                                            ?.filter(
+                                              (deliverable: any) => deliverable?.scopeOfWorkId == scopeOfWork?.id
                                             )
-                                          })}
+                                            ?.map((deliverable: any, deliverableIndex: number) => {
+                                              return (
+                                                <>
+                                                  <TableRow
+                                                    key={deliverableIndex}
+                                                    className='task-item'
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                  >
+                                                    <TableCell scope='row'>
+                                                      <Checkbox
+                                                        value={deliverable?.['id']}
+                                                        checked={deliverable?.isChecked}
+                                                        disabled
+                                                      />
+                                                    </TableCell>
+                                                    <TableCell align='right'>
+                                                      <Box
+                                                        className={`item-type-common item-type-deliverable item-type-hive`}
+                                                      >
+                                                        Deliverable
+                                                      </Box>
+                                                    </TableCell>
+                                                    <TableCell align='left'>
+                                                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                        <Box
+                                                          dangerouslySetInnerHTML={{ __html: deliverable?.title }}
+                                                        ></Box>
+                                                        <Button
+                                                          className='common-task-list-item-btn'
+                                                          onClick={() => handleGenerateTaskWithAI(deliverable?.id)}
+                                                          disabled={deliverable?.['isPreloading']}
+                                                        >
+                                                          <SyncIcon />
+                                                        </Button>
+                                                        {deliverable?.['isPreloading'] && (
+                                                          <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
+                                                            <CircularProgress color='secondary' size={14} />
+                                                          </Stack>
+                                                        )}
+                                                      </Box>
+                                                    </TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell
+                                                      align='center'
+                                                      className={'estimated-hours-sec item-type-deliverable'}
+                                                    >
+                                                      {/* {calculateTotalHoursForDeliverable(deliverable)}h */}
+                                                      {taskList
+                                                        ?.reduce((acc: number, task: any) => {
+                                                          if (
+                                                            task?.isChecked &&
+                                                            task?.deliverableId == deliverable?.id
+                                                          ) {
+                                                            return acc + Number(task?.estimateHours)
+                                                          } else {
+                                                            return acc + 0
+                                                          }
+                                                        }, 0)
+                                                        .toFixed(2)}
+                                                    </TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell align='center' className={'item-type-deliverable'}>
+                                                      {/* ${calculateTotalInternalCostForDeliverable(deliverable)} */}
+                                                      {taskList?.length &&
+                                                        `$${taskList
+                                                          ?.reduce((acc: number, task: any) => {
+                                                            if (
+                                                              task?.isChecked &&
+                                                              task?.deliverableId == deliverable?.id
+                                                            ) {
+                                                              return (
+                                                                acc +
+                                                                Number(task?.estimateHours ?? 0) *
+                                                                  Number(task?.associate?.hourlyRate ?? 0)
+                                                              )
+                                                            } else {
+                                                              return acc + 0
+                                                            }
+                                                          }, 0)
+                                                          .toFixed(2)}`}
+                                                    </TableCell>
+                                                    <TableCell align='center' className={'item-type-deliverable'}>
+                                                      $0.00
+                                                    </TableCell>
+                                                  </TableRow>
+                                                  {taskList
+                                                    ?.filter((task: any) => task?.deliverableId == deliverable?.id)
+                                                    ?.map((task: any, taskIndex: number) => {
+                                                      const subtasks = taskList?.filter(
+                                                        (subtask: any) => subtask?.estimationTasksParentId == task?.id
+                                                      )
+
+                                                      return (
+                                                        <>
+                                                          <TableRow
+                                                            key={taskIndex}
+                                                            className={'task-item'}
+                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                          >
+                                                            <TableCell scope='row'>
+                                                              <Checkbox
+                                                                onChange={() => {
+                                                                  !subtasks?.length
+                                                                    ? handleUpdateTaskCheckUnCheckForTaskOnChange(
+                                                                        task?.['id'],
+                                                                        !task?.['isChecked']
+                                                                      )
+                                                                    : handleUpdateTaskCheckUnCheckForParentTaskOnChange(
+                                                                        subtasks,
+                                                                        task?.['id'],
+                                                                        !task?.['isChecked']
+                                                                      )
+                                                                }}
+                                                                value={task?.['id']}
+                                                                checked={!!task?.['isChecked']}
+                                                              />
+                                                            </TableCell>
+                                                            <TableCell align='right'>
+                                                              <Box
+                                                                className={`item-type-common item-type-task item-type-hive`}
+                                                              >
+                                                                Task
+                                                              </Box>
+                                                            </TableCell>
+                                                            <TableCell align='left'>
+                                                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                                <Box
+                                                                  dangerouslySetInnerHTML={{
+                                                                    __html: task?.title
+                                                                  }}
+                                                                ></Box>
+                                                                <Button
+                                                                  className='common-task-list-item-btn'
+                                                                  onClick={() => handleTaskOnEdit(task)}
+                                                                >
+                                                                  <EditIcon />
+                                                                </Button>
+                                                              </Box>
+                                                            </TableCell>
+                                                            <TableCell>
+                                                              {!!task?.['isChecked'] && !subtasks?.length && (
+                                                                <Select
+                                                                  className={'team-select'}
+                                                                  labelId='associateId-label'
+                                                                  id='associateId'
+                                                                  onChange={event => {
+                                                                    handleUpdateTaskAssignOnChange(
+                                                                      task?.['id'],
+                                                                      Number(event?.target?.value)
+                                                                    )
+                                                                  }}
+                                                                  name={`associateId_${task?.['id']}`}
+                                                                  value={task?.associateId}
+                                                                  sx={{ width: '200px' }}
+                                                                >
+                                                                  {teamUserList?.map((item: any) => (
+                                                                    <MenuItem value={item?.id} key={item?.id}>
+                                                                      {item?.name}
+                                                                    </MenuItem>
+                                                                  ))}
+                                                                </Select>
+                                                              )}
+                                                            </TableCell>
+                                                            <TableCell
+                                                              align='center'
+                                                              className={subtasks?.length ? 'item-type-task' : ''}
+                                                            >
+                                                              {!!task?.['isChecked'] && !subtasks?.length ? (
+                                                                <TextField
+                                                                  className={'common-task-list-item-text-input'}
+                                                                  value={task?.estimateHours}
+                                                                  sx={{ width: '100px' }}
+                                                                  onChange={event => {
+                                                                    handleUpdateTaskEstimateHoursOnChange(
+                                                                      task?.id,
+                                                                      Number(event?.target?.value)
+                                                                    )
+                                                                  }}
+                                                                  name={`estimateHours_${task?.id}`}
+                                                                  inputProps={{
+                                                                    maxLength: 3,
+                                                                    pattern: '[0-9]*'
+                                                                  }}
+                                                                />
+                                                              ) : (
+                                                                subtasks
+                                                                  ?.reduce((acc: number, subTask: any) => {
+                                                                    if (subTask?.isChecked) {
+                                                                      return acc + Number(subTask?.estimateHours)
+                                                                    } else {
+                                                                      return acc + 0
+                                                                    }
+                                                                  }, 0)
+                                                                  .toFixed(2)
+                                                              )}
+                                                            </TableCell>
+                                                            <TableCell></TableCell>
+                                                            <TableCell
+                                                              align='center'
+                                                              className={subtasks?.length ? 'item-type-task' : ''}
+                                                            >
+                                                              {!!task?.['isChecked'] && subtasks?.length
+                                                                ? `$${subtasks
+                                                                    ?.reduce((acc: number, subTask: any) => {
+                                                                      if (subTask?.isChecked) {
+                                                                        return (
+                                                                          acc +
+                                                                          Number(subTask?.estimateHours ?? 0) *
+                                                                            Number(subTask?.associate?.hourlyRate ?? 0)
+                                                                        )
+                                                                      } else {
+                                                                        return acc + 0
+                                                                      }
+                                                                    }, 0)
+                                                                    .toFixed(2)}`
+                                                                : Number(task?.estimateHours ?? 0) *
+                                                                  Number(task?.associate?.hourlyRate ?? 0)}
+                                                            </TableCell>
+                                                            <TableCell
+                                                              align='center'
+                                                              className={subtasks?.length ? 'item-type-task' : ''}
+                                                            >
+                                                              {!!task?.['isChecked'] && `$0.00`}
+                                                            </TableCell>
+                                                          </TableRow>
+                                                          {subtasks?.map((subTask: any, subTaskIndex: number) => {
+                                                            return (
+                                                              <TableRow
+                                                                key={subTaskIndex}
+                                                                className={'task-item'}
+                                                                sx={{
+                                                                  '&:last-child td, &:last-child th': { border: 0 }
+                                                                }}
+                                                              >
+                                                                <TableCell scope='row'>
+                                                                  <Checkbox
+                                                                    onChange={() => {
+                                                                      handleUpdateTaskCheckUnCheckForTaskOnChange(
+                                                                        subTask?.['id'],
+                                                                        !subTask?.['isChecked']
+                                                                      )
+                                                                    }}
+                                                                    value={subTask?.['id']}
+                                                                    checked={!!subTask?.['isChecked']}
+                                                                  />
+                                                                </TableCell>
+                                                                <TableCell align='right'>
+                                                                  <Box
+                                                                    className={`item-type-common item-type-subtask item-type-hive`}
+                                                                  >
+                                                                    Subtask
+                                                                  </Box>
+                                                                </TableCell>
+                                                                <TableCell align='left'>
+                                                                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                                    <Box
+                                                                      dangerouslySetInnerHTML={{
+                                                                        __html: subTask?.title
+                                                                      }}
+                                                                    ></Box>
+
+                                                                    <Button
+                                                                      className='common-task-list-item-btn'
+                                                                      onClick={() => handleTaskOnEdit(subTask)}
+                                                                    >
+                                                                      <EditIcon />
+                                                                    </Button>
+                                                                  </Box>
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                  {!!subTask?.['isChecked'] && (
+                                                                    <Select
+                                                                      className={'team-select'}
+                                                                      labelId='associateId-label'
+                                                                      id='associateId'
+                                                                      onChange={event => {
+                                                                        handleUpdateTaskAssignOnChange(
+                                                                          subTask?.['id'],
+                                                                          Number(event?.target?.value)
+                                                                        )
+                                                                      }}
+                                                                      name={`associateId_${subTask?.['id']}`}
+                                                                      value={subTask?.associateId}
+                                                                      sx={{ width: '200px' }}
+                                                                    >
+                                                                      {teamUserList?.map((item: any) => (
+                                                                        <MenuItem value={item?.id} key={item?.id}>
+                                                                          {item?.name}
+                                                                        </MenuItem>
+                                                                      ))}
+                                                                    </Select>
+                                                                  )}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                  {!!subTask?.['isChecked'] &&
+                                                                    !subTask?.['sub_tasks']?.length && (
+                                                                      <TextField
+                                                                        className={'common-task-list-item-text-input'}
+                                                                        value={subTask?.estimateHours}
+                                                                        sx={{ width: '100px' }}
+                                                                        onChange={event => {
+                                                                          handleUpdateTaskEstimateHoursOnChange(
+                                                                            subTask?.id,
+                                                                            Number(event?.target?.value)
+                                                                          )
+                                                                        }}
+                                                                        name={`estimateHours_${subTask?.id}`}
+                                                                        inputProps={{
+                                                                          maxLength: 3,
+                                                                          pattern: '[0-9]*'
+                                                                        }}
+                                                                      />
+                                                                    )}
+                                                                </TableCell>
+                                                                <TableCell></TableCell>
+                                                                <TableCell align='center'>
+                                                                  {!!subTask?.['isChecked'] &&
+                                                                    `$${(
+                                                                      Number(subTask?.associate?.hourlyRate ?? 0) *
+                                                                      Number(subTask?.estimateHours)
+                                                                    ).toFixed(2)}`}
+                                                                </TableCell>
+                                                                <TableCell align='center'>
+                                                                  {!!task?.['isChecked'] && `$0.00`}
+                                                                </TableCell>
+                                                              </TableRow>
+                                                            )
+                                                          })}
+                                                        </>
+                                                      )
+                                                    })}
+                                                </>
+                                              )
+                                            })}
                                         </>
                                       )
                                     })}
-                                  </>
-                                )
-                              })}
-                            </>
-                          )
-                        })}
+                                </>
+                              </>
+                            )
+                          })}
                       </TableBody>
                       <TableFooter>
                         <TableRow sx={{ fontWeight: 'bold', fontSize: '16px' }}>
@@ -694,41 +764,24 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               {/* <Box sx={sectionTitleSx}>Added Services</Box> */}
               <Box>
-                {scopeOfWorkGroupByAdditionalServiceId(
-                  transformSubTaskTaskDeliverablesSowsData(taskList?.filter((task: any) => task?.additionalServiceId))
-                )?.map((additionalService: any, additionalServiceIndex: number) => {
+                {additionalServiceData?.map((additionalService: any, additionalServiceIndex: number) => {
                   return (
                     <Box key={additionalServiceIndex}>
                       <Box sx={sectionSubTitleSx} component={'label'}>
-                        <Checkbox
-                          onChange={event => {
-                            handleUpdateTaskCheckUnCheckForServiceOnChange(
-                              additionalService?.scope_of_works,
-                              event.target.checked
-                            )
-                          }}
-                          value={additionalService?.id}
-                          checked={
-                            additionalService?.scope_of_works.flatMap((scope_of_work: any) =>
-                              scope_of_work?.deliverables?.flatMap((deliverable: any) =>
-                                deliverable?.tasks?.filter((task: any) => task?.isChecked)
-                              )
-                            ).length
-                          }
-                          sx={{ p: 0, mr: 2 }}
-                        />
-
-                        {additionalService?.name}
+                        <Checkbox value={true} checked={true} sx={{ p: 0, mr: 2 }} disabled />
+                        {additionalService?.service_info?.name}
                       </Box>
-                      <Box sx={taskListContainer}>
-                        <Box>
+                      <Box sx={{ ...taskListContainer }}>
+                        <Box sx={{ width: '100%' }}>
                           <TableContainer component={Paper} sx={{ maxHeight: 500 }}>
                             <Table sx={{ width: '100%' }} aria-label='sticky table' stickyHeader>
                               <TableHead>
                                 <TableRow>
-                                  <TableCell></TableCell>
-                                  <TableCell align='right'></TableCell>
-                                  <TableCell align='center'>Deliverable & Timeline</TableCell>
+                                  <TableCell sx={{ width: '25px', p: 0 }}></TableCell>
+                                  <TableCell align='right' sx={{ width: '145px' }}></TableCell>
+                                  <TableCell align='center' sx={{ width: 'calc(100% - 615px)' }}>
+                                    Deliverable & Timeline
+                                  </TableCell>
                                   <TableCell align='center'>Team Member</TableCell>
                                   <TableCell align='center'>Hours</TableCell>
                                   <TableCell align='center'>Timeline</TableCell>
@@ -737,371 +790,474 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {additionalService?.scope_of_works?.map((scope_of_work: any, index: number) => {
-                                  return (
-                                    <>
-                                      <TableRow
-                                        key={scope_of_work.name}
-                                        sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                      >
-                                        <TableCell scope='row'>
-                                          <Checkbox
-                                            onChange={event => {
-                                              handleUpdateTaskCheckUnCheckForSOWOnChange(
-                                                scope_of_work?.deliverables,
-                                                event?.target?.checked
-                                              )
-                                              handleDeliverableCheckboxBySow(scope_of_work?.deliverables)
-                                            }}
-                                            value={scope_of_work?.id}
-                                            checked={scope_of_work?.deliverables?.some((deliverable: any) => {
-                                              return deliverable?.tasks?.some((task: any) => task?.isChecked)
-                                            })}
-                                          />
-                                        </TableCell>
-                                        <TableCell align='right'>
-                                          <Box className={`item-type-common item-type-sow  item-type-hive`}>SOW</Box>
-                                        </TableCell>
-                                        <TableCell align='left'>
-                                          <Box dangerouslySetInnerHTML={{ __html: scope_of_work?.title }}></Box>
-                                        </TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell align='center' className={'estimated-hours-sec item-type-sow'}>
-                                          {calculateTotalHoursForScopeOfWorks(scope_of_work)}h
-                                        </TableCell>
-                                        <TableCell></TableCell>
-                                        <TableCell align='center' className={'item-type-sow'}>
-                                          ${calculateTotalInternalCostForScopeOfWorks(scope_of_work)}
-                                        </TableCell>
-                                        <TableCell align='center' className={'item-type-sow'}>
-                                          $0.00
-                                        </TableCell>
-                                      </TableRow>
-                                      {scope_of_work?.deliverables?.map(
-                                        (deliverable: any, deliverableIndex: number) => {
-                                          return (
-                                            <>
-                                              <TableRow
-                                                key={deliverableIndex}
-                                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                              >
-                                                <TableCell scope='row'>
-                                                  <Checkbox
-                                                    onChange={event => {
-                                                      handleDeliverableCheckbox(event)
-                                                      handleUpdateTaskCheckUnCheckForDeliverablesOnChange(
-                                                        deliverable?.tasks,
-                                                        event.target.checked
-                                                      )
-                                                    }}
-                                                    value={deliverable?.['id']}
-                                                    checked={
-                                                      deliverable?.tasks?.filter((task: any) => task?.isChecked).length
-                                                    }
-                                                  />
-                                                </TableCell>
-                                                <TableCell align='right'>
-                                                  <Box
-                                                    className={`item-type-common item-type-deliverable item-type-hive`}
+                                {phaseData
+                                  ?.filter((phase: any) => phase?.additionalServiceId)
+                                  ?.map((phase: any, index: number) => {
+                                    return (
+                                      <>
+                                        <TableRow
+                                          key={phase.name}
+                                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                        >
+                                          <TableCell scope='row'>
+                                            <Checkbox value={phase?.id} checked={phase?.isChecked} disabled />
+                                          </TableCell>
+                                          <TableCell align='right'>
+                                            <Box className={`item-type-common item-type-phase item-type-hive`}>
+                                              Phase
+                                            </Box>
+                                          </TableCell>
+                                          <TableCell align='left'>
+                                            <Box dangerouslySetInnerHTML={{ __html: phase?.title }}></Box>
+                                          </TableCell>
+                                          <TableCell></TableCell>
+                                          <TableCell align='center' className={'estimated-hours-sec item-type-phase'}>
+                                            {/* {calculateTotalHoursForScopeOfWorks(phase)}h */}
+                                          </TableCell>
+                                          <TableCell></TableCell>
+                                          <TableCell align='center' className={'item-type-phase'}>
+                                            {/* ${calculateTotalInternalCostForScopeOfWorks(phase)} */}
+                                          </TableCell>
+                                          <TableCell align='center' className={'item-type-phase'}>
+                                            $0.00
+                                          </TableCell>
+                                        </TableRow>
+                                        <>
+                                          {scopeOfWorkData
+                                            ?.filter((sow: any) => sow?.phaseId == phase?.id)
+                                            ?.map((scopeOfWork: any, index: number) => {
+                                              return (
+                                                <>
+                                                  <TableRow
+                                                    key={scopeOfWork.name}
+                                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                                   >
-                                                    Deliverable
-                                                  </Box>
-                                                </TableCell>
-                                                <TableCell align='left'>
-                                                  <Box
-                                                    dangerouslySetInnerHTML={{
-                                                      __html: deliverable?.title
-                                                    }}
-                                                  ></Box>{' '}
-                                                </TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell
-                                                  align='center'
-                                                  className={'estimated-hours-sec item-type-deliverable'}
-                                                >
-                                                  {calculateTotalHoursForDeliverable(deliverable)}h
-                                                </TableCell>
-                                                <TableCell></TableCell>
-                                                <TableCell align='center' className={'item-type-deliverable'}>
-                                                  ${calculateTotalInternalCostForDeliverable(deliverable)}
-                                                </TableCell>
-                                                <TableCell align='center' className={'item-type-deliverable'}>
-                                                  $0.00
-                                                </TableCell>
-                                              </TableRow>
-
-                                              {deliverable?.tasks?.map((task: any, taskIndex: number) => {
-                                                return (
-                                                  <>
-                                                    <TableRow
-                                                      key={taskIndex}
-                                                      sx={{
-                                                        '&:last-child td, &:last-child th': { border: 0 }
-                                                      }}
+                                                    <TableCell scope='row'>
+                                                      <Checkbox
+                                                        value={scopeOfWork?.id}
+                                                        checked={scopeOfWork?.isChecked}
+                                                        disabled
+                                                      />
+                                                    </TableCell>
+                                                    <TableCell align='right'>
+                                                      <Box className={`item-type-common item-type-sow  item-type-hive`}>
+                                                        SOW
+                                                      </Box>
+                                                    </TableCell>
+                                                    <TableCell align='left'>
+                                                      <Box
+                                                        dangerouslySetInnerHTML={{ __html: scopeOfWork?.title }}
+                                                      ></Box>
+                                                    </TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell
+                                                      align='center'
+                                                      className={'estimated-hours-sec item-type-sow'}
                                                     >
-                                                      <TableCell scope='row'>
-                                                        <Checkbox
-                                                          onChange={() => {
-                                                            !task?.['sub_tasks']?.length
-                                                              ? handleUpdateTaskCheckUnCheckForTaskOnChange(
-                                                                  task?.['id'],
-                                                                  !task?.['isChecked']
-                                                                )
-                                                              : handleUpdateTaskCheckUnCheckForParentTaskOnChange(
-                                                                  task?.['sub_tasks'],
-                                                                  task?.['id'],
-                                                                  !task?.['isChecked']
-                                                                )
-                                                          }}
-                                                          value={task?.['id']}
-                                                          checked={!!task?.['isChecked']}
-                                                        />
-                                                      </TableCell>
-                                                      <TableCell align='right'>
-                                                        <Box
-                                                          className={`item-type-common item-type-task item-type-hive`}
-                                                        >
-                                                          Task
-                                                        </Box>
-                                                      </TableCell>
-                                                      <TableCell align='left'>
-                                                        <Box sx={{ display: 'flex' }}>
-                                                          <Box
-                                                            dangerouslySetInnerHTML={{
-                                                              __html: task?.title
-                                                            }}
-                                                          ></Box>
-                                                          <Button
-                                                            sx={{
-                                                              ml: '5px',
-                                                              p: '2px',
-                                                              minWidth: 0,
-                                                              border: '2px solid #7e22ce',
-                                                              borderRadius: '5px'
-                                                            }}
-                                                            onClick={() => handleTaskOnEdit(task)}
-                                                          >
-                                                            <EditIcon
-                                                              sx={{
-                                                                color: '#7e22ce',
-                                                                height: '14px !important',
-                                                                width: '14px !important'
-                                                              }}
-                                                            />
-                                                          </Button>
-                                                        </Box>
-                                                      </TableCell>
-                                                      <TableCell>
-                                                        {!!task?.['isChecked'] && !task?.['sub_tasks']?.length && (
-                                                          <Select
-                                                            className={'team-select'}
-                                                            labelId='associateId-label'
-                                                            id='associateId'
-                                                            onChange={event => {
-                                                              handleUpdateTaskAssignOnChange(
-                                                                task?.['id'],
-                                                                Number(event?.target?.value)
-                                                              )
-                                                            }}
-                                                            name={`associateId_${task?.['id']}`}
-                                                            value={task?.associateId}
-                                                            sx={{ width: '200px' }}
-                                                          >
-                                                            {teamUserList?.map((item: any) => (
-                                                              <MenuItem value={item?.id} key={item?.id}>
-                                                                {item?.name}
-                                                              </MenuItem>
-                                                            ))}
-                                                          </Select>
-                                                        )}
-                                                      </TableCell>
-                                                      <TableCell
-                                                        align='center'
-                                                        className={task?.['sub_tasks']?.length ? 'item-type-task' : ''}
-                                                      >
-                                                        {!!task?.['isChecked'] && !task?.['sub_tasks']?.length ? (
-                                                          <TextField
-                                                            className={'sow-list-item-text-input'}
-                                                            value={task?.estimateHours}
-                                                            sx={{ width: '100px' }}
-                                                            onChange={event => {
-                                                              handleUpdateTaskEstimateHoursOnChange(
-                                                                task?.id,
-                                                                Number(event?.target?.value)
-                                                              )
-                                                            }}
-                                                            name={`estimateHours_${task?.id}`}
-                                                            inputProps={{
-                                                              maxLength: 3,
-                                                              pattern: '[0-9]*'
-                                                            }}
-                                                          />
-                                                        ) : (
-                                                          task?.sub_tasks
-                                                            ?.reduce((acc: number, subTask: any) => {
-                                                              if (subTask?.isChecked) {
-                                                                return acc + subTask?.estimateHours
-                                                              } else {
-                                                                return acc + 0
-                                                              }
-                                                            }, 0)
-                                                            .toFixed(2)
-                                                        )}
-                                                        h
-                                                      </TableCell>
-                                                      <TableCell></TableCell>
-                                                      <TableCell
-                                                        align='center'
-                                                        className={task?.['sub_tasks']?.length ? 'item-type-task' : ''}
-                                                      >
-                                                        {!!task?.['isChecked'] &&
-                                                          task?.['sub_tasks']?.length &&
-                                                          `$${task?.sub_tasks
-                                                            ?.reduce((acc: number, subTask: any) => {
-                                                              if (subTask?.isChecked) {
-                                                                return (
-                                                                  acc +
-                                                                  Number(subTask?.estimateHours ?? 0) *
-                                                                    Number(subTask?.associate?.hourlyRate ?? 0)
-                                                                )
-                                                              } else {
-                                                                return acc + 0
-                                                              }
-                                                            }, 0)
-                                                            .toFixed(2)}`}
-                                                      </TableCell>
-                                                      <TableCell
-                                                        align='center'
-                                                        className={task?.['sub_tasks']?.length ? 'item-type-task' : ''}
-                                                      >
-                                                        {!!task?.['isChecked'] && `$0.00`}
-                                                      </TableCell>
-                                                    </TableRow>
-                                                    {task?.sub_tasks?.map((subTask: any, subTaskIndex: number) => {
+                                                      {/* {calculateTotalHoursForScopeOfWorks(scopeOfWork)}h */}
+                                                    </TableCell>
+                                                    <TableCell></TableCell>
+                                                    <TableCell align='center' className={'item-type-sow'}>
+                                                      {/* ${calculateTotalInternalCostForScopeOfWorks(scopeOfWork)} */}
+                                                    </TableCell>
+                                                    <TableCell align='center' className={'item-type-sow'}>
+                                                      $0.00
+                                                    </TableCell>
+                                                  </TableRow>
+                                                  {deliverableData
+                                                    ?.filter(
+                                                      (deliverable: any) =>
+                                                        deliverable?.scopeOfWorkId == scopeOfWork?.id
+                                                    )
+                                                    ?.map((deliverable: any, deliverableIndex: number) => {
                                                       return (
-                                                        <TableRow
-                                                          key={subTaskIndex}
-                                                          sx={{
-                                                            '&:last-child td, &:last-child th': {
-                                                              border: 0
-                                                            }
-                                                          }}
-                                                        >
-                                                          <TableCell scope='row'>
-                                                            <Checkbox
-                                                              onChange={() => {
-                                                                handleUpdateTaskCheckUnCheckForTaskOnChange(
-                                                                  subTask?.['id'],
-                                                                  !subTask?.['isChecked']
-                                                                )
-                                                              }}
-                                                              value={subTask?.['id']}
-                                                              checked={!!subTask?.['isChecked']}
-                                                            />
-                                                          </TableCell>
-                                                          <TableCell align='right'>
-                                                            <Box
-                                                              className={`item-type-common item-type-subtask item-type-hive`}
-                                                            >
-                                                              Subtask
-                                                            </Box>
-                                                          </TableCell>
-                                                          <TableCell align='left'>
-                                                            <Box sx={{ display: 'flex' }}>
+                                                        <>
+                                                          <TableRow
+                                                            key={deliverableIndex}
+                                                            className='task-item'
+                                                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                                          >
+                                                            <TableCell scope='row'>
+                                                              <Checkbox
+                                                                value={deliverable?.['id']}
+                                                                checked={deliverable?.isChecked}
+                                                                disabled
+                                                              />
+                                                            </TableCell>
+                                                            <TableCell align='right'>
                                                               <Box
-                                                                dangerouslySetInnerHTML={{
-                                                                  __html: subTask?.title
-                                                                }}
-                                                              ></Box>
-                                                              <Button
-                                                                sx={{
-                                                                  ml: '5px',
-                                                                  p: '2px',
-                                                                  minWidth: 0,
-                                                                  border: '2px solid #7e22ce',
-                                                                  borderRadius: '5px'
-                                                                }}
-                                                                onClick={() => handleTaskOnEdit(subTask)}
+                                                                className={`item-type-common item-type-deliverable item-type-hive`}
                                                               >
-                                                                <EditIcon
-                                                                  sx={{
-                                                                    color: '#7e22ce',
-                                                                    height: '14px !important',
-                                                                    width: '14px !important'
+                                                                Deliverable
+                                                              </Box>
+                                                            </TableCell>
+                                                            <TableCell align='left'>
+                                                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                                <Box
+                                                                  dangerouslySetInnerHTML={{
+                                                                    __html: deliverable?.title
                                                                   }}
-                                                                />
-                                                              </Button>
-                                                            </Box>
-                                                          </TableCell>
-                                                          <TableCell>
-                                                            {!!subTask?.['isChecked'] && (
-                                                              <Select
-                                                                className={'team-select'}
-                                                                labelId='associateId-label'
-                                                                id='associateId'
-                                                                onChange={event => {
-                                                                  handleUpdateTaskAssignOnChange(
-                                                                    subTask?.['id'],
-                                                                    Number(event?.target?.value)
-                                                                  )
-                                                                }}
-                                                                name={`associateId_${subTask?.['id']}`}
-                                                                value={subTask?.associateId}
-                                                                sx={{ width: '200px' }}
-                                                              >
-                                                                {teamUserList?.map((item: any) => (
-                                                                  <MenuItem value={item?.id} key={item?.id}>
-                                                                    {item?.name}
-                                                                  </MenuItem>
-                                                                ))}
-                                                              </Select>
-                                                            )}
-                                                          </TableCell>
-                                                          <TableCell>
-                                                            {!!subTask?.['isChecked'] &&
-                                                              !subTask?.['sub_tasks']?.length && (
-                                                                <TextField
-                                                                  className={'sow-list-item-text-input'}
-                                                                  value={subTask?.estimateHours}
-                                                                  sx={{ width: '100px' }}
-                                                                  onChange={event => {
-                                                                    handleUpdateTaskEstimateHoursOnChange(
-                                                                      subTask?.id,
-                                                                      Number(event?.target?.value)
-                                                                    )
-                                                                  }}
-                                                                  name={`estimateHours_${subTask?.id}`}
-                                                                  inputProps={{
-                                                                    maxLength: 3,
-                                                                    pattern: '[0-9]*'
-                                                                  }}
-                                                                />
-                                                              )}
-                                                          </TableCell>
-                                                          <TableCell></TableCell>
-                                                          <TableCell align='center'>
-                                                            {!!task?.['isChecked'] &&
-                                                              `$${Number(
-                                                                Number(task?.associate?.hourlyRate) *
-                                                                  Number(subTask?.estimateHours)
-                                                              ).toFixed(2)}`}
-                                                          </TableCell>
-                                                          <TableCell align='center'>
-                                                            {!!task?.['isChecked'] && `$0.00`}
-                                                          </TableCell>
-                                                        </TableRow>
+                                                                ></Box>
+                                                                <Button
+                                                                  className='common-task-list-item-btn'
+                                                                  onClick={() =>
+                                                                    handleGenerateTaskWithAI(deliverable?.id)
+                                                                  }
+                                                                  disabled={deliverable?.['isPreloading']}
+                                                                >
+                                                                  <SyncIcon />
+                                                                </Button>
+                                                                {deliverable?.['isPreloading'] && (
+                                                                  <Stack
+                                                                    spacing={0}
+                                                                    sx={{ height: '10px', width: '10px' }}
+                                                                  >
+                                                                    <CircularProgress color='secondary' size={14} />
+                                                                  </Stack>
+                                                                )}
+                                                              </Box>
+                                                            </TableCell>
+                                                            <TableCell></TableCell>
+                                                            <TableCell
+                                                              align='center'
+                                                              className={'estimated-hours-sec item-type-deliverable'}
+                                                            >
+                                                              {/* {calculateTotalHoursForDeliverable(deliverable)}h */}
+                                                              {taskList
+                                                                ?.reduce((acc: number, task: any) => {
+                                                                  if (
+                                                                    task?.isChecked &&
+                                                                    task?.deliverableId == deliverable?.id
+                                                                  ) {
+                                                                    return acc + Number(task?.estimateHours)
+                                                                  } else {
+                                                                    return acc + 0
+                                                                  }
+                                                                }, 0)
+                                                                .toFixed(2)}
+                                                            </TableCell>
+                                                            <TableCell></TableCell>
+                                                            <TableCell
+                                                              align='center'
+                                                              className={'item-type-deliverable'}
+                                                            >
+                                                              {/* ${calculateTotalInternalCostForDeliverable(deliverable)} */}
+                                                              {taskList?.length &&
+                                                                `$${taskList
+                                                                  ?.reduce((acc: number, task: any) => {
+                                                                    if (
+                                                                      task?.isChecked &&
+                                                                      task?.deliverableId == deliverable?.id
+                                                                    ) {
+                                                                      return (
+                                                                        acc +
+                                                                        Number(task?.estimateHours ?? 0) *
+                                                                          Number(task?.associate?.hourlyRate ?? 0)
+                                                                      )
+                                                                    } else {
+                                                                      return acc + 0
+                                                                    }
+                                                                  }, 0)
+                                                                  .toFixed(2)}`}
+                                                            </TableCell>
+                                                            <TableCell
+                                                              align='center'
+                                                              className={'item-type-deliverable'}
+                                                            >
+                                                              $0.00
+                                                            </TableCell>
+                                                          </TableRow>
+                                                          {taskList
+                                                            ?.filter(
+                                                              (task: any) => task?.deliverableId == deliverable?.id
+                                                            )
+                                                            ?.map((task: any, taskIndex: number) => {
+                                                              const subtasks = taskList?.filter(
+                                                                (subtask: any) =>
+                                                                  subtask?.estimationTasksParentId == task?.id
+                                                              )
+
+                                                              return (
+                                                                <>
+                                                                  <TableRow
+                                                                    key={taskIndex}
+                                                                    className={'task-item'}
+                                                                    sx={{
+                                                                      '&:last-child td, &:last-child th': { border: 0 }
+                                                                    }}
+                                                                  >
+                                                                    <TableCell scope='row'>
+                                                                      <Checkbox
+                                                                        onChange={() => {
+                                                                          !subtasks?.length
+                                                                            ? handleUpdateTaskCheckUnCheckForTaskOnChange(
+                                                                                task?.['id'],
+                                                                                !task?.['isChecked']
+                                                                              )
+                                                                            : handleUpdateTaskCheckUnCheckForParentTaskOnChange(
+                                                                                subtasks,
+                                                                                task?.['id'],
+                                                                                !task?.['isChecked']
+                                                                              )
+                                                                        }}
+                                                                        value={task?.['id']}
+                                                                        checked={!!task?.['isChecked']}
+                                                                      />
+                                                                    </TableCell>
+                                                                    <TableCell align='right'>
+                                                                      <Box
+                                                                        className={`item-type-common item-type-task item-type-hive`}
+                                                                      >
+                                                                        Task
+                                                                      </Box>
+                                                                    </TableCell>
+                                                                    <TableCell align='left'>
+                                                                      <Box
+                                                                        sx={{ display: 'flex', alignItems: 'center' }}
+                                                                      >
+                                                                        <Box
+                                                                          dangerouslySetInnerHTML={{
+                                                                            __html: task?.title
+                                                                          }}
+                                                                        ></Box>
+                                                                        <Button
+                                                                          className='common-task-list-item-btn'
+                                                                          onClick={() => handleTaskOnEdit(task)}
+                                                                        >
+                                                                          <EditIcon />
+                                                                        </Button>
+                                                                      </Box>
+                                                                    </TableCell>
+                                                                    <TableCell>
+                                                                      {!!task?.['isChecked'] && !subtasks?.length && (
+                                                                        <Select
+                                                                          className={'team-select'}
+                                                                          labelId='associateId-label'
+                                                                          id='associateId'
+                                                                          onChange={event => {
+                                                                            handleUpdateTaskAssignOnChange(
+                                                                              task?.['id'],
+                                                                              Number(event?.target?.value)
+                                                                            )
+                                                                          }}
+                                                                          name={`associateId_${task?.['id']}`}
+                                                                          value={task?.associateId}
+                                                                          sx={{ width: '200px' }}
+                                                                        >
+                                                                          {teamUserList?.map((item: any) => (
+                                                                            <MenuItem value={item?.id} key={item?.id}>
+                                                                              {item?.name}
+                                                                            </MenuItem>
+                                                                          ))}
+                                                                        </Select>
+                                                                      )}
+                                                                    </TableCell>
+                                                                    <TableCell
+                                                                      align='center'
+                                                                      className={
+                                                                        subtasks?.length ? 'item-type-task' : ''
+                                                                      }
+                                                                    >
+                                                                      {!!task?.['isChecked'] && !subtasks?.length ? (
+                                                                        <TextField
+                                                                          className={'common-task-list-item-text-input'}
+                                                                          value={task?.estimateHours}
+                                                                          sx={{ width: '100px' }}
+                                                                          onChange={event => {
+                                                                            handleUpdateTaskEstimateHoursOnChange(
+                                                                              task?.id,
+                                                                              Number(event?.target?.value)
+                                                                            )
+                                                                          }}
+                                                                          name={`estimateHours_${task?.id}`}
+                                                                          inputProps={{
+                                                                            maxLength: 3,
+                                                                            pattern: '[0-9]*'
+                                                                          }}
+                                                                        />
+                                                                      ) : (
+                                                                        subtasks
+                                                                          ?.reduce((acc: number, subTask: any) => {
+                                                                            if (subTask?.isChecked) {
+                                                                              return (
+                                                                                acc + Number(subTask?.estimateHours)
+                                                                              )
+                                                                            } else {
+                                                                              return acc + 0
+                                                                            }
+                                                                          }, 0)
+                                                                          .toFixed(2)
+                                                                      )}
+                                                                    </TableCell>
+                                                                    <TableCell></TableCell>
+                                                                    <TableCell
+                                                                      align='center'
+                                                                      className={
+                                                                        subtasks?.length ? 'item-type-task' : ''
+                                                                      }
+                                                                    >
+                                                                      {!!task?.['isChecked'] && subtasks?.length
+                                                                        ? `$${subtasks
+                                                                            ?.reduce((acc: number, subTask: any) => {
+                                                                              if (subTask?.isChecked) {
+                                                                                return (
+                                                                                  acc +
+                                                                                  Number(subTask?.estimateHours ?? 0) *
+                                                                                    Number(
+                                                                                      subTask?.associate?.hourlyRate ??
+                                                                                        0
+                                                                                    )
+                                                                                )
+                                                                              } else {
+                                                                                return acc + 0
+                                                                              }
+                                                                            }, 0)
+                                                                            .toFixed(2)}`
+                                                                        : Number(task?.estimateHours ?? 0) *
+                                                                          Number(task?.associate?.hourlyRate ?? 0)}
+                                                                    </TableCell>
+                                                                    <TableCell
+                                                                      align='center'
+                                                                      className={
+                                                                        subtasks?.length ? 'item-type-task' : ''
+                                                                      }
+                                                                    >
+                                                                      {!!task?.['isChecked'] && `$0.00`}
+                                                                    </TableCell>
+                                                                  </TableRow>
+                                                                  {subtasks?.map(
+                                                                    (subTask: any, subTaskIndex: number) => {
+                                                                      return (
+                                                                        <TableRow
+                                                                          key={subTaskIndex}
+                                                                          className={'task-item'}
+                                                                          sx={{
+                                                                            '&:last-child td, &:last-child th': {
+                                                                              border: 0
+                                                                            }
+                                                                          }}
+                                                                        >
+                                                                          <TableCell scope='row'>
+                                                                            <Checkbox
+                                                                              onChange={() => {
+                                                                                handleUpdateTaskCheckUnCheckForTaskOnChange(
+                                                                                  subTask?.['id'],
+                                                                                  !subTask?.['isChecked']
+                                                                                )
+                                                                              }}
+                                                                              value={subTask?.['id']}
+                                                                              checked={!!subTask?.['isChecked']}
+                                                                            />
+                                                                          </TableCell>
+                                                                          <TableCell align='right'>
+                                                                            <Box
+                                                                              className={`item-type-common item-type-subtask item-type-hive`}
+                                                                            >
+                                                                              Subtask
+                                                                            </Box>
+                                                                          </TableCell>
+                                                                          <TableCell align='left'>
+                                                                            <Box
+                                                                              sx={{
+                                                                                display: 'flex',
+                                                                                alignItems: 'center'
+                                                                              }}
+                                                                            >
+                                                                              <Box
+                                                                                dangerouslySetInnerHTML={{
+                                                                                  __html: subTask?.title
+                                                                                }}
+                                                                              ></Box>
+
+                                                                              <Button
+                                                                                className='common-task-list-item-btn'
+                                                                                onClick={() =>
+                                                                                  handleTaskOnEdit(subTask)
+                                                                                }
+                                                                              >
+                                                                                <EditIcon />
+                                                                              </Button>
+                                                                            </Box>
+                                                                          </TableCell>
+                                                                          <TableCell>
+                                                                            {!!subTask?.['isChecked'] && (
+                                                                              <Select
+                                                                                className={'team-select'}
+                                                                                labelId='associateId-label'
+                                                                                id='associateId'
+                                                                                onChange={event => {
+                                                                                  handleUpdateTaskAssignOnChange(
+                                                                                    subTask?.['id'],
+                                                                                    Number(event?.target?.value)
+                                                                                  )
+                                                                                }}
+                                                                                name={`associateId_${subTask?.['id']}`}
+                                                                                value={subTask?.associateId}
+                                                                                sx={{ width: '200px' }}
+                                                                              >
+                                                                                {teamUserList?.map((item: any) => (
+                                                                                  <MenuItem
+                                                                                    value={item?.id}
+                                                                                    key={item?.id}
+                                                                                  >
+                                                                                    {item?.name}
+                                                                                  </MenuItem>
+                                                                                ))}
+                                                                              </Select>
+                                                                            )}
+                                                                          </TableCell>
+                                                                          <TableCell>
+                                                                            {!!subTask?.['isChecked'] &&
+                                                                              !subTask?.['sub_tasks']?.length && (
+                                                                                <TextField
+                                                                                  className={
+                                                                                    'common-task-list-item-text-input'
+                                                                                  }
+                                                                                  value={subTask?.estimateHours}
+                                                                                  sx={{ width: '100px' }}
+                                                                                  onChange={event => {
+                                                                                    handleUpdateTaskEstimateHoursOnChange(
+                                                                                      subTask?.id,
+                                                                                      Number(event?.target?.value)
+                                                                                    )
+                                                                                  }}
+                                                                                  name={`estimateHours_${subTask?.id}`}
+                                                                                  inputProps={{
+                                                                                    maxLength: 3,
+                                                                                    pattern: '[0-9]*'
+                                                                                  }}
+                                                                                />
+                                                                              )}
+                                                                          </TableCell>
+                                                                          <TableCell></TableCell>
+                                                                          <TableCell align='center'>
+                                                                            {!!subTask?.['isChecked'] &&
+                                                                              `$${(
+                                                                                Number(
+                                                                                  subTask?.associate?.hourlyRate ?? 0
+                                                                                ) * Number(subTask?.estimateHours)
+                                                                              ).toFixed(2)}`}
+                                                                          </TableCell>
+                                                                          <TableCell align='center'>
+                                                                            {!!task?.['isChecked'] && `$0.00`}
+                                                                          </TableCell>
+                                                                        </TableRow>
+                                                                      )
+                                                                    }
+                                                                  )}
+                                                                </>
+                                                              )
+                                                            })}
+                                                        </>
                                                       )
                                                     })}
-                                                  </>
-                                                )
-                                              })}
-                                            </>
-                                          )
-                                        }
-                                      )}
-                                    </>
-                                  )
-                                })}
+                                                </>
+                                              )
+                                            })}
+                                        </>
+                                      </>
+                                    )
+                                  })}
                               </TableBody>
                               <TableFooter>
                                 <TableRow sx={{ fontWeight: 'bold', fontSize: '16px' }}>
@@ -1109,14 +1265,14 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                   <TableCell align='right'>Total</TableCell>
                                   <TableCell align='center'>
                                     {calculateTotalHoursForAllSOWs(
-                                      taskList?.filter((task: any) => !!task?.additionalServiceId && task?.isChecked)
+                                      taskList?.filter((task: any) => task?.additionalServiceId && task?.isChecked)
                                     )}
                                   </TableCell>
                                   <TableCell align='center'></TableCell>
                                   <TableCell align='center'>
                                     $
                                     {calculateTotalInternalCostForAllSOWs(
-                                      taskList?.filter((task: any) => !!task?.additionalServiceId && task?.isChecked)
+                                      taskList?.filter((task: any) => task?.additionalServiceId && task?.isChecked)
                                     )}
                                   </TableCell>
                                   <TableCell align='center'>$0.00</TableCell>

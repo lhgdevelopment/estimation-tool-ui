@@ -1,9 +1,10 @@
-import { Box, Pagination, Paper, Table, TableContainer } from '@mui/material'
+import { Box, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import NoDataComponent from 'src/@core/components/no-data-component'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import { TableSx } from 'src/@core/theme/tableStyle'
 import apiRequest from 'src/@core/utils/axios-config'
+import { formatDateTime } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
 import { TUsersComponent } from '../Users.decorator'
 
@@ -73,21 +74,34 @@ export default function UsersListComponent(props: TUsersComponent) {
         <Box className='w-full overflow-x-auto'>
           <TableContainer component={Paper}>
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
-              <thead>
-                <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                  <th className='px-4 py-3'>Name</th>
-                  <th className='px-4 py-3'>Email</th>
-                  <th className='px-4 py-3 text-right'>Actions</th>
-                </tr>
-              </thead>
-              <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
+              <TableHead>
+                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+                  <TableCell className='px-4 py-3'>Name</TableCell>
+                  <TableCell className='px-4 py-3'>Email</TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Role
+                  </TableCell>
+
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center', width: '190px' }}>
+                    Created At
+                  </TableCell>
+                  <TableCell className='px-4 py-3 text-right'>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
                 {listData?.map((data: any, index: number) => {
                   return (
                     <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                      <td className='px-4 py-3 text-sm'>{data?.name}</td>
-                      <td className='px-4 py-3 text-sm'>{data?.email}</td>
+                      <TableCell className='px-4 py-3 text-sm'>{data?.name}</TableCell>
+                      <TableCell className='px-4 py-3 text-sm'>{data?.email}</TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {data?.roles?.[0]?.name}
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {formatDateTime(data?.created_at)}
+                      </TableCell>
 
-                      <td className='px-4 py-3'>
+                      <TableCell className='px-4 py-3'>
                         <Box className='flex items-center justify-end space-x-1 text-sm'>
                           <button
                             onClick={() => {
@@ -116,11 +130,11 @@ export default function UsersListComponent(props: TUsersComponent) {
                             </svg>
                           </button>
                         </Box>
-                      </td>
+                      </TableCell>
                     </Box>
                   )
                 })}
-              </tbody>
+              </TableBody>
             </Table>
           </TableContainer>
           {!listData?.length && <NoDataComponent />}

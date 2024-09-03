@@ -12,6 +12,11 @@ export type TProjectSOWEstimationFormComponentProps = {
   overviewText: string
   problemGoalText: string
   projectSOWFormData: any
+  phaseData: any
+  additionalServiceData: any
+  scopeOfWorkData: any
+  deliverableData: any
+  setDeliverableData: Dispatch<any>
 }
 
 export type TProjectSOWEstimationFormViewProps = {
@@ -45,6 +50,11 @@ export type TProjectSOWEstimationFormViewProps = {
   handleTaskSelectChange: (additionalService: any, selectedTaskData: any) => any
   taskEditId: string
   taskFormData: any
+  phaseData: any
+  additionalServiceData: any
+  scopeOfWorkData: any
+  deliverableData: any
+  handleGenerateTaskWithAI: (deliverableId: number) => void
 }
 
 export function serviceGroupByProjectTypeId(data: any) {

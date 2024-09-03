@@ -19,7 +19,8 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     setSelectedDeliverableData,
     overviewText,
     problemGoalText,
-    projectSOWFormData
+    projectSOWFormData,
+    setDeliverableData
   } = props
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -496,6 +497,33 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
       })
   }
 
+  const handleGenerateTaskWithAI = (deliverableId: number) => {
+    setDeliverableData((prevList: any) =>
+      prevList.map((deliverable: any) =>
+        deliverable?.id === deliverableId ? { ...deliverable, isPreloading: true } : deliverable
+      )
+    )
+    apiRequest
+      .post(`/estimation-tasks/`, {
+        problemGoalId: problemGoalID,
+        deliverableId
+      })
+      .then(res => {
+        setTasksList((prevState: any[]) => res?.data)
+        enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+      })
+      .finally(() => {
+        setDeliverableData((prevList: any) =>
+          prevList.map((deliverable: any) =>
+            deliverable?.id === deliverableId ? { ...deliverable, isPreloading: false } : deliverable
+          )
+        )
+      })
+  }
+
   useEffect(() => {
     getEmployeeRoleList()
     setTaskListState(taskList)
@@ -505,6 +533,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     <>
       {!!preload && <Preloader close={!preload} />}
       <ProjectSOWEstimationFormView
+        {...props}
         associatedUserWithRole={associatedUserWithRole}
         handleUpdateTeamAssignOnChange={handleUpdateTeamAssignOnChange}
         handleUpdateTaskAssignOnChange={handleUpdateTaskAssignOnChange}
@@ -535,6 +564,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
         handleTaskSaveOnClick={handleTaskSaveOnClick}
         handleTaskSelectChange={handleTaskSelectChange}
         serviceTaskModalOpen={serviceTaskModalOpen}
+        handleGenerateTaskWithAI={handleGenerateTaskWithAI}
       ></ProjectSOWEstimationFormView>
     </>
   )

@@ -18,7 +18,11 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     setDeliverableNotesData,
     serviceId,
     problemGoalID,
-    scopeOfWorkData
+    setScopeOfWorkData,
+    scopeOfWorkData,
+    phaseDataList,
+    selectedAdditionalServiceData,
+    additionalServiceData
   } = props
 
   const [preload, setPreload] = useState<boolean>(false)
@@ -166,21 +170,52 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     })
     handleServiceDeliverableModalOpen()
   }
-  const handleDeliverableCheckboxBySow = (deliverables: any) => {
-    setSelectedDeliverableData((prevState: any) => {
-      const deliverableIds = deliverables?.map((deliverable: any) => Number(deliverable?.id))
-      const hasSelectedDeliverables = deliverableIds.some((id: number) => prevState.includes(id))
+  const handleSowCheckbox = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    scopeOfWorkId: number,
+    deliverableIds: number[]
+  ) => {
+    const { checked } = e.target
+    setScopeOfWorkData((prevState: any[]) => {
+      const updatedList = prevState.map((scopeOfWork: any) =>
+        scopeOfWork?.id === scopeOfWorkId ? { ...scopeOfWork, isChecked: !!checked, isPreloading: true } : scopeOfWork
+      )
 
-      if (hasSelectedDeliverables) {
-        return prevState.filter((id: number) => !deliverableIds.includes(id))
-      } else {
-        return [...prevState, ...deliverableIds]
-      }
+      // Make API request with the updated list
+      apiRequest
+        .post(`/scope-of-work-select/`, {
+          problemGoalId: problemGoalID,
+          scopeOfWorkIds: updatedList.filter(scopeOfWork => scopeOfWork?.isChecked).map(scopeOfWork => scopeOfWork?.id),
+          serviceIds: selectedAdditionalServiceData
+        })
+        .then(res => {
+          setSelectedDeliverableData((prevState: any) => {
+            const hasSelectedDeliverables = deliverableIds?.some((id: number) => prevState.includes(id))
+            if (hasSelectedDeliverables) {
+              return prevState.filter((id: number) => !deliverableIds.includes(id))
+            } else {
+              return [...prevState, ...deliverableIds]
+            }
+          })
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+        })
+        .catch(error => {
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+        .finally(() => {
+          setScopeOfWorkData((prevList: any) =>
+            prevList.map((scopeOfWork: any) =>
+              scopeOfWork?.id === scopeOfWorkId ? { ...scopeOfWork, isPreloading: false } : scopeOfWork
+            )
+          )
+        })
+
+      return updatedList
     })
   }
 
   const isSowCheckedInDeliverable = (deliverables: any, selectedDeliverableData: any) => {
-    return deliverables.every((deliverable: any) => selectedDeliverableData.includes(deliverable.id))
+    return deliverables?.every((deliverable: any) => selectedDeliverableData.includes(deliverable.id))
   }
   const handleDeliverableCheckboxByService = (additionalService: any) => {
     const deliverables = additionalService?.scope_of_works?.flatMap(
@@ -219,6 +254,35 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
       }
     })
   }
+
+  const handleGenerateSOWWithAI = (scopeOfWorkId: any) => {
+    setScopeOfWorkData((prevList: any) =>
+      prevList.map((scopeOfWork: any) =>
+        scopeOfWork?.id === scopeOfWorkId ? { ...scopeOfWork, isPreloading: true } : scopeOfWork
+      )
+    )
+    apiRequest
+      .post(`/deliverables/`, {
+        problemGoalId: problemGoalID,
+        scopeOfWorkId
+      })
+      .then(res => {
+        setDeliverableDataList((prevState: any[]) => res?.data)
+        setSelectedDeliverableData((prevState: any) => [...prevState, ...res?.data?.map((item: any) => item?.id)])
+        enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+      })
+      .finally(() => {
+        setScopeOfWorkData((prevList: any) =>
+          prevList.map((scopeOfWork: any) =>
+            scopeOfWork?.id === scopeOfWorkId ? { ...scopeOfWork, isPreloading: false } : scopeOfWork
+          )
+        )
+      })
+  }
+
   const handleServiceQuestionInputChange = (answer: string, questionId: any) => {
     const index = deliverableServiceQuestionData.findIndex((item: any) => item.questionId === questionId)
     if (index !== -1) {
@@ -241,7 +305,7 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
       (scopeOfWork: any) => scopeOfWork?.deliverables || []
     )
 
-    return deliverables.every((deliverable: any) => selectedDeliverableData.includes(deliverable.id))
+    return deliverables?.every((deliverable: any) => selectedDeliverableData.includes(deliverable.id))
   }
 
   const getServiceQuestionList = async () => {
@@ -366,7 +430,7 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
       deliverableNotesData={deliverableNotesData}
       deliverableServiceQuestionData={deliverableServiceQuestionData}
       selectedDeliverableData={selectedDeliverableData}
-      handleDeliverableCheckboxBySow={handleDeliverableCheckboxBySow}
+      handleSowCheckbox={handleSowCheckbox}
       isSowCheckedInDeliverable={isSowCheckedInDeliverable}
       handleDeliverableCheckbox={handleDeliverableCheckbox}
       handleServiceQuestionInputChange={handleServiceQuestionInputChange}
@@ -402,6 +466,9 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
       handleServiceDeliverableModalOpen={handleServiceDeliverableModalOpen}
       problemGoalId={problemGoalID}
       scopeOfWorkData={scopeOfWorkData}
+      phaseDataList={phaseDataList}
+      handleGenerateSOWWithAI={handleGenerateSOWWithAI}
+      additionalServiceData={additionalServiceData}
     ></ProjectSOWDeliverableFormView>
   )
 }

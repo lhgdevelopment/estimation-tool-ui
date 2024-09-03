@@ -28,9 +28,9 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
     handlePhaseInputChange,
     handlePhaseSaveOnClick,
     handlePhaseSelectChange,
-    handleAddNewSow,
+    handleAddNewPhase,
     handlePhaseMultipleInputChange,
-    handleRemoveSow,
+    handleRemovePhase,
     handlePhaseSlOnChange,
     slInputRefs
   } = props
@@ -52,11 +52,11 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
         <Box sx={scopeOfWorkListSx}>
           {phaseData?.map((phase: any, index: number) => {
             return (
-              <Box className={'sow-list-item'} key={index + Math.random()}>
-                <Box className={'sow-list-item-sl'}>
+              <Box className={'common-task-list-item'} key={index + Math.random()}>
+                <Box className={'common-task-list-item-sl'}>
                   <input
                     ref={el => (slInputRefs.current[phase.id] = el)}
-                    className={'sow-list-item-sl-number'}
+                    className={'common-task-list-item-sl-number'}
                     value={phase?.['serial']}
                     onChange={event => {
                       const serial = parseInt(event.target.value ?? 0, 10)
@@ -65,10 +65,10 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                     type={'number'}
                   />
                 </Box>
-                <Box className={'sow-list-item-type'}>
+                <Box className={'common-task-list-item-type'}>
                   <Box className={`item-type-common item-type-phase`}>Phase</Box>
                 </Box>
-                <Box className={'sow-list-item-check'}>
+                <Box className={'common-task-list-item-check'}>
                   <Checkbox
                     onChange={event => {
                       handlePhaseCheckbox(event, phase?.['id'])
@@ -78,7 +78,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                   />
                 </Box>
                 <Box
-                  className={'sow-list-item-title'}
+                  className={'common-task-list-item-title'}
                   sx={{
                     color: !phase?.['additionalServiceId'] ? '#903fe8' : '',
                     opacity: phase?.['isChecked'] ? 1 : 0.5
@@ -87,7 +87,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                 >
                   {phase?.['title']}
                 </Box>
-                <Button className='sow-list-item-edit-btn' onClick={() => handlePhaseOnEdit(phase)}>
+                <Button className='common-task-list-item-btn' onClick={() => handlePhaseOnEdit(phase)}>
                   <EditIcon />
                 </Button>
                 {phase?.['isPreloading'] && (
@@ -175,7 +175,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                     <Box
                       sx={sowAddButtonSx}
                       onClick={() => {
-                        handleAddNewSow()
+                        handleAddNewPhase()
                       }}
                     >
                       <AddIcon fontSize='small' />
@@ -261,7 +261,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                           >
                             <Button
                               onClick={e => {
-                                handleRemoveSow(index)
+                                handleRemovePhase(index)
                               }}
                               sx={sowRemoveButtonSx}
                             >

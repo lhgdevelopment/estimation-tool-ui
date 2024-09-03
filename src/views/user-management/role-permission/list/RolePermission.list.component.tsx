@@ -13,6 +13,7 @@ import {
   TableHead,
   TableRow
 } from '@mui/material'
+import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -20,9 +21,11 @@ import Swal from 'sweetalert2'
 import RolePermissionFormComponent from '../form/RolePermission.form.component'
 
 export default function RolePermissionListComponent() {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const [editDataId, setEditDataId] = useState<null | string>(null)
   const [listData, setListData] = useState<any>([])
   const [editData, setEditData] = useState<any>({})
+  const [preloaderList, setPreloaderList] = useState<any>([])
 
   const [permissionsList, setPermissionList] = useState<any>({})
   const [permissionModalOpen, setRoleModalOpen] = useState<boolean>(false)
@@ -55,16 +58,16 @@ export default function RolePermissionListComponent() {
   }
 
   const onUpdateRolePermission = (roleId: number, permissions: any) => {
-    apiRequest.put(`/roles/${roleId}`, { permissions }).then(res => {
-      Swal.fire({
-        title: 'Created Successfully!',
-        icon: 'success',
-        timer: 1000,
-        timerProgressBar: true,
-        showConfirmButton: false
+    // setPreloaderList([...preloaderList, ])
+    apiRequest
+      .put(`/roles/${roleId}`, { permissions })
+      .then(res => {
+        enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+        getList()
       })
-      getList()
-    })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
   }
 
   const onEdit = (id: string) => {
@@ -84,20 +87,18 @@ export default function RolePermissionListComponent() {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
-      if (res.isConfirmed) {
-        apiRequest.delete(`/roles/${id}`).then(res => {
-          Swal.fire({
-            title: 'Deleted Successfully!',
-            icon: 'success',
-            timer: 1000,
-            timerProgressBar: true,
-            showConfirmButton: false
-          })
-          getList()
-        })
-      }
     })
+      .then(res => {
+        if (res.isConfirmed) {
+          apiRequest.delete(`/roles/${id}`).then(res => {
+            enqueueSnackbar('Deleted Successfully!', { variant: 'success' })
+            getList()
+          })
+        }
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
   }
 
   const roleSorting = (data: any) => {
@@ -231,19 +232,12 @@ export default function RolePermissionListComponent() {
                         {permissionsList?.[key]?.map((permission: string, permissionIndex: number) => {
                           return (
                             <TableRow key={permissionIndex} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                              <TableCell key={permissionIndex} className='sticky'>
+                              <TableCell key={permissionIndex} className='sticky' sx={{ width: '200px' }}>
                                 <Box component={'label'}>{permission}</Box>
                               </TableCell>
-                              {listData?.map((role: any, roleIndex: number) => {
+                              {listData?.map((role: any, roleIndex2: number) => {
                                 return (
-                                  <TableCell key={roleIndex} align='center' colSpan={4}>
-                                    {/* {permission}+{role?.id} */}
-                                    {/* <Checkbox
-                                      onChange={e => {
-                                        onChangePermission(e.target.checked, permission)
-                                      }}
-                                      checked={!!role?.permissions?.filter((data: any) => data.name == permission)[0]}
-                                    /> */}
+                                  <TableCell key={roleIndex2} align='center' colSpan={4}>
                                     {!!role?.permissions?.filter((data: any) => data.name == permission)[0] ? (
                                       <Chip
                                         label='Yes'
