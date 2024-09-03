@@ -20,9 +20,9 @@ export type TProjectSOWPhaseFormViewProps = {
   handlePhaseInputChange: (event: any) => void
   handlePhaseSaveOnClick: () => void
   handlePhaseSelectChange: (e: SelectChangeEvent<any>) => void
-  handleAddNewSow: () => void
+  handleAddNewPhase: () => void
   handlePhaseMultipleInputChange: (event: any, index: number) => void
-  handleRemoveSow: (index: number) => void
+  handleRemovePhase: (index: number) => void
   handlePhaseSlOnChange: (sl: number, id: number) => void
   handlePhaseOnClear: () => void
   slInputRefs: MutableRefObject<{ [key: number]: HTMLInputElement | null }>

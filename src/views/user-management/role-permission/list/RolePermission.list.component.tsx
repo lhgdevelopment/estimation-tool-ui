@@ -25,6 +25,7 @@ export default function RolePermissionListComponent() {
   const [editDataId, setEditDataId] = useState<null | string>(null)
   const [listData, setListData] = useState<any>([])
   const [editData, setEditData] = useState<any>({})
+  const [preloaderList, setPreloaderList] = useState<any>([])
 
   const [permissionsList, setPermissionList] = useState<any>({})
   const [permissionModalOpen, setRoleModalOpen] = useState<boolean>(false)
@@ -57,6 +58,7 @@ export default function RolePermissionListComponent() {
   }
 
   const onUpdateRolePermission = (roleId: number, permissions: any) => {
+    // setPreloaderList([...preloaderList, ])
     apiRequest
       .put(`/roles/${roleId}`, { permissions })
       .then(res => {
@@ -230,12 +232,12 @@ export default function RolePermissionListComponent() {
                         {permissionsList?.[key]?.map((permission: string, permissionIndex: number) => {
                           return (
                             <TableRow key={permissionIndex} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                              <TableCell key={permissionIndex} className='sticky'>
+                              <TableCell key={permissionIndex} className='sticky' sx={{ width: '200px' }}>
                                 <Box component={'label'}>{permission}</Box>
                               </TableCell>
-                              {listData?.map((role: any, roleIndex: number) => {
+                              {listData?.map((role: any, roleIndex2: number) => {
                                 return (
-                                  <TableCell key={roleIndex} align='center' colSpan={4}>
+                                  <TableCell key={roleIndex2} align='center' colSpan={4}>
                                     {!!role?.permissions?.filter((data: any) => data.name == permission)[0] ? (
                                       <Chip
                                         label='Yes'

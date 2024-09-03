@@ -1,7 +1,7 @@
 import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useSnackbar } from 'notistack'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import { debounce } from 'src/@core/utils/utils'
 import { TProjectSOWScopeOfWorkFormComponentProps } from './ProjectSOWScopeOfWork.decorator'
@@ -15,7 +15,9 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
     selectedAdditionalServiceData,
     handleAdditionalServiceSelection,
     serviceList,
-    serviceId
+    serviceId,
+    phaseData,
+    setPhaseData
   } = props
 
   const [preload, setPreload] = useState<boolean>(false)
@@ -41,6 +43,246 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
   const [scopeOfWorkFormData, setScopeOfWorkFormData] = useState<any>(scopeOfWorkDefaultData)
   const [scopeOfWorkEditId, setScopeOfWorkEditId] = useState<any>(null)
 
+  const [phaseDataList, setPhaseDataList] = useState<any[]>(phaseData?.sort((a: any, b: any) => a?.serial - b?.serial))
+  const [servicePhaseModalOpen, setServicePhaseModalOpen] = useState<boolean>(false)
+
+  const phaseDefaultData = {
+    title: '',
+    phases: [
+      {
+        title: '',
+        serial: ''
+      }
+    ]
+  }
+
+  const [phaseFormData, setPhaseFormData] = useState<any>(phaseDefaultData)
+  const [phaseEditId, setPhaseEditId] = useState<any>(null)
+
+  const phaseSlInputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({})
+
+  const handleServicePhaseModalOpen = () => {
+    setServicePhaseModalOpen(true)
+  }
+  const handleServicePhaseModalClose = () => {
+    setServicePhaseModalOpen(false)
+    handlePhaseOnClear()
+  }
+
+  const handlePhaseCheckbox = (e: React.ChangeEvent<HTMLInputElement>, id: number, sowIds: number[]) => {
+    setPhaseDataList(prevList =>
+      prevList.map((phase: any) => (phase?.id === id ? { ...phase, isPreloading: true } : phase))
+    )
+
+    const { checked } = e.target
+
+    // Update state and immediately access the updated state in the callback
+    setPhaseDataList((prevState: any[]) => {
+      const updatedPhaseList = prevState.map((phase: any) =>
+        phase?.id === id ? { ...phase, isChecked: !!checked, isPreloading: false } : phase
+      )
+      // Make API request with the updated list
+      apiRequest
+        .post(`/phase-select/`, {
+          problemGoalId: problemGoalID,
+          phaseIds: updatedPhaseList.filter(phase => phase?.isChecked).map(phase => phase?.id)
+        })
+        .then(res => {
+          setScopeOfWorkData((prevState: any[]) => {
+            const updatedSOWList = prevState.map((scopeOfWork: any) =>
+              sowIds?.includes(scopeOfWork?.id)
+                ? { ...scopeOfWork, isChecked: !!checked, isPreloading: false }
+                : scopeOfWork
+            )
+
+            // Make API request with the updated list
+            apiRequest
+              .post(`/scope-of-work-select/`, {
+                problemGoalId: problemGoalID,
+                scopeOfWorkIds: updatedSOWList
+                  .filter(scopeOfWork => scopeOfWork?.isChecked)
+                  .map(scopeOfWork => scopeOfWork?.id),
+                serviceIds: selectedAdditionalServiceData
+              })
+              .then(res => {
+                enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+              })
+              .catch(error => {
+                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+              })
+              .finally(() => {
+                setScopeOfWorkData((prevList: any) =>
+                  prevList.map((scopeOfWork: any) =>
+                    scopeOfWork?.id === id ? { ...scopeOfWork, isPreloading: false } : scopeOfWork
+                  )
+                )
+              })
+
+            return updatedSOWList
+          })
+        })
+        .catch(error => {
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+        .finally(() => {
+          setPhaseDataList((prevState: any[]) =>
+            prevState.map((phase: any) => (phase?.id === id ? { ...phase, isPreloading: false } : phase))
+          )
+        })
+
+      return updatedPhaseList
+    })
+  }
+
+  const debouncedSetPhaseSlOnChange = useCallback(
+    debounce((sl: number, id: number) => {
+      apiRequest
+        .patch(`/phase/${id}/serial`, { serial: sl })
+        .then(res => {
+          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+        })
+        .catch(error => {
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+        .finally(() => {
+          setPhaseDataList((prevState: any[]) =>
+            prevState
+              ?.sort((a: any, b: any) => a?.serial - b?.serial)
+              .map((phase: any) => (phase?.id === id ? { ...phase, serial: sl, isPreloading: false } : phase))
+          )
+        })
+    }, 1000),
+    []
+  )
+
+  const handlePhaseSlOnChange = (sl: number, id: number) => {
+    setPhaseDataList((prevState: any[]) =>
+      prevState.map((phase: any) => (phase?.id === id ? { ...phase, serial: sl, isPreloading: true } : phase))
+    )
+
+    if (slInputRefs.current[id]) {
+      setTimeout(() => {
+        phaseSlInputRefs.current[id]?.focus()
+      }, 100)
+    }
+
+    debouncedSetPhaseSlOnChange(sl, id)
+  }
+
+  const handleGenerateSOWWithAI = (phaseId: any) => {
+    setPhaseDataList((prevState: any[]) =>
+      prevState.map((phase: any) => (phase?.id === phaseId ? { ...phase, isPreloading: true } : phase))
+    )
+    apiRequest
+      .post(`/scope-of-work/`, {
+        problemGoalID,
+        phaseId
+      })
+      .then(res => {
+        setScopeOfWorkData((prevState: any[]) => res?.data)
+        enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+      })
+      .finally(() => {
+        setPhaseDataList((prevState: any[]) =>
+          prevState.map((phase: any) => (phase?.id === phaseId ? { ...phase, isPreloading: false } : phase))
+        )
+      })
+  }
+
+  const handlePhaseSelectChange = (e: SelectChangeEvent<any>) => {
+    setPhaseFormData({
+      ...phaseFormData,
+      [e?.target?.name]: e?.target?.value
+    })
+  }
+
+  const handleAddNewPhase = () => {
+    const phases = [...phaseFormData.phases]
+    phases.push({
+      title: '',
+      serial: ''
+    })
+    setPhaseFormData(() => ({ ...phaseFormData, phases }))
+  }
+
+  const handleRemovePhase = (index: number) => {
+    const phases = [...phaseFormData.phases]
+    phases.splice(index, 1)
+    setPhaseFormData(() => ({ ...phaseFormData, phases }))
+  }
+
+  const handlePhaseMultipleInputChange = (event: any, index: number) => {
+    const { name, value } = event.target
+    const phases = [...phaseFormData.phases]
+    phases[index][name] = value
+    setPhaseFormData(() => ({ ...phaseFormData, phases }))
+  }
+
+  const handlePhaseInputChange = (event: any) => {
+    const { name, value } = event.target
+    const phases = phaseFormData
+    phases[name] = value
+    setPhaseFormData(() => ({ ...phaseFormData, ...phases }))
+  }
+
+  const handlePhaseOnClear = () => {
+    setPhaseFormData(phaseDefaultData)
+    setPhaseEditId(null)
+  }
+
+  const handlePhaseOnEdit = (data: any) => {
+    const { id, title, serial } = data
+    setPhaseEditId(id)
+    setPhaseFormData({
+      title
+    })
+    handleServicePhaseModalOpen()
+  }
+
+  const handlePhaseSaveOnClick = () => {
+    setPreload(true)
+    if (phaseEditId) {
+      apiRequest
+        .post(`/phase/${phaseEditId}`, { ...phaseFormData })
+        .then(res => {
+          setPhaseDataList((prevState: any[]) => [
+            ...prevState.map((phase: any) => {
+              if (phase?.id === phaseEditId) return res.data
+
+              return phase
+            })
+          ])
+
+          setPreload(false)
+          enqueueSnackbar('Updatedf Successfully!', { variant: 'success' })
+          handleServicePhaseModalClose()
+        })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    } else {
+      apiRequest
+        .post('/phase/add-multi', { ...phaseFormData, problemGoalId: problemGoalID })
+        .then(res => {
+          setPhaseDataList([...res?.data, ...phaseData])
+
+          setPreload(false)
+          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          handleServicePhaseModalClose()
+        })
+        .catch(error => {
+          setPreload(false)
+          setErrorMessage(error?.response?.data?.errors)
+          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        })
+    }
+  }
+
   const handleServiceSOWModalOpen = () => {
     setServiceSowModalOpen(true)
   }
@@ -52,10 +294,7 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
   const handleScopeOfWorkCheckbox = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
     const { checked } = e.target
 
-    // Update state and immediately access the updated state in the callback
     setScopeOfWorkData((prevState: any[]) => {
-      console.log(prevState)
-
       const updatedList = prevState.map((scopeOfWork: any) =>
         scopeOfWork?.id === id ? { ...scopeOfWork, isChecked: !!checked, isPreloading: true } : scopeOfWork
       )
@@ -235,23 +474,6 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
     return Object.values(grouped)
   }
 
-  const getScopeOfWorkPhaseList = async () => {
-    if (serviceId) {
-      await apiRequest
-        .get(`/service-groups?serviceId=${serviceId}`)
-        .then(res => {
-          setScopeOfWorkPhaseList(res?.data)
-        })
-        .catch(error => {
-          enqueueSnackbar(error?.message, { variant: 'error' })
-        })
-    }
-  }
-
-  useEffect(() => {
-    getScopeOfWorkPhaseList()
-  }, [])
-
   return (
     <ProjectSOWScopeOfWorkFormView
       scopeOfWorkData={scopeOfWorkData}
@@ -277,6 +499,24 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
       handleSOWOnClear={handleSOWOnClear}
       slInputRefs={slInputRefs}
       handleScopeOfWorkSlOnChange={handleScopeOfWorkSlOnChange}
+      phaseDataList={phaseDataList}
+      handlePhaseCheckbox={handlePhaseCheckbox}
+      handleServicePhaseModalOpen={handleServicePhaseModalOpen}
+      handlePhaseOnEdit={handlePhaseOnEdit}
+      servicePhaseModalOpen={servicePhaseModalOpen}
+      handleServicePhaseModalClose={handleServicePhaseModalClose}
+      handleAddNewPhase={handleAddNewPhase}
+      handlePhaseMultipleInputChange={handlePhaseMultipleInputChange}
+      handleRemovePhase={handleRemovePhase}
+      handlePhaseSaveOnClick={handlePhaseSaveOnClick}
+      handlePhaseSelectChange={handlePhaseSelectChange}
+      handlePhaseOnClear={handlePhaseOnClear}
+      handlePhaseSlOnChange={handlePhaseSlOnChange}
+      phaseEditId={phaseEditId}
+      phaseFormData={phaseFormData}
+      handlePhaseInputChange={handlePhaseInputChange}
+      phaseSlInputRefs={phaseSlInputRefs}
+      handleGenerateSOWWithAI={handleGenerateSOWWithAI}
     ></ProjectSOWScopeOfWorkFormView>
   )
 }

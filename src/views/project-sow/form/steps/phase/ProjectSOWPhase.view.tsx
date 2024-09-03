@@ -87,7 +87,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                 >
                   {phase?.['title']}
                 </Box>
-                <Button className='common-task-list-item-edit-btn' onClick={() => handlePhaseOnEdit(phase)}>
+                <Button className='common-task-list-item-btn' onClick={() => handlePhaseOnEdit(phase)}>
                   <EditIcon />
                 </Button>
                 {phase?.['isPreloading'] && (

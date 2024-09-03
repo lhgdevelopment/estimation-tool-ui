@@ -89,21 +89,21 @@ export const scopeOfWorkListSx: SxProps = {
         }
       }
     },
-    '& .common-task-list-item-edit-btn': {
+    '& .common-task-list-item-btn': {
       ml: '5px',
-      p: '2px',
+      p: '3px',
       minWidth: 0,
       borderRadius: '5px',
       opacity: 0,
       transition: 'all 0.3s ease-in-out',
       '& .MuiSvgIcon-root': {
         color: '#7e22ce',
-        height: '14px !important',
-        width: '14px !important'
+        height: '16px !important',
+        width: '16px !important'
       }
     },
     '&:hover': {
-      '& .common-task-list-item-edit-btn': {
+      '& .common-task-list-item-btn': {
         opacity: 1
       }
     }
@@ -166,7 +166,7 @@ export const taskListContainer = {
     border: '1px solid transparent'
   },
   '.task-item': {
-    '& .common-task-list-item-edit-btn': {
+    '& .common-task-list-item-btn': {
       ml: '5px',
       p: '2px',
       minWidth: 0,
@@ -182,7 +182,7 @@ export const taskListContainer = {
       }
     },
     '&:hover': {
-      '& .common-task-list-item-edit-btn': {
+      '& .common-task-list-item-btn': {
         opacity: 1
       }
     }
@@ -191,17 +191,21 @@ export const taskListContainer = {
   '& .item-type-hive': {
     border: '2px solid #9333ea'
   },
+  '& .item-type-phase': {
+    background: '#bee1f6',
+    color: '#158ddf'
+  },
   '& .item-type-sow': {
-    background: '#215a6c !important',
-    color: '#fff !important'
+    background: '#215a6c',
+    color: '#fff'
   },
   '& .item-type-deliverable': {
-    background: '#c6dbe1 !important',
-    color: '#215a6c !important'
+    background: '#c6dbe1',
+    color: '#215a6c'
   },
   '& .item-type-task': {
-    background: '#ffc8a9 !important',
-    color: '#215a6c !important'
+    background: '#ffc8a9',
+    color: '#215a6c'
   },
   '& .item-type-subtask': {
     background: '#ffe5a0 !important',
@@ -280,7 +284,7 @@ export const serviceQuestionItemSx: SxProps = {
   gap: 2,
   mb: '15px',
   padding: '15px',
-  m: '15px',
+  m: '10px',
   border: '1px solid #ecedee',
   borderRadius: '5px'
 }

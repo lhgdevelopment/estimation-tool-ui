@@ -2,7 +2,8 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import { Box, Button, Checkbox, Modal, TextField } from '@mui/material'
+import SyncIcon from '@mui/icons-material/Sync'
+import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
@@ -17,17 +18,13 @@ import {
   sowAddButtonSx,
   sowRemoveButtonSx
 } from 'src/views/project-sow/ProjectSOW.style'
-import { scopeOfWorkGroupByAdditionalServiceId } from '../../ProjectSOWForm.decorator'
-import {
-  serviceDeliverableGroupByScopeOfWorkId,
-  TProjectSOWDeliverableFormViewProps
-} from './ProjectSOWDeliverable.decorator'
+import { TProjectSOWDeliverableFormViewProps } from './ProjectSOWDeliverable.decorator'
 
 export default function ProjectSOWDeliverableFormView(props: TProjectSOWDeliverableFormViewProps) {
   const {
     preload,
     deliverableDataList,
-    handleDeliverableCheckboxBySow,
+    handleSowCheckbox,
     isSowCheckedInDeliverable,
     selectedDeliverableData,
     handleDeliverableCheckbox,
@@ -65,7 +62,10 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
     deliverableFormData,
     handleServiceDeliverableModalOpen,
     problemGoalId,
-    scopeOfWorkData
+    scopeOfWorkData,
+    phaseDataList,
+    handleGenerateSOWWithAI,
+    additionalServiceData
   } = props
 
   console.log({ scopeOfWorkData })
@@ -86,84 +86,155 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
       </Box>
       <Box sx={scopeOfWorkListContainer}>
         <Box sx={scopeOfWorkListSx}>
-          {serviceDeliverableGroupByScopeOfWorkId(
-            deliverableDataList?.filter((deliverable: any) => !deliverable?.additionalServiceId)
-          )?.map((scopeOfWork: any, index: number) => {
-            return (
-              <Box key={index + 'deliverable'}>
-                <Box className={'common-task-list-item'} component={'label'}>
-                  <Box className={'common-task-list-item-sl'}>
-                    <input className={'common-task-list-item-sl-number'} value={scopeOfWork?.['serial']} disabled />
-                  </Box>
-                  <Box className={'common-task-list-item-type'}>
-                    <Box
-                      className={`item-type-common item-type-sow ${
-                        !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
-                      }`}
-                    >
-                      SOW
+          {phaseDataList
+            ?.filter((phase: any) => !phase?.additionalServiceId)
+            ?.map((phase: any, index: number) => {
+              return (
+                <>
+                  <Box className={'common-task-list-item'} key={index + Math.random()}>
+                    <Box className={'common-task-list-item-sl'}>
+                      <input
+                        className={'common-task-list-item-sl-number'}
+                        value={phase?.['serial']}
+                        type={'number'}
+                        disabled
+                      />
                     </Box>
-                  </Box>
-                  <Box className={'common-task-list-item-check'}>
-                    <Checkbox
-                      onChange={() => {
-                        handleDeliverableCheckboxBySow(scopeOfWork?.deliverables)
-                      }}
-                      value={scopeOfWork?.id}
-                      checked={isSowCheckedInDeliverable(scopeOfWork?.deliverables, selectedDeliverableData)}
-                    />
-                  </Box>
-                  <Box className={'common-task-list-item-title'}>{scopeOfWork?.title}</Box>
-
-                  <Button className='common-task-list-item-edit-btn' onClick={() => handleSOWOnEdit(scopeOfWork)}>
-                    <EditIcon />
-                  </Button>
-                </Box>
-                {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
-                  return (
-                    <Box className={'common-task-list-item'} key={deliverableIndex} component={'label'}>
-                      <Box className={'common-task-list-item-sl'}>
-                        <input
-                          className={'common-task-list-item-sl-number'}
-                          value={`${index + 1}.${deliverableIndex + 1}`}
-                          disabled
-                        />
-                      </Box>
-                      <Box className={'common-task-list-item-type'}>
-                        <Box
-                          className={`item-type-common item-type-deliverable ${
-                            !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
-                          }`}
-                        >
-                          Deliverable
-                        </Box>
-                      </Box>
-                      <Box className={'common-task-list-item-check'}>
-                        <Checkbox
-                          onChange={handleDeliverableCheckbox}
-                          value={deliverable?.['id']}
-                          checked={selectedDeliverableData?.includes(deliverable?.['id'])}
-                        />
-                      </Box>
-                      <Box className={'common-task-list-item-title'}>{deliverable?.['title']}</Box>
-
-                      <Button
-                        className='common-task-list-item-edit-btn'
-                        onClick={() => handleDeliverableOnEdit(deliverable)}
+                    <Box className={'common-task-list-item-type'}>
+                      <Box
+                        className={`item-type-common item-type-phase ${
+                          !phase?.['additionalServiceId'] ? 'item-type-hive' : ''
+                        }`}
                       >
-                        <EditIcon />
-                      </Button>
+                        Phase
+                      </Box>
                     </Box>
-                  )
-                })}
-              </Box>
-            )
-          })}
+                    <Box className={'common-task-list-item-check'}>
+                      <Checkbox value={phase?.['id']} checked={phase?.['isChecked']} disabled />
+                    </Box>
+                    <Box
+                      className={'common-task-list-item-title'}
+                      sx={{
+                        color: !phase?.['additionalServiceId'] ? '#903fe8' : '',
+                        opacity: phase?.['isChecked'] ? 1 : 0.5
+                      }}
+                      component={phase?.['isChecked'] ? 'span' : 'del'}
+                    >
+                      {phase?.['title']}
+                    </Box>
+                  </Box>
+                  <>
+                    {scopeOfWorkData
+                      ?.filter((sow: any) => sow?.phaseId == phase?.id && !sow?.additionalServiceId)
+                      ?.map((scopeOfWork: any, index: number) => {
+                        return (
+                          <>
+                            <Box className={'common-task-list-item'} key={index + Math.random()}>
+                              <Box className={'common-task-list-item-sl'}>
+                                <Box className={'common-task-list-item-sl'}>
+                                  <input
+                                    className={'common-task-list-item-sl-number'}
+                                    value={scopeOfWork?.['serial']}
+                                    type={'number'}
+                                    disabled
+                                  />
+                                </Box>
+                              </Box>
+                              <Box className={'common-task-list-item-type'}>
+                                <Box
+                                  className={`item-type-common item-type-sow ${
+                                    !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
+                                  }`}
+                                >
+                                  SOW
+                                </Box>
+                              </Box>
+                              <Box className={'common-task-list-item-check'}>
+                                <Checkbox value={scopeOfWork?.['id']} checked={scopeOfWork?.['isChecked']} disabled />
+                              </Box>
+                              <Box
+                                className={'common-task-list-item-title'}
+                                sx={{
+                                  color: !scopeOfWork?.['additionalServiceId'] ? '#903fe8' : '',
+                                  opacity: scopeOfWork?.['isChecked'] ? 1 : 0.5
+                                }}
+                                component={scopeOfWork?.['isChecked'] ? 'span' : 'del'}
+                              >
+                                {scopeOfWork?.['title']}
+                              </Box>
+
+                              {!deliverableDataList?.filter(
+                                (deliverable: any) =>
+                                  deliverable?.scopeOfWorkId == scopeOfWork?.id && !deliverable?.additionalServiceId
+                              )?.length && (
+                                <Button
+                                  className='common-task-list-item-btn'
+                                  onClick={() => handleGenerateSOWWithAI(scopeOfWork?.id)}
+                                >
+                                  <SyncIcon />
+                                </Button>
+                              )}
+
+                              {scopeOfWork?.['isPreloading'] && (
+                                <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
+                                  <CircularProgress color='secondary' size={14} />
+                                </Stack>
+                              )}
+                            </Box>
+                            {deliverableDataList
+                              ?.filter(
+                                (deliverable: any) =>
+                                  deliverable?.scopeOfWorkId == scopeOfWork?.id && !deliverable?.additionalServiceId
+                              )
+                              ?.map((deliverable: any, deliverableIndex: number) => {
+                                return (
+                                  <Box className={'common-task-list-item'} key={deliverableIndex} component={'label'}>
+                                    <Box className={'common-task-list-item-sl'}>
+                                      <input
+                                        className={'common-task-list-item-sl-number'}
+                                        value={`${index + 1}.${deliverableIndex + 1}`}
+                                        disabled
+                                      />
+                                    </Box>
+                                    <Box className={'common-task-list-item-type'}>
+                                      <Box
+                                        className={`item-type-common item-type-deliverable ${
+                                          !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
+                                        }`}
+                                      >
+                                        Deliverable
+                                      </Box>
+                                    </Box>
+                                    <Box className={'common-task-list-item-check'}>
+                                      <Checkbox
+                                        onChange={handleDeliverableCheckbox}
+                                        value={deliverable?.['id']}
+                                        checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                      />
+                                    </Box>
+                                    <Box className={'common-task-list-item-title'}>{deliverable?.['title']}</Box>
+
+                                    <Button
+                                      className='common-task-list-item-btn'
+                                      onClick={() => handleDeliverableOnEdit(deliverable)}
+                                    >
+                                      <EditIcon />
+                                    </Button>
+                                  </Box>
+                                )
+                              })}
+                          </>
+                        )
+                      })}
+                  </>
+                </>
+              )
+            })}
         </Box>
       </Box>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', mt: 5 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', mt: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 0 }}>
           <Box sx={sectionTitleSx}>Service Question</Box>
         </Box>
         <Box sx={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}>
@@ -192,8 +263,8 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
           })}
         </Box>
       </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', mt: 5 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 5 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', mt: 3 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 0 }}>
           <Box sx={sectionTitleSx}>Project Notes</Box>
         </Box>
 
@@ -235,70 +306,180 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
       <Box>
         <Box sx={sectionTitleSx}>Added Services</Box>
         <Box>
-          {scopeOfWorkGroupByAdditionalServiceId(
-            serviceDeliverableGroupByScopeOfWorkId(
-              deliverableDataList?.filter((deliverable: any) => !!deliverable?.additionalServiceId)
-            )
-          )?.map((additionalService: any, additionalServiceIndex: number) => {
+          {additionalServiceData?.map((additionalService: any, additionalServiceIndex: number) => {
             return (
               <Box key={additionalServiceIndex}>
                 <Box sx={sectionSubTitleSx} component={'label'}>
-                  <Checkbox
-                    onChange={() => {
-                      handleDeliverableCheckboxByService(additionalService)
-                    }}
-                    value={additionalService?.id}
-                    checked={isServiceCheckedInDeliverable(additionalService, selectedDeliverableData)}
-                    sx={{ p: 0, mr: 2 }}
-                  />
-                  {additionalService?.name}
+                  <Checkbox value={additionalService?.service_info?.id} checked={true} sx={{ p: 0, mr: 2 }} disabled />
+                  {additionalService?.service_info?.name}
                 </Box>
                 <Box sx={scopeOfWorkListContainer}>
                   <Box sx={scopeOfWorkListSx}>
-                    {additionalService?.scope_of_works?.map((scopeOfWork: any, scopeOfWorkIndex: number) => {
-                      return (
-                        <Box key={scopeOfWorkIndex}>
-                          <Box className={'common-task-list-item'} component={'label'}>
-                            <Box className={'common-task-list-item-type'}>
+                    {phaseDataList
+                      ?.filter((phase: any) => phase?.additionalServiceId == additionalService?.service_info?.id)
+                      ?.map((phase: any, index: number) => {
+                        return (
+                          <>
+                            <Box className={'common-task-list-item'} key={index + Math.random()}>
+                              <Box className={'common-task-list-item-sl'}>
+                                <input
+                                  className={'common-task-list-item-sl-number'}
+                                  value={phase?.['serial']}
+                                  type={'number'}
+                                  disabled
+                                />
+                              </Box>
+                              <Box className={'common-task-list-item-type'}>
+                                <Box
+                                  className={`item-type-common item-type-phase ${
+                                    !phase?.['additionalServiceId'] ? 'item-type-hive' : ''
+                                  }`}
+                                >
+                                  Phase
+                                </Box>
+                              </Box>
+                              <Box className={'common-task-list-item-check'}>
+                                <Checkbox value={phase?.['id']} checked={phase?.['isChecked']} disabled />
+                              </Box>
                               <Box
-                                className={`item-type-common item-type-sow ${
-                                  !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
-                                }`}
-                              >
-                                SOW
-                              </Box>
-                            </Box>
-                            <Box className={'common-task-list-item-check'}>
-                              <Checkbox
-                                onChange={() => {
-                                  handleDeliverableCheckboxBySow(scopeOfWork?.deliverables)
+                                className={'common-task-list-item-title'}
+                                sx={{
+                                  color: !phase?.['additionalServiceId'] ? '#903fe8' : '',
+                                  opacity: phase?.['isChecked'] ? 1 : 0.5
                                 }}
-                                value={scopeOfWork?.id}
-                                checked={isSowCheckedInDeliverable(scopeOfWork?.deliverables, selectedDeliverableData)}
-                              />
-                            </Box>
-                            <Box className={'common-task-list-item-title'}>{scopeOfWork?.title}</Box>
-                          </Box>
-                          {scopeOfWork?.deliverables?.map((deliverable: any, deliverableIndex: number) => {
-                            return (
-                              <Box className={'common-task-list-item'} key={deliverableIndex} component={'label'}>
-                                <Box className={'common-task-list-item-type'}>
-                                  <Box className={'item-type-common item-type-deliverable'}>Deliverable</Box>
-                                </Box>
-                                <Box className={'common-task-list-item-check'}>
-                                  <Checkbox
-                                    onChange={handleDeliverableCheckbox}
-                                    value={deliverable?.['id']}
-                                    checked={selectedDeliverableData?.includes(deliverable?.['id'])}
-                                  />
-                                </Box>
-                                <Box className={'common-task-list-item-title'}>{deliverable?.['title']}</Box>
+                                component={phase?.['isChecked'] ? 'span' : 'del'}
+                              >
+                                {phase?.['title']}
                               </Box>
-                            )
-                          })}
-                        </Box>
-                      )
-                    })}
+                            </Box>
+                            <>
+                              {scopeOfWorkData
+                                ?.filter((sow: any) => sow?.phaseId == phase?.id)
+                                ?.map((scopeOfWork: any, index: number) => {
+                                  return (
+                                    <>
+                                      <Box className={'common-task-list-item'} key={index + Math.random()}>
+                                        <Box className={'common-task-list-item-sl'}>
+                                          <Box className={'common-task-list-item-sl'}>
+                                            <input
+                                              className={'common-task-list-item-sl-number'}
+                                              value={scopeOfWork?.['serial']}
+                                              type={'number'}
+                                            />
+                                          </Box>
+                                        </Box>
+                                        <Box className={'common-task-list-item-type'}>
+                                          <Box
+                                            className={`item-type-common item-type-sow ${
+                                              !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
+                                            }`}
+                                          >
+                                            SOW
+                                          </Box>
+                                        </Box>
+                                        <Box className={'common-task-list-item-check'}>
+                                          <Checkbox
+                                            onChange={e => {
+                                              handleSowCheckbox(
+                                                e,
+                                                scopeOfWork?.id,
+                                                deliverableDataList
+                                                  ?.filter(
+                                                    (deliverable: any) => deliverable?.scopeOfWorkId == scopeOfWork?.id
+                                                  )
+                                                  ?.map((deliverable: any) => Number(deliverable?.id)) ?? []
+                                              )
+                                            }}
+                                            value={scopeOfWork?.['id']}
+                                            checked={scopeOfWork?.['isChecked']}
+                                          />
+                                        </Box>
+                                        <Box
+                                          className={'common-task-list-item-title'}
+                                          sx={{
+                                            color: !scopeOfWork?.['additionalServiceId'] ? '#903fe8' : '',
+                                            opacity: scopeOfWork?.['isChecked'] ? 1 : 0.5
+                                          }}
+                                          component={scopeOfWork?.['isChecked'] ? 'span' : 'del'}
+                                        >
+                                          {scopeOfWork?.['title']}
+                                        </Box>
+
+                                        <Button
+                                          className='common-task-list-item-btn'
+                                          onClick={() => handleSOWOnEdit(scopeOfWork)}
+                                        >
+                                          <EditIcon />
+                                        </Button>
+                                        {!deliverableDataList?.filter(
+                                          (deliverable: any) => deliverable?.scopeOfWorkId == scopeOfWork?.id
+                                        )?.length && (
+                                          <Button
+                                            className='common-task-list-item-btn'
+                                            onClick={() => handleGenerateSOWWithAI(scopeOfWork?.id)}
+                                          >
+                                            <SyncIcon />
+                                          </Button>
+                                        )}
+
+                                        {scopeOfWork?.['isPreloading'] && (
+                                          <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
+                                            <CircularProgress color='secondary' size={14} />
+                                          </Stack>
+                                        )}
+                                      </Box>
+                                      {deliverableDataList
+                                        ?.filter((deliverable: any) => deliverable?.scopeOfWorkId == scopeOfWork?.id)
+                                        ?.map((deliverable: any, deliverableIndex: number) => {
+                                          return (
+                                            <Box
+                                              className={'common-task-list-item'}
+                                              key={deliverableIndex}
+                                              component={'label'}
+                                            >
+                                              <Box className={'common-task-list-item-sl'}>
+                                                <input
+                                                  className={'common-task-list-item-sl-number'}
+                                                  value={`${index + 1}.${deliverableIndex + 1}`}
+                                                  disabled
+                                                />
+                                              </Box>
+                                              <Box className={'common-task-list-item-type'}>
+                                                <Box
+                                                  className={`item-type-common item-type-deliverable ${
+                                                    !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
+                                                  }`}
+                                                >
+                                                  Deliverable
+                                                </Box>
+                                              </Box>
+                                              <Box className={'common-task-list-item-check'}>
+                                                <Checkbox
+                                                  onChange={handleDeliverableCheckbox}
+                                                  value={deliverable?.['id']}
+                                                  checked={selectedDeliverableData?.includes(deliverable?.['id'])}
+                                                />
+                                              </Box>
+                                              <Box className={'common-task-list-item-title'}>
+                                                {deliverable?.['title']}
+                                              </Box>
+
+                                              <Button
+                                                className='common-task-list-item-btn'
+                                                onClick={() => handleDeliverableOnEdit(deliverable)}
+                                              >
+                                                <EditIcon />
+                                              </Button>
+                                            </Box>
+                                          )
+                                        })}
+                                    </>
+                                  )
+                                })}
+                            </>
+                          </>
+                        )
+                      })}
                   </Box>
                 </Box>
               </Box>

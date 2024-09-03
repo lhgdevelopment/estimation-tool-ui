@@ -11,6 +11,8 @@ export type TProjectSOWScopeOfWorkFormComponentProps = {
   handleAdditionalServiceSelection: (id: any) => void
   serviceList: any
   serviceId: any
+  phaseData: any
+  setPhaseData: Dispatch<any>
 }
 
 export type TProjectSOWScopeOfWorkFormViewProps = {
@@ -37,4 +39,22 @@ export type TProjectSOWScopeOfWorkFormViewProps = {
   handleSOWOnClear: () => void
   handleScopeOfWorkSlOnChange: (sl: number, id: number) => void
   slInputRefs: MutableRefObject<{ [key: number]: HTMLInputElement | null }>
+  phaseDataList: any
+  handlePhaseCheckbox: (event: any, id: number, sowIds: number[]) => void
+  handleServicePhaseModalOpen: () => void
+  handlePhaseOnEdit: (data: any) => void
+  servicePhaseModalOpen: boolean
+  handleServicePhaseModalClose: () => void
+  phaseEditId: any
+  phaseFormData: any
+  handlePhaseInputChange: (event: any) => void
+  handlePhaseSaveOnClick: () => void
+  handlePhaseSelectChange: (e: SelectChangeEvent<any>) => void
+  handleAddNewPhase: () => void
+  handlePhaseMultipleInputChange: (event: any, index: number) => void
+  handleRemovePhase: (index: number) => void
+  handlePhaseSlOnChange: (sl: number, id: number) => void
+  handlePhaseOnClear: () => void
+  phaseSlInputRefs: MutableRefObject<{ [key: number]: HTMLInputElement | null }>
+  handleGenerateSOWWithAI: (phaseId: any) => void
 }

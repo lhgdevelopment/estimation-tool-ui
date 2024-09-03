@@ -12,6 +12,10 @@ export type TProjectSOWDeliverableFormComponentProps = {
   serviceId: string
   problemGoalID: string
   scopeOfWorkData: any
+  setScopeOfWorkData: Dispatch<any>
+  phaseDataList: any
+  selectedAdditionalServiceData: any
+  additionalServiceData: any
 }
 
 export type TProjectSOWDeliverableFormViewProps = {
@@ -21,7 +25,7 @@ export type TProjectSOWDeliverableFormViewProps = {
   deliverableServiceQuestionData: any
   deliverableNotesData: any
   serviceQuestionList: any
-  handleDeliverableCheckboxBySow: (deliverables: any) => void
+  handleSowCheckbox: (e: React.ChangeEvent<HTMLInputElement>, scopeOfWorkId: number, deliverableIds: number[]) => void
   isSowCheckedInDeliverable: (deliverables: any, selectedDeliverableData: any) => any
   handleDeliverableCheckbox: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleServiceQuestionInputChange: (answer: string, questionId: any) => void
@@ -56,6 +60,9 @@ export type TProjectSOWDeliverableFormViewProps = {
   deliverableFormData: any
   problemGoalId: string
   scopeOfWorkData: any
+  handleGenerateSOWWithAI: (scopeOfWorkId: any) => void
+  phaseDataList: any
+  additionalServiceData: any
 }
 
 export function serviceGroupByProjectTypeId(data: any) {
