@@ -171,7 +171,7 @@ export default function AIAssistantDetailsComponent() {
         <Box className='container px-6 mx-auto' sx={{ height: 'calc(100vh - 100px)', position: 'relative' }}>
           <Box
             sx={{
-              height: 'calc(100% - 315px)',
+              height: 'calc(100% - 267px)',
               pr: '24px',
               overflow: 'hidden',
               overflowY: 'auto'
@@ -201,8 +201,7 @@ export default function AIAssistantDetailsComponent() {
               bottom: '0',
               left: '0',
               right: '0',
-
-              p: '24px'
+              p: '0 20px'
             }}
             className={'bg-gray-50 dark:bg-gray-900'}
           >
@@ -214,6 +213,7 @@ export default function AIAssistantDetailsComponent() {
                   name='prompt_id'
                   value={conversationFormData.prompt_id}
                   onChange={handleSelectChange}
+                  error={errorMessage?.['prompt_id']}
                 />
                 {!!errorMessage?.['prompt_id'] &&
                   errorMessage?.['prompt_id']?.map((message: any, index: number) => {
@@ -241,6 +241,12 @@ export default function AIAssistantDetailsComponent() {
                 fullWidth
                 multiline
                 rows={4}
+                onKeyPress={e => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault()
+                    onSubmit()
+                  }
+                }}
               />
 
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>

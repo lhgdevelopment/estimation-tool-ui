@@ -16,8 +16,6 @@ type TAIAssistantMessagesComponentProps = {
 export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
   const { message, index, isWaiting = false, onRegenerate, onEdit } = props
 
-  console.log(addTargetBlankToMarkdownLinks(message?.message_content))
-
   return (
     <Box
       sx={{
@@ -41,6 +39,13 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
         <Box className='text-gray-600 dark:text-gray-400' sx={{ fontWeight: 600 }}>
           {message?.role === 'system' ? `Hive AI` : message?.user?.name ? message?.user?.name : 'You'}
         </Box>
+        {message?.role === 'user' && (
+          <Box sx={{ display: 'flex' }}>
+            <Box sx={{ fontSize: '12px', color: '#fff', background: '#999', p: '2px 10px', borderRadius: '5px' }}>
+              {message?.prompt?.name}
+            </Box>
+          </Box>
+        )}
         <Box sx={{ width: '100%', lineHeight: 'normal', mt: 2, borderRadius: 1, overflow: 'hidden' }}>
           {isWaiting ? (
             <Box
