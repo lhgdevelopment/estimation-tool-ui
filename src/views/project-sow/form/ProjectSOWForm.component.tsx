@@ -266,7 +266,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               .get(`/phase?problemGoalId=${problemGoalID}`)
               .then(res2 => {
                 if (res2?.data?.phases.length) {
-                  setPhasesData([...res2?.data?.phases])
+                  setPhasesData(res2?.data?.phases)
                   setTimeout(() => {
                     if (type == 'NEXT') {
                       setActiveStep(newActiveStep)
@@ -282,27 +282,50 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     .post(`/phase`, { problemGoalID })
                     .then(res3 => {
                       setPhasesData(res3?.data)
-                    })
-                    .catch(error => {
-                      setPreload(false)
-                      setErrorMessage(error?.response?.data?.errors)
-                      enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
-                    })
-                }
-                apiRequest
-                  .get(`/scope-of-work?problemGoalId=${problemGoalID}`)
-                  .then(res => {
-                    if (res.data.scopeOfWorks?.length) {
-                      setScopeOfWorkData(res?.data?.scopeOfWorks)
-                    } else {
                       apiRequest
-                        .post(`/scope-of-work/`, {
-                          problemGoalID: problemGoalID,
-                          phaseId: phasesData?.[0]?.id
-                        })
-                        .then(res2 => {
-                          setScopeOfWorkData(res2?.data)
-                          setPreload(false)
+                        .get(`/scope-of-work?problemGoalId=${problemGoalID}`)
+                        .then(res4 => {
+                          if (res4.data.scopeOfWorks?.length) {
+                            setScopeOfWorkData(res4?.data?.scopeOfWorks)
+                            setSelectedScopeOfWorkData(res4?.data?.scopeOfWorks?.map((item: any) => item?.id))
+                            setTimeout(() => {
+                              if (type == 'NEXT') {
+                                setActiveStep(newActiveStep)
+                                if (enabledStep < newActiveStep) {
+                                  setEnabledStep(newActiveStep)
+                                }
+                              }
+                              setPreload(false)
+                              enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                            }, 1000)
+                          } else {
+                            apiRequest
+                              .post(`/scope-of-work/`, {
+                                problemGoalID: problemGoalID,
+                                phaseId: res3?.data?.[0]?.id
+                              })
+                              .then(res5 => {
+                                setScopeOfWorkData(res5?.data)
+                                setSelectedScopeOfWorkData(res5?.data?.map((item: any) => item?.id))
+                                setTimeout(() => {
+                                  if (type == 'NEXT') {
+                                    setActiveStep(newActiveStep)
+                                    if (enabledStep < newActiveStep) {
+                                      setEnabledStep(newActiveStep)
+                                    }
+                                  }
+                                  setPreload(false)
+                                  enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+                                }, 1000)
+                              })
+                              .catch(error => {
+                                setPreload(false)
+                                setErrorMessage(error?.response?.data?.errors)
+                                enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', {
+                                  variant: 'error'
+                                })
+                              })
+                          }
                         })
                         .catch(error => {
                           setPreload(false)
@@ -311,25 +334,13 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                             variant: 'error'
                           })
                         })
-                    }
-                  })
-                  .catch(error => {
-                    setPreload(false)
-                    setErrorMessage(error?.response?.data?.errors)
-                    enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', {
-                      variant: 'error'
                     })
-                  })
-                setTimeout(() => {
-                  if (type == 'NEXT') {
-                    setActiveStep(newActiveStep)
-                    if (enabledStep < newActiveStep) {
-                      setEnabledStep(newActiveStep)
-                    }
-                  }
-                  setPreload(false)
-                  enqueueSnackbar('Generated Successfully!', { variant: 'success' })
-                }, 1000)
+                    .catch(error => {
+                      setPreload(false)
+                      setErrorMessage(error?.response?.data?.errors)
+                      enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                    })
+                }
               })
               .catch(error => {
                 setPreload(false)
@@ -518,7 +529,8 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               } else {
                 apiRequest
                   .post(`/estimation-tasks/`, {
-                    problemGoalId: problemGoalID
+                    problemGoalId: problemGoalID,
+                    deliverableId: deliverableData?.[0]?.id
                   })
                   .then(res3 => {
                     setTasksList(res3?.data)
