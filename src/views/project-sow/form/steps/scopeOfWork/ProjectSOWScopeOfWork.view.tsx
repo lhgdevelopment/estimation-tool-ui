@@ -76,139 +76,141 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
       </Box>
       <Box sx={scopeOfWorkListContainer}>
         <Box sx={scopeOfWorkListSx}>
-          {phaseDataList?.map((phase: any, index: number) => {
-            return (
-              <>
-                <Box className={'common-task-list-item'} key={index + Math.random()}>
-                  <Box className={'common-task-list-item-sl'}>
-                    <input
-                      ref={el => (slInputRefs.current[phase.id] = el)}
-                      className={'common-task-list-item-sl-number'}
-                      value={phase?.['serial']}
-                      onChange={event => {
-                        const serial = parseInt(event.target.value ?? 0, 10)
-                        handlePhaseSlOnChange(serial, phase?.['id'])
-                      }}
-                      type={'number'}
-                      disabled={phase?.['isPreloading']}
-                    />
-                  </Box>
-                  <Box className={'common-task-list-item-type'}>
-                    <Box
-                      className={`item-type-common item-type-phase ${
-                        !phase?.['additionalServiceId'] ? 'item-type-hive' : ''
-                      }`}
-                    >
-                      Phase
-                    </Box>
-                  </Box>
-                  <Box className={'common-task-list-item-check'}>
-                    <Checkbox
-                      onChange={event => {
-                        handlePhaseCheckbox(
-                          event,
-                          phase?.['id'],
-                          scopeOfWorkData?.filter((sow: any) => sow?.phaseId == phase?.id).map((sow: any) => sow?.id)
-                        )
-                      }}
-                      value={phase?.['id']}
-                      checked={phase?.['isChecked']}
-                      disabled={phase?.['isPreloading']}
-                    />
-                  </Box>
-                  <Box
-                    className={'common-task-list-item-title'}
-                    sx={{
-                      color: !phase?.['additionalServiceId'] ? '#903fe8' : '',
-                      opacity: phase?.['isChecked'] ? 1 : 0.5
-                    }}
-                    component={phase?.['isChecked'] ? 'span' : 'del'}
-                  >
-                    {phase?.['title']}
-                  </Box>
-                  <Button className='common-task-list-item-btn' onClick={() => handlePhaseOnEdit(phase)}>
-                    <EditIcon />
-                  </Button>
-                  {!scopeOfWorkData?.filter((sow: any) => sow?.phaseId == phase?.id)?.length && (
-                    <Button
-                      className='common-task-list-item-btn'
-                      onClick={() => handleGenerateSOWWithAI(phase?.id)}
-                      disabled={phase?.['isPreloading']}
-                    >
-                      <SyncIcon />
-                    </Button>
-                  )}
-
-                  {phase?.['isPreloading'] && (
-                    <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
-                      <CircularProgress color='secondary' size={14} />
-                    </Stack>
-                  )}
-                </Box>
+          {phaseDataList
+            ?.filter((phase: any) => !phase?.['additionalServiceId'])
+            ?.map((phase: any, index: number) => {
+              return (
                 <>
-                  {scopeOfWorkData
-                    ?.filter((sow: any) => sow?.phaseId == phase?.id)
-                    ?.map((scopeOfWork: any, index: number) => {
-                      return (
-                        <Box className={'common-task-list-item'} key={index + Math.random()}>
-                          <Box className={'common-task-list-item-sl'}>
+                  <Box className={'common-task-list-item'} key={index + Math.random()}>
+                    <Box className={'common-task-list-item-sl'}>
+                      <input
+                        ref={el => (slInputRefs.current[phase.id] = el)}
+                        className={'common-task-list-item-sl-number'}
+                        value={phase?.['serial']}
+                        onChange={event => {
+                          const serial = parseInt(event.target.value ?? 0, 10)
+                          handlePhaseSlOnChange(serial, phase?.['id'])
+                        }}
+                        type={'number'}
+                        disabled={phase?.['isPreloading']}
+                      />
+                    </Box>
+                    <Box className={'common-task-list-item-type'}>
+                      <Box
+                        className={`item-type-common item-type-phase ${
+                          !phase?.['additionalServiceId'] ? 'item-type-hive' : ''
+                        }`}
+                      >
+                        Phase
+                      </Box>
+                    </Box>
+                    <Box className={'common-task-list-item-check'}>
+                      <Checkbox
+                        onChange={event => {
+                          handlePhaseCheckbox(
+                            event,
+                            phase?.['id'],
+                            scopeOfWorkData?.filter((sow: any) => sow?.phaseId == phase?.id).map((sow: any) => sow?.id)
+                          )
+                        }}
+                        value={phase?.['id']}
+                        checked={phase?.['isChecked']}
+                        disabled={phase?.['isPreloading']}
+                      />
+                    </Box>
+                    <Box
+                      className={'common-task-list-item-title'}
+                      sx={{
+                        color: !phase?.['additionalServiceId'] ? '#903fe8' : '',
+                        opacity: phase?.['isChecked'] ? 1 : 0.5
+                      }}
+                      component={phase?.['isChecked'] ? 'span' : 'del'}
+                    >
+                      {phase?.['title']}
+                    </Box>
+                    <Button className='common-task-list-item-btn' onClick={() => handlePhaseOnEdit(phase)}>
+                      <EditIcon />
+                    </Button>
+                    {!scopeOfWorkData?.filter((sow: any) => sow?.phaseId == phase?.id)?.length && (
+                      <Button
+                        className='common-task-list-item-btn'
+                        onClick={() => handleGenerateSOWWithAI(phase?.id)}
+                        disabled={phase?.['isPreloading']}
+                      >
+                        <SyncIcon />
+                      </Button>
+                    )}
+
+                    {phase?.['isPreloading'] && (
+                      <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
+                        <CircularProgress color='secondary' size={14} />
+                      </Stack>
+                    )}
+                  </Box>
+                  <>
+                    {scopeOfWorkData
+                      ?.filter((sow: any) => sow?.phaseId == phase?.id)
+                      ?.map((scopeOfWork: any, index: number) => {
+                        return (
+                          <Box className={'common-task-list-item'} key={index + Math.random()}>
                             <Box className={'common-task-list-item-sl'}>
-                              <input
-                                ref={el => (slInputRefs.current[scopeOfWork.id] = el)}
-                                className={'common-task-list-item-sl-number'}
-                                value={scopeOfWork?.['serial']}
-                                onChange={event => {
-                                  const serial = parseInt(event.target.value ?? 0, 10)
-                                  handleScopeOfWorkSlOnChange(serial, scopeOfWork?.['id'])
-                                }}
-                                type={'number'}
+                              <Box className={'common-task-list-item-sl'}>
+                                <input
+                                  ref={el => (slInputRefs.current[scopeOfWork.id] = el)}
+                                  className={'common-task-list-item-sl-number'}
+                                  value={scopeOfWork?.['serial']}
+                                  onChange={event => {
+                                    const serial = parseInt(event.target.value ?? 0, 10)
+                                    handleScopeOfWorkSlOnChange(serial, scopeOfWork?.['id'])
+                                  }}
+                                  type={'number'}
+                                  disabled={scopeOfWork?.['isPreloading']}
+                                />
+                              </Box>
+                            </Box>
+                            <Box className={'common-task-list-item-type'}>
+                              <Box
+                                className={`item-type-common item-type-sow ${
+                                  !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
+                                }`}
+                              >
+                                SOW
+                              </Box>
+                            </Box>
+                            <Box className={'common-task-list-item-check'}>
+                              <Checkbox
+                                onChange={event => handleScopeOfWorkCheckbox(event, scopeOfWork?.['id'])}
+                                value={scopeOfWork?.['id']}
+                                checked={scopeOfWork?.['isChecked']}
                                 disabled={scopeOfWork?.['isPreloading']}
                               />
                             </Box>
-                          </Box>
-                          <Box className={'common-task-list-item-type'}>
                             <Box
-                              className={`item-type-common item-type-sow ${
-                                !scopeOfWork?.['additionalServiceId'] ? 'item-type-hive' : ''
-                              }`}
+                              className={'common-task-list-item-title'}
+                              sx={{
+                                color: !scopeOfWork?.['additionalServiceId'] ? '#903fe8' : '',
+                                opacity: scopeOfWork?.['isChecked'] ? 1 : 0.5
+                              }}
+                              component={scopeOfWork?.['isChecked'] ? 'span' : 'del'}
                             >
-                              SOW
+                              {scopeOfWork?.['title']}
                             </Box>
-                          </Box>
-                          <Box className={'common-task-list-item-check'}>
-                            <Checkbox
-                              onChange={event => handleScopeOfWorkCheckbox(event, scopeOfWork?.['id'])}
-                              value={scopeOfWork?.['id']}
-                              checked={scopeOfWork?.['isChecked']}
-                              disabled={scopeOfWork?.['isPreloading']}
-                            />
-                          </Box>
-                          <Box
-                            className={'common-task-list-item-title'}
-                            sx={{
-                              color: !scopeOfWork?.['additionalServiceId'] ? '#903fe8' : '',
-                              opacity: scopeOfWork?.['isChecked'] ? 1 : 0.5
-                            }}
-                            component={scopeOfWork?.['isChecked'] ? 'span' : 'del'}
-                          >
-                            {scopeOfWork?.['title']}
-                          </Box>
 
-                          <Button className='common-task-list-item-btn' onClick={() => handleSOWOnEdit(scopeOfWork)}>
-                            <EditIcon />
-                          </Button>
-                          {scopeOfWork?.['isPreloading'] && (
-                            <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
-                              <CircularProgress color='secondary' size={14} />
-                            </Stack>
-                          )}
-                        </Box>
-                      )
-                    })}
+                            <Button className='common-task-list-item-btn' onClick={() => handleSOWOnEdit(scopeOfWork)}>
+                              <EditIcon />
+                            </Button>
+                            {scopeOfWork?.['isPreloading'] && (
+                              <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
+                                <CircularProgress color='secondary' size={14} />
+                              </Stack>
+                            )}
+                          </Box>
+                        )
+                      })}
+                  </>
                 </>
-              </>
-            )
-          })}
+              )
+            })}
           {/* selectedAdditionalServiceData */}
         </Box>
       </Box>
