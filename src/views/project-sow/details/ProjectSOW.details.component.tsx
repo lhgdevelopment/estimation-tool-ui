@@ -4,16 +4,17 @@ import { Box } from '@mui/material'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
-import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
 import { useEffect, useRef, useState } from 'react'
 import CopyToClipboard from 'src/@core/components/copy-to-clipboard'
 import Preloader from 'src/@core/components/preloader'
 import apiRequest from 'src/@core/utils/axios-config'
 
 export default function ProjectSOWDetailsComponent() {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const router = useRouter()
   const allTextRef = useRef<HTMLDivElement>(null)
   const summaryTextRef = useRef<HTMLDivElement>(null)
@@ -22,22 +23,22 @@ export default function ProjectSOWDetailsComponent() {
   const scopeTextRef = useRef<HTMLDivElement>(null)
   const deliverablesRef = useRef<HTMLDivElement>(null)
 
-  const [preload, setPreload] = useState<boolean>(true)
-  const [detailsData, setDetailsData] = useState<any>({})
-  const getDetails = () => {
+  const [preload, setPreload] = useState<boolean>(false)
+  const [detailsData, setDetailsData] = useState<any>(null)
+  const getDetails = async () => {
     setPreload(true)
-    apiRequest.get(`/project-summery/${router?.query['id']}`).then(res => {
-      setDetailsData(res?.data)
-      setPreload(false)
-    })
+    await apiRequest
+      .get(`/project-summery/${router?.query?.['id']}`)
+      .then(res => {
+        setDetailsData((prev: any) => res.data)
+      })
+      .catch(error => {
+        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
+      .finally(() => {
+        setPreload(false)
+      })
   }
-  console.log(detailsData)
-
-  useEffect(() => {
-    if (router?.query['id']) {
-      getDetails()
-    }
-  }, [router?.query['id']])
 
   const sowHeadingSx = {
     fontSize: '16x',
@@ -49,10 +50,15 @@ export default function ProjectSOWDetailsComponent() {
 
   const sowBodySx = { p: 2, my: 2 }
 
+  useEffect(() => {
+    if (router?.query['id']) {
+      getDetails()
+    }
+  }, [router?.query['id']])
+
   if (preload) {
     return <Preloader close={!preload} />
   }
-  console.log(summaryTextRef?.current?.innerText)
 
   return (
     <Box sx={{ p: 5 }}>
@@ -97,7 +103,7 @@ export default function ProjectSOWDetailsComponent() {
               <AccordionDetails>
                 <Box sx={sowBodySx}>
                   <Box ref={summaryTextRef}>
-                    <MdPreview modelValue={detailsData?.['summaryText']} />
+                    <Box dangerouslySetInnerHTML={{ __html: detailsData?.['summaryText'] }}></Box>
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={summaryTextRef?.current?.innerText} />
@@ -132,9 +138,11 @@ export default function ProjectSOWDetailsComponent() {
               <AccordionDetails>
                 <Box sx={sowBodySx}>
                   <Box ref={problemGoalTextRef}>
-                    <MdPreview
-                      modelValue={detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']}
-                    />
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html: detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']
+                      }}
+                    ></Box>
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={problemGoalTextRef?.current?.innerText} />
@@ -169,13 +177,14 @@ export default function ProjectSOWDetailsComponent() {
               <AccordionDetails>
                 <Box sx={sowBodySx}>
                   <Box ref={overviewTextRef}>
-                    <MdPreview
-                      modelValue={
-                        detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.[
-                          'overviewText'
-                        ]
-                      }
-                    />
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.[
+                            'overviewText'
+                          ]
+                      }}
+                    ></Box>
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={overviewTextRef?.current?.innerText} />
@@ -208,12 +217,14 @@ export default function ProjectSOWDetailsComponent() {
               <AccordionDetails>
                 <Box sx={sowBodySx}>
                   <Box ref={scopeTextRef}>
-                    <MdPreview
-                      modelValue={
-                        detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']
-                      }
-                    />
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']
+                      }}
+                    ></Box>
                   </Box>
+
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={scopeTextRef?.current?.innerText} />
                     <Link href={`/project-summary/edit/${detailsData?.id}?step=4`} passHref>
