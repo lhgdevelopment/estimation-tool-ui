@@ -140,7 +140,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <TextField
-                label={'Serial'}
+                label={'Step Number'}
                 name='serial'
                 value={formData.serial}
                 onChange={handleTextChange}
@@ -162,7 +162,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                   { id: 'input-only', name: 'Input Only' },
                   { id: 'expected-output', name: 'Expected Output' }
                 ]}
-                label='Action Type'
+                label='Category'
                 name='action_type'
                 value={formData.action_type}
                 onChange={handleSelectChange}
@@ -179,26 +179,24 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           </Box>
           <Box sx={{ display: 'flex', gap: 5 }}>
             <Box sx={{ width: '100%' }}>
-              <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Prompt</span>
-                <TextField
-                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                  placeholder='Examples: Prompt content'
-                  name='prompt'
-                  rows={10}
-                  value={formData.prompt}
-                  onChange={handleTextChange}
-                  multiline
-                />
-                {!!errorMessage?.['prompt'] &&
-                  errorMessage?.['prompt']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
+              <TextField
+                label={'Command / Prompt'}
+                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                placeholder='Examples: Details, Command or Prompt content'
+                name='prompt'
+                rows={10}
+                value={formData.prompt}
+                onChange={handleTextChange}
+                multiline
+              />
+              {!!errorMessage?.['prompt'] &&
+                errorMessage?.['prompt']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
             </Box>
           </Box>
           <Box className='my-4 text-right'>

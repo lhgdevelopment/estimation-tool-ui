@@ -155,7 +155,7 @@ export default function AppNavbarComponent() {
                 <HiveIcon />
 
                 <Box component={'span'} className='ml-4'>
-                  Hive AI
+                  Hive Assist
                 </Box>
               </Box>
             </Link>
