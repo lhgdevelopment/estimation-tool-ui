@@ -219,9 +219,21 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
         <Box sx={sectionTitleSx}>Add Services</Box>
         <Box sx={{ py: 0, px: 5 }}>
           {serviceGroupByProjectTypeId(serviceList)?.map((projectType: any, index: number) => (
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, fontWeight: '600' }} key={index + Math.random()}>
-              <Box sx={{ mr: 2, color: '#777' }}>{projectType?.projectTypeName}</Box>
-              <Box sx={{ my: 3 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                mb: 2,
+                fontWeight: '600',
+                border: '1px dotted #31a0f64a',
+                p: '2px 10px'
+              }}
+              key={index + Math.random()}
+            >
+              <Box sx={{ width: '220px', mr: 2, color: '#777', fontWeight: 'normal' }}>
+                {projectType?.projectTypeName}
+              </Box>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', width: '100%' }}>
                 {projectType?.services?.map((service: any) => (
                   <Box
                     sx={{
@@ -234,7 +246,8 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                       background: '#afaeb3',
                       color: '#fff',
                       cursor: 'pointer',
-                      mb: 1,
+                      my: '2px',
+                      mr: 1,
                       '&.selected': {
                         background: '#31A0F6'
                       }
@@ -252,14 +265,13 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                           top: '50%',
                           left: '5px',
                           transform: 'translate(0, -50%)',
-                          fontSize: '18px',
-                          mr: 1
+                          fontSize: '18px'
                         }}
                       />
                     ) : (
                       <></>
                     )}
-                    {service.name}
+                    <Box sx={{ ml: 1 }} dangerouslySetInnerHTML={{ __html: service?.name }}></Box>
                   </Box>
                 ))}
               </Box>
