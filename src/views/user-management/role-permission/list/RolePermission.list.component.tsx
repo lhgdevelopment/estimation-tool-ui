@@ -13,15 +13,15 @@ import {
   TableHead,
   TableRow
 } from '@mui/material'
-import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import RolePermissionFormComponent from '../form/RolePermission.form.component'
 
 export default function RolePermissionListComponent() {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const [editDataId, setEditDataId] = useState<null | string>(null)
   const [listData, setListData] = useState<any>([])
   const [editData, setEditData] = useState<any>({})
@@ -62,11 +62,11 @@ export default function RolePermissionListComponent() {
     apiRequest
       .put(`/roles/${roleId}`, { permissions })
       .then(res => {
-        enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+        showSnackbar('Updated Successfully!', { variant: 'success' })
         getList()
       })
       .catch(error => {
-        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
   }
 
@@ -91,13 +91,13 @@ export default function RolePermissionListComponent() {
       .then(res => {
         if (res.isConfirmed) {
           apiRequest.delete(`/roles/${id}`).then(res => {
-            enqueueSnackbar('Deleted Successfully!', { variant: 'success' })
+            showSnackbar('Deleted Successfully!', { variant: 'success' })
             getList()
           })
         }
       })
       .catch(error => {
-        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
   }
 

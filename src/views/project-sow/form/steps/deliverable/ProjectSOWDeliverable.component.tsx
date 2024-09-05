@@ -1,10 +1,10 @@
 import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWDeliverableFormComponentProps } from './ProjectSOWDeliverable.decorator'
 import ProjectSOWDeliverableFormView from './ProjectSOWDeliverable.view'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 
 export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDeliverableFormComponentProps) {
   const {
@@ -25,6 +25,7 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     additionalServiceData
   } = props
 
+  const { showSnackbar } = useToastSnackbar()
   const [preload, setPreload] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<any[]>([])
   const [deliverableDataList, setDeliverableDataList] = useState<any[]>([])
@@ -198,10 +199,10 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
               return [...prevState, ...deliverableIds]
             }
           })
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
         .finally(() => {
           setScopeOfWorkData((prevList: any) =>
@@ -270,10 +271,10 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
       .then(res => {
         setDeliverableDataList((prevState: any[]) => res?.data)
         setSelectedDeliverableData((prevState: any) => [...prevState, ...res?.data?.map((item: any) => item?.id)])
-        enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+        showSnackbar('Generated Successfully!', { variant: 'success' })
       })
       .catch(error => {
-        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
       .finally(() => {
         setScopeOfWorkData((prevList: any) =>
@@ -317,7 +318,7 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           setServiceQuestion(res?.data)
         })
         .catch(error => {
-          enqueueSnackbar(error?.message, { variant: 'error' })
+          showSnackbar(error?.message, { variant: 'error' })
         })
     }
   }
@@ -330,7 +331,7 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           setScopeOfWorkPhaseList(res?.data)
         })
         .catch(error => {
-          enqueueSnackbar(error?.message, { variant: 'error' })
+          showSnackbar(error?.message, { variant: 'error' })
         })
     }
   }
@@ -350,13 +351,13 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           ])
 
           setPreload(false)
-          enqueueSnackbar('Updatedf Successfully!', { variant: 'success' })
+          showSnackbar('Updatedf Successfully!', { variant: 'success' })
           handleServiceSOWModalClose()
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -366,13 +367,13 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           // setSelectedScopeOfWorkData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
 
           setPreload(false)
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           handleServiceSOWModalClose()
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -392,13 +393,13 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           ])
 
           setPreload(false)
-          enqueueSnackbar('Updatedf Successfully!', { variant: 'success' })
+          showSnackbar('Updatedf Successfully!', { variant: 'success' })
           handleServiceDeliverableModalClose()
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -407,13 +408,13 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           setDeliverableDataList((prevState: any[]) => [...res?.data, ...prevState])
 
           setPreload(false)
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           handleServiceDeliverableModalClose()
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }

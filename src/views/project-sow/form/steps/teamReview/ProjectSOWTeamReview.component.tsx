@@ -1,6 +1,6 @@
 import 'md-editor-rt/lib/style.css'
-import { enqueueSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWTeamReviewFormComponentProps } from './ProjectSOWTeamReview.decorator'
 import ProjectSOWTeamReviewFormView from './ProjectSOWTeamReview.view'
@@ -15,6 +15,7 @@ export default function ProjectSOWTeamReviewFormComponent(props: TProjectSOWTeam
     associatedUserWithRole,
     problemGoalText
   } = props
+  const { showSnackbar } = useToastSnackbar()
   const [employeeRoleData, setEmployeeRole] = useState<any>([])
   const [teamUserList, setTeamUserList] = useState<any>([])
   const getAssociatedUserWithRole = (roleId: number, userId: number) => {
@@ -43,7 +44,7 @@ export default function ProjectSOWTeamReviewFormComponent(props: TProjectSOWTeam
         )
       })
       .catch(error => {
-        enqueueSnackbar(error?.message, { variant: 'error' })
+        showSnackbar(error?.message, { variant: 'error' })
       })
   }
   const getUserList = async () => {
@@ -53,7 +54,7 @@ export default function ProjectSOWTeamReviewFormComponent(props: TProjectSOWTeam
         setTeamUserList(res?.data)
       })
       .catch(error => {
-        enqueueSnackbar(error?.message, { variant: 'error' })
+        showSnackbar(error?.message, { variant: 'error' })
       })
   }
   useEffect(() => {

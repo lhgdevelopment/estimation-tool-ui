@@ -7,16 +7,16 @@ import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TMeetingSummaryComponent } from '../MeetingSummary.decorator'
 
 export default function MeetingSummaryFormComponent(props: TMeetingSummaryComponent) {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const { listData, setListData, isEdit } = props
   const [preload, setPreload] = useState<boolean>(false)
   const router = useRouter()
@@ -89,13 +89,13 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
           })
           setPreload(false)
           onClear()
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
           router.push('/meeting-summary/')
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -104,14 +104,14 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
           apiRequest.get(`/meeting-summery`).then(res => {
             setListData(res?.data)
           })
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
           setPreload(false)
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

@@ -2,17 +2,17 @@ import NorthEastIcon from '@mui/icons-material/North'
 import { Box, Button, Modal, SelectChangeEvent, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
-import { useSnackbar } from 'notistack'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
 import AIAssistantMessagesComponent from './AIAssistantMessages.component'
 
 export default function AIAssistantDetailsComponent() {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const { user } = useSelector((state: any) => state.user)
   const conversationId = useRouter()?.query['id']
 
@@ -96,48 +96,52 @@ export default function AIAssistantDetailsComponent() {
       ...(isRegenerate ? prevConversationFormData : conversationFormData),
       conversation_id: conversationId
     }
-    setConversationFormData(defaultData)
-    setDetailsData((prevState: any) => ({
-      ...prevState,
-      messages: [
-        ...prevState.messages,
-        ...[
-          {
-            ...formData,
-            user: { name: user.name }
-          },
-          {
-            message_content: null,
-            role: 'system'
-          }
+    if (formData.message_content || formData.prompt_id) {
+      setConversationFormData(defaultData)
+      setDetailsData((prevState: any) => ({
+        ...prevState,
+        messages: [
+          ...prevState.messages,
+          ...[
+            {
+              ...formData,
+              user: { name: user.name }
+            },
+            {
+              message_content: null,
+              role: 'system'
+            }
+          ]
         ]
-      ]
-    }))
-    setTimeout(() => {
-      scrollToBottom()
-    }, 100)
-    setMessagePreload(true)
-    apiRequest
-      .post(`/conversations/continue`, formData)
-      .then(res => {
-        setDetailsData((prevState: any) => ({
-          ...prevState,
-          messages: [...prevState.messages.filter((message: any) => message?.id), ...res?.data?.messages]
-        }))
-        setPrevConversationFormData(res?.data?.messages?.[0])
-        setMessagePreload(false)
+      }))
+      setTimeout(() => {
         scrollToBottom()
-      })
-      .catch(error => {
-        setErrorMessage(error?.response?.data?.errors)
-        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
-        setDetailsData((prevState: any) => ({
-          ...prevState,
-          messages: [...prevState.messages.filter((message: any) => message?.id)]
-        }))
-        setMessagePreload(false)
-        scrollToBottom()
-      })
+      }, 100)
+      setMessagePreload(true)
+      apiRequest
+        .post(`/conversations/continue`, formData)
+        .then(res => {
+          setDetailsData((prevState: any) => ({
+            ...prevState,
+            messages: [...prevState.messages.filter((message: any) => message?.id), ...res?.data?.messages]
+          }))
+          setPrevConversationFormData(res?.data?.messages?.[0])
+          setMessagePreload(false)
+          scrollToBottom()
+        })
+        .catch(error => {
+          setErrorMessage(error?.response?.data?.errors)
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setDetailsData((prevState: any) => ({
+            ...prevState,
+            messages: [...prevState.messages.filter((message: any) => message?.id)]
+          }))
+          setMessagePreload(false)
+          scrollToBottom()
+        })
+    } else {
+      return
+    }
   }
 
   const onEdit = (data: any) => {
@@ -183,7 +187,7 @@ export default function AIAssistantDetailsComponent() {
                   key={index}
                   index={index}
                   message={message}
-                  isWaiting={!message?.message_content}
+                  isWaiting={!message?.message_content && !message?.prompt_id}
                   onRegenerate={() => {
                     onSubmit(true)
                   }}

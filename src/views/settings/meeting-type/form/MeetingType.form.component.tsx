@@ -3,13 +3,13 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TMeetingTypeComponent } from '../MeetingType.decorator'
 
 export default function MeetingTypeFormComponent(props: TMeetingTypeComponent) {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
@@ -43,23 +43,23 @@ export default function MeetingTypeFormComponent(props: TMeetingTypeComponent) {
           })
           onClear()
 
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/meeting-type', formData)
         .then(res => {
           setListData((prevState: []) => [...prevState, res?.data])
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

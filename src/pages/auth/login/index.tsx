@@ -8,7 +8,7 @@ import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormCo
 import { styled } from '@mui/material/styles'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { useSnackbar } from 'notistack'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import BlankLayout from 'src/layouts/BlankLayout'
 
 // Styled Components
@@ -30,7 +30,7 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
 }))
 
 const LoginPage = () => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const [preload, setPreload] = useState<boolean>(false)
   const router = useRouter()
   const [formData, setFormData] = useState({
@@ -62,7 +62,7 @@ const LoginPage = () => {
         setPreload(false)
         const errorMessage = error?.response?.data?.errors || 'Login failed'
         setErrorMessage(errorMessage)
-        enqueueSnackbar(errorMessage, { variant: 'error' })
+        showSnackbar(errorMessage, { variant: 'error' })
       })
   }
 

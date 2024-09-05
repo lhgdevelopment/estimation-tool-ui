@@ -2,13 +2,13 @@ import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import { Box, TextField } from '@mui/material'
-import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TRolePermissionComponent } from '../RolePermission.decorator'
 
 export default function RolePermissionFormComponent(props: TRolePermissionComponent) {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData, roleModalClose, roleSorting } = props
 
   const defaultData = {
@@ -50,11 +50,11 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
           })
           roleModalClose()
           onClear()
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -62,12 +62,12 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
         .then(res => {
           setListData((prevState: []) => roleSorting([res?.data, ...prevState]))
           roleModalClose()
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

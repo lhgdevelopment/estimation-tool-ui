@@ -39,29 +39,32 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
         <Box className='text-gray-600 dark:text-gray-400' sx={{ fontWeight: 600 }}>
           {message?.role === 'system' ? `Hive AI` : message?.user?.name ? message?.user?.name : 'You'}
         </Box>
-        {message?.role === 'user' && (
+        {message?.role === 'user' && message?.prompt?.name && (
           <Box sx={{ display: 'flex' }}>
             <Box sx={{ fontSize: '12px', color: '#fff', background: '#999', p: '2px 10px', borderRadius: '5px' }}>
               {message?.prompt?.name}
             </Box>
           </Box>
         )}
-        <Box sx={{ width: '100%', lineHeight: 'normal', mt: 2, borderRadius: 1, overflow: 'hidden' }}>
-          {isWaiting ? (
-            <Box
-              sx={{
-                height: '14px',
-                width: '14px',
-                background: '#000',
-                borderRadius: '50%',
-                animation: 'pulseSize 1.25s ease-in-out infinite',
-                mt: '5px'
-              }}
-            ></Box>
-          ) : (
-            <MdPreview modelValue={addTargetBlankToMarkdownLinks(message?.message_content)}></MdPreview>
-          )}
-        </Box>
+        {message?.message_content && (
+          <Box sx={{ width: '100%', lineHeight: 'normal', mt: 2, borderRadius: 1, overflow: 'hidden' }}>
+            {isWaiting ? (
+              <Box
+                sx={{
+                  height: '14px',
+                  width: '14px',
+                  background: '#000',
+                  borderRadius: '50%',
+                  animation: 'pulseSize 1.25s ease-in-out infinite',
+                  mt: '5px'
+                }}
+              ></Box>
+            ) : (
+              <MdPreview modelValue={addTargetBlankToMarkdownLinks(message?.message_content)}></MdPreview>
+            )}
+          </Box>
+        )}
+
         {message?.role === 'system' && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', mt: '10px' }}>
             {!!message?.message_content && (

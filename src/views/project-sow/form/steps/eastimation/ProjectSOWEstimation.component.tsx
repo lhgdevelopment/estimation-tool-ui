@@ -1,8 +1,8 @@
 import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { useSnackbar } from 'notistack'
 import { useEffect, useState } from 'react'
 import Preloader from 'src/@core/components/preloader'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TProjectSOWEstimationFormComponentProps } from './ProjectSOWEstimation.decorator'
 import ProjectSOWEstimationFormView from './ProjectSOWEstimation.view'
@@ -23,7 +23,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     setDeliverableData
   } = props
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const [preload, setPreload] = useState<boolean>(false)
   const [errorMessage, setErrorMessage] = useState<any>({})
   const [employeeRoleData, setEmployeeRole] = useState<any>([])
@@ -128,7 +128,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
       .catch(error => {
         setPreload(false)
         setErrorMessage(error?.response?.data?.errors)
-        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
   }
 
@@ -153,7 +153,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -171,7 +171,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -199,7 +199,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -217,7 +217,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -245,7 +245,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -263,7 +263,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -291,7 +291,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -309,7 +309,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -356,7 +356,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -374,7 +374,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -388,12 +388,12 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
       .then(res => {
         setTasksList((prevState: any) => [...prevState?.map((task: any) => (task?.id === taskId ? res.data : task))])
         setPreload(false)
-        enqueueSnackbar('Task assigned successfully', { variant: 'success' })
+        showSnackbar('Task assigned successfully', { variant: 'success' })
       })
       .catch(error => {
         setPreload(false)
         setErrorMessage(error?.response?.data?.errors)
-        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
   }
 
@@ -407,12 +407,12 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
       .then(res => {
         setTasksList((prevState: any) => [...prevState?.map((task: any) => (task?.id === taskId ? res.data : task))])
         setPreload(false)
-        enqueueSnackbar('Task estimate hours updated successfully', { variant: 'success' })
+        showSnackbar('Task estimate hours updated successfully', { variant: 'success' })
       })
       .catch(error => {
         setPreload(false)
         setErrorMessage(error?.response?.data?.errors)
-        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
   }
 
@@ -455,13 +455,13 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           ])
 
           setPreload(false)
-          enqueueSnackbar('Updatedf Successfully!', { variant: 'success' })
+          showSnackbar('Updatedf Successfully!', { variant: 'success' })
           handleServiceTaskModalClose()
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -471,13 +471,13 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           // setSelectedScopeOfWorkData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
 
           setPreload(false)
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           handleServiceTaskModalClose()
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -493,7 +493,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
         )
       })
       .catch(error => {
-        enqueueSnackbar(error?.message, { variant: 'error' })
+        showSnackbar(error?.message, { variant: 'error' })
       })
   }
 
@@ -510,10 +510,10 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
       })
       .then(res => {
         setTasksList((prevState: any[]) => res?.data)
-        enqueueSnackbar('Generated Successfully!', { variant: 'success' })
+        showSnackbar('Generated Successfully!', { variant: 'success' })
       })
       .catch(error => {
-        enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
       .finally(() => {
         setDeliverableData((prevList: any) =>

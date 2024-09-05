@@ -15,10 +15,10 @@ import {
   TableRow
 } from '@mui/material'
 import Link from 'next/link'
-import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import NoDataComponent from 'src/@core/components/no-data-component'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import { TableSx } from 'src/@core/theme/tableStyle'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateTime } from 'src/@core/utils/utils'
@@ -28,7 +28,7 @@ import { TMeetingSummaryComponent } from '../MeetingSummary.decorator'
 export default function MeetingSummaryListComponent(props: TMeetingSummaryComponent) {
   const { listData, setListData } = props
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [expendedRow, setExpended] = useState('')
@@ -71,7 +71,7 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
         setPreload(false)
       })
       .catch(error => {
-        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
         setPreload(false)
       })
   }
@@ -93,10 +93,10 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
 
           return updatedList
         })
-        enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+        showSnackbar('Updated Successfully!', { variant: 'success' })
       })
       .catch(error => {
-        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
       .finally(() => {
         setStatusPreload(null)
@@ -129,7 +129,7 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
         }
       })
       .catch(error => {
-        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
   }
 

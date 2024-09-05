@@ -13,9 +13,9 @@ import {
   TableRow
 } from '@mui/material'
 import Link from 'next/link'
-import { enqueueSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import { TableSx } from 'src/@core/theme/tableStyle'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateTime } from 'src/@core/utils/utils'
@@ -24,6 +24,7 @@ import { TProjectSOWListComponent } from '../ProjectSOW.decorator'
 
 export default function ProjectSOWListComponent(props: TProjectSOWListComponent) {
   const { listData, setListData } = props
+  const { showSnackbar } = useToastSnackbar()
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [expendedRow, setExpended] = useState('')
@@ -41,7 +42,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
         setTotalPages(Math.ceil(paginationData?.['total'] / 10))
       })
       .catch(error => {
-        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
   }
 
@@ -71,7 +72,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
         }
       })
       .catch(error => {
-        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
   }
 

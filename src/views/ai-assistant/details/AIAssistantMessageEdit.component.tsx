@@ -1,8 +1,8 @@
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { useSnackbar } from 'notistack'
 import { Dispatch, useState } from 'react'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 
 type TAIAssistantMessagesEditComponentProps = {
@@ -11,7 +11,7 @@ type TAIAssistantMessagesEditComponentProps = {
   setDetailsData: Dispatch<any>
 }
 export default function AIAssistantMessagesEditComponent(props: TAIAssistantMessagesEditComponentProps) {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const { modalClose, editData, setDetailsData } = props
 
   const [formData, setFormData] = useState(editData)
@@ -55,7 +55,7 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
           })
           onClear()
 
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setPreload(false)

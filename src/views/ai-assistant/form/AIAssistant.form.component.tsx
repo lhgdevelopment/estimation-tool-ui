@@ -4,15 +4,15 @@ import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { useRouter } from 'next/router'
-import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
 
 export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
   const router = useRouter()
 
@@ -65,7 +65,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
           })
 
           setPreload(false)
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
           onClear()
         })
         .catch(error => {
@@ -76,7 +76,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
       apiRequest
         .post('/conversations/create', formData)
         .then(res => {
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
           setPreload(false)
           router.push(`ai-assistant/${res?.data?.conversation?.id}`)
@@ -84,7 +84,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }

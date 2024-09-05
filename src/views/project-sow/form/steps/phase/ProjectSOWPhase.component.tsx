@@ -1,7 +1,7 @@
 import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { useSnackbar } from 'notistack'
 import { useCallback, useRef, useState } from 'react'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import { debounce } from 'src/@core/utils/utils'
 import { TProjectSOWPhaseFormComponentProps } from './ProjectSOWPhase.decorator'
@@ -11,7 +11,7 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
   const { phaseData, setPhaseData, problemGoalID } = props
 
   const [preload, setPreload] = useState<boolean>(false)
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const [errorMessage, setErrorMessage] = useState<any>({})
   const [phaseDataList, setPhaseDataList] = useState<any[]>(phaseData?.sort((a: any, b: any) => a?.serial - b?.serial))
   const [servicePhaseModalOpen, setServiceSowModalOpen] = useState<boolean>(false)
@@ -58,10 +58,10 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
         })
         .then(res => {
           console.log(res)
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
         .finally(() => {
           setPhaseDataList(prevList =>
@@ -78,10 +78,10 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
       apiRequest
         .patch(`/phase/${id}/serial`, { serial: sl })
         .then(res => {
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
         .finally(() => {
           setPhaseDataList((prevState: any[]) =>
@@ -173,13 +173,13 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
           ])
 
           setPreload(false)
-          enqueueSnackbar('Updatedf Successfully!', { variant: 'success' })
+          showSnackbar('Updatedf Successfully!', { variant: 'success' })
           handleServicePhaseModalClose()
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -188,13 +188,13 @@ export default function ProjectSOWPhaseFormComponent(props: TProjectSOWPhaseForm
           setPhaseDataList([...res?.data, ...phaseData])
 
           setPreload(false)
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           handleServicePhaseModalClose()
         })
         .catch(error => {
           setPreload(false)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
