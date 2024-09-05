@@ -3,14 +3,14 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { useSnackbar } from 'notistack'
 import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from 'src/@core/components/dropdown'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import { TServiceQuestionComponent } from '../ServiceQuestion.decorator'
 
 export default function ServiceQuestionFormComponent(props: TServiceQuestionComponent) {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
@@ -58,23 +58,23 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
             return updatedList
           })
           onClear()
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/questions', formData)
         .then(res => {
           setListData((prevState: []) => [...prevState, res?.data])
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -100,7 +100,7 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <TextField
-                label={'Title'}
+                label={'What question needs to be asked?'}
                 name='title'
                 value={formData.title}
                 onChange={handleTextChange}

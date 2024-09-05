@@ -100,7 +100,7 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
             <thead>
               <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                 <Box component={'th'} className='px-4 py-3' sx={{ width: '50%' }}>
-                  Title
+                  What question needs to be asked?
                 </Box>
                 <Box component={'th'} className='px-4 py-3' sx={{ width: '50%' }}>
                   Service
@@ -116,7 +116,7 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
                 <Box component={'td'}>
                   <TextField
                     className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
-                    placeholder='Enter title'
+                    placeholder='What question needs to be asked?'
                     name='title'
                     value={filterData.title}
                     onChange={handleFilterChange}

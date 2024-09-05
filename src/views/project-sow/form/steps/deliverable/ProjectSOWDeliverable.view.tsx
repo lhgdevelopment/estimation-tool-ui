@@ -74,7 +74,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       {preload && <Preloader close={!preload} />}
       <Box sx={{ ...sectionTitleSx, display: 'flex' }}>
-        Deliverable
+        Deliverables
         <Box
           sx={sowAddButtonSx}
           onClick={() => {

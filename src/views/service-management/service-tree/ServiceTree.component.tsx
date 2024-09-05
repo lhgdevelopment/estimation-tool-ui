@@ -7,11 +7,11 @@ import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Button, Checkbox, Modal } from '@mui/material'
 import { Tree, TreeDataNode, type TreeProps } from 'antd'
-import { useSnackbar } from 'notistack'
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { Dropdown, DropdownRef, ServiceDropdownTree } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
+import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import {
@@ -26,7 +26,7 @@ import {
 
 const { DirectoryTree } = Tree
 export default function ServiceTreeComponent() {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const { showSnackbar } = useToastSnackbar()
   const [serviceTreeData, setServiceTreeData] = useState<any>([])
   const [serviceModalOpen, setServiceModalOpen] = useState<boolean>(false)
   const [expendendKeys, setExpandedKeys] = useState<any>([])
@@ -358,7 +358,7 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/services/${serviceEditDataId}`, serviceFormData)
         .then(res => {
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceClear()
           handleServiceModalClose()
           console.log(res)
@@ -368,7 +368,7 @@ export default function ServiceTreeComponent() {
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
 
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -381,7 +381,7 @@ export default function ServiceTreeComponent() {
           //   timerProgressBar: true,
           //   showConfirmButton: false
           // })
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           onServiceClear()
           handleServiceModalClose()
           console.log(res)
@@ -394,7 +394,7 @@ export default function ServiceTreeComponent() {
           console.log(error)
           console.log(errorMessage)
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -407,14 +407,14 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData?.groups)
         .then(res => {
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceGroupClear()
           handleServiceModalClose()
           getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -424,14 +424,14 @@ export default function ServiceTreeComponent() {
         })
         .then(res => {
           setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           onServiceGroupClear()
           handleServiceModalClose()
           getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -443,27 +443,27 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-scopes/${serviceSOWEditDataId}`, serviceSOWFormData)
         .then(res => {
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceSOWClear()
           handleServiceModalClose()
           getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/service-scopes', serviceSOWFormData)
         .then(res => {
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           onServiceSOWClear()
           handleServiceModalClose()
           getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -475,27 +475,27 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverables/${serviceDeliverableEditDataId}`, serviceDeliverableFormData)
         .then(res => {
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceDeliverableClear()
           handleServiceModalClose()
           getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/service-deliverables', serviceDeliverableFormData)
         .then(res => {
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           onServiceDeliverableClear()
           handleServiceModalClose()
           getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -665,7 +665,7 @@ export default function ServiceTreeComponent() {
       })
       .catch(error => {
         setErrorMessage(error?.response?.data?.errors)
-        enqueueSnackbar(error?.message, { variant: 'error' })
+        showSnackbar(error?.message, { variant: 'error' })
       })
   }
 
@@ -676,26 +676,26 @@ export default function ServiceTreeComponent() {
       apiRequest
         .put(`/service-deliverable-tasks/${serviceTaskEditDataId}`, serviceTaskFormData)
         .then(res => {
-          enqueueSnackbar('Updated Successfully!', { variant: 'success' })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceTaskClear()
           handleServiceModalClose()
           getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/service-deliverable-tasks', serviceTaskFormData)
         .then(res => {
-          enqueueSnackbar('Created Successfully!', { variant: 'success' })
+          showSnackbar('Created Successfully!', { variant: 'success' })
           onServiceTaskClear()
           getTree()
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
-          enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -738,7 +738,7 @@ export default function ServiceTreeComponent() {
         setServiceTreeData(transformServiceTree(services, 'service'))
       })
       .catch(error => {
-        enqueueSnackbar(error?.message, { variant: 'error' })
+        showSnackbar(error?.message, { variant: 'error' })
       })
   }
 
@@ -747,7 +747,7 @@ export default function ServiceTreeComponent() {
     apiRequest
       .post('/employee-roles', employeeRolesFormData)
       .then(res => {
-        enqueueSnackbar('Successfully Created!', { variant: 'success' })
+        showSnackbar('Successfully Created!', { variant: 'success' })
         onEmployeeRolesClear()
         const tasks = serviceTaskFormData.tasks
         tasks[employeeRolesFor] = {
@@ -766,7 +766,7 @@ export default function ServiceTreeComponent() {
       })
       .catch(error => {
         setErrorMessage(error?.response?.data?.errors)
-        enqueueSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
   }
 
@@ -851,12 +851,12 @@ export default function ServiceTreeComponent() {
           order: position
         })
         .then(res => {
-          enqueueSnackbar('Updated Successfully', { variant: 'success' })
+          showSnackbar('Updated Successfully', { variant: 'success' })
         })
         .catch(error => {
           console.log(error)
 
-          enqueueSnackbar(error?.message, { variant: 'error' })
+          showSnackbar(error?.message, { variant: 'error' })
 
           setServiceTreeData(initialServiceTreeData)
         })
@@ -869,10 +869,10 @@ export default function ServiceTreeComponent() {
           order: position
         })
         .then(res => {
-          enqueueSnackbar('Updated Successfully', { variant: 'success' })
+          showSnackbar('Updated Successfully', { variant: 'success' })
         })
         .catch(error => {
-          enqueueSnackbar(error?.message, { variant: 'error' })
+          showSnackbar(error?.message, { variant: 'error' })
           setServiceTreeData(initialServiceTreeData)
         })
     }
@@ -884,10 +884,10 @@ export default function ServiceTreeComponent() {
           order: position
         })
         .then(res => {
-          enqueueSnackbar('Updated Successfully', { variant: 'success' })
+          showSnackbar('Updated Successfully', { variant: 'success' })
         })
         .catch(error => {
-          enqueueSnackbar(error?.message, { variant: 'error' })
+          showSnackbar(error?.message, { variant: 'error' })
           setServiceTreeData(initialServiceTreeData)
         })
     }
@@ -900,10 +900,10 @@ export default function ServiceTreeComponent() {
           order: position
         })
         .then(res => {
-          enqueueSnackbar('Updated Successfully', { variant: 'success' })
+          showSnackbar('Updated Successfully', { variant: 'success' })
         })
         .catch(error => {
-          enqueueSnackbar(error?.message, { variant: 'error' })
+          showSnackbar(error?.message, { variant: 'error' })
           setServiceTreeData(initialServiceTreeData)
         })
     }
@@ -916,10 +916,10 @@ export default function ServiceTreeComponent() {
           order: position
         })
         .then(res => {
-          enqueueSnackbar('Updated Successfully', { variant: 'success' })
+          showSnackbar('Updated Successfully', { variant: 'success' })
         })
         .catch(error => {
-          enqueueSnackbar(error?.message, { variant: 'error' })
+          showSnackbar(error?.message, { variant: 'error' })
           setServiceTreeData(initialServiceTreeData)
         })
     }
