@@ -207,8 +207,8 @@ export default function AIAssistantDetailsComponent() {
           >
             <Box sx={{ width: '100%', mb: 2 }}>
               <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Prompt</span>
                 <Dropdown
+                  label={'Command'}
                   url={'prompts'}
                   name='prompt_id'
                   value={conversationFormData.prompt_id}
@@ -233,7 +233,7 @@ export default function AIAssistantDetailsComponent() {
               }}
             >
               <TextField
-                label={'Message'}
+                label={'Details'}
                 name='message_content'
                 value={conversationFormData.message_content}
                 onChange={handleTextChange}
