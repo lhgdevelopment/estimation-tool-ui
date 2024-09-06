@@ -1,23 +1,43 @@
 import { IJoditEditorProps, Jodit } from 'jodit-react'
 import dynamic from 'next/dynamic'
-import { RefObject, useRef } from 'react'
+import { RefObject, useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from 'src/@core/store/reducers'
 
-type TRichTextEditorProps = IJoditEditorProps
+type TRichTextEditorProps = IJoditEditorProps & {
+  value: string
+  onChange: (value: string) => void
+}
 
 const JoditEditor = dynamic(() => import('jodit-react').then(mod => mod.default), { ssr: false })
-export function RichTextEditor(props: TRichTextEditorProps) {
+
+export function RichTextEditor({ value, onChange, ...props }: TRichTextEditorProps) {
   const isDark = useSelector((state: RootState) => state.theme.isDark)
   const editorRef: RefObject<Jodit> = useRef<Jodit>(null)
-  const config: any = {
-    enter: 'br',
-    theme: isDark ? 'dark' : '',
-    defaultActionOnPaste: 'insert_as_html',
-    defaultActionOnPasteFromWord: 'insert_as_html',
-    askBeforePasteFromWord: false,
-    askBeforePasteHTML: false
-  }
 
-  return <JoditEditor {...props} ref={editorRef} config={config} />
+  // Memoize the config object to prevent reinitialization on every render
+  const config = useMemo(
+    () => ({
+      enter: 'br' as 'br' | 'div' | 'p' | undefined,
+      theme: isDark ? 'dark' : '',
+      buttons: ['bold', 'italic', 'underline', 'ul', 'ol'], // Only these buttons will be shown
+      contentCSS: '', // Removes all custom content styles
+
+      defaultActionOnPaste: 'insert_as_html',
+      defaultActionOnPasteFromWord: 'insert_as_html',
+      askBeforePasteFromWord: false,
+      askBeforePasteHTML: false
+    }),
+    [isDark]
+  )
+
+  // Use a callback to avoid unnecessary re-renders
+  const handleEditorChange = useCallback(
+    (newContent: string) => {
+      onChange(newContent)
+    },
+    [onChange] // Only recreate if onChange changes
+  )
+
+  return <JoditEditor value={value} onChange={handleEditorChange} ref={editorRef} config={config} {...props} />
 }
