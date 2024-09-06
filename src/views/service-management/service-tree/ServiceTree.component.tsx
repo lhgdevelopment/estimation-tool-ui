@@ -1274,7 +1274,9 @@ export default function ServiceTreeComponent() {
 
                       <RichTextEditor
                         value={serviceFormData.name}
-                        onBlur={newContent => handleReachText(newContent, 'name', serviceFormData, setServiceFormData)}
+                        onChange={newContent =>
+                          handleReachText(newContent, 'name', serviceFormData, setServiceFormData)
+                        }
                       />
                       {!!errorMessage?.['name'] &&
                         errorMessage?.['name']?.map((message: any, index: number) => {
@@ -1373,7 +1375,7 @@ export default function ServiceTreeComponent() {
 
                           <RichTextEditor
                             value={serviceGroupFormData.name}
-                            onBlur={newContent =>
+                            onChange={newContent =>
                               handleReachText(newContent, 'name', serviceGroupFormData, setServiceGroupFormData)
                             }
                           />
@@ -1445,7 +1447,7 @@ export default function ServiceTreeComponent() {
                                 <Box sx={{ width: '100%' }}>
                                   <RichTextEditor
                                     value={group.name}
-                                    onBlur={newContent =>
+                                    onChange={newContent =>
                                       handleMultipleReachTextChange(
                                         newContent,
                                         'name',
@@ -1599,7 +1601,7 @@ export default function ServiceTreeComponent() {
                         </label>
                         <RichTextEditor
                           value={serviceSOWFormData.name}
-                          onBlur={newContent =>
+                          onChange={newContent =>
                             handleReachText(newContent, 'name', serviceSOWFormData, setServiceSOWFormData)
                           }
                         />
@@ -1670,7 +1672,7 @@ export default function ServiceTreeComponent() {
                                 <Box sx={{ width: '100%' }}>
                                   <RichTextEditor
                                     value={scope.name}
-                                    onBlur={newContent =>
+                                    onChange={newContent =>
                                       handleMultipleReachTextChange(
                                         newContent,
                                         'name',
@@ -1816,7 +1818,7 @@ export default function ServiceTreeComponent() {
                         </label>
                         <RichTextEditor
                           value={serviceDeliverableFormData.name}
-                          onBlur={newContent =>
+                          onChange={newContent =>
                             handleReachText(
                               newContent,
                               'name',
@@ -1892,7 +1894,7 @@ export default function ServiceTreeComponent() {
                                 <Box sx={{ width: '100%' }}>
                                   <RichTextEditor
                                     value={deliverable.name}
-                                    onBlur={newContent =>
+                                    onChange={newContent =>
                                       handleMultipleReachTextChange(
                                         newContent,
                                         'name',
@@ -2109,7 +2111,7 @@ export default function ServiceTreeComponent() {
                                       <Box sx={{ width: '100%' }}>
                                         <RichTextEditor
                                           value={clickupTask.name}
-                                          onBlur={newContent =>
+                                          onChange={newContent =>
                                             handleMultipleTaskFieldChange(newContent, 'name', index)
                                           }
                                         />
@@ -2125,7 +2127,7 @@ export default function ServiceTreeComponent() {
                                       <Box sx={{ width: '100%' }}>
                                         <RichTextEditor
                                           value={clickupTask.name}
-                                          onBlur={newContent =>
+                                          onChange={newContent =>
                                             handleMultipleTaskFieldChange(newContent, 'name', index)
                                           }
                                         />
@@ -2183,7 +2185,7 @@ export default function ServiceTreeComponent() {
                                                     <Box sx={{ width: '100%' }}>
                                                       <RichTextEditor
                                                         value={subTask.name}
-                                                        onBlur={newContent =>
+                                                        onChange={newContent =>
                                                           handleMultipleTaskFieldChange(newContent, 'name', index)
                                                         }
                                                       />
@@ -2368,7 +2370,7 @@ export default function ServiceTreeComponent() {
                               </label>
                               <RichTextEditor
                                 value={serviceTaskFormData.name}
-                                onBlur={newContent =>
+                                onChange={newContent =>
                                   handleReachText(newContent, 'name', serviceTaskFormData, setServiceTaskFormData)
                                 }
                               />
@@ -2517,7 +2519,7 @@ export default function ServiceTreeComponent() {
                                       <Box sx={{ width: '100%' }}>
                                         <RichTextEditor
                                           value={task.name}
-                                          onBlur={newContent =>
+                                          onChange={newContent =>
                                             handleMultipleTaskFieldChange(newContent, 'name', index)
                                           }
                                         />
