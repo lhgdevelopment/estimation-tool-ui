@@ -213,7 +213,7 @@ export default function AIAssistantDetailsComponent() {
               <label className='block text-sm'>
                 <Dropdown
                   label={'Command'}
-                  url={'prompts'}
+                  url={'prompts-allowed'}
                   name='prompt_id'
                   value={conversationFormData.prompt_id}
                   onChange={handleSelectChange}

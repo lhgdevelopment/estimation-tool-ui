@@ -1,5 +1,5 @@
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer'
-import { Box } from '@mui/material'
+import { Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
@@ -75,28 +75,36 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
         <Box className='w-full overflow-x-auto'>
-          <table className='w-full whitespace-no-wrap'>
-            <thead>
-              <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                <th className='px-4 py-3'>Name</th>
-                <th className='px-4 py-3'>Created By</th>
-                <th className='px-4 py-3'>Created On</th>
-                <th className='px-4 py-3'>Last User</th>
-                <th className='px-4 py-3'>Last Updated</th>
-                <th className='px-4 py-3 text-right'>Actions</th>
-              </tr>
-            </thead>
-            <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
+          <Table className='w-full whitespace-no-wrap'>
+            <TableHead>
+              <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+                <TableCell className='px-4 py-3'>Name</TableCell>
+                <TableCell className='px-4 py-3'>Created By</TableCell>
+                <TableCell className='px-4 py-3'>Created On</TableCell>
+                <TableCell className='px-4 py-3'>Last User</TableCell>
+                <TableCell className='px-4 py-3'>Last Updated</TableCell>
+                <TableCell className='px-4 py-3 text-right'>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
               {listData?.map((data: any, index: number) => {
                 return (
-                  <tr key={index} className='text-gray-700 dark:text-gray-400'>
-                    <td className='px-4 py-3 text-sm'>{data?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.user?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</td>
-                    <td className='px-4 py-3 text-sm'>{data?.user?.name}</td>
-                    <td className='px-4 py-3 text-sm'>{formatDateTime(data?.updated_at)}</td>
+                  <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
+                    <TableCell className='px-4 py-3 text-sm'>{data?.name}</TableCell>
+                    <TableCell className='px-4 py-3 text-sm'>
+                      <Box sx={{ width: '100px', textOverflow: 'ellipsis', textWrap: 'nowrap', overflow: 'hidden' }}>
+                        {data?.user?.name}
+                      </Box>
+                    </TableCell>
+                    <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</TableCell>
+                    <TableCell className='px-4 py-3 text-sm'>
+                      <Box sx={{ width: '100px', textOverflow: 'ellipsis', textWrap: 'nowrap', overflow: 'hidden' }}>
+                        {data?.user?.name}
+                      </Box>
+                    </TableCell>
+                    <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.updated_at)}</TableCell>
 
-                    <td className='px-4 py-3'>
+                    <TableCell className='px-4 py-3'>
                       <Box className='flex items-center justify-end space-x-1 text-sm'>
                         <Link href={`ai-assistant/${data?.id}`}>
                           <a
@@ -135,12 +143,12 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                           </svg>
                         </button>
                       </Box>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )
               })}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
           {!listData?.length && (
             <Box
               sx={{
