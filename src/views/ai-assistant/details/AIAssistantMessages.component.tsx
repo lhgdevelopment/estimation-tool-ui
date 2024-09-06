@@ -53,12 +53,19 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
                 sx={{
                   height: '14px',
                   width: '14px',
-                  background: '#000',
                   borderRadius: '50%',
-                  animation: 'pulseSize 1.25s ease-in-out infinite',
-                  mt: '5px'
+                  m: '5px'
                 }}
-              ></Box>
+              >
+                <Box
+                  sx={{
+                    height: '100%',
+                    width: '100%'
+                  }}
+                  component={'img'}
+                  src='/gif/hive-assist-loader.gif'
+                ></Box>
+              </Box>
             ) : (
               <MdPreview modelValue={addTargetBlankToMarkdownLinks(message?.message_content)}></MdPreview>
             )}

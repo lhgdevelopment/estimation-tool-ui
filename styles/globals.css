@@ -48,14 +48,15 @@ code[class*='language-'] {
 button:focus {
   outline: none;
 }
-
+.jodit ol,
+.jodit ul,
 .md-editor-preview ol,
 .md-editor-preview ul,
 .md-editor-preview menu,
 .markdown-preview-container ol,
 .markdown-preview-container ul,
 .markdown-preview-container menu {
-  list-style: initial;
+  list-style: inside;
 }
 
 .preloader-loading-text {
