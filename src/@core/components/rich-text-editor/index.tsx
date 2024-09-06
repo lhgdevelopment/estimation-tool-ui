@@ -10,7 +10,7 @@ type TRichTextEditorProps = IJoditEditorProps & {
 }
 
 const JoditEditor = dynamic(() => import('jodit-react').then(mod => mod.default), { ssr: false })
-
+type InsertMode = 'insert_as_html' | 'insert_as_text' | 'insert_clear_html' | 'insert_only_text'
 export function RichTextEditor({ value, onChange, ...props }: TRichTextEditorProps) {
   const isDark = useSelector((state: RootState) => state.theme.isDark)
   const editorRef: RefObject<Jodit> = useRef<Jodit>(null)
@@ -22,8 +22,7 @@ export function RichTextEditor({ value, onChange, ...props }: TRichTextEditorPro
       theme: isDark ? 'dark' : '',
       buttons: ['bold', 'italic', 'underline', 'ul', 'ol'], // Only these buttons will be shown
       contentCSS: '', // Removes all custom content styles
-
-      defaultActionOnPaste: 'insert_as_html',
+      defaultActionOnPaste: 'insert_as_html' as InsertMode,
       defaultActionOnPasteFromWord: 'insert_as_html',
       askBeforePasteFromWord: false,
       askBeforePasteHTML: false
