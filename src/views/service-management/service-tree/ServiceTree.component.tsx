@@ -405,7 +405,7 @@ export default function ServiceTreeComponent() {
 
     if (serviceGroupEditDataId) {
       apiRequest
-        .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData?.groups)
+        .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData)
         .then(res => {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceGroupClear()

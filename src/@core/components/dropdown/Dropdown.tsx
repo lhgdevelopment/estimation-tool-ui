@@ -4,7 +4,7 @@ import { Box, InputAdornment, InputLabel, ListSubheader, SxProps, TextField } fr
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { forwardRef, SyntheticEvent, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import apiRequest from '../../utils/axios-config'
 
 type TOptionConfig = { title: string; id: string }
@@ -47,6 +47,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     sx,
     label,
     labelId = 'demo-simple-select-label',
+    onClose,
     ...otherProps
   } = props
   const dropdownRef = useRef(null)
@@ -92,6 +93,11 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
       setPreloader(false)
     }
   }
+
+  const handleOnClose = (event: SyntheticEvent) => {
+    onClose && onClose(event)
+    setOptionItems(initialOptionList)
+  }
   const refreshList = () => {
     getList()
   }
@@ -134,6 +140,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
           onChange={onChange}
           multiple={multiple}
           fullWidth
+          onClose={handleOnClose}
           onOpen={() => {
             if (!optionItems.length || syncOnOpen) {
               getList()
