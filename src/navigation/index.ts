@@ -58,15 +58,15 @@ const navigation: TNavigation[] = [
     accessBy: ['Admin'],
     subMenu: [
       {
-        title: 'Hourly Rates',
-        icon: BadgeIcon,
-        path: '/service-management/hourly-rates',
-        accessBy: ['Admin']
-      },
-      {
         title: 'Services',
         icon: SettingsEthernetIcon,
         path: '/service-management/service-tree',
+        accessBy: ['Admin']
+      },
+      {
+        title: 'Hourly Rates',
+        icon: BadgeIcon,
+        path: '/service-management/hourly-rates',
         accessBy: ['Admin']
       },
       {
@@ -150,6 +150,11 @@ const navigation: TNavigation[] = [
         title: 'MUI Icons',
         icon: GroupsIcon,
         path: 'https://mui.com/material-ui/material-icons/'
+      },
+      {
+        title: 'Time Cloud',
+        icon: GroupsIcon,
+        path: 'https://time.cloud.lhgdev.com/'
       }
     ]
   }

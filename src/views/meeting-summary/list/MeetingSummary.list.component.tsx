@@ -191,9 +191,13 @@ export default function MeetingSummaryListComponent(props: TMeetingSummaryCompon
                       onChange={setFilterValues}
                     />
                   </Box>
-                  <Box component={'td'}>--</Box>
+                  <Box component={'td'} sx={{ textAlign: 'center' }}>
+                    --
+                  </Box>
 
-                  <Box component={'td'}>--</Box>
+                  <Box component={'td'} sx={{ textAlign: 'center' }}>
+                    --
+                  </Box>
 
                   <Box component={'td'} sx={{ textAlign: 'center' }}>
                     --
