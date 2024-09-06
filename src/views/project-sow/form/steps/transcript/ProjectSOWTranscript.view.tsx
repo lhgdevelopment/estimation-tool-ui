@@ -22,7 +22,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
               id='outlined-multiline-flexible'
               label='Company Name'
               className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600'
+                errorMessage?.['company'] ? 'border-red-600' : 'dark:border-gray-600'
               }`}
               placeholder='Company Name'
               name='company'
@@ -45,7 +45,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
               id='outlined-multiline-flexible'
               label='Phone'
               className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
               }`}
               placeholder='(999) 555-1234'
               name='clientPhone'
@@ -63,7 +63,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
               id='outlined-multiline-flexible'
               label='Website'
               className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
               }`}
               placeholder='https://www.company-website.com'
               name='clientWebsite'
@@ -78,7 +78,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
               id='outlined-multiline-flexible'
               label='Email'
               className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                errorMessage?.['clientEmail'] ? 'border-red-600' : 'dark:border-gray-600 '
               }`}
               placeholder='name@company-name.com'
               name='clientEmail'
@@ -106,6 +106,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
           </Box>
           <Box sx={{ width: '50%' }}>
             <TextField
+              label='Project Name'
               id='outlined-multiline-flexible'
               className={`block w-full mt-1 text-sm dark:bg-gray-700 dark:text-gray-300 dark:focus:shadow-outline-gray form-input`}
               placeholder='Project Name'
@@ -114,7 +115,6 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
               onChange={e => {
                 handleFormInputChange(e, projectSOWFormData, setProjectSOWFormData)
               }}
-              disabled
               sx={{ borderColor: '#e2e8f0' }}
             />
           </Box>
