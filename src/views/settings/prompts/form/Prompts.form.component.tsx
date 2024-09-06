@@ -18,6 +18,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     type: null,
     prompt: '',
     serial: '',
+    user_id: [],
     action_type: ''
   }
 
@@ -82,6 +83,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
       type: editData?.['type'],
       prompt: editData?.['prompt'],
       serial: editData?.['serial'],
+      user_id: editData?.['shared_user']?.map((user: any) => user.id),
       action_type: editData?.['action_type']
     })
   }, [editDataId, editData])
@@ -169,6 +171,26 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               />
               {!!errorMessage?.['action_type'] &&
                 errorMessage?.['action_type']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '100%' }}>
+              <Dropdown
+                label='Allowed Users'
+                url='users'
+                name='user_id'
+                value={formData.user_id}
+                onChange={handleSelectChange}
+                multiple
+              />
+              {!!errorMessage?.['user_id'] &&
+                errorMessage?.['user_id']?.map((message: any, index: number) => {
                   return (
                     <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                       {message}

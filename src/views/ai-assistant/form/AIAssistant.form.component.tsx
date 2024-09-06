@@ -133,7 +133,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
               <Box sx={{ width: '50%' }}>
                 <Dropdown
                   label='Type'
-                  url={'prompts'}
+                  url={'prompts-allowed'}
                   name='prompt_id'
                   value={formData.prompt_id}
                   onChange={handleSelectChange}
