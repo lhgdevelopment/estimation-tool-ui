@@ -19,7 +19,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     prompt: '',
     serial: '',
     user_id: [],
-    action_type: ''
+    action_type: null
   }
 
   const [formData, setFormData] = useState(defaultData)
@@ -56,7 +56,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           })
 
           showSnackbar('Updated Successfully!', { variant: 'success' })
-          onClear()
+          setTimeout(() => onClear(), 1000)
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -68,7 +68,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
         .then(res => {
           setListData((prevState: []) => [...prevState, res?.data])
           showSnackbar('Created Successfully!', { variant: 'success' })
-          onClear()
+          setTimeout(() => onClear(), 1000)
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -83,7 +83,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
       type: editData?.['type'],
       prompt: editData?.['prompt'],
       serial: editData?.['serial'],
-      user_id: editData?.['shared_user']?.map((user: any) => user.id),
+      user_id: editData?.['shared_user']?.map((user: any) => user.user_id),
       action_type: editData?.['action_type']
     })
   }, [editDataId, editData])
