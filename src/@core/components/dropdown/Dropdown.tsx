@@ -129,7 +129,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
   }
 
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth sx={sx}>
       <InputLabel id={labelId}>{label}</InputLabel>
       <Box sx={{ display: 'flex', alignItems: 'center' }}>
         <Select
