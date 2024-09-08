@@ -17,6 +17,7 @@ export default function AIAssistantDetailsComponent() {
   const conversationId = useRouter()?.query['id']
 
   const [preload, setPreload] = useState<boolean>(false)
+  const [isWaiting, setIsWaiting] = useState<boolean>(false)
   const [messagePreload, setMessagePreload] = useState<boolean>(false)
   const [detailsData, setDetailsData] = useState<any>({})
 
@@ -91,6 +92,7 @@ export default function AIAssistantDetailsComponent() {
   }
 
   const onSubmit = (isRegenerate = false) => {
+    setIsWaiting(true)
     setErrorMessage({})
     const formData = {
       ...(isRegenerate ? prevConversationFormData : conversationFormData),
@@ -123,8 +125,12 @@ export default function AIAssistantDetailsComponent() {
         .then(res => {
           setDetailsData((prevState: any) => ({
             ...prevState,
-            messages: [...prevState.messages.filter((message: any) => message?.id), ...res?.data?.messages]
+            messages: [...res?.data?.conversation?.messages, ...res?.data?.messages]
           }))
+          /* setDetailsData((prevState: any) => ({
+            ...prevState,
+            messages: [...prevState.messages.filter((message: any) => message?.id), ...res?.data?.messages]
+          })) */
           setPrevConversationFormData(res?.data?.messages?.[0])
           setMessagePreload(false)
           scrollToBottom()
@@ -138,6 +144,9 @@ export default function AIAssistantDetailsComponent() {
           }))
           setMessagePreload(false)
           scrollToBottom()
+        })
+        .finally(() => {
+          setIsWaiting(false)
         })
     } else {
       return
@@ -182,12 +191,14 @@ export default function AIAssistantDetailsComponent() {
             }}
           >
             {detailsData?.messages?.map((message: any, index: number) => {
+              const getIsWaiting = isWaiting && index == detailsData?.messages?.length - 1
+
               return (
                 <AIAssistantMessagesComponent
                   key={index}
                   index={index}
                   message={message}
-                  isWaiting={!message?.message_content && !message?.prompt_id}
+                  isWaiting={getIsWaiting}
                   onRegenerate={() => {
                     onSubmit(true)
                   }}

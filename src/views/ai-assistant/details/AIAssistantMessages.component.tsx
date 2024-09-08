@@ -46,31 +46,32 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
             </Box>
           </Box>
         )}
-        {message?.message_content && (
-          <Box sx={{ width: '100%', lineHeight: 'normal', mt: 2, borderRadius: 1, overflow: 'hidden' }}>
-            {isWaiting ? (
+
+        <Box sx={{ width: '100%', lineHeight: 'normal', mt: 2, borderRadius: 1, overflow: 'hidden' }}>
+          {isWaiting ? (
+            <Box
+              sx={{
+                height: '14px',
+                width: '14px',
+                borderRadius: '50%',
+                m: '5px'
+              }}
+            >
               <Box
                 sx={{
-                  height: '14px',
-                  width: '14px',
-                  borderRadius: '50%',
-                  m: '5px'
+                  height: '100%',
+                  width: '100%'
                 }}
-              >
-                <Box
-                  sx={{
-                    height: '100%',
-                    width: '100%'
-                  }}
-                  component={'img'}
-                  src='/gif/hive-assist-loader.gif'
-                ></Box>
-              </Box>
-            ) : (
-              <MdPreview modelValue={addTargetBlankToMarkdownLinks(message?.message_content)}></MdPreview>
-            )}
-          </Box>
-        )}
+                component={'img'}
+                src='/gif/hive-assist-loader.gif'
+              ></Box>
+            </Box>
+          ) : message?.message_content ? (
+            <MdPreview modelValue={addTargetBlankToMarkdownLinks(message?.message_content)}></MdPreview>
+          ) : (
+            <> </>
+          )}
+        </Box>
 
         {message?.role === 'system' && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', mt: '10px' }}>

@@ -21,6 +21,10 @@ export const scopeOfWorkListContainer = {
   p: 3
 }
 export const scopeOfWorkListSx: SxProps = {
+  width: '100%',
+  maxHeight: '300px',
+  overflow: 'hidden',
+  overflowY: 'auto',
   '& .common-task-list-item': {
     display: 'flex',
     alignItems: 'center',
