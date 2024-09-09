@@ -688,13 +688,9 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         }
 
         if (res?.data?.scopeOfWorksData && res?.data?.scopeOfWorksData?.scopeOfWorks?.length) {
-          setScopeOfWorkData(
-            res?.data?.scopeOfWorksData?.scopeOfWorks?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
-          )
+          setScopeOfWorkData(res?.data?.scopeOfWorksData?.scopeOfWorks)
           setSelectedScopeOfWorkData(
-            res?.data?.scopeOfWorksData?.scopeOfWorks
-              ?.filter((scopeOfWork: any) => !scopeOfWork?.additionalServiceId)
-              ?.map((scopeOfWork: any) => scopeOfWork?.id)
+            res?.data?.scopeOfWorksData?.scopeOfWorks?.map((scopeOfWork: any) => scopeOfWork?.id)
           )
 
           setSelectedAdditionalServiceData(
@@ -702,7 +698,6 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               (additionalService: any) => additionalService?.selectedServiceId
             )
           )
-          console.log(res?.data?.scopeOfWorksData?.additionalServices)
 
           setAdditionalServiceData(res?.data?.scopeOfWorksData?.additionalServices)
 

@@ -413,14 +413,15 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                         </Button>
                                         {!deliverableDataList?.filter(
                                           (deliverable: any) => deliverable?.scopeOfWorkId == scopeOfWork?.id
-                                        )?.length && (
-                                          <Button
-                                            className='common-task-list-item-btn'
-                                            onClick={() => handleGenerateSOWWithAI(scopeOfWork?.id)}
-                                          >
-                                            <SyncIcon />
-                                          </Button>
-                                        )}
+                                        )?.length &&
+                                          !scopeOfWork?.additionalServiceId && (
+                                            <Button
+                                              className='common-task-list-item-btn'
+                                              onClick={() => handleGenerateSOWWithAI(scopeOfWork?.id)}
+                                            >
+                                              <SyncIcon />
+                                            </Button>
+                                          )}
 
                                         {scopeOfWork?.['isPreloading'] && (
                                           <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
