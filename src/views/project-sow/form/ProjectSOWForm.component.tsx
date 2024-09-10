@@ -715,6 +715,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           if (res?.data?.deliverablesData?.deliverableNotes?.length) {
             setDeliverableNotesData(res?.data?.deliverablesData?.deliverableNotes ?? [])
           }
+
           // setSelectedAdditionalServiceScopeOfWorkData(
           //   res?.data?.deliverablesData?.deliverables
           //     ?.filter((deliverable: any) => !!deliverable?.additionalServiceId)

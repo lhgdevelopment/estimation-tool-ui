@@ -1,4 +1,5 @@
 import EditIcon from '@mui/icons-material/Edit'
+import HiveIcon from '@mui/icons-material/Hive'
 import ReplayIcon from '@mui/icons-material/Replay'
 import { Avatar, Box, Tooltip } from '@mui/material'
 import { MdPreview } from 'md-editor-rt'
@@ -28,15 +29,21 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
           mr: '10px'
         }}
       >
-        <Avatar
-          sx={{ width: 32, height: 32, border: '1px solid #ddd' }}
-          src={message?.role === 'system' ? '/avatar/lhg-logo.png' : ''}
-        >
-          {message?.role === 'system' ? '' : message?.user?.name ? message?.user?.name[0] : 'Y'}
-        </Avatar>
+        {message?.role === 'system' ? (
+          <Avatar sx={{ width: 32, height: 32, border: '1px solid #9333ea', backgroundColor: '#9333ea' }}>
+            <HiveIcon sx={{ color: '#fff' }} />
+          </Avatar>
+        ) : (
+          <Avatar sx={{ width: 32, height: 32, border: '1px solid #ddd' }} src={message?.user?.image}>
+            {message?.user?.name ? message?.user?.name[0] : 'U'}
+          </Avatar>
+        )}
       </Box>
       <Box sx={{ width: '100%' }}>
-        <Box className='text-gray-600 dark:text-gray-400' sx={{ fontWeight: 600 }}>
+        <Box
+          className='text-gray-600 dark:text-gray-400'
+          sx={{ fontWeight: 600, color: message?.role === 'system' ? '#9333ea' : '' }}
+        >
           {message?.role === 'system' ? `Hive AI` : message?.user?.name ? message?.user?.name : 'You'}
         </Box>
         {message?.role === 'user' && message?.prompt?.name && (
