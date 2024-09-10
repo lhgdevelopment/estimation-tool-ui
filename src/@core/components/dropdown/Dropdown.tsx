@@ -24,6 +24,7 @@ interface ISelectProps {
   isAddNewButton?: boolean
   onAddNew?: () => void
   syncOnOpen?: boolean
+  clearable?: boolean // Added prop for clearable option
 }
 
 type SelectPropsWithISelectProps = SelectProps & ISelectProps
@@ -48,6 +49,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     label,
     labelId = 'demo-simple-select-label',
     onClose,
+    clearable = true, // Default is true to allow clearing
     ...otherProps
   } = props
   const dropdownRef = useRef(null)
@@ -73,9 +75,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
           setPreloader(false)
         })
         .catch(() => {
-          // setTimeout(() => {
-          //   getList()
-          // }, 10000)
+          // handle error
         })
     } else if (dataList.length) {
       const fetchedOptions =
@@ -85,7 +85,6 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
         })) || []
       setOptionItems(fetchedOptions)
       setInitialOptionList(fetchedOptions)
-
       setPreloader(false)
     } else {
       setOptionItems([])
@@ -98,6 +97,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     onClose && onClose(event)
     setOptionItems(initialOptionList)
   }
+
   const refreshList = () => {
     getList()
   }
@@ -148,11 +148,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
           }}
         >
           {searchable && (
-            <ListSubheader
-              sx={{
-                pt: 1
-              }}
-            >
+            <ListSubheader sx={{ pt: 1 }}>
               <TextField
                 size='small'
                 autoFocus
@@ -174,6 +170,13 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
               />
             </ListSubheader>
           )}
+
+          {clearable && !multiple && (
+            <MenuItem value=''>
+              <em>Clear selection</em>
+            </MenuItem>
+          )}
+
           {placeholder && (
             <MenuItem value='' disabled>
               {placeholder}
