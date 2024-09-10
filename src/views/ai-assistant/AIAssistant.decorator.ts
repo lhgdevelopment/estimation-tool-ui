@@ -8,3 +8,8 @@ export type TAIAssistantComponent = {
   listData: any[]
   setListData: Dispatch<any>
 }
+
+export const shareAccessLevel = [
+  { id: 1, name: 'View Only' },
+  { id: 2, name: 'Edit' }
+]

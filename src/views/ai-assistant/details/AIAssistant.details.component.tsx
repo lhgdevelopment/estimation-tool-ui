@@ -1,3 +1,4 @@
+import DeleteIcon from '@mui/icons-material/Delete'
 import IosShareIcon from '@mui/icons-material/IosShare'
 import NorthEastIcon from '@mui/icons-material/North'
 import PersonIcon from '@mui/icons-material/Person'
@@ -12,7 +13,16 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import { blue } from '@mui/material/colors'
 
-import { Box, DialogActions, DialogContent, IconButton, Modal, SelectChangeEvent, TextField } from '@mui/material'
+import {
+  Box,
+  DialogActions,
+  DialogContent,
+  IconButton,
+  ListItemSecondaryAction,
+  Modal,
+  SelectChangeEvent,
+  TextField
+} from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
@@ -21,6 +31,7 @@ import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
+import { shareAccessLevel } from '../AIAssistant.decorator'
 import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
 import AIAssistantMessagesComponent from './AIAssistantMessages.component'
 
@@ -73,12 +84,45 @@ export default function AIAssistantDetailsComponent() {
   const handleShareOnSubmit = () => {
     const userAccess = selectedUserIdsForShare.map((id: any) => {
       return {
-        user_id: id
+        user_id: id,
+        access_level: selectedShareType
       }
     })
-    apiRequest.post(`/conversations/share/${conversationId}`, {
-      user_access: []
-    })
+    apiRequest
+      .post(`/conversations/share/${conversationId}`, {
+        user_access: userAccess
+      })
+      .then(res => {
+        console.log(res?.data?.shared_user)
+
+        showSnackbar('Successfully shared with selected users', 'success')
+        setDetailsData((prevState: any) => ({
+          ...prevState,
+          shared_user: res?.data?.shared_user
+        }))
+        setSelectedUserIdsForShare([])
+        setSelectedShareType('')
+      })
+      .catch(err => {
+        showSnackbar(err?.message, { variant: 'error' })
+      })
+  }
+
+  const handleSharedUserOnRemove = (id: any) => {
+    apiRequest
+      .post(`/conversations/remove-share/${conversationId}`, {
+        user_id: [id]
+      })
+      .then(res => {
+        showSnackbar('Successfully removed from shared users', { variant: 'success' })
+        setDetailsData((prevState: any) => ({
+          ...prevState,
+          shared_user: prevState?.shared_user?.filter((sharedUserData: any) => sharedUserData?.user_id != id)
+        }))
+      })
+      .catch(err => {
+        showSnackbar(err?.message, { variant: 'error' })
+      })
   }
 
   const getDetails = () => {
@@ -257,10 +301,7 @@ export default function AIAssistantDetailsComponent() {
             </Box>
             <Box sx={{ width: '150px' }}>
               <Dropdown
-                dataList={[
-                  { id: 1, name: 'View Only' },
-                  { id: 2, name: 'Edit' }
-                ]}
+                dataList={shareAccessLevel}
                 value={selectedShareType}
                 onChange={event => handleShareTypeonChange(event?.target?.value as string)}
                 label={'Access'}
@@ -272,27 +313,39 @@ export default function AIAssistantDetailsComponent() {
             <Box sx={{ fontSize: '16px', fontWeight: 600 }}>People with access</Box>
             <Box>
               <List sx={{ pt: 0 }}>
-                {detailsData?.shared_user?.length == 0 && (
-                  <ListItem disableGutters>
-                    <ListItemButton>
+                <ListItem disableGutters sx={{ p: 0 }}>
+                  <ListItemButton sx={{ py: 1 }}>
+                    <ListItemAvatar>
+                      <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                        <PersonIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      sx={{ fontSize: '14px', '& .MuiTypography-body1': { fontWeight: 600 } }}
+                      primary={detailsData?.user?.name}
+                      secondary={'Owner'}
+                    />
+                  </ListItemButton>
+                </ListItem>
+
+                {detailsData?.shared_user?.map((sharedUserData: any, index: number) => (
+                  <ListItem disableGutters key={index} sx={{ p: 0 }}>
+                    <ListItemButton sx={{ py: 1 }}>
                       <ListItemAvatar>
                         <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
                           <PersonIcon />
                         </Avatar>
                       </ListItemAvatar>
-                      <ListItemText primary={currentUser?.name} secondary={'Owner'} />
-                    </ListItemButton>
-                  </ListItem>
-                )}
-                {detailsData?.shared_user?.map((user: any, index: number) => (
-                  <ListItem disableGutters key={index}>
-                    <ListItemButton>
-                      <ListItemAvatar>
-                        <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                          <PersonIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary={user?.name} />
+                      <ListItemText
+                        sx={{ fontSize: '14px', '& .MuiTypography-body1': { fontWeight: 600 } }}
+                        primary={sharedUserData?.user?.name}
+                        secondary={shareAccessLevel?.[sharedUserData?.access_level - 1]?.name}
+                      />
+                      <ListItemSecondaryAction>
+                        <IconButton onClick={() => handleSharedUserOnRemove(sharedUserData?.user_id)} color='error'>
+                          <DeleteIcon color='error' />
+                        </IconButton>
+                      </ListItemSecondaryAction>
                     </ListItemButton>
                   </ListItem>
                 ))}
@@ -304,9 +357,15 @@ export default function AIAssistantDetailsComponent() {
           <Button onClick={handleShareDialogClose} color='error'>
             Cancel
           </Button>
-          <Button onClick={handleShareDialogClose} autoFocus>
-            Share
-          </Button>
+          {selectedUserIdsForShare?.length ? (
+            <Button onClick={handleShareOnSubmit} variant='contained' autoFocus>
+              Share
+            </Button>
+          ) : (
+            <Button onClick={handleShareDialogClose} autoFocus>
+              Done
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
       <Box sx={{ p: 5, py: 0, height: 'calc(100vh - 100px)' }}>
