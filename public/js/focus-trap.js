@@ -18,7 +18,7 @@ function focusTrap(element) {
    */
   function getFocusableElements(element = document) {
     return [
-      ...element.querySelectorAll(
+      ...element?.querySelectorAll(
         'a, button, details, input, select, textarea, [tabindex]:not([tabindex="-1"])'
       ),
     ].filter((e) => !e.hasAttribute('disabled'))

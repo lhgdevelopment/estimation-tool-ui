@@ -1,5 +1,18 @@
+import IosShareIcon from '@mui/icons-material/IosShare'
 import NorthEastIcon from '@mui/icons-material/North'
-import { Box, Button, Modal, SelectChangeEvent, TextField } from '@mui/material'
+import PersonIcon from '@mui/icons-material/Person'
+import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemText from '@mui/material/ListItemText'
+import { blue } from '@mui/material/colors'
+
+import { Box, DialogActions, DialogContent, IconButton, Modal, SelectChangeEvent, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
@@ -13,7 +26,7 @@ import AIAssistantMessagesComponent from './AIAssistantMessages.component'
 
 export default function AIAssistantDetailsComponent() {
   const { showSnackbar } = useToastSnackbar()
-  const { user } = useSelector((state: any) => state.user)
+  const currentUser = useSelector((state: any) => state.user)?.user
   const conversationId = useRouter()?.query['id']
 
   const [preload, setPreload] = useState<boolean>(false)
@@ -35,6 +48,25 @@ export default function AIAssistantDetailsComponent() {
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const [shareDialogOpen, setShareDialogOpen] = useState(false)
+  const [selectedUserIdsForShare, setSelectedUserIdsForShare] = useState<any[]>([])
+  const [selectedShareType, setSelectedShareType] = useState('')
+
+  const handleShareDialogOpen = () => {
+    setShareDialogOpen(true)
+  }
+
+  const handleShareDialogClose = () => {
+    setShareDialogOpen(false)
+  }
+
+  const handleShareUserOnChange = (ids = []) => {
+    setSelectedUserIdsForShare(ids)
+  }
+  const handleShareTypeonChange = (type = '') => {
+    setSelectedShareType(type)
+  }
 
   const getDetails = () => {
     setPreload(true)
@@ -107,7 +139,7 @@ export default function AIAssistantDetailsComponent() {
           ...[
             {
               ...formData,
-              user: { name: user.name }
+              user: { name: currentUser.name }
             },
             {
               message_content: null,
@@ -179,12 +211,96 @@ export default function AIAssistantDetailsComponent() {
   }
 
   return (
-    <Box sx={{ p: 5 }}>
-      <Box>
-        <Box className='container px-6 mx-auto' sx={{ height: 'calc(100vh - 100px)', position: 'relative' }}>
+    <>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 5 }}>
+        <Box component={'h1'}>{detailsData?.name}</Box>
+        <IconButton
+          onClick={e => {
+            handleShareDialogOpen()
+          }}
+        >
+          <IosShareIcon />
+        </IconButton>
+      </Box>
+      <Dialog
+        open={shareDialogOpen}
+        onClose={handleShareDialogClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+        sx={{ '& .MuiPaper-root': { maxWidth: '500px', width: '100%' } }}
+      >
+        <DialogTitle id='alert-dialog-title'>Share "{detailsData?.name}"</DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', gap: 5, pt: 2 }}>
+            <Box sx={{ width: 'calc(100% - 150px)' }}>
+              <Dropdown
+                url={'users'}
+                placeholder='Add people for share with'
+                label={'Add people for share with'}
+                value={selectedUserIdsForShare}
+                onChange={event => handleShareUserOnChange([...(event?.target?.value as never[])])}
+                multiple
+              />
+            </Box>
+            <Box sx={{ width: '150px' }}>
+              <Dropdown
+                dataList={[
+                  { id: 1, name: 'View Only' },
+                  { id: 2, name: 'Edit' }
+                ]}
+                value={selectedShareType}
+                onChange={event => handleShareTypeonChange(event?.target?.value as string)}
+                label={'Access'}
+                searchable={false}
+              />
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'column', mt: 4 }}>
+            <Box sx={{ fontSize: '16px', fontWeight: 600 }}>People with access</Box>
+            <Box>
+              <List sx={{ pt: 0 }}>
+                {detailsData?.shared_user?.length == 0 && (
+                  <ListItem disableGutters>
+                    <ListItemButton>
+                      <ListItemAvatar>
+                        <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                          <PersonIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={currentUser?.name} secondary={'Owner'} />
+                    </ListItemButton>
+                  </ListItem>
+                )}
+                {detailsData?.shared_user?.map((user: any, index: number) => (
+                  <ListItem disableGutters key={index}>
+                    <ListItemButton>
+                      <ListItemAvatar>
+                        <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                          <PersonIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={user?.name} />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleShareDialogClose} color='error'>
+            Cancel
+          </Button>
+          <Button onClick={handleShareDialogClose} autoFocus>
+            Share
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Box sx={{ p: 5, py: 0, height: 'calc(100vh - 100px)' }}>
+        <Box className='container px-6 mx-auto' sx={{ height: '100%', position: 'relative' }}>
           <Box
             sx={{
-              height: 'calc(100% - 267px)',
+              height: 'calc(100% - 205px)',
               pr: '24px',
               overflow: 'hidden',
               overflowY: 'auto'
@@ -221,6 +337,7 @@ export default function AIAssistantDetailsComponent() {
             className={'bg-gray-50 dark:bg-gray-900'}
           >
             <Box sx={{ width: '100%', mb: 2 }}>
+              {conversationFormData.prompt_id}
               <label className='block text-sm'>
                 <Dropdown
                   label={'Command'}
@@ -271,6 +388,9 @@ export default function AIAssistantDetailsComponent() {
                   }}
                   sx={{
                     //background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
+                    position: 'absolute',
+                    bottom: '5px',
+                    right: '5px',
                     mt: '16px',
                     background: '#000',
                     padding: '0',
@@ -295,19 +415,19 @@ export default function AIAssistantDetailsComponent() {
             </Box>
           </Box>
         </Box>
+        <Modal
+          open={messageEditOpenModal}
+          onClose={handlemessageEditModalClose}
+          aria-labelledby='modal-modal-title'
+          aria-describedby='modal-modal-description'
+        >
+          <AIAssistantMessagesEditComponent
+            editData={editData}
+            modalClose={handlemessageEditModalClose}
+            setDetailsData={setDetailsData}
+          />
+        </Modal>
       </Box>
-      <Modal
-        open={messageEditOpenModal}
-        onClose={handlemessageEditModalClose}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
-        <AIAssistantMessagesEditComponent
-          editData={editData}
-          modalClose={handlemessageEditModalClose}
-          setDetailsData={setDetailsData}
-        />
-      </Modal>
-    </Box>
+    </>
   )
 }

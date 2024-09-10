@@ -90,7 +90,9 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
               {listData?.map((data: any, index: number) => {
                 return (
                   <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
-                    <TableCell className='px-4 py-3 text-sm'>{data?.name}</TableCell>
+                    <TableCell className='px-4 py-3 text-sm'>
+                      <Link href={`ai-assistant/${data?.id}`}>{data?.name}</Link>
+                    </TableCell>
                     <TableCell className='px-4 py-3 text-sm'>
                       <Box sx={{ width: '100px', textOverflow: 'ellipsis', textWrap: 'nowrap', overflow: 'hidden' }}>
                         {data?.user?.name}
