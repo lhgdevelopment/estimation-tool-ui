@@ -59,6 +59,8 @@ export default function AIAssistantDetailsComponent() {
 
   const handleShareDialogClose = () => {
     setShareDialogOpen(false)
+    setSelectedUserIdsForShare([])
+    setSelectedShareType('')
   }
 
   const handleShareUserOnChange = (ids = []) => {
@@ -66,6 +68,17 @@ export default function AIAssistantDetailsComponent() {
   }
   const handleShareTypeonChange = (type = '') => {
     setSelectedShareType(type)
+  }
+
+  const handleShareOnSubmit = () => {
+    const userAccess = selectedUserIdsForShare.map((id: any) => {
+      return {
+        user_id: id
+      }
+    })
+    apiRequest.post(`/conversations/share/${conversationId}`, {
+      user_access: []
+    })
   }
 
   const getDetails = () => {
@@ -337,7 +350,6 @@ export default function AIAssistantDetailsComponent() {
             className={'bg-gray-50 dark:bg-gray-900'}
           >
             <Box sx={{ width: '100%', mb: 2 }}>
-              {conversationFormData.prompt_id}
               <label className='block text-sm'>
                 <Dropdown
                   label={'Command'}
