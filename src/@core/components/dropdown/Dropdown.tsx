@@ -24,7 +24,7 @@ interface ISelectProps {
   isAddNewButton?: boolean
   onAddNew?: () => void
   syncOnOpen?: boolean
-  clearable?: boolean // Added prop for clearable option
+  clearable?: boolean
 }
 
 type SelectPropsWithISelectProps = SelectProps & ISelectProps
@@ -49,13 +49,12 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     label,
     labelId = 'demo-simple-select-label',
     onClose,
-    clearable = true, // Default is true to allow clearing
+    clearable = true,
     ...otherProps
   } = props
   const dropdownRef = useRef(null)
   const [optionItems, setOptionItems] = useState<Record<string | number, any>[]>([])
   const [initialOptionList, setInitialOptionList] = useState<Record<string | number, any>[]>([])
-
   const [preloader, setPreloader] = useState(true)
   const [searchText, setSearchText] = useState('')
 
@@ -128,6 +127,15 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     setSearchText('')
   }
 
+  const handleSelectAll = () => {
+    const allIds = optionItems.map(item => item.id)
+    onChange && onChange({ target: { value: allIds } } as any, { action: 'select' } as any)
+  }
+
+  const handleClearAll = () => {
+    onChange && onChange({ target: { value: [] } } as any, { action: 'clear' } as any)
+  }
+
   return (
     <FormControl fullWidth sx={sx}>
       <InputLabel id={labelId}>{label}</InputLabel>
@@ -187,6 +195,15 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
               <Box component='span' dangerouslySetInnerHTML={{ __html: option.title }}></Box>
             </MenuItem>
           ))}
+
+          {multiple && (
+            <ListSubheader>
+              <Box display='flex' justifyContent='space-between' p={1}>
+                <button onClick={handleSelectAll}>Select All</button>
+                <button onClick={handleClearAll}>Clear All</button>
+              </Box>
+            </ListSubheader>
+          )}
         </Select>
         {isAddNewButton && (
           <button
