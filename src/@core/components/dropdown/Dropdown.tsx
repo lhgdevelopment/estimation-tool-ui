@@ -170,18 +170,17 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
               />
             </ListSubheader>
           )}
-
+          {placeholder && (
+            <MenuItem value='' disabled>
+              {placeholder}
+            </MenuItem>
+          )}
           {clearable && !multiple && (
             <MenuItem value=''>
               <em>Clear selection</em>
             </MenuItem>
           )}
 
-          {placeholder && (
-            <MenuItem value='' disabled>
-              {placeholder}
-            </MenuItem>
-          )}
           {preloader && <MenuItem disabled>Loading...</MenuItem>}
           {optionItems?.map((option: any, index: number) => (
             <MenuItem value={option.id} key={index}>

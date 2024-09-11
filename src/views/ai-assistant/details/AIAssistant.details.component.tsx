@@ -1,4 +1,3 @@
-import DeleteIcon from '@mui/icons-material/Delete'
 import IosShareIcon from '@mui/icons-material/IosShare'
 import NorthEastIcon from '@mui/icons-material/North'
 import PersonIcon from '@mui/icons-material/Person'
@@ -9,7 +8,6 @@ import DialogTitle from '@mui/material/DialogTitle'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
-import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import { blue } from '@mui/material/colors'
 
@@ -19,7 +17,9 @@ import {
   DialogContent,
   IconButton,
   ListItemSecondaryAction,
+  MenuItem,
   Modal,
+  Select,
   SelectChangeEvent,
   TextField
 } from '@mui/material'
@@ -31,6 +31,7 @@ import { Dropdown } from 'src/@core/components/dropdown'
 import Preloader from 'src/@core/components/preloader'
 import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
 import apiRequest from 'src/@core/utils/axios-config'
+import Swal from 'sweetalert2'
 import { shareAccessLevel } from '../AIAssistant.decorator'
 import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
 import AIAssistantMessagesComponent from './AIAssistantMessages.component'
@@ -93,9 +94,7 @@ export default function AIAssistantDetailsComponent() {
         user_access: userAccess
       })
       .then(res => {
-        console.log(res?.data?.shared_user)
-
-        showSnackbar('Successfully shared with selected users', 'success')
+        showSnackbar('Successfully shared with selected users', { variant: 'success' })
         setDetailsData((prevState: any) => ({
           ...prevState,
           shared_user: res?.data?.shared_user
@@ -108,21 +107,64 @@ export default function AIAssistantDetailsComponent() {
       })
   }
 
+  const handleShareAccessUpdateOnChange = (userId: any, accessLevel: any) => {
+    if (accessLevel === 'REMOVE') {
+      handleSharedUserOnRemove(userId)
+    } else {
+      apiRequest
+        .post(`/conversations/share/${conversationId}`, {
+          user_access: [
+            {
+              user_id: userId,
+              access_level: accessLevel
+            }
+          ]
+        })
+        .then(res => {
+          console.log(res)
+
+          showSnackbar('Successfully shared with selected users', { variant: 'success' })
+          setDetailsData((prevState: any) => ({
+            ...prevState,
+            shared_user: res?.data?.shared_user
+          }))
+          setSelectedUserIdsForShare([])
+          setSelectedShareType('')
+        })
+        .catch(err => {
+          showSnackbar(err?.message, { variant: 'error' })
+        })
+    }
+  }
+
   const handleSharedUserOnRemove = (id: any) => {
-    apiRequest
-      .post(`/conversations/remove-share/${conversationId}`, {
-        user_id: [id]
-      })
-      .then(res => {
-        showSnackbar('Successfully removed from shared users', { variant: 'success' })
-        setDetailsData((prevState: any) => ({
-          ...prevState,
-          shared_user: prevState?.shared_user?.filter((sharedUserData: any) => sharedUserData?.user_id != id)
-        }))
-      })
-      .catch(err => {
-        showSnackbar(err?.message, { variant: 'error' })
-      })
+    Swal.fire({
+      title: 'Are You sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showConfirmButton: true,
+      confirmButtonText: 'Yes, remove this user!',
+      confirmButtonColor: '#dc2626',
+      showCancelButton: true,
+      cancelButtonText: 'No, cancel!'
+    }).then(res => {
+      if (res.isConfirmed) {
+        apiRequest
+          .post(`/conversations/remove-share/${conversationId}`, {
+            user_id: [id]
+          })
+          .then(res => {
+            showSnackbar('Successfully removed from shared users', { variant: 'success' })
+            setDetailsData((prevState: any) => ({
+              ...prevState,
+              shared_user: prevState?.shared_user?.filter((sharedUserData: any) => sharedUserData?.user_id != id)
+            }))
+          })
+          .catch(err => {
+            showSnackbar(err?.message, { variant: 'error' })
+          })
+      }
+    })
   }
 
   const getDetails = () => {
@@ -314,7 +356,23 @@ export default function AIAssistantDetailsComponent() {
             <Box>
               <List sx={{ pt: 0 }}>
                 <ListItem disableGutters sx={{ p: 0 }}>
-                  <ListItemButton sx={{ py: 1 }}>
+                  <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                      <PersonIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    sx={{ fontSize: '14px', '& .MuiTypography-body1': { fontWeight: 600 } }}
+                    primary={detailsData?.user?.name}
+                    secondary={detailsData?.user?.email}
+                  />
+                  <ListItemSecondaryAction>
+                    <Box sx={{ fontSize: '14px', color: '#a6a6a6' }}>Owner</Box>
+                  </ListItemSecondaryAction>
+                </ListItem>
+
+                {detailsData?.shared_user?.map((sharedUserData: any, index: number) => (
+                  <ListItem disableGutters key={index} sx={{ p: 0, width: '100%' }}>
                     <ListItemAvatar>
                       <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
                         <PersonIcon />
@@ -322,31 +380,33 @@ export default function AIAssistantDetailsComponent() {
                     </ListItemAvatar>
                     <ListItemText
                       sx={{ fontSize: '14px', '& .MuiTypography-body1': { fontWeight: 600 } }}
-                      primary={detailsData?.user?.name}
-                      secondary={'Owner'}
+                      primary={sharedUserData?.user?.name}
+                      secondary={sharedUserData?.user?.email}
                     />
-                  </ListItemButton>
-                </ListItem>
-
-                {detailsData?.shared_user?.map((sharedUserData: any, index: number) => (
-                  <ListItem disableGutters key={index} sx={{ p: 0 }}>
-                    <ListItemButton sx={{ py: 1 }}>
-                      <ListItemAvatar>
-                        <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                          <PersonIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        sx={{ fontSize: '14px', '& .MuiTypography-body1': { fontWeight: 600 } }}
-                        primary={sharedUserData?.user?.name}
-                        secondary={shareAccessLevel?.[sharedUserData?.access_level - 1]?.name}
-                      />
-                      <ListItemSecondaryAction>
-                        <IconButton onClick={() => handleSharedUserOnRemove(sharedUserData?.user_id)} color='error'>
-                          <DeleteIcon color='error' />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
+                    <ListItemSecondaryAction sx={{ display: 'flex', gap: 1, right: 0 }}>
+                      <Select
+                        sx={{
+                          p: '0',
+                          fontSize: '14px',
+                          '& .MuiSelect-select': { p: '10px 15px', textAlign: 'right' },
+                          '& fieldset': { display: 'none' }
+                        }}
+                        value={sharedUserData.access_level}
+                        onChange={event =>
+                          handleShareAccessUpdateOnChange(sharedUserData?.user_id, event?.target?.value)
+                        }
+                      >
+                        {shareAccessLevel?.map((access: any, index: number) => (
+                          <MenuItem key={index} value={access?.id}>
+                            {access?.name}
+                          </MenuItem>
+                        ))}
+                        <Box sx={{ width: '100%', borderTop: '1px solid #a6a6a6' }}></Box>
+                        <MenuItem sx={{ color: 'red' }} value='REMOVE'>
+                          Remove
+                        </MenuItem>
+                      </Select>
+                    </ListItemSecondaryAction>
                   </ListItem>
                 ))}
               </List>
