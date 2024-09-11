@@ -9,7 +9,7 @@ export const useToastSnackbar = () => {
   ) => {
     const defaultOptions: OptionsWithExtraProps<any> = {
       variant: 'default', // Example: default variant can be 'default'
-      autoHideDuration: 10000, // Example: default duration of 10 seconds
+      autoHideDuration: 1000, // Example: default duration of 10 seconds
       ...otherProp // Overwrite with passed options
     }
 

@@ -393,16 +393,23 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   .then(res3 => {
                     setDeliverableData(res3?.data)
                     setSelectedDeliverableData(res3?.data?.map((deliverable: any) => deliverable?.id))
-                    setTimeout(() => {
-                      if (type == 'NEXT') {
-                        setActiveStep(newActiveStep)
-                        if (enabledStep < newActiveStep) {
-                          setEnabledStep(newActiveStep)
+                    apiRequest.post(`/deliverables/additional-service`, { problemGoalId: problemGoalID }).then(res4 => {
+                      setDeliverableData((prevState: any) => [...prevState, ...res4?.data])
+                      setSelectedDeliverableData((prevState: any) => [
+                        ...prevState,
+                        ...res4?.data?.map((deliverable: any) => deliverable?.id)
+                      ])
+                      setTimeout(() => {
+                        if (type == 'NEXT') {
+                          setActiveStep(newActiveStep)
+                          if (enabledStep < newActiveStep) {
+                            setEnabledStep(newActiveStep)
+                          }
                         }
-                      }
-                      setPreload(false)
-                      showSnackbar('Generated Successfully!', { variant: 'success' })
-                    }, 1000)
+                        setPreload(false)
+                        showSnackbar('Generated Successfully!', { variant: 'success' })
+                      }, 1000)
+                    })
                   })
                   .catch(error => {
                     setPreload(false)
@@ -462,16 +469,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                     .then(res3 => {
                       setDeliverableData(res3?.data?.deliverable)
                       setSelectedDeliverableData(res3?.data?.deliverables?.map((deliverable: any) => deliverable?.id))
-                      setTimeout(() => {
-                        if (type == 'NEXT') {
-                          setActiveStep(newActiveStep)
-                          if (enabledStep < newActiveStep) {
-                            setEnabledStep(newActiveStep)
-                          }
-                        }
-                        setPreload(false)
-                        showSnackbar('Generated Successfully!', { variant: 'success' })
-                      }, 1000)
+
+                      apiRequest
+                        .post(`/deliverables/additional-service`, { problemGoalId: problemGoalID })
+                        .then(res4 => {
+                          setDeliverableData((prevState: any) => [...prevState, ...res4?.data])
+                          setSelectedDeliverableData((prevState: any) => [
+                            ...prevState,
+                            ...res4?.data?.map((deliverable: any) => deliverable?.id)
+                          ])
+                          setTimeout(() => {
+                            if (type == 'NEXT') {
+                              setActiveStep(newActiveStep)
+                              if (enabledStep < newActiveStep) {
+                                setEnabledStep(newActiveStep)
+                              }
+                            }
+                            setPreload(false)
+                            showSnackbar('Generated Successfully!', { variant: 'success' })
+                          }, 1000)
+                        })
                     })
                     .catch(error => {
                       setPreload(false)
@@ -534,16 +551,22 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   })
                   .then(res3 => {
                     setTasksList(res3?.data)
-                    setTimeout(() => {
-                      if (type == 'NEXT') {
-                        setActiveStep(newActiveStep)
-                        if (enabledStep < newActiveStep) {
-                          setEnabledStep(newActiveStep)
-                        }
-                      }
-                      setPreload(false)
-                      showSnackbar('Generated Successfully!', { variant: 'success' })
-                    }, 1000)
+                    apiRequest
+                      .post(`/estimation-tasks/additional-service`, { problemGoalId: problemGoalID })
+                      .then(res4 => {
+                        setTasksList((prevState: any) => [...prevState, ...res4?.data])
+
+                        setTimeout(() => {
+                          if (type == 'NEXT') {
+                            setActiveStep(newActiveStep)
+                            if (enabledStep < newActiveStep) {
+                              setEnabledStep(newActiveStep)
+                            }
+                          }
+                          setPreload(false)
+                          showSnackbar('Generated Successfully!', { variant: 'success' })
+                        }, 1000)
+                      })
                   })
                   .catch(error => {
                     setPreload(false)
@@ -572,18 +595,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
             setPreload(false)
           } else {
             apiRequest
-              .post(`/estimation-tasks`, { problemGoalId: problemGoalID, deliverableId: deliverableData?.[0]?.id })
-              .then(res2 => {
-                setTimeout(() => {
-                  if (type == 'NEXT') {
-                    setActiveStep(newActiveStep)
-                    if (enabledStep < newActiveStep) {
-                      setEnabledStep(newActiveStep)
+              .post(`/estimation-tasks/`, {
+                problemGoalId: problemGoalID,
+                deliverableId: deliverableData?.[0]?.id
+              })
+              .then(res3 => {
+                setTasksList(res3?.data)
+                apiRequest.post(`/estimation-tasks/additional-service`, { problemGoalId: problemGoalID }).then(res4 => {
+                  setTasksList((prevState: any) => [...prevState, ...res4?.data])
+
+                  setTimeout(() => {
+                    if (type == 'NEXT') {
+                      setActiveStep(newActiveStep)
+                      if (enabledStep < newActiveStep) {
+                        setEnabledStep(newActiveStep)
+                      }
                     }
-                  }
-                  setPreload(false)
-                  showSnackbar('Generated Successfully!', { variant: 'success' })
-                }, 1000)
+                    setPreload(false)
+                    showSnackbar('Generated Successfully!', { variant: 'success' })
+                  }, 1000)
+                })
               })
               .catch(error => {
                 setPreload(false)

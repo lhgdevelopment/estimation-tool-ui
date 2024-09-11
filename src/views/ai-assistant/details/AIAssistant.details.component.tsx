@@ -49,6 +49,7 @@ export default function AIAssistantDetailsComponent() {
   const [messageEditOpenModal, setMessageEditOpenModal] = useState<boolean>(false)
   const handlemessageEditModalClose = () => setMessageEditOpenModal(false)
   const [editData, setEditData] = useState<boolean>(false)
+  const [hasEditAccess, setHasEditAccess] = useState<boolean>(false)
 
   const defaultData = {
     conversation_id: conversationId,
@@ -171,6 +172,16 @@ export default function AIAssistantDetailsComponent() {
     setPreload(true)
     apiRequest.get(`/conversations/${conversationId}`).then(res => {
       setDetailsData(res?.data)
+      setHasEditAccess(
+        res?.data?.user_id == currentUser?.id
+          ? true
+          : res?.data?.shared_user?.filter((sharedUser: any) => sharedUser?.user?.id == currentUser?.id)?.[0]
+              ?.access_level == 2
+          ? true
+          : false
+      )
+      console.log(res?.data?.user_id == currentUser?.id)
+
       const userMessages = res?.data?.messages?.filter((message: any) => message?.role == 'user')
 
       setPrevConversationFormData({
@@ -313,13 +324,15 @@ export default function AIAssistantDetailsComponent() {
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 5 }}>
         <Box component={'h1'}>{detailsData?.name}</Box>
-        <IconButton
-          onClick={e => {
-            handleShareDialogOpen()
-          }}
-        >
-          <IosShareIcon />
-        </IconButton>
+        {hasEditAccess && (
+          <IconButton
+            onClick={e => {
+              handleShareDialogOpen()
+            }}
+          >
+            <IosShareIcon />
+          </IconButton>
+        )}
       </Box>
       <Dialog
         open={shareDialogOpen}
@@ -432,7 +445,7 @@ export default function AIAssistantDetailsComponent() {
         <Box className='container px-6 mx-auto' sx={{ height: '100%', position: 'relative' }}>
           <Box
             sx={{
-              height: 'calc(100% - 205px)',
+              height: hasEditAccess ? 'calc(100% - 205px)' : '100%',
               pr: '24px',
               overflow: 'hidden',
               overflowY: 'auto'
@@ -456,95 +469,96 @@ export default function AIAssistantDetailsComponent() {
             })}
             <Box ref={messagesEndRef}></Box>
           </Box>
-
-          <Box
-            sx={{
-              position: 'absolute',
-              width: '100%',
-              bottom: '0',
-              left: '0',
-              right: '0',
-              p: '0 20px'
-            }}
-            className={'bg-gray-50 dark:bg-gray-900'}
-          >
-            <Box sx={{ width: '100%', mb: 2 }}>
-              <label className='block text-sm'>
-                <Dropdown
-                  label={'Command'}
-                  url={'prompts-allowed'}
-                  name='prompt_id'
-                  value={conversationFormData.prompt_id}
-                  onChange={handleSelectChange}
-                  error={errorMessage?.['prompt_id']}
-                />
-                {!!errorMessage?.['prompt_id'] &&
-                  errorMessage?.['prompt_id']?.map((message: any, index: number) => {
-                    return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
-                        {message}
-                      </span>
-                    )
-                  })}
-              </label>
-            </Box>
+          {hasEditAccess && (
             <Box
               sx={{
+                position: 'absolute',
                 width: '100%',
-                mb: 2,
-                position: 'relative'
+                bottom: '0',
+                left: '0',
+                right: '0',
+                p: '0 20px'
               }}
+              className={'bg-gray-50 dark:bg-gray-900'}
             >
-              <TextField
-                label={'Details'}
-                name='message_content'
-                value={conversationFormData.message_content}
-                onChange={handleTextChange}
-                error={errorMessage?.['message_content']}
-                fullWidth
-                multiline
-                rows={4}
-                onKeyDown={e => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault()
-                    onSubmit()
-                  }
+              <Box sx={{ width: '100%', mb: 2 }}>
+                <label className='block text-sm'>
+                  <Dropdown
+                    label={'Command'}
+                    url={'prompts-allowed'}
+                    name='prompt_id'
+                    value={conversationFormData.prompt_id}
+                    onChange={handleSelectChange}
+                    error={errorMessage?.['prompt_id']}
+                  />
+                  {!!errorMessage?.['prompt_id'] &&
+                    errorMessage?.['prompt_id']?.map((message: any, index: number) => {
+                      return (
+                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                          {message}
+                        </span>
+                      )
+                    })}
+                </label>
+              </Box>
+              <Box
+                sx={{
+                  width: '100%',
+                  mb: 2,
+                  position: 'relative'
                 }}
-              />
-
-              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button
-                  onClick={() => {
-                    onSubmit()
-                  }}
-                  sx={{
-                    //background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
-                    position: 'absolute',
-                    bottom: '5px',
-                    right: '5px',
-                    mt: '16px',
-                    background: '#000',
-                    padding: '0',
-                    height: '30px',
-                    width: '30px',
-                    minWidth: 'auto',
-                    color: '#fff',
-                    border: '0',
-                    outline: '0',
-                    borderRadius: '0.5rem',
-                    zIndex: 1,
-                    '&:hover': {
-                      background: '#000'
+              >
+                <TextField
+                  label={'Details'}
+                  name='message_content'
+                  value={conversationFormData.message_content}
+                  onChange={handleTextChange}
+                  error={errorMessage?.['message_content']}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault()
+                      onSubmit()
                     }
                   }}
+                />
 
-                  // disabled={!String(conversationFormData?.message_content).trim()}
-                >
-                  <NorthEastIcon sx={{ fontSize: '16px' }} />
-                </Button>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button
+                    onClick={() => {
+                      onSubmit()
+                    }}
+                    sx={{
+                      //background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
+                      position: 'absolute',
+                      bottom: '5px',
+                      right: '5px',
+                      mt: '16px',
+                      background: '#000',
+                      padding: '0',
+                      height: '30px',
+                      width: '30px',
+                      minWidth: 'auto',
+                      color: '#fff',
+                      border: '0',
+                      outline: '0',
+                      borderRadius: '0.5rem',
+                      zIndex: 1,
+                      '&:hover': {
+                        background: '#000'
+                      }
+                    }}
+
+                    // disabled={!String(conversationFormData?.message_content).trim()}
+                  >
+                    <NorthEastIcon sx={{ fontSize: '16px' }} />
+                  </Button>
+                </Box>
               </Box>
             </Box>
-          </Box>
+          )}
         </Box>
         <Modal
           open={messageEditOpenModal}
