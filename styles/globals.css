@@ -260,3 +260,7 @@ button:focus {
 .read-only .md-editor-toolbar-wrapper {
   pointer-events: none;
 }
+
+.swal2-container {
+  z-index: 99999;
+}
