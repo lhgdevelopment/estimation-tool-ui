@@ -150,7 +150,7 @@ export default function AppNavbarComponent() {
             <Link href={'/ai-assistant'} passHref>
               <Box
                 component={'a'}
-                className='inline-flex items-center  w-full px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
+                className='inline-flex items-center  w-full px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg  focus:outline-none focus:shadow-outline-purple hover:text-white hover:bg-purple-700'
               >
                 <HiveIcon />
 
