@@ -173,7 +173,7 @@ export default function AIAssistantDetailsComponent() {
     apiRequest.get(`/conversations/${conversationId}`).then(res => {
       setDetailsData(res?.data)
       setHasEditAccess(
-        res?.data?.user_id == currentUser?.id
+        currentUser?.role == 'Admin' || res?.data?.user_id == currentUser?.id
           ? true
           : res?.data?.shared_user?.filter((sharedUser: any) => sharedUser?.user?.id == currentUser?.id)?.[0]
               ?.access_level == 2
