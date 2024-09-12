@@ -59,6 +59,9 @@ button:focus {
   list-style: inside;
 }
 
+a:hover {
+  color: #9333ea;
+}
 .preloader-loading-text {
   margin: auto;
   position: absolute;
