@@ -1,12 +1,14 @@
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer'
-import { Box, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
+import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField} from '@mui/material'
 import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
-import { formatDateTime } from 'src/@core/utils/utils'
+import {debounce, formatDateTime} from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
+import {Dropdown} from "../../../@core/components/dropdown";
+import {promptsTypeList} from "../../settings/prompts/Prompts.decorator";
 
 export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
@@ -15,15 +17,29 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   const [totalPages, setTotalPages] = useState<number>(1)
   const [preloader, setPreloader] = useState<boolean>(false)
 
-  const getList = (page = 1) => {
+  const defaultFilterData = {
+    name: '',
+    user_id: '',
+  }
+
+  const [filterData, setFilterData] = useState(defaultFilterData)
+
+  const getList = (page = 1, {name = '', user_id = ''} = {}) => {
     setPreloader(true)
-    apiRequest.get(`/conversations?page=${page}`).then(res => {
+    apiRequest.get(`/conversations?page=${page}&name=${name}&user_id=${user_id}`).then(res => {
       const paginationData: any = res
       setListData(res?.data)
       setCurrentPage(paginationData?.['current_page'])
       setTotalPages(Math.ceil(paginationData?.['total'] / 10))
       setPreloader(false)
     })
+  }
+
+  const handleFilterOnChange = (e: any) => {
+    setFilterData({
+      ...filterData,
+      [e.target.name]: e.target.value
+    });
   }
 
   const onEdit = (id: string) => {
@@ -53,18 +69,26 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
             timerProgressBar: true,
             showConfirmButton: false
           })
-          getList()
+          getList(1, { ...filterData })
         })
       }
     })
   }
 
   useEffect(() => {
-    getList()
+    getList(1, { ...filterData })
   }, [])
 
+  const handleFilterChange = () => {
+    getList(1, { ...filterData });
+  }
+  const onFilterClear = () => {
+    setFilterData({...defaultFilterData})
+    getList(1, { ...defaultFilterData })
+  }
+
   const handlePageChange = (newPage: number) => {
-    getList(newPage)
+    getList(newPage, { ...filterData });
   }
 
   if (!!preloader) {
@@ -87,6 +111,70 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
               </TableRow>
             </TableHead>
             <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
+              <TableRow className='text-gray-700 dark:text-gray-400'>
+                <TableCell sx={{ p: '10px !important' }}>
+                  <TextField
+                    sx={{ width: '100%', p: '0px', input: { p: '10px 10px' } }}
+                    placeholder='Enter name'
+                    name='name'
+                    value={filterData.name}
+                    onChange={handleFilterOnChange}
+                  />
+                </TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>
+                  <Dropdown
+                    sx={{ '& .MuiInputBase-input': { p: '10px 10px !important' } }}
+                    optionConfig={{
+                      title: 'name',
+                      id: 'id'
+                    }}
+                    url='users'
+                    name='user_id'
+                    value={filterData.user_id}
+                    onChange={handleFilterOnChange}
+                  />
+                </TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
+                <TableCell>
+                  <Box sx={{ textAlign: 'center' }}>
+                    <Button
+                      onClick={handleFilterChange}
+                      sx={{
+                        border: '1px solid #9333ea',
+                        padding: '3px 10px',
+                        mr: 1,
+                        fontSize: '14px',
+                        borderRadius: '5px',
+                        color: '#9333ea',
+                        '&:hover': {
+                          background: '#9333ea',
+                          color: '#fff'
+                        }
+                      }}
+                    >
+                      Filter
+                    </Button>
+                    <Button
+                      onClick={onFilterClear}
+                      sx={{
+                        border: '1px solid #9333ea',
+                        padding: '3px 10px',
+                        fontSize: '14px',
+                        borderRadius: '5px',
+                        color: '#9333ea',
+                        '&:hover': {
+                          background: '#9333ea',
+                          color: '#fff'
+                        }
+                      }}
+                    >
+                      Clear
+                    </Button>
+                  </Box>
+                </TableCell>
+              </TableRow>
               {listData?.map((data: any, index: number) => {
                 return (
                   <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
