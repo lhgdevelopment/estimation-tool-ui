@@ -1,7 +1,6 @@
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/material'
-import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -98,7 +97,10 @@ export default function UpdateLogDetailsComponent() {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Box sx={sowBodySx}>
-                    <MdPreview modelValue={detailsData?.['deployed']} />
+                    <Box
+                      className='md-editor-preview'
+                      dangerouslySetInnerHTML={{ __html: detailsData?.['deployed'] }}
+                    ></Box>
                     <Box className='flex' sx={{ mt: 5 }}>
                       <CopyToClipboard textToCopy={detailsData?.['deployed']} />
                       <Link href={`/settings/update-log/edit/${UpdateLogId}`} passHref>
@@ -126,7 +128,10 @@ export default function UpdateLogDetailsComponent() {
                 </AccordionSummary>
                 <AccordionDetails>
                   <Box sx={sowBodySx}>
-                    <MdPreview modelValue={detailsData?.['next']} />
+                    <Box
+                      className='md-editor-preview'
+                      dangerouslySetInnerHTML={{ __html: detailsData?.['next'] }}
+                    ></Box>
                     <Box className='flex' sx={{ mt: 5 }}>
                       <CopyToClipboard textToCopy={detailsData?.['next']} />
                       <Link href={`/settings/update-log/edit/${UpdateLogId}`} passHref>

@@ -1,7 +1,6 @@
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/material'
-import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -148,7 +147,11 @@ export default function LeadsDetailsComponent() {
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={sowBodySx}>
-                  <MdPreview modelValue={detailsData?.['description']} />
+                  <Box
+                    className='md-editor-preview'
+                    dangerouslySetInnerHTML={{ __html: detailsData?.['description'] }}
+                  ></Box>
+
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={detailsData?.['description']} />
                     <Link href={`/leads/edit/${leadsId}`} passHref>

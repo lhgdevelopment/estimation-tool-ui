@@ -28,7 +28,6 @@ import {
 } from '@mui/material'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
-import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { Dropdown } from 'src/@core/components/dropdown'
 import {
@@ -222,7 +221,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
             Problem & Goals
           </AccordionSummary>
           <AccordionDetails>
-            <MdPreview modelValue={problemGoalText} />
+            <Box className='md-editor-preview' dangerouslySetInnerHTML={{ __html: problemGoalText }}></Box>
           </AccordionDetails>
         </Accordion>
 
@@ -235,7 +234,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
             Project Overview
           </AccordionSummary>
           <AccordionDetails>
-            <MdPreview modelValue={overviewText} />
+            <Box className='md-editor-preview' dangerouslySetInnerHTML={{ __html: overviewText }}></Box>
           </AccordionDetails>
         </Accordion>
         <Accordion sx={teamReviewBoxSx} defaultExpanded={true}>

@@ -8,7 +8,6 @@ import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent'
 import TimelineSeparator from '@mui/lab/TimelineSeparator'
 import { Box } from '@mui/material'
 import Typography from '@mui/material/Typography'
-import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { useEffect, useRef, useState } from 'react'
 import apiRequest from 'src/@core/utils/axios-config'
@@ -97,10 +96,10 @@ export default function UpdateLogTimelineComponent() {
               </TimelineSeparator>
               <TimelineContent sx={{ maxWidth: 'calc(50% - 18px)', m: '0 !important' }}>
                 <Typography variant='h6' component='span'>
-                  <MdPreview modelValue={updateLog.deployed} />
+                  <Box className='md-editor-preview' dangerouslySetInnerHTML={{ __html: updateLog.deployed }}></Box>
                 </Typography>
                 <Typography>
-                  <MdPreview modelValue={updateLog.next} />
+                  <Box className='md-editor-preview' dangerouslySetInnerHTML={{ __html: updateLog.next }}></Box>
                 </Typography>
               </TimelineContent>
             </TimelineItem>
