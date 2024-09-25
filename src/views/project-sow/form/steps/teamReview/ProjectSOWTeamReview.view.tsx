@@ -12,7 +12,6 @@ import {
 } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { Dropdown } from 'src/@core/components/dropdown'
-import { RichTextEditor } from 'src/@core/components/rich-text-editor'
 import { formTitleSx, teamReviewBoxSx } from 'src/views/project-sow/ProjectSOW.style'
 import { TProjectSOWTeamReviewFormViewProps } from './ProjectSOWTeamReview.decorator'
 
@@ -181,7 +180,7 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
             Project Overview
           </AccordionSummary>
           <AccordionDetails>
-            <RichTextEditor value={overviewText} onChange={setOverviewText} />
+            <Box className='md-editor-preview' dangerouslySetInnerHTML={{ __html: overviewText }}></Box>
           </AccordionDetails>
         </Accordion>
 
