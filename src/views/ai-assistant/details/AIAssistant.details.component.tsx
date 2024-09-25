@@ -180,8 +180,6 @@ export default function AIAssistantDetailsComponent() {
           ? true
           : false
       )
-      console.log(res?.data?.user_id == currentUser?.id)
-
       const userMessages = res?.data?.messages?.filter((message: any) => message?.role == 'user')
 
       setPrevConversationFormData({
@@ -301,10 +299,10 @@ export default function AIAssistantDetailsComponent() {
   }
 
   useEffect(() => {
-    if (conversationId) {
+    if (conversationId && currentUser?.id) {
       getDetails()
     }
-  }, [conversationId])
+  }, [conversationId, currentUser?.id])
 
   const sowHeadingSx = {
     fontSize: '16x',

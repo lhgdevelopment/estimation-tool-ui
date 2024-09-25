@@ -103,7 +103,10 @@ export default function ProjectSOWDetailsComponent() {
               <AccordionDetails>
                 <Box sx={sowBodySx}>
                   <Box ref={summaryTextRef}>
-                    <Box dangerouslySetInnerHTML={{ __html: detailsData?.['summaryText'] }}></Box>
+                    <Box
+                      className='md-editor-preview'
+                      dangerouslySetInnerHTML={{ __html: detailsData?.['summaryText'] }}
+                    ></Box>
                   </Box>
                   <Box className='flex' sx={{ mt: 5 }}>
                     <CopyToClipboard textToCopy={summaryTextRef?.current?.innerText} />
@@ -139,6 +142,7 @@ export default function ProjectSOWDetailsComponent() {
                 <Box sx={sowBodySx}>
                   <Box ref={problemGoalTextRef}>
                     <Box
+                      className='md-editor-preview'
                       dangerouslySetInnerHTML={{
                         __html: detailsData?.['meeting_transcript']?.['problems_and_goals']?.['problemGoalText']
                       }}
@@ -178,6 +182,7 @@ export default function ProjectSOWDetailsComponent() {
                 <Box sx={sowBodySx}>
                   <Box ref={overviewTextRef}>
                     <Box
+                      className='md-editor-preview'
                       dangerouslySetInnerHTML={{
                         __html:
                           detailsData?.['meeting_transcript']?.['problems_and_goals']?.['project_overview']?.[
@@ -218,6 +223,7 @@ export default function ProjectSOWDetailsComponent() {
                 <Box sx={sowBodySx}>
                   <Box ref={scopeTextRef}>
                     <Box
+                      className='md-editor-preview'
                       dangerouslySetInnerHTML={{
                         __html:
                           detailsData?.['meeting_transcript']?.['problems_and_goals']?.['scope_of_work']?.['scopeText']

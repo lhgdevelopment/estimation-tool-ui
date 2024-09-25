@@ -10,7 +10,6 @@ import {
   Select,
   TextField
 } from '@mui/material'
-import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import { Dropdown } from 'src/@core/components/dropdown'
 import { RichTextEditor } from 'src/@core/components/rich-text-editor'
@@ -169,7 +168,7 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
             Problem & Goals
           </AccordionSummary>
           <AccordionDetails>
-            <MdPreview modelValue={problemGoalText} />
+            <Box className='md-editor-preview' dangerouslySetInnerHTML={{ __html: problemGoalText }}></Box>
           </AccordionDetails>
         </Accordion>
 

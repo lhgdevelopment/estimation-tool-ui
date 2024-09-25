@@ -2,7 +2,6 @@ import EditIcon from '@mui/icons-material/Edit'
 import HiveIcon from '@mui/icons-material/Hive'
 import ReplayIcon from '@mui/icons-material/Replay'
 import { Avatar, Box, Tooltip } from '@mui/material'
-import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import CopyToClipboard from 'src/@core/components/copy-to-clipboard'
 import { addTargetBlankToMarkdownLinks } from 'src/@core/utils/utils'
@@ -74,7 +73,10 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
               ></Box>
             </Box>
           ) : message?.message_content ? (
-            <MdPreview modelValue={addTargetBlankToMarkdownLinks(message?.message_content)}></MdPreview>
+            <Box
+              className='md-editor-preview'
+              dangerouslySetInnerHTML={{ __html: addTargetBlankToMarkdownLinks(message?.message_content) }}
+            ></Box>
           ) : (
             <> </>
           )}

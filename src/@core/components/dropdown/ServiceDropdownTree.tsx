@@ -156,13 +156,21 @@ export function ServiceDropdownTree(props: SelectPropsWithISelectProps) {
           if (type === 'services') {
             return (
               <MenuItem sx={{ ...listSubHeaderSx, ...{ pl: '32px' } }} value={serviceOption.id} key={index}>
-                <Box component='span' dangerouslySetInnerHTML={{ __html: serviceOption.name }}></Box>
+                <Box
+                  component='span'
+                  className='md-editor-preview'
+                  dangerouslySetInnerHTML={{ __html: serviceOption.name }}
+                ></Box>
               </MenuItem>
             )
           } else if (type === 'groups') {
             return [
               <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '16px' } }} key={serviceOption.id}>
-                <Box component='span' dangerouslySetInnerHTML={{ __html: serviceOption.name }}></Box>
+                <Box
+                  component='span'
+                  className='md-editor-preview'
+                  dangerouslySetInnerHTML={{ __html: serviceOption.name }}
+                ></Box>
               </ListSubheader>,
               serviceOption?.groups?.map((groupsOption: any, groupsOptionIndex: number) => (
                 <MenuItem
@@ -170,19 +178,31 @@ export function ServiceDropdownTree(props: SelectPropsWithISelectProps) {
                   value={groupsOption.id}
                   key={groupsOptionIndex}
                 >
-                  <Box component='span' dangerouslySetInnerHTML={{ __html: groupsOption.name }}></Box>
+                  <Box
+                    component='span'
+                    className='md-editor-preview'
+                    dangerouslySetInnerHTML={{ __html: groupsOption.name }}
+                  ></Box>
                 </MenuItem>
               ))
             ]
           } else if (type === 'sows') {
             return [
               <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '16px' } }} key={serviceOption.id}>
-                <Box component='span' dangerouslySetInnerHTML={{ __html: serviceOption.name }}></Box>
+                <Box
+                  component='span'
+                  className='md-editor-preview'
+                  dangerouslySetInnerHTML={{ __html: serviceOption.name }}
+                ></Box>
               </ListSubheader>,
               serviceOption?.groups?.map((groupsOption: any, groupsOptionIndex: number) => {
                 return [
                   <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '32px' } }} key={groupsOptionIndex}>
-                    <Box component='span' dangerouslySetInnerHTML={{ __html: groupsOption.name }}></Box>
+                    <Box
+                      component='span'
+                      className='md-editor-preview'
+                      dangerouslySetInnerHTML={{ __html: groupsOption.name }}
+                    ></Box>
                   </ListSubheader>,
                   groupsOption?.sows?.map((sowsOption: any, sowsOptionIndex: number) => (
                     <MenuItem
@@ -190,7 +210,11 @@ export function ServiceDropdownTree(props: SelectPropsWithISelectProps) {
                       value={sowsOption.id}
                       key={sowsOptionIndex}
                     >
-                      <Box component='span' dangerouslySetInnerHTML={{ __html: sowsOption.name }}></Box>
+                      <Box
+                        component='span'
+                        className='md-editor-preview'
+                        dangerouslySetInnerHTML={{ __html: sowsOption.name }}
+                      ></Box>
                     </MenuItem>
                   ))
                 ]
@@ -199,17 +223,29 @@ export function ServiceDropdownTree(props: SelectPropsWithISelectProps) {
           } else if (type === 'deliverables') {
             return [
               <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '16px' } }} key={serviceOption.id}>
-                <Box component='span' dangerouslySetInnerHTML={{ __html: serviceOption.name }}></Box>
+                <Box
+                  component='span'
+                  className='md-editor-preview'
+                  dangerouslySetInnerHTML={{ __html: serviceOption.name }}
+                ></Box>
               </ListSubheader>,
               serviceOption?.groups?.map((groupsOption: any, groupsOptionIndex: number) => {
                 return [
                   <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '32px' } }} key={groupsOptionIndex}>
-                    <Box component='span' dangerouslySetInnerHTML={{ __html: groupsOption.name }}></Box>
+                    <Box
+                      component='span'
+                      className='md-editor-preview'
+                      dangerouslySetInnerHTML={{ __html: groupsOption.name }}
+                    ></Box>
                   </ListSubheader>,
                   groupsOption?.sows?.map((sowsOption: any, sowsOptionIndex: number) => {
                     return [
                       <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '48px' } }} key={sowsOptionIndex}>
-                        <Box component='span' dangerouslySetInnerHTML={{ __html: sowsOption.name }}></Box>
+                        <Box
+                          component='span'
+                          className='md-editor-preview'
+                          dangerouslySetInnerHTML={{ __html: sowsOption.name }}
+                        ></Box>
                       </ListSubheader>,
                       sowsOption?.deliverables?.map((deliverablesOption: any, deliverablesOptionIndex: number) => (
                         <MenuItem
@@ -217,7 +253,11 @@ export function ServiceDropdownTree(props: SelectPropsWithISelectProps) {
                           value={deliverablesOption.id}
                           key={deliverablesOptionIndex}
                         >
-                          <Box component='span' dangerouslySetInnerHTML={{ __html: deliverablesOption.name }}></Box>
+                          <Box
+                            component='span'
+                            className='md-editor-preview'
+                            dangerouslySetInnerHTML={{ __html: deliverablesOption.name }}
+                          ></Box>
                         </MenuItem>
                       ))
                     ]
@@ -228,22 +268,38 @@ export function ServiceDropdownTree(props: SelectPropsWithISelectProps) {
           } else if (type === 'tasks') {
             return [
               <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '16px' } }} key={serviceOption.id}>
-                <Box component='span' dangerouslySetInnerHTML={{ __html: serviceOption.name }}></Box>
+                <Box
+                  component='span'
+                  className='md-editor-preview'
+                  dangerouslySetInnerHTML={{ __html: serviceOption.name }}
+                ></Box>
               </ListSubheader>,
               serviceOption?.groups?.map((groupsOption: any, groupsOptionIndex: number) => {
                 return [
                   <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '32px' } }} key={groupsOptionIndex}>
-                    <Box component='span' dangerouslySetInnerHTML={{ __html: groupsOption.name }}></Box>
+                    <Box
+                      component='span'
+                      className='md-editor-preview'
+                      dangerouslySetInnerHTML={{ __html: groupsOption.name }}
+                    ></Box>
                   </ListSubheader>,
                   groupsOption?.sows?.map((sowsOption: any, sowsOptionIndex: number) => {
                     return [
                       <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '48px' } }} key={sowsOptionIndex}>
-                        <Box component='span' dangerouslySetInnerHTML={{ __html: sowsOption.name }}></Box>
+                        <Box
+                          component='span'
+                          className='md-editor-preview'
+                          dangerouslySetInnerHTML={{ __html: sowsOption.name }}
+                        ></Box>
                       </ListSubheader>,
                       sowsOption?.deliverables?.map((deliverablesOption: any, deliverablesOptionIndex: number) => {
                         return [
                           <ListSubheader sx={{ ...listSubHeaderSx, ...{ pl: '64px' } }} key={deliverablesOptionIndex}>
-                            <Box component='span' dangerouslySetInnerHTML={{ __html: deliverablesOption.name }}></Box>
+                            <Box
+                              component='span'
+                              className='md-editor-preview'
+                              dangerouslySetInnerHTML={{ __html: deliverablesOption.name }}
+                            ></Box>
                           </ListSubheader>,
                           deliverablesOption?.tasks?.map((tasksOption: any, tasksOptionIndex: number) => (
                             <MenuItem
@@ -251,7 +307,11 @@ export function ServiceDropdownTree(props: SelectPropsWithISelectProps) {
                               value={tasksOption.id}
                               key={tasksOptionIndex}
                             >
-                              <Box component='span' dangerouslySetInnerHTML={{ __html: tasksOption.name }}></Box>
+                              <Box
+                                component='span'
+                                className='md-editor-preview'
+                                dangerouslySetInnerHTML={{ __html: tasksOption.name }}
+                              ></Box>
                             </MenuItem>
                           ))
                         ]
