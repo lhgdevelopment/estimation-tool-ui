@@ -192,7 +192,11 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
           {preloader && <MenuItem disabled>Loading...</MenuItem>}
           {optionItems?.map((option: any, index: number) => (
             <MenuItem value={option.id} key={index}>
-              <Box component='span' dangerouslySetInnerHTML={{ __html: option.title }}></Box>
+              <Box
+                component='span'
+                className='md-editor-preview'
+                dangerouslySetInnerHTML={{ __html: option.title }}
+              ></Box>
             </MenuItem>
           ))}
 

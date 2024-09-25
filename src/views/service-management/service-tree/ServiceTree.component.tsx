@@ -1011,7 +1011,11 @@ export default function ServiceTreeComponent() {
                 if (node?.['type'] == 'service') {
                   return (
                     <Box sx={treeTitleSx}>
-                      <Box title={''} dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box
+                        title={''}
+                        className='md-editor-preview'
+                        dangerouslySetInnerHTML={{ __html: node?.title as string }}
+                      ></Box>
                       <Box sx={treeButtonContainerSx}>
                         <Button
                           onClick={e => {
@@ -1049,7 +1053,11 @@ export default function ServiceTreeComponent() {
                 } else if (node?.['type'] == 'group') {
                   return (
                     <Box component={'span'} sx={treeTitleSx}>
-                      <Box component={'span'} dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box
+                        component={'span'}
+                        className='md-editor-preview'
+                        dangerouslySetInnerHTML={{ __html: node?.title as string }}
+                      ></Box>
                       <Box component={'span'} sx={treeButtonContainerSx}>
                         <Button
                           onClick={e => {
@@ -1085,7 +1093,11 @@ export default function ServiceTreeComponent() {
                 } else if (node?.['type'] == 'sow') {
                   return (
                     <Box component={'span'} sx={treeTitleSx}>
-                      <Box component={'span'} dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box
+                        component={'span'}
+                        className='md-editor-preview'
+                        dangerouslySetInnerHTML={{ __html: node?.title as string }}
+                      ></Box>
                       <Box component={'span'} sx={treeButtonContainerSx}>
                         <Button
                           onClick={e => {
@@ -1121,7 +1133,11 @@ export default function ServiceTreeComponent() {
                 } else if (node?.['type'] == 'deliverable') {
                   return (
                     <Box component={'span'} sx={treeTitleSx}>
-                      <Box component={'span'} dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box
+                        component={'span'}
+                        className='md-editor-preview'
+                        dangerouslySetInnerHTML={{ __html: node?.title as string }}
+                      ></Box>
                       <Box component={'span'} sx={treeButtonContainerSx}>
                         <Button
                           onClick={e => {
@@ -1161,7 +1177,11 @@ export default function ServiceTreeComponent() {
                 } else if (node?.['type'] == 'task' || node?.['type'] == 'sub_task') {
                   return (
                     <Box component={'span'} sx={treeTitleSx}>
-                      <Box component={'span'} dangerouslySetInnerHTML={{ __html: node?.title as string }}></Box>
+                      <Box
+                        component={'span'}
+                        className='md-editor-preview'
+                        dangerouslySetInnerHTML={{ __html: node?.title as string }}
+                      ></Box>
                       <Box component={'span'} sx={treeButtonContainerSx}>
                         <Button
                           onClick={e => {

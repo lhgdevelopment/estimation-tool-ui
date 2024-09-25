@@ -271,7 +271,11 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                     ) : (
                       <></>
                     )}
-                    <Box sx={{ ml: 1 }} dangerouslySetInnerHTML={{ __html: service?.name }}></Box>
+                    <Box
+                      sx={{ ml: 1 }}
+                      className='md-editor-preview'
+                      dangerouslySetInnerHTML={{ __html: service?.name }}
+                    ></Box>
                   </Box>
                 ))}
               </Box>

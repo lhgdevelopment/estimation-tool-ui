@@ -61,6 +61,7 @@ CustomDocument.getInitialProps = async ctx => {
     return (
       <style
         key={style.key}
+        className='md-editor-preview'
         dangerouslySetInnerHTML={{ __html: style.css }}
         data-emotion={`${style.key} ${style.ids.join(' ')}`}
       />
