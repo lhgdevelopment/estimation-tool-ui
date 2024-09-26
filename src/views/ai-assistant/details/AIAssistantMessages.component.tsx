@@ -4,7 +4,7 @@ import ReplayIcon from '@mui/icons-material/Replay'
 import { Avatar, Box, Tooltip } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import CopyToClipboard from 'src/@core/components/copy-to-clipboard'
-import { addTargetBlankToMarkdownLinks } from 'src/@core/utils/utils'
+import {marked} from "marked";
 
 type TAIAssistantMessagesComponentProps = {
   message: any
@@ -13,10 +13,21 @@ type TAIAssistantMessagesComponentProps = {
   onRegenerate?: () => void
   onEdit?: (data: any) => void
 }
-export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
-  const { message, index, isWaiting = false, onRegenerate, onEdit } = props
+const renderer = new marked.Renderer();
+const linkRenderer = renderer.link;
+renderer.link = (href, title, text) => {
+  const html = linkRenderer.call(renderer, href, title, text);
 
-  return (
+return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ');
+};
+renderer.listitem = (text, task, checked) => {
+  return `<li>${String(text).replace(/<p>|<\/p>/g, '') }</li>`;
+};
+
+export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
+const { message, index, isWaiting = false, onRegenerate, onEdit } = props
+
+return (
     <Box
       sx={{
         display: 'flex',
@@ -75,8 +86,13 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
           ) : message?.message_content ? (
             <Box
               className='md-editor-preview'
-              dangerouslySetInnerHTML={{ __html: addTargetBlankToMarkdownLinks(message?.message_content) }}
-            ></Box>
+              sx={{ p: 4 }}
+              dangerouslySetInnerHTML={{ __html: marked(
+                  message?.message_content
+                ,{ renderer: renderer, gfm: true }) }}
+            >
+
+            </Box>
           ) : (
             <> </>
           )}
