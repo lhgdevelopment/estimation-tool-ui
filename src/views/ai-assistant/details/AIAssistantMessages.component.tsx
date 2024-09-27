@@ -86,7 +86,11 @@ return (
           ) : message?.message_content ? (
             <Box
               className='md-editor-preview'
-              sx={{ p: 4 }}
+              sx={{
+                p: 4,
+                wordBreak: 'auto-phrase',
+                textAlign: 'justify'
+            }}
               dangerouslySetInnerHTML={{ __html: marked(
                   message?.message_content
                 ,{ renderer: renderer, gfm: true }) }}
