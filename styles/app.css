@@ -1717,19 +1717,3 @@ video {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
-
-.md-editor-preview.md-editor-preview table tr th, .md-editor-preview.md-editor-preview table tr td{
-  border: 1px solid white;
-  padding: 5px 7px;
-  color: white;
-}
-
-.md-editor-preview.md-editor-preview table tbody tr:hover{
-  background-color: white;
-  color: black;
-  transition: background-color .5s ease-in-out;
-}
-
-.md-editor-preview.md-editor-preview table tbody tr:hover td{
-  color: black;
-}
