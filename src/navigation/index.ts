@@ -11,6 +11,7 @@ import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
+import Diversity3Icon from '@mui/icons-material/Diversity3';
 
 type TNavigation = {
   title: string
@@ -126,6 +127,12 @@ const navigation: TNavigation[] = [
         title: 'User',
         icon: SettingsEthernetIcon,
         path: '/user-management/users',
+        accessBy: ['Admin']
+      },
+      {
+        title: 'Teams',
+        icon: Diversity3Icon,
+        path: '/user-management/teams',
         accessBy: ['Admin']
       }
     ]
