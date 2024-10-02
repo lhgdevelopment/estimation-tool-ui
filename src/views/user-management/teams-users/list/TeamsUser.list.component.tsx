@@ -6,21 +6,22 @@ import { TableSx } from 'src/@core/theme/tableStyle'
 import apiRequest from 'src/@core/utils/axios-config'
 import { formatDateTime } from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
-import Link from 'next/link'
-import { TUsersComponent } from '../TeamsPrompts.decorator'
+import { TUsersComponent } from '../TeamsUser.decorator'
 import {useRouter} from "next/router";
 
-export default function TeamsPromptsListComponent(props: TUsersComponent) {
+export default function TeamsUserListComponent(props: TUsersComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [isLoading, setIsLoading] = useState<boolean>(false)
+
   const { query } = useRouter();
 
   const getList = (page = 1) => {
     setIsLoading(true);
-    apiRequest.get(`/teams/${query.id}/share/prompts?page=${page}`).then(res => {
+    apiRequest.get(`/teams/${query.id}/users?page=${page}`).then(res => {
       const paginationData: any = res
+
       setListData(res?.data)
       setCurrentPage(paginationData?.['current_page'])
       setTotalPages(Math.ceil(paginationData?.['total'] / 10))
@@ -48,7 +49,7 @@ export default function TeamsPromptsListComponent(props: TUsersComponent) {
       cancelButtonText: 'No, cancel!'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/teams/${query.id}/share/prompts/${id}`).then(res => {
+        apiRequest.delete(`/teams/${query.id}/users/${id}`).then(res => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',
@@ -80,15 +81,14 @@ export default function TeamsPromptsListComponent(props: TUsersComponent) {
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
         <Box className='w-full overflow-x-auto'>
-          {listData?.length > 0 && <TableContainer component={Paper}>
+          <TableContainer component={Paper}>
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
-                <TableRow
-                  className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
                   <TableCell className='px-4 py-3'>
-                    Name
+                    User Name
                   </TableCell>
-                  <TableCell className='px-4 py-3' sx={{textAlign: 'center', width: '190px'}}>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center', width: '190px' }}>
                     Created At
                   </TableCell>
                   <TableCell className='px-4 py-3' sx={{textAlign: 'right'}}>Actions</TableCell>
@@ -99,9 +99,9 @@ export default function TeamsPromptsListComponent(props: TUsersComponent) {
                   return (
                     <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                       <TableCell className='px-4 py-3 text-sm'>
-                        {data?.prompt?.name}
+                        {data?.user?.name}
                       </TableCell>
-                      <TableCell className='px-4 py-3 text-sm' sx={{textAlign: 'center'}}>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
                         {formatDateTime(data?.created_at)}
                       </TableCell>
 
@@ -129,10 +129,10 @@ export default function TeamsPromptsListComponent(props: TUsersComponent) {
                 })}
               </TableBody>
             </Table>
-          </TableContainer>}
-          {listData?.length === 0 && <NoDataComponent />}
+          </TableContainer>
+          {!listData?.length && <NoDataComponent />}
         </Box>
-        {listData?.length > 0 && <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', my: 4}}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 4 }}>
           <Pagination
             count={totalPages}
             color='primary'
@@ -142,7 +142,7 @@ export default function TeamsPromptsListComponent(props: TUsersComponent) {
             }}
             defaultPage={currentPage}
           />
-        </Box>}
+        </Box>
       </Box>
     </Fragment>
   )

@@ -96,18 +96,16 @@ export default function TeamsListComponent(props: TUsersComponent) {
                   return (
                     <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
                       <TableCell className='px-4 py-3 text-sm'>
-                        <Link passHref href={'/'}>
-                          {data?.name}
-                        </Link>
+                        {data?.name}
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm underline underline-offset-2 color'>
                         <Link passHref href={`/user-management/teams/${data.id}/prompts/`}>
-                          100
+                          {String(data?.promptCount || 0).padStart(2,'0')}
                         </Link>
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm underline underline-offset-2' sx={{ textAlign: 'center' }}>
                         <Link passHref href={`/user-management/teams/${data.id}/users/`}>
-                          10
+                          {String(data?.userCount || 0).padStart(2,'0')}
                         </Link>
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>

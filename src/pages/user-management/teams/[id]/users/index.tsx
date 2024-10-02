@@ -1,9 +1,9 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import TeamsComponent from "../../../../../views/user-management/teams/Teams.component";
+import TeamsUserComponent from "../../../../../views/user-management/teams-users/TeamsUser.component";
 
 const Teams = () => {
-  return <TeamsComponent />
+  return <TeamsUserComponent />
 }
 Teams.getLayout = (page: ReactNode) => <AppLayout>{page}</AppLayout>
 export default Teams
