@@ -13,14 +13,18 @@ export default function TeamsListComponent(props: TUsersComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const getList = (page = 1) => {
+    setIsLoading(true);
     apiRequest.get(`/teams?page=${page}`).then(res => {
       const paginationData: any = res
 
       setListData(res?.data)
       setCurrentPage(paginationData?.['current_page'])
       setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+    }).finally(()=>{
+      setIsLoading(false);
     })
   }
 
@@ -65,11 +69,14 @@ export default function TeamsListComponent(props: TUsersComponent) {
     getList(newPage)
   }
 
-  if (!listData?.length) {
+
+  if (isLoading) {
     return <UiSkeleton />
+  }else if( listData.length === 0 ) {
+    return <NoDataComponent preload />
   }
 
-  return (
+return (
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
         <Box className='w-full overflow-x-auto'>

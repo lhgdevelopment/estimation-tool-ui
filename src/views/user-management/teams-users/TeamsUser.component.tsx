@@ -5,6 +5,8 @@ import TeamsUserListComponent from './list/TeamsUser.list.component'
 import apiRequest from "../../../@core/utils/axios-config";
 import {useRouter} from "next/router";
 import Error404 from "../../../pages/404";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Link from 'next/link';
 
 
 export default function TeamsUserComponent() {
@@ -34,6 +36,11 @@ export default function TeamsUserComponent() {
 return (
     <>
       <Box className='container px-6 mx-auto'>
+        <Link href={`/user-management/teams`} passHref>
+          <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300 cursor-pointer'>
+            <ArrowBackIcon /> Back
+          </Box>
+        </Link>
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
           Add User to {teamInfo.name}
         </Box>
