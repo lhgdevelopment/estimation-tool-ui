@@ -1,15 +1,19 @@
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer'
 import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField} from '@mui/material'
 import Link from 'next/link'
-import { Fragment, useEffect, useState } from 'react'
+import {Fragment, useCallback, useEffect, useState} from 'react'
 import UiSkeleton from 'src/@core/components/ui-skeleton'
 import apiRequest from 'src/@core/utils/axios-config'
 import {debounce, formatDateTime} from 'src/@core/utils/utils'
 import Swal from 'sweetalert2'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
 import {Dropdown} from "../../../@core/components/dropdown";
-import {promptsTypeList} from "../../settings/prompts/Prompts.decorator";
+import useDebounce from "../../../@core/utils/debounce";
 
+const defaultFilterData = {
+  name: '',
+  user_id: '',
+}
 export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
 
@@ -17,14 +21,11 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   const [totalPages, setTotalPages] = useState<number>(1)
   const [preloader, setPreloader] = useState<boolean>(false)
 
-  const defaultFilterData = {
-    name: '',
-    user_id: '',
-  }
-
   const [filterData, setFilterData] = useState(defaultFilterData)
+  const debounceValue = useDebounce(filterData, 800);
 
-  const getList = (page = 1, {name = '', user_id = ''} = {}) => {
+
+  const getList = useCallback((page = 1, {name = '', user_id = ''} = {}) => {
     setPreloader(true)
     apiRequest.get(`/conversations?page=${page}&name=${name}&user_id=${user_id}`).then(res => {
       const paginationData: any = res
@@ -33,8 +34,10 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
       setTotalPages(Math.ceil(paginationData?.['total'] / 10))
       setPreloader(false)
     })
-  }
-
+  }, [setListData, setCurrentPage, setTotalPages, setPreloader]);
+  useEffect(() => {
+    getList(1, { ...debounceValue });
+  }, [debounceValue, getList]);
   const handleFilterOnChange = (e: any) => {
     setFilterData({
       ...filterData,
