@@ -12,10 +12,10 @@ import {
   TextField
 } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from 'src/@core/components/dropdown'
-import NoDataComponent from 'src/@core/components/no-data-component'
-import UiSkeleton from 'src/@core/components/ui-skeleton'
-import apiRequest from 'src/@core/utils/axios-config'
+import { Dropdown } from '@core/components/dropdown'
+import NoDataComponent from '@core/components/no-data-component'
+import UiSkeleton from '@core/components/ui-skeleton'
+import apiRequest from '@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import {TMemoryComponent} from '../Memory.decorator'
 import {TableSx} from "../../../../@core/theme/tableStyle";

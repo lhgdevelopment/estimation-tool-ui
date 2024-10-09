@@ -1,7 +1,7 @@
 import 'md-editor-rt/lib/style.css'
 import { useEffect, useState } from 'react'
-import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
-import apiRequest from 'src/@core/utils/axios-config'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import { TProjectSOWTeamReviewFormComponentProps } from './ProjectSOWTeamReview.decorator'
 import ProjectSOWTeamReviewFormView from './ProjectSOWTeamReview.view'
 

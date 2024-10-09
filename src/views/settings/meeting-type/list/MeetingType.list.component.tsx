@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import UiSkeleton from 'src/@core/components/ui-skeleton'
-import apiRequest from 'src/@core/utils/axios-config'
+import UiSkeleton from '@core/components/ui-skeleton'
+import apiRequest from '@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TMeetingTypeComponent } from '../MeetingType.decorator'
 

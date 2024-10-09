@@ -29,7 +29,7 @@ import {
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import 'md-editor-rt/lib/style.css'
-import { Dropdown } from 'src/@core/components/dropdown'
+import { Dropdown } from '@core/components/dropdown'
 import {
   formTitleSx,
   sectionSubTitleSx,

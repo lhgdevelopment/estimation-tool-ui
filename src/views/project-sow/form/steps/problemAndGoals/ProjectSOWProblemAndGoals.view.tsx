@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { RichTextEditor } from 'src/@core/components/rich-text-editor'
+import { RichTextEditor } from '@core/components/rich-text-editor'
 import { formTitleSx } from 'src/views/project-sow/ProjectSOW.style'
 import { TProjectSOWProblemAndGoalsFormViewProps } from './ProjectSOWProblemAndGoals.decorator'
 

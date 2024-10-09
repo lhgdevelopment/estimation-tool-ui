@@ -6,7 +6,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import SyncIcon from '@mui/icons-material/Sync'
 import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { Dropdown } from 'src/@core/components/dropdown'
+import { Dropdown } from '@core/components/dropdown'
 import {
   scopeOfWorkListContainer,
   scopeOfWorkListSx,

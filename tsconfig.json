@@ -17,7 +17,8 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-
+      "@core/*": ["src/@core/*"],
+      "react": ["./node_modules/@types/react"]
     }
   },
   "include": ["src", "next-env.d.ts", ".env", ],

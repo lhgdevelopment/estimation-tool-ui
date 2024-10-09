@@ -10,8 +10,8 @@ import { Box } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import 'md-editor-rt/lib/style.css'
 import { useEffect, useRef, useState } from 'react'
-import apiRequest from 'src/@core/utils/axios-config'
-import { dateDefaultFormat, formatDateTime } from 'src/@core/utils/utils'
+import apiRequest from '@core/utils/axios-config'
+import { dateDefaultFormat, formatDateTime } from '@core/utils/utils'
 
 export default function UpdateLogTimelineComponent() {
   const [updateLogData, setUpdateLogData] = useState<any>([])

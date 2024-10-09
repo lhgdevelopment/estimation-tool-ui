@@ -8,7 +8,7 @@ import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormCo
 import { styled } from '@mui/material/styles'
 import axios from 'axios'
 import { useRouter } from 'next/router'
-import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import BlankLayout from 'src/layouts/BlankLayout'
 
 // Styled Components

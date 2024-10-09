@@ -3,7 +3,7 @@ import HiveIcon from '@mui/icons-material/Hive'
 import ReplayIcon from '@mui/icons-material/Replay'
 import { Avatar, Box, Tooltip } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import CopyToClipboard from 'src/@core/components/copy-to-clipboard'
+import CopyToClipboard from '@core/components/copy-to-clipboard'
 import {marked} from "marked";
 
 type TAIAssistantMessagesComponentProps = {

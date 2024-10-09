@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { Fragment, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { RootState } from 'src/@core/store/reducers'
+import { RootState } from '@core/store/reducers'
 import navigation from 'src/navigation'
 
 export default function AppNavbarComponent() {

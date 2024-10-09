@@ -1,10 +1,10 @@
 import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useEffect, useState } from 'react'
-import apiRequest from 'src/@core/utils/axios-config'
+import apiRequest from '@core/utils/axios-config'
 import { TProjectSOWDeliverableFormComponentProps } from './ProjectSOWDeliverable.decorator'
 import ProjectSOWDeliverableFormView from './ProjectSOWDeliverable.view'
-import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 
 export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDeliverableFormComponentProps) {
   const {

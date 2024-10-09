@@ -5,9 +5,9 @@ import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import CopyToClipboard from 'src/@core/components/copy-to-clipboard'
-import Preloader from 'src/@core/components/preloader'
-import apiRequest from 'src/@core/utils/axios-config'
+import CopyToClipboard from '@core/components/copy-to-clipboard'
+import Preloader from '@core/components/preloader'
+import apiRequest from '@core/utils/axios-config'
 
 export default function UpdateLogDetailsComponent() {
   const UpdateLogId = useRouter()?.query['id']

@@ -5,9 +5,9 @@ import EditIcon from '@mui/icons-material/Edit'
 import SyncIcon from '@mui/icons-material/Sync'
 import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { Dropdown } from 'src/@core/components/dropdown'
-import Preloader from 'src/@core/components/preloader'
-import { getShortStringNumber } from 'src/@core/utils/utils'
+import { Dropdown } from '@core/components/dropdown'
+import Preloader from '@core/components/preloader'
+import { getShortStringNumber } from '@core/utils/utils'
 import {
   deliverableNoteItemSx,
   scopeOfWorkListContainer,

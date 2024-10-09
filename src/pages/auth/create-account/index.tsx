@@ -31,7 +31,7 @@ import Twitter from 'mdi-material-ui/Twitter'
 
 // ** Configs
 // ** Layout Import
-import BlankLayout from 'src/@core/layouts/BlankLayout'
+import BlankLayout from '@core/layouts/BlankLayout'
 
 interface State {
   password: string

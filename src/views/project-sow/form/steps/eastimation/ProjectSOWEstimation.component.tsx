@@ -1,9 +1,9 @@
 import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useEffect, useState } from 'react'
-import Preloader from 'src/@core/components/preloader'
-import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
-import apiRequest from 'src/@core/utils/axios-config'
+import Preloader from '@core/components/preloader'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import { TProjectSOWEstimationFormComponentProps } from './ProjectSOWEstimation.decorator'
 import ProjectSOWEstimationFormView from './ProjectSOWEstimation.view'
 

@@ -1,8 +1,8 @@
 import { Box, Button } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import NoDataComponent from 'src/@core/components/no-data-component'
-import UiSkeleton from 'src/@core/components/ui-skeleton'
-import apiRequest from 'src/@core/utils/axios-config'
+import NoDataComponent from '@core/components/no-data-component'
+import UiSkeleton from '@core/components/ui-skeleton'
+import apiRequest from '@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { THourlyRatesComponent } from '../HourlyRates.decorator'
 

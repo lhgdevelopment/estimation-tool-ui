@@ -11,10 +11,10 @@ import {
   TextField
 } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from 'src/@core/components/dropdown'
-import UiSkeleton from 'src/@core/components/ui-skeleton'
-import { TableSx } from 'src/@core/theme/tableStyle'
-import apiRequest from 'src/@core/utils/axios-config'
+import { Dropdown } from '@core/components/dropdown'
+import UiSkeleton from '@core/components/ui-skeleton'
+import { TableSx } from '@core/theme/tableStyle'
+import apiRequest from '@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { TPromptsComponent, promptsTypeList } from '../Prompts.decorator'
 

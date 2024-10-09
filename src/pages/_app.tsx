@@ -19,10 +19,10 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 import { Provider } from 'react-redux'
 
 // ** Contexts
-import { SettingsConsumer, SettingsProvider } from 'src/@core/context/settingsContext'
+import { SettingsConsumer, SettingsProvider } from '@core/context/settingsContext'
 
 // ** Utils Imports
-import { createEmotionCache } from 'src/@core/utils/create-emotion-cache'
+import { createEmotionCache } from '@core/utils/create-emotion-cache'
 
 // ** Config Imports
 import themeConfig from 'src/configs/themeConfig'
@@ -31,7 +31,7 @@ import themeConfig from 'src/configs/themeConfig'
 import AppLayout from 'src/layouts/AppLayout'
 
 // ** Global css styles
-import ThemeComponent from 'src/@core/theme/ThemeComponent'
+import ThemeComponent from '@core/theme/ThemeComponent'
 import '../../styles/app.css'
 import '../../styles/globals.css'
 import store from '../@core/store/store'

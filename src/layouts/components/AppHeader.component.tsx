@@ -4,8 +4,8 @@ import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import { Fragment, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { isDarkTheme } from 'src/@core/store/actions/userActions'
-import { RootState } from 'src/@core/store/reducers'
+import { isDarkTheme } from '@core/store/actions/userActions'
+import { RootState } from '@core/store/reducers'
 
 export default function AppHeaderComponent() {
   const dispatch = useDispatch()

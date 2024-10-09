@@ -11,7 +11,7 @@ import {
   TextField
 } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { Dropdown } from 'src/@core/components/dropdown'
+import { Dropdown } from '@core/components/dropdown'
 import { formTitleSx, teamReviewBoxSx } from 'src/views/project-sow/ProjectSOW.style'
 import { TProjectSOWTeamReviewFormViewProps } from './ProjectSOWTeamReview.decorator'
 

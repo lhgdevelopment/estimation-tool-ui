@@ -14,9 +14,9 @@ import {
   TableRow
 } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import UiSkeleton from 'src/@core/components/ui-skeleton'
-import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
-import apiRequest from 'src/@core/utils/axios-config'
+import UiSkeleton from '@core/components/ui-skeleton'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import RolePermissionFormComponent from '../form/RolePermission.form.component'
 

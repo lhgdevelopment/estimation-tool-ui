@@ -2,8 +2,8 @@ import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { Dispatch, useState } from 'react'
-import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
-import apiRequest from 'src/@core/utils/axios-config'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 
 type TAIAssistantMessagesEditComponentProps = {
   editData: any

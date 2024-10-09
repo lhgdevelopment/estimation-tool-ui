@@ -2,7 +2,7 @@ import { IJoditEditorProps, Jodit } from 'jodit-react'
 import dynamic from 'next/dynamic'
 import { RefObject, useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { RootState } from 'src/@core/store/reducers'
+import { RootState } from '@core/store/reducers'
 
 type TRichTextEditorProps = IJoditEditorProps & {
   value: string

@@ -2,7 +2,7 @@
 import { PaletteMode } from '@mui/material'
 
 // ** Types
-import { ContentWidth } from 'src/@core/utils/types'
+import { ContentWidth } from '@core/utils/types'
 
 type ThemeConfig = {
   mode: PaletteMode

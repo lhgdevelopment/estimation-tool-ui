@@ -1,9 +1,9 @@
 import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useCallback, useRef, useState } from 'react'
-import { useToastSnackbar } from 'src/@core/hooks/useToastSnackbar'
-import apiRequest from 'src/@core/utils/axios-config'
-import { debounce } from 'src/@core/utils/utils'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
+import { debounce } from '@core/utils/utils'
 import { TProjectSOWPhaseFormComponentProps } from './ProjectSOWPhase.decorator'
 import ProjectSOWPhaseFormView from './ProjectSOWPhase.view'
 
