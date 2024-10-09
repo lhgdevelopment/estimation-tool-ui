@@ -12,6 +12,7 @@ import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
 import Diversity3Icon from '@mui/icons-material/Diversity3';
+import MemoryIcon from '@mui/icons-material/Memory';
 
 type TNavigation = {
   title: string
@@ -108,6 +109,12 @@ const navigation: TNavigation[] = [
         icon: EventRepeatIcon,
         path: '/settings/update-log',
         accessBy: ['Admin']
+      },
+      {
+        title: 'Memory',
+        icon: EventRepeatIcon,
+        path: '/settings/memory',
+        accessBy: ['Admin']
       }
     ]
   },
@@ -131,7 +138,7 @@ const navigation: TNavigation[] = [
       },
       {
         title: 'Teams',
-        icon: Diversity3Icon,
+        icon: MemoryIcon,
         path: '/user-management/teams',
         accessBy: ['Admin']
       }
