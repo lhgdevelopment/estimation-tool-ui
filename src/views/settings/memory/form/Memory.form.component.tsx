@@ -8,6 +8,7 @@ import { Dropdown } from '@core/components/dropdown'
 import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import apiRequest from '@core/utils/axios-config'
 import {TMemoryComponent} from "../Memory.decorator";
+import AppTextInput from "@core/components/input/textInput";
 
 export default function MemoryFormComponent(props: TMemoryComponent) {
   const { showSnackbar } = useToastSnackbar()
@@ -89,10 +90,12 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
   }, [editDataId, editData])
 
   const onClear = () => {
-    setFormData(prevState => ({ ...defaultData }))
     setEditDataId(null)
     setEditData({})
     setErrorMessage({})
+    setTimeout(()=>{
+      setFormData(prevState => ({ ...defaultData }))
+    }, 200)
   }
 
   return (
@@ -101,13 +104,12 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
-              <TextField
+              <AppTextInput
                 label={'Memory Title'}
                 name='title'
                 value={formData.title}
                 onChange={handleTextChange}
-                error={errorMessage?.['title']}
-                fullWidth
+                hasError={!!errorMessage?.['title']}
               />
               {!!errorMessage?.['title'] &&
                 errorMessage?.['title']?.map((message: any, index: number) => {
