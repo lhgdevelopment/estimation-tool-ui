@@ -1,25 +1,3 @@
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import {
-  Box,
-  Button,
-  Pagination,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from '@mui/material'
-import Link from 'next/link'
-import { Fragment, useEffect, useState } from 'react'
-import UiSkeleton from '@core/components/ui-skeleton'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import { TableSx } from '@core/theme/tableStyle'
-import apiRequest from '@core/utils/axios-config'
-import { formatDateTime } from '@core/utils/utils'
-import Swal from 'sweetalert2'
-import { TLeadsComponent } from '../Leads.decorator'
 
 export default function LeadsListComponent(props: TLeadsComponent) {
   const { listData, setListData } = props
@@ -128,7 +106,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
           <TableContainer component={Paper}>
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
-                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b d:border-gray-700 bg-gray-5k-d:text-gray-ark-d:bg-gray-800'>
                   <TableCell className='px-4 py-3'>First Name</TableCell>
                   <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
                     Last Name
@@ -152,11 +130,11 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
-                <Box component={'tr'} className='text-gray-700 dark:text-gray-400' sx={{ '& td': { p: '5px 5px' } }}>
+              <TableBody className='bg-white Boxide-y d:Boxide-gray-70k-d:bg-gray-800'>
+                <Box component={'tr'} className='text-gray-700 d:text-gray-400' sx={{ '& td': { p: '5px 5px' } }}>
                   <Box component={'td'}>
                     <input
-                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      className='block w-full mt-1 text-sm d:border-gray-60k-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purark-d:text-gra dark-d:focus:shadow-outline-gray form-input'
                       placeholder='Enter first Name'
                       name='firstName'
                       value={filterData.firstName}
@@ -165,7 +143,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                   </Box>
                   <Box component={'td'}>
                     <input
-                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      className='block w-full mt-1 text-sm d:border-gray-60k-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purark-d:text-gra dark-d:focus:shadow-outline-gray form-input'
                       placeholder='Enter last name'
                       name='lastName'
                       value={filterData.lastName}
@@ -174,7 +152,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                   </Box>
                   <Box component={'td'}>
                     <input
-                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      className='block w-full mt-1 text-sm d:border-gray-60k-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purark-d:text-gra dark-d:focus:shadow-outline-gray form-input'
                       placeholder='Enter company'
                       name='company'
                       value={filterData.company}
@@ -183,7 +161,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                   </Box>
                   <Box component={'td'}>
                     <input
-                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      className='block w-full mt-1 text-sm d:border-gray-60k-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purark-d:text-gra dark-d:focus:shadow-outline-gray form-input'
                       placeholder='Enter phone'
                       name='phone'
                       value={filterData.phone}
@@ -192,7 +170,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                   </Box>
                   <Box component={'td'}>
                     <input
-                      className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                      className='block w-full mt-1 text-sm d:border-gray-60k-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purark-d:text-gra dark-d:focus:shadow-outline-gray form-input'
                       placeholder='Enter email'
                       name='email'
                       value={filterData.email}
@@ -230,7 +208,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
 
                 {listData?.map((data: any, index: number) => {
                   return (
-                    <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
+                    <TableRow key={index} className='text-gray-700 d:text-gray-400'>
                       <TableCell className='px-4 py-3 text-sm'>{data?.firstName}</TableCell>
                       <TableCell className='px-4 py-3 text-sm'>{data?.lastName}</TableCell>
                       <TableCell className='px-4 py-3 text-sm'>{data?.company}</TableCell>
@@ -246,7 +224,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
-                              className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                              className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                               aria-label='View'
                             >
                               <VisibilityIcon />
@@ -257,7 +235,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
-                              className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                              className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                               aria-label='View'
                             >
                               <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -269,7 +247,7 @@ export default function LeadsListComponent(props: TLeadsComponent) {
                             onClick={() => {
                               onDelete(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-red-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-red-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-red-600 rounded-lg d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-red-600'
                             aria-label='Delete'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>

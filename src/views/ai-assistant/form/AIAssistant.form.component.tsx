@@ -1,3 +1,7 @@
+import { Dropdown } from '@core/components/dropdown'
+import Preloader from '@core/components/preloader'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
@@ -5,10 +9,6 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import Preloader from '@core/components/preloader'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
 
 export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
@@ -108,7 +108,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
   return (
     <Fragment>
       {!!prelaod && <Preloader close={!!prelaod} />}
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: editDataId ? '100%' : '50%' }}>
@@ -123,7 +123,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
               {!!errorMessage?.['name'] &&
                 errorMessage?.['name']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -142,7 +142,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
                 {!!errorMessage?.['prompt_id'] &&
                   errorMessage?.['prompt_id']?.map((message: any, index: number) => {
                     return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                         {message}
                       </span>
                     )
@@ -166,7 +166,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
                 {!!errorMessage?.['message_content'] &&
                   errorMessage?.['message_content']?.map((message: any, index: number) => {
                     return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                         {message}
                       </span>
                     )

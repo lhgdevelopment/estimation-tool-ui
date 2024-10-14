@@ -1,3 +1,6 @@
+import CopyToClipboard from '@core/components/copy-to-clipboard'
+import Preloader from '@core/components/preloader'
+import apiRequest from '@core/utils/axios-config'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/material'
@@ -5,9 +8,6 @@ import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import CopyToClipboard from '@core/components/copy-to-clipboard'
-import Preloader from '@core/components/preloader'
-import apiRequest from '@core/utils/axios-config'
 
 export default function MeetingSummaryDetailsComponent() {
   const meetingId = useRouter()?.query['id']
@@ -67,16 +67,16 @@ export default function MeetingSummaryDetailsComponent() {
             )}
           </Box>
           <Box className='flex flex-col gap-4' sx={sowBodySx}>
-            <Box className='flex flex-col gap-4 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800'>
+            <Box className='flex flex-col gap-4 p-4 bg-white rounded-lg shadow-xs dark-d:bg-gray-800'>
               <Box className='flex gap-4  '>
-                <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Clickup Link: </Box>
+                <Box className='text-md font-semibold text-gray-700 dark-d:text-gray-200'>Clickup Link: </Box>
                 <Box>
                   {!!detailsData?.['clickupLink'] && (
                     <Box
                       component={'a'}
                       href={detailsData?.['clickupLink']}
                       target='_blank'
-                      className='text-gray-700 dark:text-gray-400'
+                      className='text-gray-700 dark-d:text-gray-400'
                     >
                       {detailsData?.['clickupLink']}
                     </Box>
@@ -84,14 +84,14 @@ export default function MeetingSummaryDetailsComponent() {
                 </Box>
               </Box>
               <Box className='flex gap-4 '>
-                <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>TLDV Link: </Box>
+                <Box className='text-md font-semibold text-gray-700 dark-d:text-gray-200'>TLDV Link: </Box>
                 <Box>
                   {!!detailsData?.['tldvLink'] && (
                     <Box
                       component={'a'}
                       href={detailsData?.['tldvLink']}
                       target='_blank'
-                      className='text-gray-700 dark:text-gray-400'
+                      className='text-gray-700 dark-d:text-gray-400'
                     >
                       {detailsData?.['tldvLink']}
                     </Box>
@@ -106,7 +106,7 @@ export default function MeetingSummaryDetailsComponent() {
                 aria-controls='sow1-content'
                 id='sow1-header'
               >
-                <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Summary Text</Box>
+                <Box className='text-md font-semibold text-gray-700 dark-d:text-gray-200'>Summary Text</Box>
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={sowBodySx}>
@@ -142,7 +142,7 @@ export default function MeetingSummaryDetailsComponent() {
                 aria-controls='sow1-content'
                 id='sow1-header'
               >
-                <Box className='text-md font-semibold text-gray-700 dark:text-gray-200'>Transcript Text</Box>
+                <Box className='text-md font-semibold text-gray-700 dark-d:text-gray-200'>Transcript Text</Box>
               </AccordionSummary>
               <AccordionDetails>
                 <Box sx={sowBodySx}>

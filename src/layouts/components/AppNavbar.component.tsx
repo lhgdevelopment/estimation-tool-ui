@@ -1,3 +1,4 @@
+import { RootState } from '@core/store/reducers'
 import HiveIcon from '@mui/icons-material/Hive'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { Box } from '@mui/material'
@@ -6,7 +7,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { Fragment, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { RootState } from '@core/store/reducers'
 import navigation from 'src/navigation'
 
 export default function AppNavbarComponent() {
@@ -19,11 +19,11 @@ export default function AppNavbarComponent() {
     <Fragment>
       <Box
         sx={{ width: '280px', height: '100vh', position: 'fixed', top: '0', left: '0' }}
-        className='z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0'
+        className='z-20 hidden w-64 overflow-y-auto bg-white dark-d:bg-gray-800 md:block flex-shrink-0'
       >
-        <Box className='py-4 text-gray-500 dark:text-gray-400 '>
+        <Box className='py-4 text-gray-500 dark-d:text-gray-400 '>
           <Box className={'text-center'}>
-            <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 leading-3' href='#'>
+            <Box component={'a'} className='text-lg font-bold text-gray-800 dark-d:text-gray-200 leading-3' href='#'>
               The Hive
             </Box>
           </Box>
@@ -32,7 +32,7 @@ export default function AppNavbarComponent() {
               <Box
                 component={'a'}
                 href={'/'}
-                className='inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200'
+                className='inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark-d:hover:text-gray-200'
               >
                 <svg
                   className='w-5 h-5'
@@ -68,9 +68,9 @@ export default function AppNavbarComponent() {
 
                     <Box
                       component={'button'}
-                      className={`inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 ${
+                      className={`inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark-d:hover:text-gray-200 ${
                         router.pathname.split('/').indexOf(nav.path.replaceAll('/', '')) != -1
-                          ? 'dark:text-gray-200'
+                          ? 'dark-d:text-gray-200'
                           : ''
                       }`}
                       aria-haspopup='true'
@@ -87,7 +87,7 @@ export default function AppNavbarComponent() {
                     <>
                       <Box
                         component={'ul'}
-                        className={`p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900 ${
+                        className={`p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-900 ${
                           dropdownOpen === 'submenu_' + index
                             ? ''
                             : nav.subMenu?.filter(subMenu => subMenu.path === router.pathname).length
@@ -100,8 +100,8 @@ export default function AppNavbarComponent() {
                           <Box
                             key={subIndex}
                             component={'li'}
-                            className={`px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 ${
-                              router.pathname == subNav.path ? 'text-gray-800 dark:text-gray-200' : ''
+                            className={`px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark-d:hover:text-gray-200 ${
+                              router.pathname == subNav.path ? 'text-gray-800 dark-d:text-gray-200' : ''
                             }`}
                           >
                             <Box
@@ -130,10 +130,10 @@ export default function AppNavbarComponent() {
                     <Box
                       component={'a'}
                       href={nav.path ? nav.path : ''}
-                      className={`inline-flex items-center w-full text-sm font-semibold  transition-colors duration-150 hover:text-gray-800 hover:text-gray-800 dark:hover:text-gray-200 ${
+                      className={`inline-flex items-center w-full text-sm font-semibold  transition-colors duration-150 hover:text-gray-800 hover:text-gray-800 dark-d:hover:text-gray-200 ${
                         router.pathname == nav.path ||
                         router.pathname.split('/').indexOf(nav.path.replaceAll('/', '')) != -1
-                          ? 'text-gray-800 dark:text-gray-200'
+                          ? 'text-gray-800 dark-d:text-gray-200'
                           : ''
                       }`}
                     >
@@ -165,16 +165,16 @@ export default function AppNavbarComponent() {
       {/* <!-- Mobile sidebar --> */}
       {/* <!-- Backdrop --> */}
       {/* <Box className='fixed inset-0 z-10 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center'></Box> */}
-      <Box className='fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-white dark:bg-gray-800 md:hidden'>
-        <Box className='py-4 text-gray-500 dark:text-gray-400'>
-          <Box component={'a'} className='text-lg font-bold text-gray-800 dark:text-gray-200 display-block' href='#'>
+      <Box className='fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-white dark-d:bg-gray-800 md:hidden'>
+        <Box className='py-4 text-gray-500 dark-d:text-gray-400'>
+          <Box component={'a'} className='text-lg font-bold text-gray-800 dark-d:text-gray-200 display-block' href='#'>
             The Hive
           </Box>
           <Box component={'ul'} className='mt-6'>
             <Box component={'li'} className='relative px-6 py-3'>
               <Box
                 component={'a'}
-                className='inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200'
+                className='inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark-d:hover:text-gray-200'
                 href='index.html'
               >
                 <svg
@@ -204,7 +204,7 @@ export default function AppNavbarComponent() {
               ></Box>
               <Box
                 component={'a'}
-                className='inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100'
+                className='inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark-d:hover:text-gray-200 dark-d:text-gray-100'
                 href='forms.html'
               >
                 <svg

@@ -213,7 +213,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
           <button
             type='button'
             className={
-              'flex items-center justify-center ml-2 h-9 w-9 text-sm font-medium leading-5 rounded-lg outline-none border border-solid border-purple-400 dark:border-gray-400 text-purple-600 dark:text-gray-400 hover:bg-purple-400 hover:text-white'
+              'flex items-center justify-center ml-2 h-9 w-9 text-sm font-medium leading-5 rounded-lg outline-none border border-solid border-purple-400 dark-d:border-gray-400 text-purple-600 dark-d:text-gray-400 hover:bg-purple-400 hover:text-white'
             }
             onClick={() => {
               onAddNew && onAddNew()

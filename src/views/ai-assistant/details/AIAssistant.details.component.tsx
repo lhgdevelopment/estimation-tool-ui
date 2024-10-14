@@ -11,6 +11,10 @@ import ListItemAvatar from '@mui/material/ListItemAvatar'
 import ListItemText from '@mui/material/ListItemText'
 import { blue } from '@mui/material/colors'
 
+import { Dropdown } from '@core/components/dropdown'
+import Preloader from '@core/components/preloader'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import {
   Box,
   DialogActions,
@@ -27,10 +31,6 @@ import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Dropdown } from '@core/components/dropdown'
-import Preloader from '@core/components/preloader'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import { shareAccessLevel } from '../AIAssistant.decorator'
 import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
@@ -477,7 +477,7 @@ export default function AIAssistantDetailsComponent() {
                 right: '0',
                 p: '0 20px'
               }}
-              className={'bg-gray-50 dark:bg-gray-900'}
+              className={'bg-gray-50 dark-d:bg-gray-900'}
             >
               <Box sx={{ width: '100%', mb: 2 }}>
                 <label className='block text-sm'>
@@ -492,7 +492,7 @@ export default function AIAssistantDetailsComponent() {
                   {!!errorMessage?.['prompt_id'] &&
                     errorMessage?.['prompt_id']?.map((message: any, index: number) => {
                       return (
-                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                           {message}
                         </span>
                       )

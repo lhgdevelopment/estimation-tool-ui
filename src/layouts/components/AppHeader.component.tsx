@@ -1,11 +1,11 @@
+import { isDarkTheme } from '@core/store/actions/userActions'
+import { RootState } from '@core/store/reducers'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { Box } from '@mui/material'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import { Fragment, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { isDarkTheme } from '@core/store/actions/userActions'
-import { RootState } from '@core/store/reducers'
 
 export default function AppHeaderComponent() {
   const dispatch = useDispatch()
@@ -28,10 +28,10 @@ export default function AppHeaderComponent() {
     <Fragment>
       <Box
         component={'header'}
-        className='z-10 py-4 bg-white shadow-md dark:bg-gray-800'
+        className='z-10 py-4 bg-white shadow-md dark-d:bg-gray-800'
         sx={{ width: 'calc(100% - 280px)', position: 'fixed', top: 0, left: '280px', right: 0 }}
       >
-        <Box className='container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300'>
+        <Box className='container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark-d:text-purple-300'>
           {/* <!-- Mobile hamburger --> */}
           <Box component={'button'} className='p-1 -ml-1 mr-5 rounded-md md:hidden' aria-label='Menu'>
             <svg className='w-6 h-6' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -91,26 +91,26 @@ export default function AppHeaderComponent() {
                 <Box
                   component={'span'}
                   aria-hidden='true'
-                  className='absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800'
+                  className='absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark-d:border-gray-800'
                 ></Box>
               </Box>
               {!!isOpenNotificationDropdown && (
                 <Box>
                   <Box
                     component={'ul'}
-                    className='absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:text-gray-300 dark:border-gray-700 dark:bg-gray-700'
+                    className='absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark-d:text-gray-300 dark-d:border-gray-700 dark-d:bg-gray-700'
                     aria-label='submenu'
                   >
                     <Box component={'li'} className='flex'>
                       <Box
                         component={'a'}
-                        className='inline-flex items-center justify-between w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                        className='inline-flex items-center justify-between w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark-d:hover:bg-gray-800 dark-d:hover:text-gray-200'
                         href='#'
                       >
                         <Box component={'span'}>Messages</Box>
                         <Box
                           component={'span'}
-                          className='inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-600 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-600'
+                          className='inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-600 bg-red-100 rounded-full dark-d:text-red-100 dark-d:bg-red-600'
                         >
                           13
                         </Box>
@@ -119,13 +119,13 @@ export default function AppHeaderComponent() {
                     <Box component={'li'} className='flex'>
                       <Box
                         component={'a'}
-                        className='inline-flex items-center justify-between w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                        className='inline-flex items-center justify-between w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark-d:hover:bg-gray-800 dark-d:hover:text-gray-200'
                         href='#'
                       >
                         <Box component={'span'}>Sales</Box>
                         <Box
                           component={'span'}
-                          className='inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-600 bg-red-100 rounded-full dark:text-red-100 dark:bg-red-600'
+                          className='inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-600 bg-red-100 rounded-full dark-d:text-red-100 dark-d:bg-red-600'
                         >
                           2
                         </Box>
@@ -134,7 +134,7 @@ export default function AppHeaderComponent() {
                     <Box component={'li'} className='flex'>
                       <Box
                         component={'a'}
-                        className='inline-flex items-center justify-between w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                        className='inline-flex items-center justify-between w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark-d:hover:bg-gray-800 dark-d:hover:text-gray-200'
                         href='#'
                       >
                         <Box component={'span'}>Alerts</Box>
@@ -161,13 +161,13 @@ export default function AppHeaderComponent() {
                 <Box>
                   <Box
                     component={'ul'}
-                    className='absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:border-gray-700 dark:text-gray-300 dark:bg-gray-700'
+                    className='absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark-d:border-gray-700 dark-d:text-gray-300 dark-d:bg-gray-700'
                     aria-label='submenu'
                   >
                     <Box component={'li'} className='flex'>
                       <Box
                         component={'a'}
-                        className='inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                        className='inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark-d:hover:bg-gray-800 dark-d:hover:text-gray-200'
                         href='#'
                       >
                         <svg
@@ -188,7 +188,7 @@ export default function AppHeaderComponent() {
                     <Box component={'li'} className='flex'>
                       <Box
                         component={'a'}
-                        className='inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                        className='inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark-d:hover:bg-gray-800 dark-d:hover:text-gray-200'
                         href='/settings/update-log/timeline/'
                       >
                         <svg
@@ -210,7 +210,7 @@ export default function AppHeaderComponent() {
                     <Box component={'li'} className='flex'>
                       <Box
                         component={'button'}
-                        className='inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                        className='inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark-d:hover:bg-gray-800 dark-d:hover:text-gray-200'
                         onClick={() => {
                           handleLogout()
                         }}

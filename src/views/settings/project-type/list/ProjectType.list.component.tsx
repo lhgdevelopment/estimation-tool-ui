@@ -1,7 +1,7 @@
-import { Box } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from '@core/components/ui-skeleton'
 import apiRequest from '@core/utils/axios-config'
+import { Box } from '@mui/material'
+import { Fragment, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import { TProjectTypeComponent } from '../ProjectType.decorator'
 
@@ -72,15 +72,15 @@ export default function ProjectTypeListComponent(props: TProjectTypeComponent) {
         <Box className='w-full overflow-x-auto'>
           <table className='w-full whitespace-no-wrap'>
             <thead>
-              <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+              <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark-d:border-gray-700 bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-800'>
                 <th className='px-4 py-3'>Project Type</th>
                 <th className='px-4 py-3 text-right'>Actions</th>
               </tr>
             </thead>
-            <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
+            <tbody className='bg-white Boxide-y dark-d:Boxide-gray-700 dark-d:bg-gray-800'>
               {listData?.map((data: any, index: number) => {
                 return (
-                  <tr key={index} className='text-gray-700 dark:text-gray-400'>
+                  <tr key={index} className='text-gray-700 dark-d:text-gray-400'>
                     <td className='px-4 py-3 text-sm'>{data?.name}</td>
 
                     <td className='px-4 py-3'>
@@ -89,7 +89,7 @@ export default function ProjectTypeListComponent(props: TProjectTypeComponent) {
                           onClick={() => {
                             onEdit(data['id'])
                           }}
-                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                           aria-label='Edit'
                         >
                           <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -100,7 +100,7 @@ export default function ProjectTypeListComponent(props: TProjectTypeComponent) {
                           onClick={() => {
                             onDelete(data['id'])
                           }}
-                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                           aria-label='Delete'
                         >
                           <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -131,7 +131,7 @@ export default function ProjectTypeListComponent(props: TProjectTypeComponent) {
             </Box>
           )}
         </Box>
-        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
+        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark-d:border-gray-700 bg-gray-50 sm:grid-cols-9 dark-d:text-gray-400 dark-d:bg-gray-800'>
           <span className='flex items-center col-span-3'>
             Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
             {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}
