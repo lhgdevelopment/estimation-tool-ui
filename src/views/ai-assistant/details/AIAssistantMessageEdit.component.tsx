@@ -1,9 +1,9 @@
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { Dispatch, useState } from 'react'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 
 type TAIAssistantMessagesEditComponentProps = {
   editData: any
@@ -85,8 +85,8 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
           maxWidth: '1000px'
         }}
       >
-        <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
-          <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
+        <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
+          <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark-d:text-gray-300'>
             Update Hive AI Message
           </Box>
           <form onSubmit={onSubmit}>
@@ -105,7 +105,7 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
                 {!!errorMessage?.['message_content'] &&
                   errorMessage?.['message_content']?.map((message: any, index: number) => {
                     return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                         {message}
                       </span>
                     )

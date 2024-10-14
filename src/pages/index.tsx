@@ -81,60 +81,60 @@ const Dashboard = () => {
   return (
     <Fragment>
       <Box className='container px-6 mx-auto grid'>
-        <h2 className='my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200'>Dashboard</h2>
+        <h2 className='my-6 text-2xl font-semibold text-gray-700 dark-d:text-gray-200'>Dashboard</h2>
 
         {/* <!-- Cards --> */}
         <Box className='grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4'>
           {/* <!-- Card --> */}
-          <Box className='flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800'>
-            <Box className='p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500'>
+          <Box className='flex items-center p-4 bg-white rounded-lg shadow-xs dark-d:bg-gray-800'>
+            <Box className='p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark-d:text-orange-100 dark-d:bg-orange-500'>
               <AccountTreeIcon />
             </Box>
             <Box>
-              <p className='mb-2 text-sm font-medium text-gray-600 dark:text-gray-400'>Total Projects</p>
-              <p className='text-lg font-semibold text-gray-700 dark:text-gray-200'>6389</p>
+              <p className='mb-2 text-sm font-medium text-gray-600 dark-d:text-gray-400'>Total Projects</p>
+              <p className='text-lg font-semibold text-gray-700 dark-d:text-gray-200'>6389</p>
             </Box>
           </Box>
           {/* <!-- Card --> */}
-          <Box className='flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800'>
-            <Box className='p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500'>
+          <Box className='flex items-center p-4 bg-white rounded-lg shadow-xs dark-d:bg-gray-800'>
+            <Box className='p-3 mr-4 text-green-500 bg-green-100 rounded-full dark-d:text-green-100 dark-d:bg-green-500'>
               <DashboardCustomizeIcon />
             </Box>
             <Box>
-              <p className='mb-2 text-sm font-medium text-gray-600 dark:text-gray-400'>Total Projects Components</p>
-              <p className='text-lg font-semibold text-gray-700 dark:text-gray-200'>700</p>
+              <p className='mb-2 text-sm font-medium text-gray-600 dark-d:text-gray-400'>Total Projects Components</p>
+              <p className='text-lg font-semibold text-gray-700 dark-d:text-gray-200'>700</p>
             </Box>
           </Box>
           {/* <!-- Card --> */}
-          <Box className='flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800'>
-            <Box className='p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500'>
+          <Box className='flex items-center p-4 bg-white rounded-lg shadow-xs dark-d:bg-gray-800'>
+            <Box className='p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark-d:text-blue-100 dark-d:bg-blue-500'>
               <DashboardIcon />
             </Box>
             <Box>
-              <p className='mb-2 text-sm font-medium text-gray-600 dark:text-gray-400'>Total Website Components</p>
-              <p className='text-lg font-semibold text-gray-700 dark:text-gray-200'>376</p>
+              <p className='mb-2 text-sm font-medium text-gray-600 dark-d:text-gray-400'>Total Website Components</p>
+              <p className='text-lg font-semibold text-gray-700 dark-d:text-gray-200'>376</p>
             </Box>
           </Box>
           {/* <!-- Card --> */}
-          <Box className='flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800'>
-            <Box className='p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500'>
+          <Box className='flex items-center p-4 bg-white rounded-lg shadow-xs dark-d:bg-gray-800'>
+            <Box className='p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark-d:text-teal-100 dark-d:bg-teal-500'>
               <CategoryIcon />
             </Box>
             <Box>
-              <p className='mb-2 text-sm font-medium text-gray-600 dark:text-gray-400'>
+              <p className='mb-2 text-sm font-medium text-gray-600 dark-d:text-gray-400'>
                 Total Website Components Category
               </p>
-              <p className='text-lg font-semibold text-gray-700 dark:text-gray-200'>35</p>
+              <p className='text-lg font-semibold text-gray-700 dark-d:text-gray-200'>35</p>
             </Box>
           </Box>
         </Box>
 
         {/* <!-- Charts --> */}
         <Box className='grid gap-6 mb-8 md:grid-cols-3'>
-          <Box className='min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800'>
-            <h4 className='mb-4 font-semibold text-gray-800 dark:text-gray-300'>Revenue</h4>
+          <Box className='min-w-0 p-4 bg-white rounded-lg shadow-xs dark-d:bg-gray-800'>
+            <h4 className='mb-4 font-semibold text-gray-800 dark-d:text-gray-300'>Revenue</h4>
             <Pie data={revenueData} />
-            <Box className='flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400'>
+            <Box className='flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark-d:text-gray-400'>
               {/* <!-- Chart legend --> */}
               <Box className='flex items-center'>
                 <span className='inline-block w-3 h-3 mr-1 bg-blue-500 rounded-full'></span>
@@ -150,10 +150,10 @@ const Dashboard = () => {
               </Box>
             </Box>
           </Box>
-          <Box className='min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800'>
-            <h4 className='mb-4 font-semibold text-gray-800 dark:text-gray-300'>Traffic</h4>
+          <Box className='min-w-0 p-4 bg-white rounded-lg shadow-xs dark-d:bg-gray-800'>
+            <h4 className='mb-4 font-semibold text-gray-800 dark-d:text-gray-300'>Traffic</h4>
             <Line data={trafficData} />
-            <Box className='flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400'>
+            <Box className='flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark-d:text-gray-400'>
               {/* <!-- Chart legend --> */}
               <Box className='flex items-center'>
                 <span className='inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full'></span>
@@ -165,10 +165,10 @@ const Dashboard = () => {
               </Box>
             </Box>
           </Box>
-          <Box className='min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800'>
-            <h4 className='mb-4 font-semibold text-gray-800 dark:text-gray-300'>Traffic</h4>
+          <Box className='min-w-0 p-4 bg-white rounded-lg shadow-xs dark-d:bg-gray-800'>
+            <h4 className='mb-4 font-semibold text-gray-800 dark-d:text-gray-300'>Traffic</h4>
             <Line data={trafficData} />
-            <Box className='flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400'>
+            <Box className='flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark-d:text-gray-400'>
               {/* <!-- Chart legend --> */}
               <Box className='flex items-center'>
                 <span className='inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full'></span>

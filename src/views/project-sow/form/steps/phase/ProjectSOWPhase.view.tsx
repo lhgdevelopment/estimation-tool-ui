@@ -114,7 +114,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
         }}
       >
         <Box
-          className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
+          className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -126,7 +126,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
           }}
         >
           <Box sx={{ mb: '20px' }}>
-            <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
+            <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark-d:text-gray-200'>
               {phaseEditId ? 'Update' : 'Add'} Phase
             </h2>
           </Box>
@@ -152,7 +152,7 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                       {!!errorMessage?.['title'] &&
                         errorMessage?.['title']?.map((message: any, index: number) => {
                           return (
-                            <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index + Math.random()} className='text-xs text-red-600 dark-d:text-red-400'>
                               {message}
                             </span>
                           )
@@ -221,7 +221,10 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                             {!!errorMessage?.['title'] &&
                               errorMessage?.['title']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span
+                                    key={index + Math.random()}
+                                    className='text-xs text-red-600 dark-d:text-red-400'
+                                  >
                                     {message}
                                   </span>
                                 )
@@ -245,7 +248,10 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                             {!!errorMessage?.['serial'] &&
                               errorMessage?.['serial']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span
+                                    key={index + Math.random()}
+                                    className='text-xs text-red-600 dark-d:text-red-400'
+                                  >
                                     {message}
                                   </span>
                                 )

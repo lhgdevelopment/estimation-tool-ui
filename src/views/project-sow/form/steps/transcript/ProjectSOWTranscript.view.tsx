@@ -1,10 +1,10 @@
+import { Dropdown } from '@core/components/dropdown'
+import { handleFormInputChange, handleFormSelectChange } from '@core/utils/form'
+import { getShortStringNumber } from '@core/utils/utils'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, IconButton, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { Dropdown } from '@core/components/dropdown'
-import { handleFormInputChange, handleFormSelectChange } from '@core/utils/form'
-import { getShortStringNumber } from '@core/utils/utils'
 import { formTitleSx } from '../../../ProjectSOW.style'
 import { TProjectSOWTranscriptFormViewProps, transcriptMeetingLinkAddButtonSx } from './ProjectSOWTranscript.decorator'
 
@@ -21,8 +21,8 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
             <TextField
               id='outlined-multiline-flexible'
               label='Company Name'
-              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                errorMessage?.['company'] ? 'border-red-600' : 'dark:border-gray-600'
+              className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                errorMessage?.['company'] ? 'border-red-600' : 'dark-d:border-gray-600'
               }`}
               placeholder='Company Name'
               name='company'
@@ -34,7 +34,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
             {!!errorMessage?.['company'] &&
               errorMessage?.['company']?.map((message: any, index: number) => {
                 return (
-                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                     {message}
                   </span>
                 )
@@ -44,8 +44,8 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
             <TextField
               id='outlined-multiline-flexible'
               label='Phone'
-              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark:border-gray-600 '
+              className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                errorMessage?.['clientPhone'] ? 'border-red-600' : 'dark-d:border-gray-600 '
               }`}
               placeholder='(999) 555-1234'
               name='clientPhone'
@@ -62,8 +62,8 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
             <TextField
               id='outlined-multiline-flexible'
               label='Website'
-              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark:border-gray-600 '
+              className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark-d:border-gray-600 '
               }`}
               placeholder='https://www.company-website.com'
               name='clientWebsite'
@@ -77,8 +77,8 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
             <TextField
               id='outlined-multiline-flexible'
               label='Email'
-              className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                errorMessage?.['clientEmail'] ? 'border-red-600' : 'dark:border-gray-600 '
+              className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                errorMessage?.['clientEmail'] ? 'border-red-600' : 'dark-d:border-gray-600 '
               }`}
               placeholder='name@company-name.com'
               name='clientEmail'
@@ -108,7 +108,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
             <TextField
               label='Project Name'
               id='outlined-multiline-flexible'
-              className={`block w-full mt-1 text-sm dark:bg-gray-700 dark:text-gray-300 dark:focus:shadow-outline-gray form-input`}
+              className={`block w-full mt-1 text-sm dark-d:bg-gray-700 dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input`}
               placeholder='Project Name'
               name='projectName'
               value={projectSOWFormData.projectName}
@@ -145,7 +145,7 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
                 <TextField
                   id='outlined-multiline-flexible'
                   label={`${getShortStringNumber(index + 1)} Meeting Link`}
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input`}
+                  className={`block w-full mt-1 text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input`}
                   placeholder={`${getShortStringNumber(
                     index + 1
                   )} Meeting Link: https://tldv.io/app/meetings/unique-meeting-id/`}

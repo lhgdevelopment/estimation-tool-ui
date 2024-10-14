@@ -1,3 +1,4 @@
+import { Dropdown } from '@core/components/dropdown'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {
   Accordion,
@@ -11,7 +12,6 @@ import {
   TextField
 } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { Dropdown } from '@core/components/dropdown'
 import { formTitleSx, teamReviewBoxSx } from 'src/views/project-sow/ProjectSOW.style'
 import { TProjectSOWTeamReviewFormViewProps } from './ProjectSOWTeamReview.decorator'
 
@@ -47,8 +47,8 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Company Name'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600'
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600'
                   }`}
                   name='company'
                   value={projectSOWFormData.company}
@@ -57,7 +57,7 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
                 {!!errorMessage?.['company'] &&
                   errorMessage?.['company']?.map((message: any, index: number) => {
                     return (
-                      <span key={index + 'msg'} className='text-xs text-red-600 dark:text-red-400'>
+                      <span key={index + 'msg'} className='text-xs text-red-600 dark-d:text-red-400'>
                         {message}
                       </span>
                     )
@@ -67,8 +67,8 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Website'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='clientWebsite'
                   value={projectSOWFormData.clientWebsite}
@@ -91,8 +91,8 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Project Name'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='projectName'
                   value={projectSOWFormData.projectName}
@@ -106,8 +106,8 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Meeting Transcripts'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='projectName'
                   value={''}
@@ -118,8 +118,8 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Meeting Transcripts'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='projectName'
                   value={''}
@@ -133,8 +133,8 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Account Manager Notes'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='projectName'
                   value={''}
@@ -147,8 +147,8 @@ export default function ProjectSOWTeamReviewFormView(props: TProjectSOWTeamRevie
                 <Box
                   component={'textarea'}
                   id='outlined-multiline-flexible'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='projectName'
                   rows={5}

@@ -1,10 +1,10 @@
+import CopyToClipboard from '@core/components/copy-to-clipboard'
 import EditIcon from '@mui/icons-material/Edit'
 import HiveIcon from '@mui/icons-material/Hive'
 import ReplayIcon from '@mui/icons-material/Replay'
 import { Avatar, Box, Tooltip } from '@mui/material'
+import { marked } from 'marked'
 import 'md-editor-rt/lib/style.css'
-import CopyToClipboard from '@core/components/copy-to-clipboard'
-import {marked} from "marked";
 
 type TAIAssistantMessagesComponentProps = {
   message: any
@@ -13,21 +13,21 @@ type TAIAssistantMessagesComponentProps = {
   onRegenerate?: () => void
   onEdit?: (data: any) => void
 }
-const renderer = new marked.Renderer();
-const linkRenderer = renderer.link;
+const renderer = new marked.Renderer()
+const linkRenderer = renderer.link
 renderer.link = (href, title, text) => {
-  const html = linkRenderer.call(renderer, href, title, text);
+  const html = linkRenderer.call(renderer, href, title, text)
 
-return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ');
-};
+  return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ')
+}
 renderer.listitem = (text, task, checked) => {
-  return `<li>${String(text).replace(/<p>|<\/p>/g, '') }</li>`;
-};
+  return `<li>${String(text).replace(/<p>|<\/p>/g, '')}</li>`
+}
 
 export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
-const { message, index, isWaiting = false, onRegenerate, onEdit } = props
+  const { message, index, isWaiting = false, onRegenerate, onEdit } = props
 
-return (
+  return (
     <Box
       sx={{
         display: 'flex',
@@ -51,7 +51,7 @@ return (
       </Box>
       <Box sx={{ width: '100%' }}>
         <Box
-          className='text-gray-600 dark:text-gray-400'
+          className='text-gray-600 dark-d:text-gray-400'
           sx={{ fontWeight: 600, color: message?.role === 'system' ? '#9333ea' : '' }}
         >
           {message?.role === 'system' ? `Hive AI` : message?.user?.name ? message?.user?.name : 'You'}
@@ -90,13 +90,9 @@ return (
                 p: 4,
                 wordBreak: 'auto-phrase',
                 textAlign: 'justify'
-            }}
-              dangerouslySetInnerHTML={{ __html: marked(
-                  message?.message_content
-                ,{ renderer: renderer, gfm: true }) }}
-            >
-
-            </Box>
+              }}
+              dangerouslySetInnerHTML={{ __html: marked(message?.message_content, { renderer: renderer, gfm: true }) }}
+            ></Box>
           ) : (
             <> </>
           )}

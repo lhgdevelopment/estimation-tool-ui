@@ -1,3 +1,8 @@
+import { Dropdown, DropdownRef, ServiceDropdownTree } from '@core/components/dropdown'
+import Preloader from '@core/components/preloader'
+import { RichTextEditor } from '@core/components/rich-text-editor'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import ClearIcon from '@material-ui/icons/Clear'
 import AddIcon from '@mui/icons-material/Add'
 import BrowserUpdatedIcon from '@mui/icons-material/BrowserUpdated'
@@ -8,11 +13,6 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Button, Checkbox, Modal } from '@mui/material'
 import { Tree, TreeDataNode, type TreeProps } from 'antd'
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
-import { Dropdown, DropdownRef, ServiceDropdownTree } from '@core/components/dropdown'
-import Preloader from '@core/components/preloader'
-import { RichTextEditor } from '@core/components/rich-text-editor'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import {
   EServiceFormType,
@@ -932,7 +932,7 @@ export default function ServiceTreeComponent() {
       <Box className='container px-6 mx-auto'>
         <Box
           component={'h1'}
-          className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'
+          className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark-d:text-gray-300'
           sx={{ display: 'flex', alignItems: 'center' }}
         >
           Service
@@ -1241,7 +1241,7 @@ export default function ServiceTreeComponent() {
           }}
         >
           <Box
-            className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
+            className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -1253,7 +1253,7 @@ export default function ServiceTreeComponent() {
             }}
           >
             <Box sx={{ mb: '20px' }}>
-              <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
+              <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark-d:text-gray-200'>
                 {formType === EServiceFormType.SERVICE && <>{serviceEditDataId ? 'Update' : 'Add'} Service</>}
                 {formType === EServiceFormType.GROUP && <>{serviceGroupEditDataId ? 'Update' : 'Add'} Group</>}
                 {formType === EServiceFormType.SOW && <>{serviceSOWEditDataId ? 'Update' : 'Add'} Scope</>}
@@ -1268,7 +1268,7 @@ export default function ServiceTreeComponent() {
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
-                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Project Type</span>
+                      <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Project Type</span>
                       <Dropdown
                         url={'project-type'}
                         name='projectTypeId'
@@ -1278,7 +1278,7 @@ export default function ServiceTreeComponent() {
                       {!!errorMessage?.['projectTypeId'] &&
                         errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
                           return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                               {message}
                             </span>
                           )
@@ -1290,7 +1290,7 @@ export default function ServiceTreeComponent() {
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
-                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                      <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Name</span>
 
                       <RichTextEditor
                         value={serviceFormData.name}
@@ -1301,7 +1301,7 @@ export default function ServiceTreeComponent() {
                       {!!errorMessage?.['name'] &&
                         errorMessage?.['name']?.map((message: any, index: number) => {
                           return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                               {message}
                             </span>
                           )
@@ -1312,9 +1312,9 @@ export default function ServiceTreeComponent() {
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box sx={{ width: '100%' }}>
                     <label className='block text-sm'>
-                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                      <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Order</span>
                       <input
-                        className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                        className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                         placeholder='Examples: 1'
                         name='order'
                         value={serviceFormData.order}
@@ -1325,7 +1325,7 @@ export default function ServiceTreeComponent() {
                       {!!errorMessage?.['order'] &&
                         errorMessage?.['order']?.map((message: any, index: number) => {
                           return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                               {message}
                             </span>
                           )
@@ -1365,7 +1365,7 @@ export default function ServiceTreeComponent() {
                     }}
                   >
                     <label className='block text-sm'>
-                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service</span>
+                      <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Service</span>
                       <Dropdown
                         url={'services'}
                         name='serviceId'
@@ -1377,7 +1377,7 @@ export default function ServiceTreeComponent() {
                       {!!errorMessage?.['serviceId'] &&
                         errorMessage?.['serviceId']?.map((message: any, index: number) => {
                           return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                               {message}
                             </span>
                           )
@@ -1391,7 +1391,7 @@ export default function ServiceTreeComponent() {
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                       <Box sx={{ width: '100%' }}>
                         <label className='block text-sm'>
-                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                          <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Name</span>
 
                           <RichTextEditor
                             value={serviceGroupFormData.name}
@@ -1402,7 +1402,7 @@ export default function ServiceTreeComponent() {
                           {!!errorMessage?.['name'] &&
                             errorMessage?.['name']?.map((message: any, index: number) => {
                               return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                   {message}
                                 </span>
                               )
@@ -1413,9 +1413,9 @@ export default function ServiceTreeComponent() {
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                       <Box sx={{ width: '100%' }}>
                         <label className='block text-sm'>
-                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                          <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Order</span>
                           <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                            className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                             placeholder='Examples: 1'
                             name='order'
                             value={serviceGroupFormData.order}
@@ -1426,7 +1426,7 @@ export default function ServiceTreeComponent() {
                           {!!errorMessage?.['order'] &&
                             errorMessage?.['order']?.map((message: any, index: number) => {
                               return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                   {message}
                                 </span>
                               )
@@ -1461,7 +1461,7 @@ export default function ServiceTreeComponent() {
                             <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '100%' }}>
                                 <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                                  <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Name</span>
                                 </label>
 
                                 <Box sx={{ width: '100%' }}>
@@ -1483,7 +1483,7 @@ export default function ServiceTreeComponent() {
                                 {!!errorMessage?.[`names.${index}`] &&
                                   errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
                                     return (
-                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                         {String(message).replaceAll('names.0', 'name')}
                                       </span>
                                     )
@@ -1493,9 +1493,9 @@ export default function ServiceTreeComponent() {
                             <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '100%' }}>
                                 <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                                  <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Order</span>
                                   <input
-                                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                    className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                     placeholder='Examples: 1'
                                     name='order'
                                     value={group.order}
@@ -1591,7 +1591,7 @@ export default function ServiceTreeComponent() {
                     }}
                   >
                     <label className='block text-sm'>
-                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Group</span>
+                      <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Service Group</span>
                       <ServiceDropdownTree
                         name='serviceGroupId'
                         value={serviceSOWFormData.serviceGroupId}
@@ -1603,7 +1603,7 @@ export default function ServiceTreeComponent() {
                       {!!errorMessage?.['serviceGroupId'] &&
                         errorMessage?.['serviceGroupId']?.map((message: any, index: number) => {
                           return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                               {message}
                             </span>
                           )
@@ -1617,7 +1617,7 @@ export default function ServiceTreeComponent() {
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                       <Box sx={{ width: '100%' }}>
                         <label className='block text-sm'>
-                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                          <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Name</span>
                         </label>
                         <RichTextEditor
                           value={serviceSOWFormData.name}
@@ -1628,7 +1628,7 @@ export default function ServiceTreeComponent() {
                         {!!errorMessage?.['name'] &&
                           errorMessage?.['name']?.map((message: any, index: number) => {
                             return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                 {message}
                               </span>
                             )
@@ -1638,9 +1638,9 @@ export default function ServiceTreeComponent() {
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                       <Box sx={{ width: '100%' }}>
                         <label className='block text-sm'>
-                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                          <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Order</span>
                           <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                            className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                             placeholder='Examples: 1'
                             name='order'
                             value={serviceSOWFormData.order}
@@ -1651,7 +1651,7 @@ export default function ServiceTreeComponent() {
                           {!!errorMessage?.['order'] &&
                             errorMessage?.['order']?.map((message: any, index: number) => {
                               return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                   {message}
                                 </span>
                               )
@@ -1686,7 +1686,7 @@ export default function ServiceTreeComponent() {
                             <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '100%' }}>
                                 <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                                  <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Name</span>
                                 </label>
 
                                 <Box sx={{ width: '100%' }}>
@@ -1708,7 +1708,7 @@ export default function ServiceTreeComponent() {
                                 {!!errorMessage?.[`names.${index}`] &&
                                   errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
                                     return (
-                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                         {String(message).replaceAll('names.0', 'name')}
                                       </span>
                                     )
@@ -1718,9 +1718,9 @@ export default function ServiceTreeComponent() {
                             <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '100%' }}>
                                 <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                                  <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Order</span>
                                   <input
-                                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                    className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                     placeholder='Examples: 1'
                                     name='order'
                                     value={scope.order}
@@ -1808,7 +1808,7 @@ export default function ServiceTreeComponent() {
                     }}
                   >
                     <label className='block text-sm'>
-                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Scope</span>
+                      <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Service Scope</span>
                       <ServiceDropdownTree
                         name='serviceScopeId'
                         value={serviceDeliverableFormData.serviceScopeId}
@@ -1820,7 +1820,7 @@ export default function ServiceTreeComponent() {
                       {!!errorMessage?.['serviceScopeId'] &&
                         errorMessage?.['serviceScopeId']?.map((message: any, index: number) => {
                           return (
-                            <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                               {message}
                             </span>
                           )
@@ -1834,7 +1834,7 @@ export default function ServiceTreeComponent() {
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                       <Box sx={{ width: '100%' }}>
                         <label className='block text-sm'>
-                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                          <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Name</span>
                         </label>
                         <RichTextEditor
                           value={serviceDeliverableFormData.name}
@@ -1850,7 +1850,7 @@ export default function ServiceTreeComponent() {
                         {!!errorMessage?.['name'] &&
                           errorMessage?.['name']?.map((message: any, index: number) => {
                             return (
-                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                              <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                 {message}
                               </span>
                             )
@@ -1860,9 +1860,9 @@ export default function ServiceTreeComponent() {
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                       <Box sx={{ width: '100%' }}>
                         <label className='block text-sm'>
-                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                          <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Order</span>
                           <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                            className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                             placeholder='Examples: 1'
                             name='order'
                             value={serviceDeliverableFormData.order}
@@ -1873,7 +1873,7 @@ export default function ServiceTreeComponent() {
                           {!!errorMessage?.['order'] &&
                             errorMessage?.['order']?.map((message: any, index: number) => {
                               return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                   {message}
                                 </span>
                               )
@@ -1908,7 +1908,7 @@ export default function ServiceTreeComponent() {
                             <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '100%' }}>
                                 <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                                  <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Name</span>
                                 </label>
 
                                 <Box sx={{ width: '100%' }}>
@@ -1930,7 +1930,7 @@ export default function ServiceTreeComponent() {
                                 {!!errorMessage?.[`names.${index}`] &&
                                   errorMessage?.[`names.${index}`]?.map((message: any, index: number) => {
                                     return (
-                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                         {String(message).replaceAll('names.0', 'name')}
                                       </span>
                                     )
@@ -1940,9 +1940,9 @@ export default function ServiceTreeComponent() {
                             <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                               <Box sx={{ width: '100%' }}>
                                 <label className='block text-sm'>
-                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                                  <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Order</span>
                                   <input
-                                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                    className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                     placeholder='Examples: 1'
                                     name='order'
                                     value={deliverable.order}
@@ -2030,7 +2030,7 @@ export default function ServiceTreeComponent() {
               </form>
             )}
             {formType === EServiceFormType.TASK && (
-              <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+              <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
                 <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                   <Box
                     sx={{
@@ -2047,7 +2047,7 @@ export default function ServiceTreeComponent() {
                           setIsFatchFromClickUp(e.target.checked)
                         }}
                       />
-                      <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Fetch Task From Clickup</span>
+                      <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Fetch Task From Clickup</span>
                     </label>
                   </Box>
                 </Box>
@@ -2058,9 +2058,9 @@ export default function ServiceTreeComponent() {
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                         <Box sx={{ width: '100%' }}>
                           <label className='block text-sm'>
-                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Clickup Link</span>
+                            <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Clickup Link</span>
                             <input
-                              className={`block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
+                              className={`block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
                                 !!clickupTaskList?.length ? 'opacity-50' : ''
                               }`}
                               placeholder='Enter clickup task link'
@@ -2074,7 +2074,7 @@ export default function ServiceTreeComponent() {
                             {!!errorMessage?.['clickupLink'] &&
                               errorMessage?.['clickupLink']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                     {message}
                                   </span>
                                 )
@@ -2138,7 +2138,7 @@ export default function ServiceTreeComponent() {
                                         {/* {!!errorMessage?.[`tasks.${index}.name`] &&
                                   errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {
                                     return (
-                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                         {String(message).replaceAll('tasks.0.', '')}
                                       </span>
                                     )
@@ -2154,7 +2154,7 @@ export default function ServiceTreeComponent() {
                                         {/* {!!errorMessage?.[`tasks.${index}.name`] &&
                                   errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {
                                     return (
-                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                         {String(message).replaceAll('tasks.0.', '')}
                                       </span>
                                     )
@@ -2180,7 +2180,7 @@ export default function ServiceTreeComponent() {
                                             <Box sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                                               <Box sx={{ width: '100%' }}>
                                                 <label className='block text-sm'>
-                                                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                  <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>
                                                     Name
                                                   </span>
                                                 </label>
@@ -2215,7 +2215,7 @@ export default function ServiceTreeComponent() {
                                                             return (
                                                               <span
                                                                 key={index}
-                                                                className='text-xs text-red-600 dark:text-red-400'
+                                                                className='text-xs text-red-600 dark-d:text-red-400'
                                                               >
                                                                 {String(message).replaceAll('tasks.0.', '')}
                                                               </span>
@@ -2226,11 +2226,11 @@ export default function ServiceTreeComponent() {
                                                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                                                       <Box sx={{ width: '50%' }}>
                                                         <label className='block text-sm'>
-                                                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                          <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>
                                                             Hour
                                                           </span>
                                                           <input
-                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                            className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                                             placeholder='Examples: 50.00'
                                                             name='cost'
                                                             value={subTask.cost}
@@ -2244,7 +2244,7 @@ export default function ServiceTreeComponent() {
                                                                 return (
                                                                   <span
                                                                     key={index}
-                                                                    className='text-xs text-red-600 dark:text-red-400'
+                                                                    className='text-xs text-red-600 dark-d:text-red-400'
                                                                   >
                                                                     {String(message).replaceAll('tasks.0.', '')}
                                                                   </span>
@@ -2255,11 +2255,11 @@ export default function ServiceTreeComponent() {
                                                       </Box>
                                                       <Box sx={{ width: '50%' }}>
                                                         <label className='block text-sm'>
-                                                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                                          <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>
                                                             Description
                                                           </span>
                                                           <input
-                                                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                                            className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                                             placeholder='Examples: Company logo for header'
                                                             name='description'
                                                             value={subTask.description}
@@ -2273,7 +2273,7 @@ export default function ServiceTreeComponent() {
                                                                 return (
                                                                   <span
                                                                     key={index}
-                                                                    className='text-xs text-red-600 dark:text-red-400'
+                                                                    className='text-xs text-red-600 dark-d:text-red-400'
                                                                   >
                                                                     {String(message).replaceAll('tasks.0.', '')}
                                                                   </span>
@@ -2330,7 +2330,7 @@ export default function ServiceTreeComponent() {
                           }}
                         >
                           <label className='block text-sm'>
-                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Service Deliverable</span>
+                            <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Service Deliverable</span>
                             <ServiceDropdownTree
                               name='serviceDeliverableId'
                               value={serviceTaskFormData.serviceDeliverableId}
@@ -2342,7 +2342,7 @@ export default function ServiceTreeComponent() {
                             {!!errorMessage?.['serviceDeliverableId'] &&
                               errorMessage?.['serviceDeliverableId']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                     {message}
                                   </span>
                                 )
@@ -2359,7 +2359,7 @@ export default function ServiceTreeComponent() {
                             }}
                           >
                             <label className='block text-sm'>
-                              <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Parent Task</span>
+                              <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Parent Task</span>
                               <Dropdown
                                 url={`service-deliverable-tasks?serviceDeliverableId=${serviceTaskFormData.serviceDeliverableId}`}
                                 name='parentTaskId'
@@ -2371,7 +2371,7 @@ export default function ServiceTreeComponent() {
                               {!!errorMessage?.['parentTaskId'] &&
                                 errorMessage?.['parentTaskId']?.map((message: any, index: number) => {
                                   return (
-                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                       {message}
                                     </span>
                                   )
@@ -2386,7 +2386,7 @@ export default function ServiceTreeComponent() {
                           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                             <Box sx={{ width: '100%' }}>
                               <label className='block text-sm'>
-                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                                <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Name</span>
                               </label>
                               <RichTextEditor
                                 value={serviceTaskFormData.name}
@@ -2397,7 +2397,7 @@ export default function ServiceTreeComponent() {
                               {!!errorMessage?.['name'] &&
                                 errorMessage?.['name']?.map((message: any, index: number) => {
                                   return (
-                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                       {message}
                                     </span>
                                   )
@@ -2408,9 +2408,9 @@ export default function ServiceTreeComponent() {
                           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                             <Box sx={{ width: '100%' }}>
                               <label className='block text-sm'>
-                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                                <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Order</span>
                                 <input
-                                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                  className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                   placeholder='Examples: 1'
                                   name='order'
                                   value={serviceTaskFormData.order}
@@ -2421,7 +2421,7 @@ export default function ServiceTreeComponent() {
                                 {!!errorMessage?.['order'] &&
                                   errorMessage?.['order']?.map((message: any, index: number) => {
                                     return (
-                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                         {message}
                                       </span>
                                     )
@@ -2432,7 +2432,7 @@ export default function ServiceTreeComponent() {
                           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                             <Box sx={{ width: '100%' }}>
                               <label className='block text-sm'>
-                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Employee Role</span>
+                                <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Employee Role</span>
                               </label>
                               <Dropdown
                                 url={`employee-roles`}
@@ -2445,7 +2445,7 @@ export default function ServiceTreeComponent() {
                               {!!errorMessage?.['employeeRoleId'] &&
                                 errorMessage?.['employeeRoleId']?.map((message: any, index: number) => {
                                   return (
-                                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                       {message}
                                     </span>
                                   )
@@ -2455,9 +2455,9 @@ export default function ServiceTreeComponent() {
                           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                             <Box sx={{ width: '50%' }}>
                               <label className='block text-sm'>
-                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hour</span>
+                                <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Hour</span>
                                 <input
-                                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                  className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                   placeholder='Examples: 50.00'
                                   name='cost'
                                   value={serviceTaskFormData.cost}
@@ -2468,7 +2468,7 @@ export default function ServiceTreeComponent() {
                                 {!!errorMessage?.['cost'] &&
                                   errorMessage?.['cost']?.map((message: any, index: number) => {
                                     return (
-                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                         {message}
                                       </span>
                                     )
@@ -2477,9 +2477,9 @@ export default function ServiceTreeComponent() {
                             </Box>
                             <Box sx={{ width: '50%' }}>
                               <label className='block text-sm'>
-                                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Description</span>
+                                <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Description</span>
                                 <input
-                                  className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                  className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                   placeholder='Examples: Company logo for header'
                                   name='description'
                                   value={serviceTaskFormData.description}
@@ -2490,7 +2490,7 @@ export default function ServiceTreeComponent() {
                                 {!!errorMessage?.['description'] &&
                                   errorMessage?.['description']?.map((message: any, index: number) => {
                                     return (
-                                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                         {message}
                                       </span>
                                     )
@@ -2516,7 +2516,7 @@ export default function ServiceTreeComponent() {
                               <Box key={index} sx={{ width: '100%', display: 'flex', gap: 5, mb: 5 }}>
                                 <Box sx={{ width: '100%' }}>
                                   <label className='block text-sm'>
-                                    <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Name</span>
+                                    <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Name</span>
                                   </label>
                                   <Box
                                     className='block text-sm'
@@ -2546,7 +2546,7 @@ export default function ServiceTreeComponent() {
                                         {!!errorMessage?.[`tasks.${index}.name`] &&
                                           errorMessage?.[`tasks.${index}.name`]?.map((message: any, index: number) => {
                                             return (
-                                              <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                              <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                                 {String(message).replaceAll('tasks.0.', '')}
                                               </span>
                                             )
@@ -2555,9 +2555,9 @@ export default function ServiceTreeComponent() {
                                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                                         <Box sx={{ width: '100%' }}>
                                           <label className='block text-sm'>
-                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Order</span>
+                                            <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Order</span>
                                             <input
-                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                              className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                               placeholder='Examples: 1'
                                               name='order'
                                               value={task.order}
@@ -2571,7 +2571,7 @@ export default function ServiceTreeComponent() {
                                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                                         <Box sx={{ width: '100%' }}>
                                           <label className='block text-sm'>
-                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                            <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>
                                               Employee Role
                                             </span>
                                           </label>
@@ -2595,9 +2595,9 @@ export default function ServiceTreeComponent() {
                                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                                         <Box sx={{ width: '50%' }}>
                                           <label className='block text-sm'>
-                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hour</span>
+                                            <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Hour</span>
                                             <input
-                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                              className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                               placeholder='Examples: 50.00'
                                               name='cost'
                                               value={task.cost}
@@ -2611,7 +2611,7 @@ export default function ServiceTreeComponent() {
                                                   return (
                                                     <span
                                                       key={index}
-                                                      className='text-xs text-red-600 dark:text-red-400'
+                                                      className='text-xs text-red-600 dark-d:text-red-400'
                                                     >
                                                       {String(message).replaceAll('tasks.0.', '')}
                                                     </span>
@@ -2622,11 +2622,11 @@ export default function ServiceTreeComponent() {
                                         </Box>
                                         <Box sx={{ width: '50%' }}>
                                           <label className='block text-sm'>
-                                            <span className='flex text-gray-700 dark:text-gray-400 mb-1'>
+                                            <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>
                                               Description
                                             </span>
                                             <input
-                                              className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                                              className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                                               placeholder='Examples: Company logo for header'
                                               name='description'
                                               value={task.description}
@@ -2640,7 +2640,7 @@ export default function ServiceTreeComponent() {
                                                   return (
                                                     <span
                                                       key={index}
-                                                      className='text-xs text-red-600 dark:text-red-400'
+                                                      className='text-xs text-red-600 dark-d:text-red-400'
                                                     >
                                                       {String(message).replaceAll('tasks.0.', '')}
                                                     </span>
@@ -2735,7 +2735,7 @@ export default function ServiceTreeComponent() {
             }}
           >
             <Box
-              className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
+              className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -2747,8 +2747,8 @@ export default function ServiceTreeComponent() {
               }}
             >
               <Box sx={{ mb: '20px' }}>
-                <h2 className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>Add Employee Roles</h2>
-                <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+                <h2 className='my-6 text-xl font-semibold text-gray-700 dark-d:text-gray-200'>Add Employee Roles</h2>
+                <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
                   <form
                     onSubmit={e => {
                       onEmployeeRolesSubmit(e)
@@ -2757,9 +2757,9 @@ export default function ServiceTreeComponent() {
                     <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                       <Box sx={{ width: '100%' }}>
                         <label className='block text-sm'>
-                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Role Name</span>
+                          <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Role Name</span>
                           <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                            className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                             placeholder='Enter role name'
                             name='name'
                             value={employeeRolesFormData.name}
@@ -2770,7 +2770,7 @@ export default function ServiceTreeComponent() {
                           {!!errorMessage?.['name'] &&
                             errorMessage?.['name']?.map((message: any, index: number) => {
                               return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                   {message}
                                 </span>
                               )
@@ -2779,9 +2779,9 @@ export default function ServiceTreeComponent() {
                       </Box>
                       <Box sx={{ width: '100%' }}>
                         <label className='block text-sm'>
-                          <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Hourly Rate</span>
+                          <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Hourly Rate</span>
                           <input
-                            className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                            className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                             placeholder='Enter hourly rate'
                             name='average_hourly'
                             value={employeeRolesFormData.average_hourly}
@@ -2793,7 +2793,7 @@ export default function ServiceTreeComponent() {
                           {!!errorMessage?.['average_hourly'] &&
                             errorMessage?.['average_hourly']?.map((message: any, index: number) => {
                               return (
-                                <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                                   {message}
                                 </span>
                               )

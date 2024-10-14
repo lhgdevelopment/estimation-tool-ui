@@ -1,12 +1,12 @@
-import { Box, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
 import NoDataComponent from '@core/components/no-data-component'
 import UiSkeleton from '@core/components/ui-skeleton'
 import { TableSx } from '@core/theme/tableStyle'
 import apiRequest from '@core/utils/axios-config'
 import { formatDateTime } from '@core/utils/utils'
-import Swal from 'sweetalert2'
+import { Box, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
 import Link from 'next/link'
+import { Fragment, useEffect, useState } from 'react'
+import Swal from 'sweetalert2'
 import { TUsersComponent } from '../Teams.decorator'
 
 export default function TeamsListComponent(props: TUsersComponent) {
@@ -16,16 +16,19 @@ export default function TeamsListComponent(props: TUsersComponent) {
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const getList = (page = 1) => {
-    setIsLoading(true);
-    apiRequest.get(`/teams?page=${page}`).then(res => {
-      const paginationData: any = res
+    setIsLoading(true)
+    apiRequest
+      .get(`/teams?page=${page}`)
+      .then(res => {
+        const paginationData: any = res
 
-      setListData(res?.data)
-      setCurrentPage(paginationData?.['current_page'])
-      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
-    }).finally(()=>{
-      setIsLoading(false);
-    })
+        setListData(res?.data)
+        setCurrentPage(paginationData?.['current_page'])
+        setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
   }
 
   const onEdit = (id: string) => {
@@ -69,24 +72,21 @@ export default function TeamsListComponent(props: TUsersComponent) {
     getList(newPage)
   }
 
-
   if (isLoading) {
     return <UiSkeleton />
-  }else if( listData.length === 0 ) {
+  } else if (listData.length === 0) {
     return <NoDataComponent preload />
   }
 
-return (
+  return (
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
         <Box className='w-full overflow-x-auto'>
           <TableContainer component={Paper}>
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
-                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                  <TableCell className='px-4 py-3'>
-                    Name
-                  </TableCell>
+                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark-d:border-gray-700 bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-800'>
+                  <TableCell className='px-4 py-3'>Name</TableCell>
                   <TableCell className='px-4 py-3'>Total Prompts</TableCell>
                   <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
                     Total User
@@ -95,24 +95,27 @@ return (
                   <TableCell className='px-4 py-3' sx={{ textAlign: 'center', width: '190px' }}>
                     Created At
                   </TableCell>
-                  <TableCell className='px-4 py-3' sx={{textAlign: 'right'}}>Actions</TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'right' }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
+              <TableBody className='bg-white Boxide-y dark-d:Boxide-gray-700 dark-d:bg-gray-800'>
                 {listData?.map((data: any, index: number) => {
                   return (
-                    <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
-                      <TableCell className='px-4 py-3 text-sm'>
-                        {data?.name}
-                      </TableCell>
+                    <Box component={'tr'} key={index} className='text-gray-700 dark-d:text-gray-400'>
+                      <TableCell className='px-4 py-3 text-sm'>{data?.name}</TableCell>
                       <TableCell className='px-4 py-3 text-sm underline underline-offset-2 color'>
                         <Link passHref href={`/user-management/teams/${data.id}/prompts/`}>
-                          {String(data?.promptCount || 0).padStart(2,'0')}
+                          {String(data?.promptCount || 0).padStart(2, '0')}
                         </Link>
                       </TableCell>
-                      <TableCell className='px-4 py-3 text-sm underline underline-offset-2' sx={{ textAlign: 'center' }}>
+                      <TableCell
+                        className='px-4 py-3 text-sm underline underline-offset-2'
+                        sx={{ textAlign: 'center' }}
+                      >
                         <Link passHref href={`/user-management/teams/${data.id}/users/`}>
-                          {String(data?.userCount || 0).padStart(2,'0')}
+                          {String(data?.userCount || 0).padStart(2, '0')}
                         </Link>
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
@@ -125,7 +128,7 @@ return (
                             onClick={() => {
                               onEdit(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                             aria-label='Edit'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -136,7 +139,7 @@ return (
                             onClick={() => {
                               onDelete(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                             aria-label='Delete'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>

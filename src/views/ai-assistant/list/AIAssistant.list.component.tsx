@@ -1,18 +1,18 @@
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer'
-import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField} from '@mui/material'
-import Link from 'next/link'
-import {Fragment, useCallback, useEffect, useState} from 'react'
 import UiSkeleton from '@core/components/ui-skeleton'
 import apiRequest from '@core/utils/axios-config'
-import {debounce, formatDateTime} from '@core/utils/utils'
+import { formatDateTime } from '@core/utils/utils'
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer'
+import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material'
+import Link from 'next/link'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
+import { Dropdown } from '../../../@core/components/dropdown'
+import useDebounce from '../../../@core/utils/debounce'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
-import {Dropdown} from "../../../@core/components/dropdown";
-import useDebounce from "../../../@core/utils/debounce";
 
 const defaultFilterData = {
   name: '',
-  user_id: '',
+  user_id: ''
 }
 export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
@@ -22,27 +22,29 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   const [preloader, setPreloader] = useState<boolean>(false)
 
   const [filterData, setFilterData] = useState(defaultFilterData)
-  const debounceValue = useDebounce(filterData, 800);
+  const debounceValue = useDebounce(filterData, 800)
 
-
-  const getList = useCallback((page = 1, {name = '', user_id = ''} = {}) => {
-    setPreloader(true)
-    apiRequest.get(`/conversations?page=${page}&name=${name}&user_id=${user_id}`).then(res => {
-      const paginationData: any = res
-      setListData(res?.data)
-      setCurrentPage(paginationData?.['current_page'])
-      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
-      setPreloader(false)
-    })
-  }, [setListData, setCurrentPage, setTotalPages, setPreloader]);
+  const getList = useCallback(
+    (page = 1, { name = '', user_id = '' } = {}) => {
+      setPreloader(true)
+      apiRequest.get(`/conversations?page=${page}&name=${name}&user_id=${user_id}`).then(res => {
+        const paginationData: any = res
+        setListData(res?.data)
+        setCurrentPage(paginationData?.['current_page'])
+        setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+        setPreloader(false)
+      })
+    },
+    [setListData, setCurrentPage, setTotalPages, setPreloader]
+  )
   useEffect(() => {
-    getList(1, { ...debounceValue });
-  }, [debounceValue, getList]);
+    getList(1, { ...debounceValue })
+  }, [debounceValue, getList])
   const handleFilterOnChange = (e: any) => {
     setFilterData({
       ...filterData,
       [e.target.name]: e.target.value
-    });
+    })
   }
 
   const onEdit = (id: string) => {
@@ -83,15 +85,15 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   }, [])
 
   const handleFilterChange = () => {
-    getList(1, { ...filterData });
+    getList(1, { ...filterData })
   }
   const onFilterClear = () => {
-    setFilterData({...defaultFilterData})
+    setFilterData({ ...defaultFilterData })
     getList(1, { ...defaultFilterData })
   }
 
   const handlePageChange = (newPage: number) => {
-    getList(newPage, { ...filterData });
+    getList(newPage, { ...filterData })
   }
 
   if (!!preloader) {
@@ -104,7 +106,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
         <Box className='w-full overflow-x-auto'>
           <Table className='w-full whitespace-no-wrap'>
             <TableHead>
-              <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+              <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark-d:border-gray-700 bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-800'>
                 <TableCell className='px-4 py-3'>Name</TableCell>
                 <TableCell className='px-4 py-3'>Created By</TableCell>
                 <TableCell className='px-4 py-3'>Created On</TableCell>
@@ -113,8 +115,8 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                 <TableCell className='px-4 py-3 text-right'>Actions</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
-              <TableRow className='text-gray-700 dark:text-gray-400'>
+            <TableBody className='bg-white Boxide-y dark-d:Boxide-gray-700 dark-d:bg-gray-800'>
+              <TableRow className='text-gray-700 dark-d:text-gray-400'>
                 <TableCell sx={{ p: '10px !important' }}>
                   <TextField
                     sx={{ width: '100%', p: '0px', input: { p: '10px 10px' } }}
@@ -180,7 +182,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
               </TableRow>
               {listData?.map((data: any, index: number) => {
                 return (
-                  <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
+                  <TableRow key={index} className='text-gray-700 dark-d:text-gray-400'>
                     <TableCell className='px-4 py-3 text-sm'>
                       <Link href={`ai-assistant/${data?.id}`}>{data?.name}</Link>
                     </TableCell>
@@ -201,7 +203,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                       <Box className='flex items-center justify-end space-x-1 text-sm'>
                         <Link href={`ai-assistant/${data?.id}`}>
                           <a
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                             aria-label='Edit'
                           >
                             <QuestionAnswerIcon />
@@ -212,7 +214,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                           onClick={() => {
                             onEdit(data['id'])
                           }}
-                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                           aria-label='Edit'
                         >
                           <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -224,7 +226,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                           onClick={() => {
                             onDelete(data['id'])
                           }}
-                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                           aria-label='Delete'
                         >
                           <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -255,7 +257,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
             </Box>
           )}
         </Box>
-        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
+        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark-d:border-gray-700 bg-gray-50 sm:grid-cols-9 dark-d:text-gray-400 dark-d:bg-gray-800'>
           <span className='flex items-center col-span-3'>
             Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
             {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}

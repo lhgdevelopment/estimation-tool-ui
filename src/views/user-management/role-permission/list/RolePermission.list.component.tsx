@@ -1,3 +1,6 @@
+import UiSkeleton from '@core/components/ui-skeleton'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@mui/icons-material/Add'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import {
@@ -14,9 +17,6 @@ import {
   TableRow
 } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import UiSkeleton from '@core/components/ui-skeleton'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import Swal from 'sweetalert2'
 import RolePermissionFormComponent from '../form/RolePermission.form.component'
 
@@ -136,7 +136,7 @@ export default function RolePermissionListComponent() {
   return (
     <Fragment>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
+        <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark-d:text-gray-300'>
           RolePermission
         </Box>
         <Box>

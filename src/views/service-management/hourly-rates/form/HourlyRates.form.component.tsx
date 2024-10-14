@@ -1,11 +1,11 @@
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import { THourlyRatesComponent } from '../HourlyRates.decorator'
 
 export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
@@ -94,7 +94,7 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
 
   return (
     <Fragment>
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
@@ -109,7 +109,7 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
               {!!errorMessage?.['name'] &&
                 errorMessage?.['name']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -127,7 +127,7 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
               {!!errorMessage?.['average_hourly'] &&
                 errorMessage?.['average_hourly']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )

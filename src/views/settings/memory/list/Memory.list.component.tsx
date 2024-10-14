@@ -1,3 +1,5 @@
+import { Dropdown } from '@core/components/dropdown'
+import apiRequest from '@core/utils/axios-config'
 import {
   Box,
   Button,
@@ -12,14 +14,10 @@ import {
   TextField
 } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import NoDataComponent from '@core/components/no-data-component'
-import UiSkeleton from '@core/components/ui-skeleton'
-import apiRequest from '@core/utils/axios-config'
 import Swal from 'sweetalert2'
-import {TMemoryComponent} from '../Memory.decorator'
-import {TableSx} from "../../../../@core/theme/tableStyle";
-import {promptsTypeList} from "../../prompts/Prompts.decorator";
+import { TableSx } from '../../../../@core/theme/tableStyle'
+import { promptsTypeList } from '../../prompts/Prompts.decorator'
+import { TMemoryComponent } from '../Memory.decorator'
 
 export default function MemoryListComponent(props: TMemoryComponent) {
   const { setEditDataId, listData, setListData, setEditData, editDataId } = props
@@ -55,15 +53,13 @@ export default function MemoryListComponent(props: TMemoryComponent) {
 
   const getList = (page = 1) => {
     setPreloader(true)
-    apiRequest
-      .get(`/memory?page=${page}&title=${filterData?.title}&promptId=${filterData?.promptId}`)
-      .then(res => {
-        const paginationData: any = res
-        setListData(res?.data)
-        setCurrentPage(paginationData?.['current_page'])
-        setTotalPages(Math.ceil(paginationData?.['total'] / 10))
-        setPreloader(false)
-      })
+    apiRequest.get(`/memory?page=${page}&title=${filterData?.title}&promptId=${filterData?.promptId}`).then(res => {
+      const paginationData: any = res
+      setListData(res?.data)
+      setCurrentPage(paginationData?.['current_page'])
+      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+      setPreloader(false)
+    })
   }
 
   const onEdit = (id: string) => {
@@ -118,8 +114,10 @@ export default function MemoryListComponent(props: TMemoryComponent) {
           <TableContainer component={Paper}>
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
-                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
-                  <TableCell className='px-4 py-3' sx={{width: '20%'}}>Title</TableCell>
+                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark-d:border-gray-700 bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-800'>
+                  <TableCell className='px-4 py-3' sx={{ width: '20%' }}>
+                    Title
+                  </TableCell>
                   <TableCell className='px-4 py-3' sx={{ width: '90%' }}>
                     Prompt
                   </TableCell>
@@ -131,8 +129,8 @@ export default function MemoryListComponent(props: TMemoryComponent) {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
-                <TableRow className='text-gray-700 dark:text-gray-400'>
+              <TableBody className='bg-white Boxide-y dark-d:Boxide-gray-700 dark-d:bg-gray-800'>
+                <TableRow className='text-gray-700 dark-d:text-gray-400'>
                   <TableCell sx={{ p: '10px !important' }}>
                     <TextField
                       sx={{ width: '100%', p: '0px', input: { p: '10px 10px' } }}
@@ -195,7 +193,7 @@ export default function MemoryListComponent(props: TMemoryComponent) {
                   const promptsType: any = promptsTypeList.find(type => type.id === data?.type)
 
                   return (
-                    <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
+                    <TableRow key={index} className='text-gray-700 dark-d:text-gray-400'>
                       <TableCell className='px-4 py-3 text-sm'>{data?.title}</TableCell>
 
                       <TableCell className='px-4 py-3 text-sm w-200 expendable-row'>
@@ -243,7 +241,7 @@ export default function MemoryListComponent(props: TMemoryComponent) {
                             onClick={() => {
                               onEdit(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                             aria-label='Edit'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -254,7 +252,7 @@ export default function MemoryListComponent(props: TMemoryComponent) {
                             onClick={() => {
                               onDelete(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-red-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-red-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-red-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-red-600'
                             aria-label='Delete'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -286,7 +284,7 @@ export default function MemoryListComponent(props: TMemoryComponent) {
             </Box>
           )}
         </Box>
-        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
+        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark-d:border-gray-700 bg-gray-50 sm:grid-cols-9 dark-d:text-gray-400 dark-d:bg-gray-800'>
           <span className='flex items-center col-span-3'>
             Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
             {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}

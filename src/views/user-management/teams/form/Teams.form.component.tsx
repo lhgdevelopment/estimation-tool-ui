@@ -1,12 +1,11 @@
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import { TUsersComponent } from '../Teams.decorator'
 
 export default function TeamsFormComponent(props: TUsersComponent) {
@@ -14,10 +13,10 @@ export default function TeamsFormComponent(props: TUsersComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
-    name: '',
+    name: ''
   }
 
-  const [formData, setUsersFormData] = useState({...defaultData})
+  const [formData, setUsersFormData] = useState({ ...defaultData })
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
@@ -73,7 +72,7 @@ export default function TeamsFormComponent(props: TUsersComponent) {
 
   useEffect(() => {
     setUsersFormData({
-      name: editData?.['name'] || '',
+      name: editData?.['name'] || ''
     })
   }, [editDataId, editData])
 
@@ -85,15 +84,15 @@ export default function TeamsFormComponent(props: TUsersComponent) {
 
   return (
     <Fragment>
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <TextField
                 id='outlined-multiline-flexible'
                 label='Name'
-                className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['name'] ? 'border-red-600' : 'dark:border-gray-600'
+                className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                  errorMessage?.['name'] ? 'border-red-600' : 'dark-d:border-gray-600'
                 }`}
                 placeholder='Name'
                 name='name'
@@ -103,7 +102,7 @@ export default function TeamsFormComponent(props: TUsersComponent) {
               {!!errorMessage?.['name'] &&
                 errorMessage?.['name']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )

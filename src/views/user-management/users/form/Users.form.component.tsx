@@ -1,12 +1,12 @@
+import { Dropdown } from '@core/components/dropdown'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import { TUsersComponent } from '../Users.decorator'
 
 export default function UsersFormComponent(props: TUsersComponent) {
@@ -93,15 +93,15 @@ export default function UsersFormComponent(props: TUsersComponent) {
 
   return (
     <Fragment>
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <TextField
                 id='outlined-multiline-flexible'
                 label='Name'
-                className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['name'] ? 'border-red-600' : 'dark:border-gray-600'
+                className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                  errorMessage?.['name'] ? 'border-red-600' : 'dark-d:border-gray-600'
                 }`}
                 placeholder='Name'
                 name='name'
@@ -111,7 +111,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
               {!!errorMessage?.['name'] &&
                 errorMessage?.['name']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -134,8 +134,8 @@ export default function UsersFormComponent(props: TUsersComponent) {
               <TextField
                 id='outlined-multiline-flexible'
                 label='Email'
-                className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['email'] ? 'border-red-600' : 'dark:border-gray-600'
+                className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                  errorMessage?.['email'] ? 'border-red-600' : 'dark-d:border-gray-600'
                 }`}
                 placeholder='Email'
                 name='email'
@@ -145,7 +145,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
               {!!errorMessage?.['email'] &&
                 errorMessage?.['email']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -157,8 +157,8 @@ export default function UsersFormComponent(props: TUsersComponent) {
               <TextField
                 id='outlined-multiline-flexible'
                 label='Password'
-                className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['password'] ? 'border-red-600' : 'dark:border-gray-600'
+                className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                  errorMessage?.['password'] ? 'border-red-600' : 'dark-d:border-gray-600'
                 }`}
                 placeholder='Password'
                 name='password'
@@ -168,7 +168,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
               {!!errorMessage?.['password'] &&
                 errorMessage?.['password']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -178,8 +178,8 @@ export default function UsersFormComponent(props: TUsersComponent) {
               <TextField
                 id='outlined-multiline-flexible'
                 label='Confirm Password'
-                className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['password_confirmation'] ? 'border-red-600' : 'dark:border-gray-600'
+                className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                  errorMessage?.['password_confirmation'] ? 'border-red-600' : 'dark-d:border-gray-600'
                 }`}
                 placeholder='Confirm Password'
                 name='password_confirmation'
@@ -189,7 +189,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
               {!!errorMessage?.['password_confirmation'] &&
                 errorMessage?.['password_confirmation']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )

@@ -1,11 +1,11 @@
-import VisibilityIcon from '@mui/icons-material/Visibility'
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import Link from 'next/link'
-import { Fragment, useEffect, useState } from 'react'
 import UiSkeleton from '@core/components/ui-skeleton'
 import { TableSx } from '@core/theme/tableStyle'
 import apiRequest from '@core/utils/axios-config'
 import { formatDateTime } from '@core/utils/utils'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import Link from 'next/link'
+import { Fragment, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import { TUpdateLogComponent } from '../UpdateLog.decorator'
 
@@ -86,7 +86,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
           <TableContainer component={Paper}>
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
-                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark-d:border-gray-700 bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-800'>
                   <TableCell className='px-4 py-3'>Date</TableCell>
                   <TableCell className='px-4 py-3'>Created At</TableCell>
                   <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
@@ -94,10 +94,10 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
+              <TableBody className='bg-white Boxide-y dark-d:Boxide-gray-700 dark-d:bg-gray-800'>
                 {listData?.map((data: any, index: number) => {
                   return (
-                    <TableRow key={index} className='text-gray-700 dark:text-gray-400'>
+                    <TableRow key={index} className='text-gray-700 dark-d:text-gray-400'>
                       <TableCell className='px-4 py-3 text-sm'>{data?.date}</TableCell>
                       {/* <TableCell className='px-4 py-3 text-sm w-200 expendable-row'>
                         <Box className='expendable-row-inner'>
@@ -140,7 +140,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
-                              className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                              className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                               aria-label='View'
                             >
                               <VisibilityIcon />
@@ -151,7 +151,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}
-                              className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                              className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                               aria-label='View'
                             >
                               <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -163,7 +163,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
                             onClick={() => {
                               onDelete(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-red-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-red-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-red-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-red-600'
                             aria-label='Delete'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -195,7 +195,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
             </Box>
           )}
         </Box>
-        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
+        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark-d:border-gray-700 bg-gray-50 sm:grid-cols-9 dark-d:text-gray-400 dark-d:bg-gray-800'>
           <span className='flex items-center col-span-3'>
             Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
             {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}

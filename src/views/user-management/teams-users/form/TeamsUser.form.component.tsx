@@ -1,25 +1,25 @@
+import { Dropdown } from '@core/components/dropdown'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box, TextField } from '@mui/material'
+import { Box } from '@mui/material'
+import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import { TUsersComponent } from '../TeamsUser.decorator'
-import {useRouter} from "next/router";
 
 export default function TeamsUserFormComponent(props: TUsersComponent) {
   const { showSnackbar } = useToastSnackbar()
-  const { query } = useRouter();
+  const { query } = useRouter()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
-    userId: '',
+    userId: ''
   }
 
-  const [formData, setUsersFormData] = useState({...defaultData})
+  const [formData, setUsersFormData] = useState({ ...defaultData })
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
@@ -53,7 +53,7 @@ export default function TeamsUserFormComponent(props: TUsersComponent) {
 
   useEffect(() => {
     setUsersFormData({
-      userId: editData?.['userId'] || '',
+      userId: editData?.['userId'] || ''
     })
   }, [editDataId, editData])
 
@@ -65,7 +65,7 @@ export default function TeamsUserFormComponent(props: TUsersComponent) {
 
   return (
     <Fragment>
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
@@ -74,13 +74,13 @@ export default function TeamsUserFormComponent(props: TUsersComponent) {
                 placeholder='Add user for share with'
                 label={'Add user for share with'}
                 value={formData.userId}
-                name="userId"
+                name='userId'
                 onChange={handleTextChange as any}
               />
               {!!errorMessage?.['userId'] &&
                 errorMessage?.['userId']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )

@@ -1,3 +1,7 @@
+import Preloader from '@core/components/preloader'
+import { RichTextEditor } from '@core/components/rich-text-editor'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
@@ -10,10 +14,6 @@ import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import Preloader from '@core/components/preloader'
-import { RichTextEditor } from '@core/components/rich-text-editor'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import { TUpdateLogComponent } from '../UpdateLog.decorator'
 
 export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
@@ -137,16 +137,16 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
   return (
     <Fragment>
       {!!preload && <Preloader close={!preload} />}
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Date</span>
+                <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Date</span>
 
                 <DatePicker
-                  className={`block w-full mt-1 text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['date'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full mt-1 text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['date'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   sx={{ width: '100%' }}
                   name='date'
@@ -158,7 +158,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
                 {!!errorMessage?.['date'] &&
                   errorMessage?.['date']?.map((message: any, index: number) => {
                     return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                         {message}
                       </span>
                     )
@@ -169,7 +169,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Deployed</span>
+                <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Deployed</span>
               </label>
               <RichTextEditor
                 value={formData.deployed}
@@ -181,7 +181,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Next</span>
+                <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Next</span>
               </label>
               <RichTextEditor value={formData.next} onChange={newContent => handleReachText(newContent, 'next')} />
             </Box>
