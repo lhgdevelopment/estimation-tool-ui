@@ -42,7 +42,7 @@ return (
           </Box>
         </Link>
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
-          Add Prompt to {teamInfo.name}
+          Add Prompts to {teamInfo.name}
         </Box>
         <TeamsPromptsFormComponent
           setEditDataId={setEditDataId}

@@ -16,7 +16,7 @@ export default function TeamsUserFormComponent(props: TUsersComponent) {
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
   const defaultData = {
-    userId: '',
+    userIds: [],
   }
 
   const [formData, setUsersFormData] = useState({...defaultData})
@@ -39,9 +39,9 @@ export default function TeamsUserFormComponent(props: TUsersComponent) {
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
     apiRequest
-      .post(`/teams/${query.id}/users`, formData)
+      .post(`/teams/${query.id}/share/users`, formData)
       .then(res => {
-        setListData((prevState: []) => [...prevState, res?.data])
+        setListData((prevState: []) => [...prevState, ...res?.data])
         showSnackbar('Created Successfully!', { variant: 'success' })
         onClear()
       })
@@ -53,7 +53,7 @@ export default function TeamsUserFormComponent(props: TUsersComponent) {
 
   useEffect(() => {
     setUsersFormData({
-      userId: editData?.['userId'] || '',
+      userIds: editData?.['userIds'] || '',
     })
   }, [editDataId, editData])
 
@@ -73,12 +73,13 @@ export default function TeamsUserFormComponent(props: TUsersComponent) {
                 url={'users'}
                 placeholder='Add user for share with'
                 label={'Add user for share with'}
-                value={formData.userId}
-                name="userId"
+                value={formData.userIds}
+                name="userIds"
                 onChange={handleTextChange as any}
+                multiple
               />
-              {!!errorMessage?.['userId'] &&
-                errorMessage?.['userId']?.map((message: any, index: number) => {
+              {!!errorMessage?.['userIds'] &&
+                errorMessage?.['userIds']?.map((message: any, index: number) => {
                   return (
                     <span key={index} className='text-xs text-red-600 dark:text-red-400'>
                       {message}
