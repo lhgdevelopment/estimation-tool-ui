@@ -13,7 +13,7 @@ import {useRouter} from "next/router";
 export default function TeamsUserFormComponent(props: TUsersComponent) {
   const { showSnackbar } = useToastSnackbar()
   const { query } = useRouter();
-  const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
+  const { editDataId, setEditDataId, listData, setListData, editData, setEditData, listRef } = props
 
   const defaultData = {
     userIds: [],
@@ -41,9 +41,9 @@ export default function TeamsUserFormComponent(props: TUsersComponent) {
     apiRequest
       .post(`/teams/${query.id}/share/users`, formData)
       .then(res => {
-        setListData((prevState: []) => [...prevState, ...res?.data])
         showSnackbar('Created Successfully!', { variant: 'success' })
         onClear()
+        listRef?.current?.getList(1)
       })
       .catch(error => {
         setErrorMessage(error?.response?.data?.errors)

@@ -1,5 +1,5 @@
 import { Box, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import {Fragment, useCallback, useEffect, useState} from 'react'
 import NoDataComponent from '@core/components/no-data-component'
 import UiSkeleton from '@core/components/ui-skeleton'
 import { TableSx } from '@core/theme/tableStyle'
@@ -10,16 +10,16 @@ import { TUsersComponent } from '../TeamsUser.decorator'
 import {useRouter} from "next/router";
 
 export default function TeamsUserListComponent(props: TUsersComponent) {
-  const { setEditDataId, listData, setListData, setEditData, editDataId } = props
+  const { setEditDataId, listData, setListData, setEditData, editDataId, listRef } = props
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const { query } = useRouter();
 
-  const getList = (page = 1) => {
+  const getList = useCallback((page= 0) => {
     setIsLoading(true);
-    apiRequest.get(`/teams/${query.id}/users?page=${page}`).then(res => {
+    apiRequest.get(`/teams/${query.id}/users?page=${page || currentPage}`).then(res => {
       const paginationData: any = res
 
       setListData(res?.data)
@@ -28,7 +28,13 @@ export default function TeamsUserListComponent(props: TUsersComponent) {
     }).finally(()=>{
       setIsLoading(false);
     })
-  }
+  }, [query.id, setIsLoading, setListData, setCurrentPage, setTotalPages, currentPage])
+
+  useEffect(() => {
+    if(listRef){
+      listRef.current = { getList }
+    }
+  }, [getList, listRef]);
 
   const onEdit = (id: string) => {
     setEditDataId(id)

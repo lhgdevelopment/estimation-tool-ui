@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import TeamsPromptsFormComponent from './form/TeamsPrompts.form.component'
 import TeamsPromptsListComponent from './list/TeamsPrompts.list.component'
 import apiRequest from "../../../@core/utils/axios-config";
@@ -10,6 +10,7 @@ import Link from "next/link";
 
 
 export default function TeamsPromptsComponent() {
+  const listRef = useRef<null>(null)
   const [ editDataId, setEditDataId] = useState<null | string>(null)
   const [ listData, setListData] = useState<any>([])
   const [ editData, setEditData] = useState<any>({})
@@ -18,7 +19,7 @@ export default function TeamsPromptsComponent() {
   const { query } = useRouter();
 
 
-  const getTeamInfo = useCallback((page = 1) => {
+  const getTeamInfo = useCallback(() => {
     apiRequest.get(`/teams/${query.id}`).then(res => {
       setTeamInfo(res?.data)
       setNotFound(false);
@@ -51,6 +52,7 @@ return (
           setListData={setListData}
           editData={editData}
           setEditData={setEditData}
+          listRef={listRef}
         />
         <TeamsPromptsListComponent
           setEditDataId={setEditDataId}
@@ -59,6 +61,7 @@ return (
           setListData={setListData}
           editData={editData}
           setEditData={setEditData}
+          listRef={listRef}
         />
       </Box>
     </>

@@ -25,7 +25,6 @@ interface ISelectProps {
   onAddNew?: () => void
   syncOnOpen?: boolean
   clearable?: boolean
-  filter?: (items: any[])=> any[]
 }
 
 type SelectPropsWithISelectProps = SelectProps & ISelectProps
@@ -51,7 +50,6 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     labelId = 'demo-simple-select-label',
     onClose,
     clearable = true,
-    filter,
     ...otherProps
   } = props
   const dropdownRef = useRef(null)
@@ -66,15 +64,11 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
       apiRequest
         .get(`/${url}?${queryParam.join('&')}&per_page=1000`)
         .then(res => {
-          let fetchedOptions =
+          const fetchedOptions =
             res?.data?.map((item: any) => ({
               title: item?.[optionConfig?.title],
               id: item?.[optionConfig?.id]
             })) || []
-          if(filter) {
-            console.log('filter',filter)
-            fetchedOptions = filter(fetchedOptions)
-          }
           setOptionItems(fetchedOptions)
           setInitialOptionList(fetchedOptions)
           setPreloader(false)

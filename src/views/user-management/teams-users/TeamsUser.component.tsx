@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import TeamsUserFormComponent from './form/TeamsUser.form.component'
 import TeamsUserListComponent from './list/TeamsUser.list.component'
 import apiRequest from "../../../@core/utils/axios-config";
@@ -10,6 +10,7 @@ import Link from 'next/link';
 
 
 export default function TeamsUserComponent() {
+  const listRef = useRef<null>(null)
   const [ editDataId, setEditDataId] = useState<null | string>(null)
   const [ listData, setListData] = useState<any>([])
   const [ editData, setEditData] = useState<any>({})
@@ -51,6 +52,7 @@ return (
           setListData={setListData}
           editData={editData}
           setEditData={setEditData}
+          listRef={listRef}
         />
         <TeamsUserListComponent
           setEditDataId={setEditDataId}
@@ -59,6 +61,7 @@ return (
           setListData={setListData}
           editData={editData}
           setEditData={setEditData}
+          listRef={listRef}
         />
       </Box>
     </>
