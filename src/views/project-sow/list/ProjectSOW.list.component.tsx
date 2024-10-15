@@ -106,6 +106,9 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
                     Member
                   </TableCell>
                   <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
+                    Last Updated At
+                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
                     Created At
                   </TableCell>
                   <TableCell className='px-4 py-3' sx={{ width: '100px', textAlign: 'center' }}>
@@ -156,6 +159,9 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
                         <Box sx={{ display: 'inline-block' }}>
                           <Avatar>{String(data.created_by?.name)[0]}</Avatar>
                         </Box>
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {formatDateTime(data?.created_at)}
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
                         {formatDateTime(data?.created_at)}

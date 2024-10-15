@@ -32,6 +32,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
       [e.target.name]: e.target.value
     })
   }
+
   const handleReachText = (value: string, field: string) => {
     setFormData({
       ...formData,

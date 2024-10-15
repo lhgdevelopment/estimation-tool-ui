@@ -61,17 +61,18 @@ export const dateDefaultFormat: Intl.DateTimeFormatOptions = {
 export function formatDateTime(
   date: Date,
   options: Intl.DateTimeFormatOptions = {
-    month: 'long',
+    month: 'numeric',
     day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true
+    year: 'numeric'
+
+    // hour: 'numeric',
+    // minute: 'numeric',
+    // hour12: true
   }
 ): string {
   const formattedDate = new Date(date).toLocaleDateString('en-US', options)
 
-  return formattedDate.replace(/\//g, '-')
+  return formattedDate.replace(/\//g, '/')
 }
 
 export function addTargetBlankToMarkdownLinks(markdownText = '') {
