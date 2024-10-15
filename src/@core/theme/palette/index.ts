@@ -1,6 +1,6 @@
 // ** Type Imports
-import { PaletteMode } from '@mui/material'
 import { ThemeColor } from '@core/layouts/types'
+import { PaletteMode } from '@mui/material'
 
 const DefaultPalette = (mode: PaletteMode, themeColor: ThemeColor) => {
   // ** Vars

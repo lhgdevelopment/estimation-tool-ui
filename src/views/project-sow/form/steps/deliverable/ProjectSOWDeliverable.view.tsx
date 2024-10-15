@@ -1,3 +1,6 @@
+import { Dropdown } from '@core/components/dropdown'
+import Preloader from '@core/components/preloader'
+import { getShortStringNumber } from '@core/utils/utils'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -5,9 +8,6 @@ import EditIcon from '@mui/icons-material/Edit'
 import SyncIcon from '@mui/icons-material/Sync'
 import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { Dropdown } from '@core/components/dropdown'
-import Preloader from '@core/components/preloader'
-import { getShortStringNumber } from '@core/utils/utils'
 import {
   deliverableNoteItemSx,
   scopeOfWorkListContainer,
@@ -501,7 +501,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
         }}
       >
         <Box
-          className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
+          className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -515,7 +515,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
           <Box sx={{ mb: '20px' }}>
             <h2
               id='service-deliverable-modal-title'
-              className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'
+              className='my-6 text-xl font-semibold text-gray-700 dark-d:text-gray-200'
             >
               {deliverableEditId ? 'Update' : 'Add'} Deliverable
             </h2>
@@ -542,7 +542,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                     {!!errorMessage?.['phaseId'] &&
                       errorMessage?.['phaseId']?.map((message: any, index: number) => {
                         return (
-                          <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                          <span key={index + Math.random()} className='text-xs text-red-600 dark-d:text-red-400'>
                             {message}
                           </span>
                         )
@@ -570,7 +570,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                       {!!errorMessage?.['title'] &&
                         errorMessage?.['title']?.map((message: any, index: number) => {
                           return (
-                            <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index + Math.random()} className='text-xs text-red-600 dark-d:text-red-400'>
                               {message}
                             </span>
                           )
@@ -645,7 +645,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                     return (
                                       <span
                                         key={index + Math.random()}
-                                        className='text-xs text-red-600 dark:text-red-400'
+                                        className='text-xs text-red-600 dark-d:text-red-400'
                                       >
                                         {message}
                                       </span>
@@ -693,7 +693,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                     return (
                                       <span
                                         key={index + Math.random()}
-                                        className='text-xs text-red-600 dark:text-red-400'
+                                        className='text-xs text-red-600 dark-d:text-red-400'
                                       >
                                         {message}
                                       </span>
@@ -721,7 +721,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                   return (
                                     <span
                                       key={index + Math.random()}
-                                      className='text-xs text-red-600 dark:text-red-400'
+                                      className='text-xs text-red-600 dark-d:text-red-400'
                                     >
                                       {message}
                                     </span>
@@ -773,7 +773,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
         }}
       >
         <Box
-          className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
+          className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -785,7 +785,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
           }}
         >
           <Box sx={{ mb: '20px' }}>
-            <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
+            <h2 id='service-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark-d:text-gray-200'>
               {scopeOfWorkEditId ? 'Update' : 'Add'} Scope of Work
             </h2>
           </Box>
@@ -812,7 +812,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                     {!!errorMessage?.['phaseId'] &&
                       errorMessage?.['phaseId']?.map((message: any, index: number) => {
                         return (
-                          <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                          <span key={index + Math.random()} className='text-xs text-red-600 dark-d:text-red-400'>
                             {message}
                           </span>
                         )
@@ -840,7 +840,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                       {!!errorMessage?.['title'] &&
                         errorMessage?.['title']?.map((message: any, index: number) => {
                           return (
-                            <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index + Math.random()} className='text-xs text-red-600 dark-d:text-red-400'>
                               {message}
                             </span>
                           )
@@ -909,7 +909,10 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                             {!!errorMessage?.['title'] &&
                               errorMessage?.['title']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span
+                                    key={index + Math.random()}
+                                    className='text-xs text-red-600 dark-d:text-red-400'
+                                  >
                                     {message}
                                   </span>
                                 )
@@ -933,7 +936,10 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                             {!!errorMessage?.['serial'] &&
                               errorMessage?.['serial']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span
+                                    key={index + Math.random()}
+                                    className='text-xs text-red-600 dark-d:text-red-400'
+                                  >
                                     {message}
                                   </span>
                                 )

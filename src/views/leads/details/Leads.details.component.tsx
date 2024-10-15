@@ -1,13 +1,12 @@
-import EditNoteIcon from '@mui/icons-material/EditNote'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/material'
-import 'md-editor-rt/lib/style.css'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import CopyToClipboard from '@core/components/copy-to-clipboard'
 import Preloader from '@core/components/preloader'
 import apiRequest from '@core/utils/axios-config'
+import EditNoteIcon from '@mui/icons-material/EditNote'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import { Accordion, AccordionDetails, AccordionSummary, Box } from '@mui/material'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 export default function LeadsDetailsComponent() {
   const leadsId = useRouter()?.query['id']
@@ -47,7 +46,7 @@ export default function LeadsDetailsComponent() {
       <Box>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 15px' }}>
-            <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
+            <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 d:text-gray-300'>
               Leads
             </Box>
 

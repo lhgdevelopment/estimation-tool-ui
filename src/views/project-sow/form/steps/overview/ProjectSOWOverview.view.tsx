@@ -1,6 +1,6 @@
+import { RichTextEditor } from '@core/components/rich-text-editor'
 import { Box } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
-import { RichTextEditor } from '@core/components/rich-text-editor'
 import { formTitleSx } from 'src/views/project-sow/ProjectSOW.style'
 import { TProjectSOWOverviewFormViewProps } from './ProjectSOWOverview.decorator'
 
@@ -23,7 +23,7 @@ export default function ProjectSOWOverviewFormView(props: TProjectSOWOverviewFor
             {!!errorMessage?.overviewText &&
               errorMessage?.overviewText?.map((message: any, index: number) => {
                 return (
-                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                  <span key={index + Math.random()} className='text-xs text-red-600 dark-d:text-red-400'>
                     {message}
                   </span>
                 )

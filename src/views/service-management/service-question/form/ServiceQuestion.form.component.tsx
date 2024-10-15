@@ -1,12 +1,12 @@
+import { Dropdown } from '@core/components/dropdown'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import { TServiceQuestionComponent } from '../ServiceQuestion.decorator'
 
 export default function ServiceQuestionFormComponent(props: TServiceQuestionComponent) {
@@ -95,7 +95,7 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
 
   return (
     <Fragment>
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
@@ -110,7 +110,7 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
               {!!errorMessage?.['title'] &&
                 errorMessage?.['title']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -130,7 +130,7 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
               {!!errorMessage?.['serviceIds'] &&
                 errorMessage?.['serviceIds']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )

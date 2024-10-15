@@ -1,10 +1,10 @@
-import { Box, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
 import NoDataComponent from '@core/components/no-data-component'
 import UiSkeleton from '@core/components/ui-skeleton'
 import { TableSx } from '@core/theme/tableStyle'
 import apiRequest from '@core/utils/axios-config'
 import { formatDateTime } from '@core/utils/utils'
+import { Box, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import { Fragment, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import { TUsersComponent } from '../Users.decorator'
 
@@ -75,7 +75,7 @@ export default function UsersListComponent(props: TUsersComponent) {
           <TableContainer component={Paper}>
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
-                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark-d:border-gray-700 bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-800'>
                   <TableCell className='px-4 py-3'>Name</TableCell>
                   <TableCell className='px-4 py-3'>Email</TableCell>
                   <TableCell className='px-4 py-3' sx={{ textAlign: 'center' }}>
@@ -88,10 +88,10 @@ export default function UsersListComponent(props: TUsersComponent) {
                   <TableCell className='px-4 py-3 text-right'>Actions</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
+              <TableBody className='bg-white Boxide-y dark-d:Boxide-gray-700 dark-d:bg-gray-800'>
                 {listData?.map((data: any, index: number) => {
                   return (
-                    <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
+                    <Box component={'tr'} key={index} className='text-gray-700 dark-d:text-gray-400'>
                       <TableCell className='px-4 py-3 text-sm'>{data?.name}</TableCell>
                       <TableCell className='px-4 py-3 text-sm'>{data?.email}</TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
@@ -107,7 +107,7 @@ export default function UsersListComponent(props: TUsersComponent) {
                             onClick={() => {
                               onEdit(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                             aria-label='Edit'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -118,7 +118,7 @@ export default function UsersListComponent(props: TUsersComponent) {
                             onClick={() => {
                               onDelete(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                             aria-label='Delete'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>

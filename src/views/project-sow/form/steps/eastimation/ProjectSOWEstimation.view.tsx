@@ -1,3 +1,4 @@
+import { Dropdown } from '@core/components/dropdown'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -29,7 +30,6 @@ import {
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import 'md-editor-rt/lib/style.css'
-import { Dropdown } from '@core/components/dropdown'
 import {
   formTitleSx,
   sectionSubTitleSx,
@@ -101,8 +101,8 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Company Name'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600'
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600'
                   }`}
                   name='company'
                   value={projectSOWFormData.company}
@@ -111,7 +111,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                 {!!errorMessage?.['company'] &&
                   errorMessage?.['company']?.map((message: any, index: number) => {
                     return (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                         {message}
                       </span>
                     )
@@ -121,8 +121,8 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Website'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='clientWebsite'
                   value={projectSOWFormData.clientWebsite}
@@ -145,8 +145,8 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Project Name'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='projectName'
                   value={projectSOWFormData.projectName}
@@ -160,8 +160,8 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Meeting Transcripts'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='projectName'
                   value={''}
@@ -172,8 +172,8 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Meeting Transcripts'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='projectName'
                   value={''}
@@ -187,8 +187,8 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                 <TextField
                   id='outlined-multiline-flexible'
                   label='Account Manager Notes'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='projectName'
                   value={''}
@@ -201,8 +201,8 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                 <Box
                   component={'textarea'}
                   id='outlined-multiline-flexible'
-                  className={`block w-full text-sm dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input ${
-                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark:border-gray-600 '
+                  className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                    errorMessage?.['projectName'] ? 'border-red-600' : 'dark-d:border-gray-600 '
                   }`}
                   name='projectName'
                   rows={5}
@@ -1357,7 +1357,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
         }}
       >
         <Box
-          className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'
+          className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -1369,7 +1369,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
           }}
         >
           <Box sx={{ mb: '20px' }}>
-            <h2 id='service-task-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark:text-gray-200'>
+            <h2 id='service-task-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark-d:text-gray-200'>
               {taskEditId ? 'Update' : 'Add'} Task
             </h2>
           </Box>
@@ -1405,7 +1405,7 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                       {!!errorMessage?.['title'] &&
                         errorMessage?.['title']?.map((message: any, index: number) => {
                           return (
-                            <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                            <span key={index + Math.random()} className='text-xs text-red-600 dark-d:text-red-400'>
                               {message}
                             </span>
                           )
@@ -1474,7 +1474,10 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                             {!!errorMessage?.['title'] &&
                               errorMessage?.['title']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span
+                                    key={index + Math.random()}
+                                    className='text-xs text-red-600 dark-d:text-red-400'
+                                  >
                                     {message}
                                   </span>
                                 )
@@ -1498,7 +1501,10 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                             {!!errorMessage?.['serial'] &&
                               errorMessage?.['serial']?.map((message: any, index: number) => {
                                 return (
-                                  <span key={index + Math.random()} className='text-xs text-red-600 dark:text-red-400'>
+                                  <span
+                                    key={index + Math.random()}
+                                    className='text-xs text-red-600 dark-d:text-red-400'
+                                  >
                                     {message}
                                   </span>
                                 )

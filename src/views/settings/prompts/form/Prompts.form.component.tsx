@@ -1,12 +1,12 @@
+import { Dropdown } from '@core/components/dropdown'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import { TPromptsComponent, promptsTypeList } from '../Prompts.decorator'
 
 export default function PromptsFormComponent(props: TPromptsComponent) {
@@ -96,7 +96,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
 
   return (
     <Fragment>
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
@@ -111,7 +111,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               {!!errorMessage?.['name'] &&
                 errorMessage?.['name']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -132,7 +132,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               {!!errorMessage?.['type'] &&
                 errorMessage?.['type']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -152,7 +152,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               {!!errorMessage?.['serial'] &&
                 errorMessage?.['serial']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -172,7 +172,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               {!!errorMessage?.['action_type'] &&
                 errorMessage?.['action_type']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -192,7 +192,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               {!!errorMessage?.['user_id'] &&
                 errorMessage?.['user_id']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -203,7 +203,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
             <Box sx={{ width: '100%' }}>
               <TextField
                 label={'Command / Prompt'}
-                className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                 placeholder='Examples: Details, Command or Prompt content'
                 name='prompt'
                 rows={10}
@@ -214,7 +214,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               {!!errorMessage?.['prompt'] &&
                 errorMessage?.['prompt']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )

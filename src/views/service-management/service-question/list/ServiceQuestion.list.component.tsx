@@ -1,9 +1,9 @@
-import { Box, Button, Chip, TextField } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
 import { Dropdown } from '@core/components/dropdown'
 import NoDataComponent from '@core/components/no-data-component'
 import UiSkeleton from '@core/components/ui-skeleton'
 import apiRequest from '@core/utils/axios-config'
+import { Box, Button, Chip, TextField } from '@mui/material'
+import { Fragment, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import { TServiceQuestionComponent } from '../ServiceQuestion.decorator'
 
@@ -98,7 +98,7 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
         <Box className='w-full overflow-x-auto'>
           <table className='w-full whitespace-no-wrap'>
             <thead>
-              <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+              <tr className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark-d:border-gray-700 bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-800'>
                 <Box component={'th'} className='px-4 py-3' sx={{ width: '50%' }}>
                   What question needs to be asked?
                 </Box>
@@ -111,11 +111,11 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
                 </Box>
               </tr>
             </thead>
-            <tbody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
-              <Box component={'tr'} className='text-gray-700 dark:text-gray-400' sx={{ '& td': { p: '5px 5px' } }}>
+            <tbody className='bg-white Boxide-y dark-d:Boxide-gray-700 dark-d:bg-gray-800'>
+              <Box component={'tr'} className='text-gray-700 dark-d:text-gray-400' sx={{ '& td': { p: '5px 5px' } }}>
                 <Box component={'td'}>
                   <TextField
-                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                    className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                     placeholder='What question needs to be asked?'
                     name='title'
                     value={filterData.title}
@@ -165,7 +165,7 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
               ) : (
                 listData?.map((data: any, index: number) => {
                   return (
-                    <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
+                    <Box component={'tr'} key={index} className='text-gray-700 dark-d:text-gray-400'>
                       <Box component={'td'} className='px-4 py-3 text-sm'>
                         {data?.title}
                       </Box>
@@ -183,7 +183,7 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
                             onClick={() => {
                               onEdit(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                             aria-label='Edit'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -194,7 +194,7 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
                             onClick={() => {
                               onDelete(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-red-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-red-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-red-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-red-600'
                             aria-label='Delete'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
@@ -215,7 +215,7 @@ export default function ServiceQuestionListComponent(props: TServiceQuestionComp
           </table>
           <NoDataComponent preload={!listData.length} />
         </Box>
-        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark:border-gray-700 bg-gray-50 sm:grid-cols-9 dark:text-gray-400 dark:bg-gray-800'>
+        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark-d:border-gray-700 bg-gray-50 sm:grid-cols-9 dark-d:text-gray-400 dark-d:bg-gray-800'>
           <span className='flex items-center col-span-3'>
             Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
             {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}

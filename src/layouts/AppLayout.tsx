@@ -3,13 +3,13 @@
 import { Box } from '@mui/material'
 
 // ** Hook Import
+import { isDarkTheme, loginUser } from '@core/store/actions/userActions'
+import { RootState } from '@core/store/reducers'
+import apiRequest from '@core/utils/axios-config'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import { ReactNode, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { isDarkTheme, loginUser } from '@core/store/actions/userActions'
-import { RootState } from '@core/store/reducers'
-import apiRequest from '@core/utils/axios-config'
 import AppBackToTopButton from './components/AppBackToTopButton.component'
 import AppHeaderComponent from './components/AppHeader.component'
 import AppNavbarComponent from './components/AppNavbar.component'
@@ -26,9 +26,9 @@ const AppLayout = ({ children }: Props) => {
   const token = Cookies.get('accessToken')
   const isDark = useSelector((state: RootState) => state.theme.isDark)
 
-  useEffect(() => {
-    document.body.classList.toggle('theme-dark', isDark)
-  }, [isDark])
+  // useEffect(() => {
+  //   document.body.classList.toggle('theme-dark', isDark)
+  // }, [isDark])
 
   useEffect(() => {
     const storedTheme = Cookies.get('isDark')
@@ -62,7 +62,7 @@ const AppLayout = ({ children }: Props) => {
   }
 
   return (
-    <Box className={`flex bg-gray-50 dark:bg-gray-900 }`} sx={{ minHeight: '100vh' }}>
+    <Box className={`flex bg-gray-50 dark-d:bg-gray-900 }`} sx={{ minHeight: '100vh' }}>
       {/* <!-- Desktop sidebar --> */}
       <AppNavbarComponent />
       <Box className='flex flex-col flex-1' sx={{ marginLeft: '280px', width: 'calc(100% - 280px)' }}>

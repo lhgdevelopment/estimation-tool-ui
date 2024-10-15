@@ -19,7 +19,7 @@ export default function AIAssistantComponent() {
             id='prompt-textarea'
             placeholder='Chat Prompt...'
             rows={1}
-            className='block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray'
+            className='block w-full mt-1 text-sm dark-d:text-gray-300 dark-d:border-gray-600 dark-d:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:focus:shadow-outline-gray'
             sx={{ height: '40px', overflowY: 'hidden' }}
           ></Box>
         </Box>

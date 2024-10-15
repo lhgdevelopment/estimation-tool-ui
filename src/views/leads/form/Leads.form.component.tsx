@@ -1,3 +1,8 @@
+import { Dropdown } from '@core/components/dropdown'
+import Preloader from '@core/components/preloader'
+import { RichTextEditor } from '@core/components/rich-text-editor'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
@@ -7,12 +12,7 @@ import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import Preloader from '@core/components/preloader'
-import { RichTextEditor } from '@core/components/rich-text-editor'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { TLeadsComponent } from '../Leads.decorator'
 
 export default function LeadsFormComponent(props: TLeadsComponent) {
@@ -140,7 +140,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
   return (
     <Fragment>
       {!!preload && <Preloader close={!preload} />}
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
@@ -156,7 +156,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
               {!!errorMessage?.['firstName'] &&
                 errorMessage?.['firstName']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -174,7 +174,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
               {!!errorMessage?.['lastName'] &&
                 errorMessage?.['lastName']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -195,7 +195,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
               {!!errorMessage?.['company'] &&
                 errorMessage?.['company']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -213,7 +213,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
               {!!errorMessage?.['phone'] &&
                 errorMessage?.['phone']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -233,7 +233,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
               {!!errorMessage?.['email'] &&
                 errorMessage?.['email']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -252,7 +252,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
               {!!errorMessage?.['projectTypeId'] &&
                 errorMessage?.['projectTypeId']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -262,7 +262,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm'>
-                <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Description</span>
+                <span className='flex text-gray-700 d:text-gray-400 mb-1'>Description</span>
               </label>
               <RichTextEditor
                 value={formData.description}

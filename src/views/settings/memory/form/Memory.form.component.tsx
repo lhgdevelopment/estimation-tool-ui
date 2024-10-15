@@ -1,14 +1,14 @@
+import { Dropdown } from '@core/components/dropdown'
+import AppTextInput from '@core/components/input/textInput'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
-import {TMemoryComponent} from "../Memory.decorator";
-import AppTextInput from "@core/components/input/textInput";
+import { TMemoryComponent } from '../Memory.decorator'
 
 export default function MemoryFormComponent(props: TMemoryComponent) {
   const { showSnackbar } = useToastSnackbar()
@@ -93,14 +93,14 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
     setEditDataId(null)
     setEditData({})
     setErrorMessage({})
-    setTimeout(()=>{
+    setTimeout(() => {
       setFormData(prevState => ({ ...defaultData }))
     }, 200)
   }
 
   return (
     <Fragment>
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
@@ -114,7 +114,7 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
               {!!errorMessage?.['title'] &&
                 errorMessage?.['title']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -134,7 +134,7 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
               {!!errorMessage?.['promptIds'] &&
                 errorMessage?.['promptIds']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -156,7 +156,7 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
               {!!errorMessage?.['prompt'] &&
                 errorMessage?.['prompt']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )

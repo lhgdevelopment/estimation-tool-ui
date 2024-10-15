@@ -1,3 +1,8 @@
+import { Dropdown } from '@core/components/dropdown'
+import Preloader from '@core/components/preloader'
+import { RichTextEditor } from '@core/components/rich-text-editor'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
@@ -8,11 +13,6 @@ import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import Preloader from '@core/components/preloader'
-import { RichTextEditor } from '@core/components/rich-text-editor'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import { TMeetingSummaryComponent } from '../MeetingSummary.decorator'
 
 export default function MeetingSummaryFormComponent(props: TMeetingSummaryComponent) {
@@ -148,7 +148,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
   return (
     <Fragment>
       {!!preload && <Preloader close={!preload} />}
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
@@ -163,7 +163,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
               {!!errorMessage?.['meetingName'] &&
                 errorMessage?.['meetingName']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -182,7 +182,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
               {!!errorMessage?.['meetingType'] &&
                 errorMessage?.['meetingType']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -203,7 +203,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
               {!!errorMessage?.['clickupLink'] &&
                 errorMessage?.['clickupLink']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -221,7 +221,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
               {!!errorMessage?.['tldvLink'] &&
                 errorMessage?.['tldvLink']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )
@@ -233,17 +233,17 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
               <Box sx={{ width: '50%' }}>
                 <label className='block text-sm' htmlFor='pushToClickUp'>
-                  <span className='text-gray-700 dark:text-gray-400 mr-2'>Push to clickup</span>
+                  <span className='text-gray-700 dark-d:text-gray-400 mr-2'>Push to clickup</span>
                   <Checkbox
                     id='pushToClickUp'
-                    className='h-6 w-6 border-purple-600 text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray'
+                    className='h-6 w-6 border-purple-600 text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:focus:shadow-outline-gray'
                     name='pushToClickUp'
                     checked={formData.pushToClickUp}
                     onChange={handleCheckChange}
                   />
                   {!!errorMessage?.['pushToClickUp'] &&
                     errorMessage?.['pushToClickUp']?.map((message: any, index: number) => (
-                      <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                         {message}
                       </span>
                     ))}
@@ -256,9 +256,9 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
             <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm'>
-                  <span className='text-gray-700 dark:text-gray-400'>Transcript Text</span>
+                  <span className='text-gray-700 dark-d:text-gray-400'>Transcript Text</span>
                   <textarea
-                    className='block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input'
+                    className='block w-full mt-1 text-sm dark-d:border-gray-600 dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input'
                     /* placeholder='Examples: Transcript Text' */
                     name='transcriptText'
                     rows={10}
@@ -268,7 +268,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
                   {!!errorMessage?.['transcriptText'] &&
                     errorMessage?.['transcriptText']?.map((message: any, index: number) => {
                       return (
-                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                           {message}
                         </span>
                       )
@@ -282,13 +282,13 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
             <Box sx={{ display: 'flex', gap: 5 }}>
               <Box sx={{ width: '100%' }}>
                 <label className='block text-sm' htmlFor={'#summaryText'}>
-                  <span className='flex text-gray-700 dark:text-gray-400 mb-1'>Meeting Summary Text</span>
+                  <span className='flex text-gray-700 dark-d:text-gray-400 mb-1'>Meeting Summary Text</span>
                   <RichTextEditor value={summaryText} onChange={setSummaryText} />
 
                   {!!errorMessage?.['summaryText'] &&
                     errorMessage?.['summaryText']?.map((message: any, index: number) => {
                       return (
-                        <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                        <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                           {message}
                         </span>
                       )
@@ -301,17 +301,17 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
           <Box sx={{ display: 'flex', gap: 5, mt: 5 }}>
             <Box sx={{ width: '100%' }}>
               <label className='block text-sm' htmlFor='is_private'>
-                <span className='text-gray-700 dark:text-gray-400 mr-2'>Private?</span>
+                <span className='text-gray-700 dark-d:text-gray-400 mr-2'>Private?</span>
                 <Checkbox
                   id='is_private'
-                  className='h-6 w-6 border-purple-600 text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray'
+                  className='h-6 w-6 border-purple-600 text-purple-600 form-checkbox focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:focus:shadow-outline-gray'
                   name='is_private'
                   checked={formData.is_private}
                   onChange={handleCheckChange}
                 />
                 {!!errorMessage?.['is_private'] &&
                   errorMessage?.['is_private']?.map((message: any, index: number) => (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   ))}

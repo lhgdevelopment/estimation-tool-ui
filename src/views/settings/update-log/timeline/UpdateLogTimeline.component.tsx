@@ -1,3 +1,5 @@
+import apiRequest from '@core/utils/axios-config'
+import { dateDefaultFormat, formatDateTime } from '@core/utils/utils'
 import RepeatIcon from '@mui/icons-material/Repeat'
 import Timeline from '@mui/lab/Timeline'
 import TimelineConnector from '@mui/lab/TimelineConnector'
@@ -10,8 +12,6 @@ import { Box } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import 'md-editor-rt/lib/style.css'
 import { useEffect, useRef, useState } from 'react'
-import apiRequest from '@core/utils/axios-config'
-import { dateDefaultFormat, formatDateTime } from '@core/utils/utils'
 
 export default function UpdateLogTimelineComponent() {
   const [updateLogData, setUpdateLogData] = useState<any>([])
@@ -66,7 +66,10 @@ export default function UpdateLogTimelineComponent() {
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
-        <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300 text-center'>
+        <Box
+          component={'h1'}
+          className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark-d:text-gray-300 text-center'
+        >
           Hive Update Log
         </Box>
       </Box>
