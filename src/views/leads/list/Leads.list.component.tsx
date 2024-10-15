@@ -1,3 +1,25 @@
+import UiSkeleton from '@core/components/ui-skeleton'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import { TableSx } from '@core/theme/tableStyle'
+import apiRequest from '@core/utils/axios-config'
+import { formatDateTime } from '@core/utils/utils'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import {
+  Box,
+  Button,
+  Pagination,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material'
+import Link from 'next/link'
+import { Fragment, useEffect, useState } from 'react'
+import Swal from 'sweetalert2'
+import { TLeadsComponent } from '../Leads.decorator'
 
 export default function LeadsListComponent(props: TLeadsComponent) {
   const { listData, setListData } = props

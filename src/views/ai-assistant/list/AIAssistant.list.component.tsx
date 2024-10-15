@@ -1,8 +1,12 @@
 import UiSkeleton from '@core/components/ui-skeleton'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import apiRequest from '@core/utils/axios-config'
 import { formatDateTime } from '@core/utils/utils'
+import ClearIcon from '@material-ui/icons/Clear'
+import EditIcon from '@material-ui/icons/Edit'
+import EditNoteIcon from '@mui/icons-material/EditNote'
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer'
-import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material'
+import { Box, Button, Modal, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material'
 import Link from 'next/link'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
@@ -15,14 +19,31 @@ const defaultFilterData = {
   user_id: ''
 }
 export default function AIAssistantListComponent(props: TAIAssistantComponent) {
-  const { setEditDataId, listData, setListData, setEditData, editDataId } = props
-
+  const { listData, setListData } = props
+  const { showSnackbar } = useToastSnackbar()
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [preloader, setPreloader] = useState<boolean>(false)
 
   const [filterData, setFilterData] = useState(defaultFilterData)
   const debounceValue = useDebounce(filterData, 800)
+
+  const [editDataId, setEditDataId] = useState<null | string>(null)
+  const [formData, setFormData] = useState({
+    name: ''
+  })
+  const [errorMessage, setErrorMessage] = useState<any>({})
+  const [hiveEditModalOpen, setHiveEditModalOpen] = useState<boolean>(false)
+  const [expendendKeys, setExpandedKeys] = useState<any>([])
+
+  const handleHiveEditModalOpen = () => {
+    setHiveEditModalOpen(true)
+    setErrorMessage({})
+  }
+  const handleHiveEditModalClose = () => {
+    setHiveEditModalOpen(false)
+    setErrorMessage({})
+  }
 
   const getList = useCallback(
     (page = 1, { name = '', user_id = '' } = {}) => {
@@ -49,9 +70,9 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
 
   const onEdit = (id: string) => {
     setEditDataId(id)
-
     const editData = listData.length ? listData?.filter((data: any) => data['id'] == id)[0] : {}
-    setEditData(editData)
+    setFormData(editData)
+    handleHiveEditModalOpen()
   }
 
   const onDelete = (id: string) => {
@@ -94,6 +115,42 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
 
   const handlePageChange = (newPage: number) => {
     getList(newPage, { ...filterData })
+  }
+  const handleTextChange = (e: React.ChangeEvent<any>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+  const onSubmit = (e: React.FormEvent<any>) => {
+    e.preventDefault()
+    setErrorMessage({})
+    if (editDataId) {
+      apiRequest
+        .put(`/conversations/${editDataId}`, formData)
+        .then(res => {
+          setListData((prevState: []) => {
+            const updatedList: any = [...prevState]
+            const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
+
+            if (editedServiceIndex !== -1) {
+              updatedList[editedServiceIndex]['name'] = res?.data?.name
+            }
+
+            return updatedList
+          })
+
+          setFormData({
+            name: ''
+          })
+          showSnackbar('Updated Successfully!', { variant: 'success' })
+          handleHiveEditModalClose()
+        })
+        .catch(error => {
+          setErrorMessage(error?.response?.data?.errors)
+          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        })
+    }
   }
 
   if (!!preloader) {
@@ -184,7 +241,31 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                 return (
                   <TableRow key={index} className='text-gray-700 dark-d:text-gray-400'>
                     <TableCell className='px-4 py-3 text-sm'>
-                      <Link href={`ai-assistant/${data?.id}`}>{data?.name}</Link>
+                      <Box sx={{ '&:hover .edit-name-btn': { opacity: 1 } }}>
+                        <Link href={`ai-assistant/${data?.id}`}>{data?.name}</Link>
+
+                        <Button
+                          sx={{
+                            ml: '5px',
+                            p: '3px',
+                            minWidth: 0,
+                            borderRadius: '5px',
+                            opacity: 0,
+                            transition: 'all 0.3s ease-in-out',
+                            '& .MuiSvgIcon-root': {
+                              color: '#7e22ce',
+                              height: '16px !important',
+                              width: '16px !important'
+                            }
+                          }}
+                          className='edit-name-btn'
+                          onClick={() => {
+                            onEdit(data['id'])
+                          }}
+                        >
+                          <EditIcon />
+                        </Button>
+                      </Box>
                     </TableCell>
                     <TableCell className='px-4 py-3 text-sm'>
                       <Box sx={{ width: '100px', textOverflow: 'ellipsis', textWrap: 'nowrap', overflow: 'hidden' }}>
@@ -209,18 +290,6 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                             <QuestionAnswerIcon />
                           </a>
                         </Link>
-
-                        <button
-                          onClick={() => {
-                            onEdit(data['id'])
-                          }}
-                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
-                          aria-label='Edit'
-                        >
-                          <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
-                            <path d='M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z'></path>
-                          </svg>
-                        </button>
 
                         <button
                           onClick={() => {
@@ -320,6 +389,75 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
           </span>
         </Box>
       </Box>
+      <Modal
+        open={hiveEditModalOpen}
+        onClose={handleHiveEditModalClose}
+        aria-labelledby='hive-modal-title'
+        aria-describedby='hive-modal-description'
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        <Box
+          className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '50%',
+            overflowY: 'auto',
+            p: '50px',
+            maxHeight: '100%',
+            '& form': { width: '100%', display: 'flex', flexDirection: 'column' }
+          }}
+        >
+          <Box sx={{ mb: '20px' }}>
+            <h2 id='hive-modal-title' className='my-6 text-xl font-semibold text-gray-700 dark-d:text-gray-200'>
+              Update Name
+            </h2>
+          </Box>
+          <form onSubmit={onSubmit}>
+            <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+              <Box sx={{ width: '100%' }}>
+                <TextField
+                  label={'Name'}
+                  name='name'
+                  value={formData?.name}
+                  onChange={handleTextChange}
+                  error={errorMessage?.['name']}
+                  fullWidth
+                />
+                {!!errorMessage?.['name'] &&
+                  errorMessage?.['name']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
+              </Box>
+            </Box>
+
+            <Box className='my-4 text-right'>
+              <button
+                onClick={handleHiveEditModalClose}
+                type='button'
+                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+              >
+                Close <ClearIcon />
+              </button>
+              <button
+                type='submit'
+                className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+              >
+                Update
+                <EditNoteIcon />
+              </button>
+            </Box>
+          </form>
+        </Box>
+      </Modal>
     </Fragment>
   )
 }

@@ -120,7 +120,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
 
   useEffect(() => {
     setOptionItems(initialOptionList.filter(item => containsText(item['title'], searchText)))
-  }, [searchText])
+  }, [initialOptionList, searchText])
 
   const selectOnOpen = () => {
     setOptionItems(initialOptionList)
