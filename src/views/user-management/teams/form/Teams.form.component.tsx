@@ -7,8 +7,10 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
 import { Fragment, useEffect, useState } from 'react'
 import { TUsersComponent } from '../Teams.decorator'
+import {useRouter} from "next/router";
 
 export default function TeamsFormComponent(props: TUsersComponent) {
+  const router = useRouter()
   const { showSnackbar } = useToastSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
@@ -59,9 +61,9 @@ export default function TeamsFormComponent(props: TUsersComponent) {
       apiRequest
         .post('/teams', formData)
         .then(res => {
-          setListData((prevState: []) => [...prevState, res?.data])
+          //setListData((prevState: []) => [...prevState, res?.data])
           showSnackbar('Created Successfully!', { variant: 'success' })
-          onClear()
+          router.push(`/user-management/teams/${res?.data.id}/users`)
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)

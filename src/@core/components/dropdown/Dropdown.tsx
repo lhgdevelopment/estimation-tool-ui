@@ -4,7 +4,7 @@ import { Box, InputAdornment, InputLabel, ListSubheader, SxProps, TextField } fr
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
-import { forwardRef, SyntheticEvent, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import {forwardRef, SyntheticEvent, useCallback, useEffect, useImperativeHandle, useRef, useState} from 'react'
 import apiRequest from '../../utils/axios-config'
 
 type TOptionConfig = { title: string; id: string }
@@ -58,7 +58,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
   const [preloader, setPreloader] = useState(true)
   const [searchText, setSearchText] = useState('')
 
-  const getList = () => {
+  const getList = useCallback(() => {
     setPreloader(true)
     if (!dataList.length && url) {
       apiRequest
@@ -90,7 +90,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
       setInitialOptionList([])
       setPreloader(false)
     }
-  }
+  },[setPreloader, setOptionItems, setInitialOptionList, setPreloader])
 
   const handleOnClose = (event: SyntheticEvent) => {
     onClose && onClose(event)
@@ -129,11 +129,11 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
 
   const handleSelectAll = () => {
     const allIds = optionItems.map(item => item.id)
-    onChange && onChange({ target: { value: allIds } } as any, { action: 'select' } as any)
+    onChange && onChange({ target: { value: allIds, name: otherProps.name } } as any, { action: 'select' } as any)
   }
 
   const handleClearAll = () => {
-    onChange && onChange({ target: { value: [] } } as any, { action: 'clear' } as any)
+    onChange && onChange({ target: { value: [], name: otherProps.name } } as any, { action: 'clear' } as any)
   }
 
   return (

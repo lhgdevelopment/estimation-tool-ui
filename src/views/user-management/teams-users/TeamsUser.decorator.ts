@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react'
+import {Dispatch, MutableRefObject, SetStateAction} from 'react'
 
 export type TUsersComponent = {
   editDataId?: string | null
@@ -7,6 +7,7 @@ export type TUsersComponent = {
   setEditData: Dispatch<any> // Remove the optional '?'
   listData: any[]
   setListData: Dispatch<any>
+  listRef?: MutableRefObject<any>
 }
 
 export const promptsTypeList = [

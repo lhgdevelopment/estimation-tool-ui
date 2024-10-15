@@ -1,37 +1,40 @@
+import { Box, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
+import {Fragment, useCallback, useEffect, useState} from 'react'
 import NoDataComponent from '@core/components/no-data-component'
 import UiSkeleton from '@core/components/ui-skeleton'
 import { TableSx } from '@core/theme/tableStyle'
 import apiRequest from '@core/utils/axios-config'
 import { formatDateTime } from '@core/utils/utils'
-import { Box, Pagination, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import { useRouter } from 'next/router'
-import { Fragment, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import { TUsersComponent } from '../TeamsUser.decorator'
+import {useRouter} from "next/router";
 
 export default function TeamsUserListComponent(props: TUsersComponent) {
-  const { setEditDataId, listData, setListData, setEditData, editDataId } = props
+  const { setEditDataId, listData, setListData, setEditData, editDataId, listRef } = props
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const { query } = useRouter()
+  const { query } = useRouter();
 
-  const getList = (page = 1) => {
-    setIsLoading(true)
-    apiRequest
-      .get(`/teams/${query.id}/users?page=${page}`)
-      .then(res => {
-        const paginationData: any = res
+  const getList = useCallback((page= 0) => {
+    setIsLoading(true);
+    apiRequest.get(`/teams/${query.id}/users?page=${page || currentPage}`).then(res => {
+      const paginationData: any = res
 
-        setListData(res?.data)
-        setCurrentPage(paginationData?.['current_page'])
-        setTotalPages(Math.ceil(paginationData?.['total'] / 10))
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }
+      setListData(res?.data)
+      setCurrentPage(paginationData?.['current_page'])
+      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+    }).finally(()=>{
+      setIsLoading(false);
+    })
+  }, [query.id, setIsLoading, setListData, setCurrentPage, setTotalPages, currentPage])
+
+  useEffect(() => {
+    if(listRef){
+      listRef.current = { getList }
+    }
+  }, [getList, listRef]);
 
   const onEdit = (id: string) => {
     setEditDataId(id)
@@ -76,7 +79,7 @@ export default function TeamsUserListComponent(props: TUsersComponent) {
 
   if (isLoading) {
     return <UiSkeleton />
-  } else if (listData.length === 0) {
+  }else if( listData.length === 0 ) {
     return <NoDataComponent preload />
   }
 
@@ -87,21 +90,23 @@ export default function TeamsUserListComponent(props: TUsersComponent) {
           <TableContainer component={Paper}>
             <Table className='w-full whitespace-no-wrap' sx={TableSx}>
               <TableHead>
-                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark-d:border-gray-700 bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-800'>
-                  <TableCell className='px-4 py-3'>User Name</TableCell>
+                <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800'>
+                  <TableCell className='px-4 py-3'>
+                    User Name
+                  </TableCell>
                   <TableCell className='px-4 py-3' sx={{ textAlign: 'center', width: '190px' }}>
                     Created At
                   </TableCell>
-                  <TableCell className='px-4 py-3' sx={{ textAlign: 'right' }}>
-                    Actions
-                  </TableCell>
+                  <TableCell className='px-4 py-3' sx={{textAlign: 'right'}}>Actions</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody className='bg-white Boxide-y dark-d:Boxide-gray-700 dark-d:bg-gray-800'>
+              <TableBody className='bg-white Boxide-y dark:Boxide-gray-700 dark:bg-gray-800'>
                 {listData?.map((data: any, index: number) => {
                   return (
-                    <Box component={'tr'} key={index} className='text-gray-700 dark-d:text-gray-400'>
-                      <TableCell className='px-4 py-3 text-sm'>{data?.user?.name}</TableCell>
+                    <Box component={'tr'} key={index} className='text-gray-700 dark:text-gray-400'>
+                      <TableCell className='px-4 py-3 text-sm'>
+                        {data?.user?.name}
+                      </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
                         {formatDateTime(data?.created_at)}
                       </TableCell>
@@ -112,7 +117,7 @@ export default function TeamsUserListComponent(props: TUsersComponent) {
                             onClick={() => {
                               onDelete(data['id'])
                             }}
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
+                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                             aria-label='Delete'
                           >
                             <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
