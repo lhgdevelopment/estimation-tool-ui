@@ -1,3 +1,6 @@
+import {useState} from "react";
+import {Box} from "@mui/material";
+import LeadsFormComponent from "../form/Leads.form.component";
 
 export default function LeadsEditComponent() {
   const [listData, setListData] = useState<any>([])
