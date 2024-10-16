@@ -5,12 +5,14 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { TMeetingTypeComponent } from '../MeetingType.decorator'
 
 export default function MeetingTypeFormComponent(props: TMeetingTypeComponent) {
   const { showSnackbar } = useToastSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
+
+  const nameInputRef = useRef<HTMLInputElement>(null)
 
   const defaultData = {
     name: ''
@@ -65,15 +67,22 @@ export default function MeetingTypeFormComponent(props: TMeetingTypeComponent) {
   }
 
   useEffect(() => {
-    setFormData({
-      name: editData?.['name']
-    })
+    if (editDataId) {
+      setFormData({
+        name: editData?.['name'] || ''
+      })
+      // Focus the name input field by default when edit mode is triggered
+      nameInputRef.current?.focus()
+    } else {
+      setFormData(defaultData)
+    }
   }, [editDataId, editData])
 
   const onClear = () => {
-    setFormData(prevState => ({ ...defaultData }))
+    setFormData({ ...defaultData })
     setEditDataId(null)
     setEditData({})
+    setErrorMessage({})
   }
 
   return (
@@ -88,6 +97,7 @@ export default function MeetingTypeFormComponent(props: TMeetingTypeComponent) {
               onChange={handleTextChange}
               error={errorMessage?.['name']}
               fullWidth
+              inputRef={nameInputRef}
             />
             {!!errorMessage?.['name'] &&
               errorMessage?.['name']?.map((message: any, index: number) => {

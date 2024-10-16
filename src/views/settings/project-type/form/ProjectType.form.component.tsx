@@ -5,12 +5,16 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { TProjectTypeComponent } from '../ProjectType.decorator'
 
 export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
   const { showSnackbar } = useToastSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
+
+  // Refs for both input fields
+  const nameInputRef = useRef<HTMLInputElement>(null)
+  const prefixInputRef = useRef<HTMLInputElement>(null)
 
   const defaultData = {
     name: '',
@@ -64,16 +68,23 @@ export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
   }
 
   useEffect(() => {
-    setFormData({
-      name: editData?.['name'],
-      projectTypePrefix: editData?.['projectTypePrefix']
-    })
+    if (editDataId) {
+      setFormData({
+        name: editData?.['name'] || '',
+        projectTypePrefix: editData?.['projectTypePrefix'] || ''
+      })
+      // Focus the name input field by default when edit mode is triggered
+      nameInputRef.current?.focus()
+    } else {
+      setFormData(defaultData)
+    }
   }, [editDataId, editData])
 
   const onClear = () => {
-    setFormData(prevState => ({ ...defaultData }))
+    setFormData({ ...defaultData })
     setEditDataId(null)
     setEditData({})
+    setErrorMessage({})
   }
 
   return (
@@ -92,15 +103,14 @@ export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
                 name='name'
                 value={formData.name}
                 onChange={handleTextChange}
+                inputRef={nameInputRef} // Attach ref to the name input
               />
               {!!errorMessage?.['name'] &&
-                errorMessage?.['name']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+                errorMessage?.['name']?.map((message: any, index: number) => (
+                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                    {message}
+                  </span>
+                ))}
             </Box>
             <Box sx={{ width: '50%' }}>
               <TextField
@@ -113,15 +123,14 @@ export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
                 name='projectTypePrefix'
                 value={formData.projectTypePrefix}
                 onChange={handleTextChange}
+                inputRef={prefixInputRef} // Attach ref to the prefix input
               />
               {!!errorMessage?.['projectTypePrefix'] &&
-                errorMessage?.['projectTypePrefix']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+                errorMessage?.['projectTypePrefix']?.map((message: any, index: number) => (
+                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                    {message}
+                  </span>
+                ))}
             </Box>
           </Box>
 
@@ -139,7 +148,6 @@ export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
               className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
             >
               {editDataId ? 'Update ' : 'Save '}
-
               {editDataId ? <EditNoteIcon /> : <AddIcon />}
             </button>
           </Box>

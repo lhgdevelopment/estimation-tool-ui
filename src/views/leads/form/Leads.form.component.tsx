@@ -17,7 +17,7 @@ import { TLeadsComponent } from '../Leads.decorator'
 
 export default function LeadsFormComponent(props: TLeadsComponent) {
   const { showSnackbar } = useToastSnackbar()
-  const { listData, setListData, isEdit } = props
+  const { listData, setListData } = props
   const [preload, setPreload] = useState<boolean>(false)
   const router = useRouter()
 

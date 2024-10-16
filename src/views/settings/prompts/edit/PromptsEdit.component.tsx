@@ -1,17 +1,17 @@
 import { Box } from '@mui/material'
 import { useState } from 'react'
-import LeadsFormComponent from '../form/Leads.form.component'
+import PromptsFormComponent from '../form/Prompts.form.component'
 
-export default function LeadsEditComponent() {
+export default function PromptsEditComponent() {
   const [listData, setListData] = useState<any>([])
 
   return (
     <>
       <Box className='container px-6 mx-auto'>
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark-d:text-gray-300'>
-          Edit Leads
+          Edit Prompts
         </Box>
-        <LeadsFormComponent listData={listData} setListData={setListData} />
+        <PromptsFormComponent listData={listData} setListData={setListData} isEdit={true} />
       </Box>
     </>
   )
