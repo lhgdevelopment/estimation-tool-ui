@@ -62,12 +62,6 @@ export default function PromptsListComponent(props: TPromptsComponent) {
       })
   }
 
-  const onEdit = (id: string) => {
-    setEditDataId(id)
-    const editData = listData.length ? listData?.filter((data: any) => data['id'] == id)[0] : {}
-    setEditData(editData)
-  }
-
   const handleFilterChange = () => {
     getList()
   }
