@@ -11,7 +11,7 @@ export default function PromptsEditComponent() {
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark-d:text-gray-300'>
           Edit Prompts
         </Box>
-        <PromptsFormComponent listData={listData} setListData={setListData} isEdit={true} />
+        <PromptsFormComponent listData={listData} setListData={setListData} />
       </Box>
     </>
   )
