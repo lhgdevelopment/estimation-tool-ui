@@ -180,6 +180,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
 
                   <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
                   <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
                   <TableCell>
                     <Box sx={{ textAlign: 'center' }}>
                       <Button
