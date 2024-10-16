@@ -7,6 +7,7 @@ import {useRouter} from "next/router";
 import Error404 from "../../../pages/404";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Link from 'next/link';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 
 
 export default function TeamsUserComponent() {
@@ -37,11 +38,18 @@ export default function TeamsUserComponent() {
 return (
     <>
       <Box className='container px-6 mx-auto'>
-        <Link href={`/user-management/teams`} passHref>
-          <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300 cursor-pointer'>
-            <ArrowBackIcon /> Back
-          </Box>
-        </Link>
+        <Box className='flex justify-between'>
+          <Link href={`/user-management/teams`} passHref>
+            <Box className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300 cursor-pointer'>
+              <ArrowBackIcon /> Back
+            </Box>
+          </Link>
+          <Link href={`/user-management/teams/${query.id}/prompts`} passHref>
+            <Box className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300 cursor-pointer'>
+              <AssignmentIcon /> Team Prompts
+            </Box>
+          </Link>
+        </Box>
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
           Add Users to {teamInfo.name}
         </Box>

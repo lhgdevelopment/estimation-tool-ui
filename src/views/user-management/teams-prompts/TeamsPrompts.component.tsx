@@ -6,6 +6,7 @@ import apiRequest from "../../../@core/utils/axios-config";
 import {useRouter} from "next/router";
 import Error404 from "../../../pages/404";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import Link from "next/link";
 
 
@@ -37,11 +38,19 @@ export default function TeamsPromptsComponent() {
 return (
     <>
       <Box className='container px-6 mx-auto'>
-        <Link href={`/user-management/teams`} passHref>
-          <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300 cursor-pointer'>
-            <ArrowBackIcon /> Back
-          </Box>
-        </Link>
+        <Box className='flex justify-between'>
+          <Link href={`/user-management/teams`} passHref>
+            <Box className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300 cursor-pointer'>
+              <ArrowBackIcon /> Back
+            </Box>
+          </Link>
+          <Link href={`/user-management/teams/${query.id}/users`} passHref>
+            <Box className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300 cursor-pointer'>
+              <PersonAddAltIcon /> Team Users
+            </Box>
+          </Link>
+        </Box>
+
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark:text-gray-300'>
           Add Prompts to {teamInfo.name}
         </Box>

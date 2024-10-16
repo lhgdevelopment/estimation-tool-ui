@@ -19,10 +19,11 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     prompt: '',
     serial: '',
     user_id: [],
+    teamIds: [],
     action_type: null
   }
 
-  const [formData, setFormData] = useState(defaultData)
+  const [formData, setFormData] = useState({...defaultData})
   const [errorMessage, setErrorMessage] = useState<any>({})
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
@@ -56,7 +57,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           })
 
           showSnackbar('Updated Successfully!', { variant: 'success' })
-          setTimeout(() => onClear(), 1000)
+          onClear();
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -66,9 +67,9 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
       apiRequest
         .post('/prompts', formData)
         .then(res => {
+          onClear();
           setListData((prevState: []) => [...prevState, res?.data])
           showSnackbar('Created Successfully!', { variant: 'success' })
-          setTimeout(() => onClear(), 1000)
         })
         .catch(error => {
           setErrorMessage(error?.response?.data?.errors)
@@ -84,14 +85,17 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
       prompt: editData?.['prompt'],
       serial: editData?.['serial'],
       user_id: editData?.['shared_user']?.map((user: any) => user.user_id),
+      teamIds: editData?.['shared_teams']?.map((team: any) => team.teamId),
       action_type: editData?.['action_type']
     })
   }, [editDataId, editData])
 
   const onClear = () => {
-    setFormData(prevState => defaultData)
     setEditDataId(null)
     setEditData({})
+    setTimeout(()=> {
+      setFormData({...defaultData});
+    }, 100)
   }
 
   return (
@@ -191,6 +195,26 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               />
               {!!errorMessage?.['user_id'] &&
                 errorMessage?.['user_id']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '100%' }}>
+              <Dropdown
+                label='Allowed Teams'
+                url='teams'
+                name='teamIds'
+                value={formData.teamIds}
+                onChange={handleSelectChange}
+                multiple
+              />
+              {!!errorMessage?.['teamIds'] &&
+                errorMessage?.['teamIds']?.map((message: any, index: number) => {
                   return (
                     <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}

@@ -134,6 +134,9 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                   <TableCell className='px-4 py-3' sx={{ width: '100%' }}>
                     Allowed Users
                   </TableCell>
+                  <TableCell className='px-4 py-3' sx={{ width: '100%' }}>
+                    Allowed Teams
+                  </TableCell>
 
                   <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
                     Actions
@@ -262,7 +265,12 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
                         <Box sx={{ maxWidth: '200px', overflow: 'hidden', textWrap: 'wrap' }}>
-                          {data?.shared_user?.map((shared: any) => shared?.user?.name).join(',')}
+                          {data?.shared_user?.map((shared: any) => shared?.user?.name).join(', ')}
+                        </Box>
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        <Box sx={{ maxWidth: '200px', overflow: 'hidden', textWrap: 'wrap' }}>
+                          {data?.shared_teams?.map((shared: any) => shared?.team?.name).join(', ')}
                         </Box>
                       </TableCell>
                       <TableCell className='px-4 py-3'>
