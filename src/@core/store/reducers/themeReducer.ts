@@ -1,11 +1,20 @@
-const initialThemeState = {
-  isdark: null
+interface ThemeState {
+  isDark: boolean
 }
 
-const themeReducer = (state = initialThemeState, action: any) => {
+interface Action {
+  type: string
+  payload: any
+}
+
+const initialThemeState: ThemeState = {
+  isDark: false
+}
+
+const themeReducer = (state: ThemeState = initialThemeState, action: Action): ThemeState => {
   switch (action.type) {
     case 'IS_DARK_THEME':
-      return { ...state, isdark: action.payload }
+      return { ...state, isDark: action.payload }
     default:
       return state
   }

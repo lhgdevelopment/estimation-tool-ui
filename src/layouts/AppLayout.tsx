@@ -3,7 +3,7 @@
 import { Box } from '@mui/material'
 
 // ** Hook Import
-import { isDarkTheme, loginUser } from '@core/store/actions/userActions'
+import { isDarkTheme, loginUser } from '@core/store/actions'
 import { RootState } from '@core/store/reducers'
 import apiRequest from '@core/utils/axios-config'
 import Cookies from 'js-cookie'
@@ -25,7 +25,7 @@ const AppLayout = ({ children }: Props) => {
   const router = useRouter()
   const token = Cookies.get('accessToken')
   const isDark = useSelector((state: RootState) => state.theme.isDark)
-
+  const isNavbarCollapsed = useSelector((state: RootState) => state?.settings?.isNavbarCollapsed)
   // useEffect(() => {
   //   document.body.classList.toggle('theme-dark', isDark)
   // }, [isDark])
@@ -62,10 +62,16 @@ const AppLayout = ({ children }: Props) => {
   }
 
   return (
-    <Box className={`flex bg-gray-50 dark-d:bg-gray-900 }`} sx={{ minHeight: '100vh' }}>
+    <Box className={`flex bg-gray-50 dark-d:bg-gray-900`} sx={{ minHeight: '100vh' }}>
       {/* <!-- Desktop sidebar --> */}
       <AppNavbarComponent />
-      <Box className='flex flex-col flex-1' sx={{ marginLeft: '280px', width: 'calc(100% - 280px)' }}>
+      <Box
+        className='flex flex-col flex-1'
+        sx={{
+          marginLeft: isNavbarCollapsed ? '90px' : '280px',
+          width: isNavbarCollapsed ? 'calc(100% - 90px)' : 'calc(100% - 280px)'
+        }}
+      >
         <AppHeaderComponent />
         <Box sx={{ mt: '60px' }} component={'main'} className='h-full'>
           {children}
