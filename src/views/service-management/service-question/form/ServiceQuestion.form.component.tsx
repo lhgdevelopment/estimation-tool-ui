@@ -6,7 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { TServiceQuestionComponent } from '../ServiceQuestion.decorator'
 
 export default function ServiceQuestionFormComponent(props: TServiceQuestionComponent) {
@@ -20,13 +20,7 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
-
-  const handleReachText = (value: string, field: string) => {
-    setFormData({
-      ...formData,
-      [field]: value
-    })
-  }
+  const titleInputRef = useRef<HTMLInputElement>(null) // Add ref for input focus
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -38,56 +32,44 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
   const handleSelectChange = (e: any) => {
     setFormData({
       ...formData,
-      [e?.target?.name]: e?.target?.value
+      [e.target.name]: e.target.value
     })
   }
 
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
-    if (editDataId) {
-      apiRequest
-        .put(`/questions/${editDataId}`, formData)
-        .then(res => {
-          setListData((prevState: []) => {
-            const updatedList: any = [...prevState]
-            const editedServiceQuestionIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
-            if (editedServiceQuestionIndex !== -1) {
-              updatedList[editedServiceQuestionIndex] = res?.data
-            }
+    const apiCall = editDataId
+      ? apiRequest.put(`/questions/${editDataId}`, formData)
+      : apiRequest.post('/questions', formData)
 
-            return updatedList
-          })
-          onClear()
-          showSnackbar('Updated Successfully!', { variant: 'success' })
-        })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
-        })
-    } else {
-      apiRequest
-        .post('/questions', formData)
-        .then(res => {
-          setListData((prevState: []) => [...prevState, res?.data])
-          showSnackbar('Created Successfully!', { variant: 'success' })
-          onClear()
-        })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
-        })
-    }
+    apiCall
+      .then(res => {
+        setListData((prevState: any[]) =>
+          editDataId ? prevState.map(item => (item.id === editDataId ? res.data : item)) : [...prevState, res.data]
+        )
+        showSnackbar(editDataId ? 'Updated Successfully!' : 'Created Successfully!', { variant: 'success' })
+        onClear()
+      })
+      .catch(error => {
+        setErrorMessage(error?.response?.data?.errors || {})
+        showSnackbar(error?.response?.data?.message || 'Something went wrong!', { variant: 'error' })
+      })
   }
 
   useEffect(() => {
-    setFormData({
-      title: editData?.['title'],
-      serviceIds: editData?.['serviceIds']
-    })
+    if (editDataId) {
+      setFormData({
+        title: editData?.title || '',
+        serviceIds: editData?.serviceIds || []
+      })
+      titleInputRef.current?.focus() // Focus title input on edit mode
+    } else {
+      setFormData(defaultData)
+    }
   }, [editDataId, editData])
 
   const onClear = () => {
-    setFormData(prevState => ({ ...defaultData }))
+    setFormData({ ...defaultData })
     setEditDataId(null)
     setEditData({})
     setErrorMessage({})
@@ -100,41 +82,35 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <TextField
-                label={'What question needs to be asked?'}
+                label='What question needs to be asked?'
                 name='title'
                 value={formData.title}
                 onChange={handleTextChange}
-                error={errorMessage?.['title']}
+                error={!!errorMessage?.title}
+                inputRef={titleInputRef} // Attach ref to input
                 fullWidth
               />
-              {!!errorMessage?.['title'] &&
-                errorMessage?.['title']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+              {errorMessage?.title?.map((message: any, index: number) => (
+                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                  {message}
+                </span>
+              ))}
             </Box>
             <Box sx={{ width: '50%' }}>
               <Dropdown
-                label={'Service'}
+                label='Service'
                 url='services'
                 name='serviceIds'
                 value={formData.serviceIds}
                 onChange={handleSelectChange}
-                placeholder=''
-                error={!!errorMessage?.['serviceIds']}
+                error={!!errorMessage?.serviceIds}
                 multiple
               />
-              {!!errorMessage?.['serviceIds'] &&
-                errorMessage?.['serviceIds']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+              {errorMessage?.serviceIds?.map((message: any, index: number) => (
+                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                  {message}
+                </span>
+              ))}
             </Box>
           </Box>
 
@@ -152,7 +128,6 @@ export default function ServiceQuestionFormComponent(props: TServiceQuestionComp
               className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
             >
               {editDataId ? 'Update ' : 'Save '}
-
               {editDataId ? <EditNoteIcon /> : <AddIcon />}
             </button>
           </Box>
