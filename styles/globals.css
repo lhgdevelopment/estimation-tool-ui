@@ -239,7 +239,7 @@ a:hover {
 .md-editor-preview,
 .md-editor-previewOnly {
   color: #000000;
-  background: #FFFFFF;
+  background: #ffffff;
 }
 .theme-dark .md-editor-preview,
 .theme-dark .md-editor-previewOnly {
@@ -247,18 +247,18 @@ a:hover {
   background: #24262d;
 }
 
-.md-editor-preview.md-editor-preview table tr th, .md-editor-preview.md-editor-preview table tr td{
+.md-editor-preview.md-editor-preview table tr th,
+.md-editor-preview.md-editor-preview table tr td {
   border: 1px solid #000000;
   padding: 5px 7px;
   color: #000000;
 }
-.theme-dark .md-editor-preview.md-editor-preview table tr th, .theme-dark .md-editor-preview.md-editor-preview table tr td{
+.theme-dark .md-editor-preview.md-editor-preview table tr th,
+.theme-dark .md-editor-preview.md-editor-preview table tr td {
   border: 1px solid white;
   padding: 5px 7px;
   color: white;
 }
-
-
 
 .theme-dark .MuiAccordionSummary-expandIconWrapper {
   color: #9e9e9e;

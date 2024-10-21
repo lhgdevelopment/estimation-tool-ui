@@ -33,7 +33,7 @@ export const scopeOfWorkListSx: SxProps = {
     color: '#777778',
     cursor: 'pointer',
     mb: '5px',
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
     '& .common-task-list-item-sl': {
       '.common-task-list-item-sl-number': {
         width: '50px',
@@ -93,12 +93,11 @@ export const scopeOfWorkListSx: SxProps = {
         }
       }
     },
-    '& .common-task-list-item-btn': {
+    '& .common-task-list-item-btn, & .common-task-list-item-sync-btn': {
       ml: '5px',
       p: '3px',
       minWidth: 0,
       borderRadius: '5px',
-      opacity: 0,
       transition: 'all 0.3s ease-in-out',
       '& .MuiSvgIcon-root': {
         color: '#7e22ce',
@@ -106,6 +105,10 @@ export const scopeOfWorkListSx: SxProps = {
         width: '16px !important'
       }
     },
+    '& .common-task-list-item-btn': {
+      opacity: 0
+    },
+
     '&:hover': {
       '& .common-task-list-item-btn': {
         opacity: 1

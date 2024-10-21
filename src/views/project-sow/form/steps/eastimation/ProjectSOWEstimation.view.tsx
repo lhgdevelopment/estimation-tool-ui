@@ -25,7 +25,8 @@ import {
   TableFooter,
   TableHead,
   TableRow,
-  TextField
+  TextField,
+  Tooltip
 } from '@mui/material'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
@@ -416,13 +417,15 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                           className='md-editor-preview'
                                                           dangerouslySetInnerHTML={{ __html: deliverable?.title }}
                                                         ></Box>
-                                                        <Button
-                                                          className='common-task-list-item-btn'
-                                                          onClick={() => handleGenerateTaskWithAI(deliverable?.id)}
-                                                          disabled={deliverable?.['isPreloading']}
-                                                        >
-                                                          <SyncIcon />
-                                                        </Button>
+                                                        <Tooltip title='Generate task with AI'>
+                                                          <Button
+                                                            className='common-task-list-item-sync-btn'
+                                                            onClick={() => handleGenerateTaskWithAI(deliverable?.id)}
+                                                            disabled={deliverable?.['isPreloading']}
+                                                          >
+                                                            <SyncIcon />
+                                                          </Button>
+                                                        </Tooltip>
                                                         {deliverable?.['isPreloading'] && (
                                                           <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
                                                             <CircularProgress color='secondary' size={14} />
@@ -521,12 +524,14 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                                     __html: task?.title
                                                                   }}
                                                                 ></Box>
-                                                                <Button
-                                                                  className='common-task-list-item-btn'
-                                                                  onClick={() => handleTaskOnEdit(task)}
-                                                                >
-                                                                  <EditIcon />
-                                                                </Button>
+                                                                <Tooltip placement='top' title='Edit Task'>
+                                                                  <Button
+                                                                    className='common-task-list-item-btn'
+                                                                    onClick={() => handleTaskOnEdit(task)}
+                                                                  >
+                                                                    <EditIcon />
+                                                                  </Button>
+                                                                </Tooltip>
                                                               </Box>
                                                             </TableCell>
                                                             <TableCell>
@@ -651,13 +656,14 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                                         __html: subTask?.title
                                                                       }}
                                                                     ></Box>
-
-                                                                    <Button
-                                                                      className='common-task-list-item-btn'
-                                                                      onClick={() => handleTaskOnEdit(subTask)}
-                                                                    >
-                                                                      <EditIcon />
-                                                                    </Button>
+                                                                    <Tooltip placement='top' title='Edit Subtask'>
+                                                                      <Button
+                                                                        className='common-task-list-item-btn'
+                                                                        onClick={() => handleTaskOnEdit(subTask)}
+                                                                      >
+                                                                        <EditIcon />
+                                                                      </Button>
+                                                                    </Tooltip>
                                                                   </Box>
                                                                 </TableCell>
                                                                 <TableCell>
@@ -911,15 +917,18 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                                     __html: deliverable?.title
                                                                   }}
                                                                 ></Box>
-                                                                <Button
-                                                                  className='common-task-list-item-btn'
-                                                                  onClick={() =>
-                                                                    handleGenerateTaskWithAI(deliverable?.id)
-                                                                  }
-                                                                  disabled={deliverable?.['isPreloading']}
-                                                                >
-                                                                  <SyncIcon />
-                                                                </Button>
+                                                                <Tooltip title='Generate task with AI'>
+                                                                  <Button
+                                                                    className='common-task-list-item-sync-btn'
+                                                                    onClick={() =>
+                                                                      handleGenerateTaskWithAI(deliverable?.id)
+                                                                    }
+                                                                    disabled={deliverable?.['isPreloading']}
+                                                                  >
+                                                                    <SyncIcon />
+                                                                  </Button>
+                                                                </Tooltip>
+
                                                                 {deliverable?.['isPreloading'] && (
                                                                   <Stack
                                                                     spacing={0}
@@ -1034,12 +1043,14 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                                             __html: task?.title
                                                                           }}
                                                                         ></Box>
-                                                                        <Button
-                                                                          className='common-task-list-item-btn'
-                                                                          onClick={() => handleTaskOnEdit(task)}
-                                                                        >
-                                                                          <EditIcon />
-                                                                        </Button>
+                                                                        <Tooltip placement='top' title='Edit Task'>
+                                                                          <Button
+                                                                            className='common-task-list-item-btn'
+                                                                            onClick={() => handleTaskOnEdit(task)}
+                                                                          >
+                                                                            <EditIcon />
+                                                                          </Button>
+                                                                        </Tooltip>
                                                                       </Box>
                                                                     </TableCell>
                                                                     <TableCell>
@@ -1184,14 +1195,19 @@ export default function ProjectSOWEstimationFormView(props: TProjectSOWEstimatio
                                                                                 }}
                                                                               ></Box>
 
-                                                                              <Button
-                                                                                className='common-task-list-item-btn'
-                                                                                onClick={() =>
-                                                                                  handleTaskOnEdit(subTask)
-                                                                                }
+                                                                              <Tooltip
+                                                                                placement='top'
+                                                                                title='Edit Task'
                                                                               >
-                                                                                <EditIcon />
-                                                                              </Button>
+                                                                                <Button
+                                                                                  className='common-task-list-item-btn'
+                                                                                  onClick={() =>
+                                                                                    handleTaskOnEdit(subTask)
+                                                                                  }
+                                                                                >
+                                                                                  <EditIcon />
+                                                                                </Button>
+                                                                              </Tooltip>
                                                                             </Box>
                                                                           </TableCell>
                                                                           <TableCell>

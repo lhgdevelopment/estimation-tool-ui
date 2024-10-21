@@ -1,28 +1,26 @@
+import { Dropdown } from '@core/components/dropdown'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
-import { Box, TextField } from '@mui/material'
-import {Fragment, useCallback, useEffect, useState} from 'react'
-import { Dropdown } from '@core/components/dropdown'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
+import { Box } from '@mui/material'
+import { useRouter } from 'next/router'
+import { Fragment, useEffect, useState } from 'react'
 import { TUsersComponent } from '../TeamsPrompts.decorator'
-import {useRouter} from "next/router";
 
 export default function TeamsPromptsFormComponent(props: TUsersComponent) {
   const { showSnackbar } = useToastSnackbar()
-  const { query } = useRouter();
+  const { query } = useRouter()
   const { editDataId, setEditDataId, listRef, setListData, editData, setEditData } = props
 
-
   const defaultData = {
-    promptIds: [],
+    promptIds: []
   }
 
-  const [formData, setUsersFormData] = useState({...defaultData})
+  const [formData, setUsersFormData] = useState({ ...defaultData })
   const [errorMessage, setErrorMessage] = useState<any>({})
-
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setUsersFormData({
@@ -44,7 +42,7 @@ export default function TeamsPromptsFormComponent(props: TUsersComponent) {
       .post(`/teams/${query.id}/share/prompts`, formData)
       .then(res => {
         showSnackbar('Created Successfully!', { variant: 'success' })
-        onClear();
+        onClear()
         listRef?.current?.getList(1)
       })
       .catch(error => {
@@ -55,7 +53,7 @@ export default function TeamsPromptsFormComponent(props: TUsersComponent) {
 
   useEffect(() => {
     setUsersFormData({
-      promptIds: editData?.['promptIds'] || '',
+      promptIds: editData?.['promptIds'] || ''
     })
   }, [editDataId, editData])
 
@@ -67,7 +65,7 @@ export default function TeamsPromptsFormComponent(props: TUsersComponent) {
 
   return (
     <Fragment>
-      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800'>
+      <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
@@ -76,14 +74,14 @@ export default function TeamsPromptsFormComponent(props: TUsersComponent) {
                 placeholder='Add prompt for share with'
                 label={'Add prompt for share with'}
                 value={formData.promptIds}
-                name="promptIds"
+                name='promptIds'
                 onChange={handleTextChange as any}
                 multiple
               />
               {!!errorMessage?.['promptIds'] &&
                 errorMessage?.['promptIds']?.map((message: any, index: number) => {
                   return (
-                    <span key={index} className='text-xs text-red-600 dark:text-red-400'>
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
                     </span>
                   )

@@ -6,7 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import SyncIcon from '@mui/icons-material/Sync'
-import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField } from '@mui/material'
+import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField, Tooltip } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import {
   deliverableNoteItemSx,
@@ -167,12 +167,14 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                 (deliverable: any) =>
                                   deliverable?.scopeOfWorkId == scopeOfWork?.id && !deliverable?.additionalServiceId
                               )?.length && (
-                                <Button
-                                  className='common-task-list-item-btn'
-                                  onClick={() => handleGenerateSOWWithAI(scopeOfWork?.id)}
-                                >
-                                  <SyncIcon />
-                                </Button>
+                                <Tooltip placement='top' title='Generate SOW with AI'>
+                                  <Button
+                                    className='common-task-list-item-sync-btn'
+                                    onClick={() => handleGenerateSOWWithAI(scopeOfWork?.id)}
+                                  >
+                                    <SyncIcon />
+                                  </Button>
+                                </Tooltip>
                               )}
 
                               {scopeOfWork?.['isPreloading'] && (
@@ -213,13 +215,14 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                       />
                                     </Box>
                                     <Box className={'common-task-list-item-title'}>{deliverable?.['title']}</Box>
-
-                                    <Button
-                                      className='common-task-list-item-btn'
-                                      onClick={() => handleDeliverableOnEdit(deliverable)}
-                                    >
-                                      <EditIcon />
-                                    </Button>
+                                    <Tooltip placement='top' title='Edit Deliverable'>
+                                      <Button
+                                        className='common-task-list-item-btn'
+                                        onClick={() => handleDeliverableOnEdit(deliverable)}
+                                      >
+                                        <EditIcon />
+                                      </Button>
+                                    </Tooltip>
                                   </Box>
                                 )
                               })}
@@ -404,24 +407,25 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                         >
                                           {scopeOfWork?.['title']}
                                         </Box>
-
-                                        <Button
-                                          className='common-task-list-item-btn'
-                                          onClick={() => handleSOWOnEdit(scopeOfWork)}
-                                        >
-                                          <EditIcon />
-                                        </Button>
                                         {!deliverableDataList?.filter(
                                           (deliverable: any) => deliverable?.scopeOfWorkId == scopeOfWork?.id
                                         )?.length &&
                                           !scopeOfWork?.additionalServiceId && (
                                             <Button
-                                              className='common-task-list-item-btn'
+                                              className='common-task-list-item-sync-btn'
                                               onClick={() => handleGenerateSOWWithAI(scopeOfWork?.id)}
                                             >
                                               <SyncIcon />
                                             </Button>
                                           )}
+                                        <Tooltip placement='top' title='Edit Scope of Work'>
+                                          <Button
+                                            className='common-task-list-item-btn'
+                                            onClick={() => handleSOWOnEdit(scopeOfWork)}
+                                          >
+                                            <EditIcon />
+                                          </Button>
+                                        </Tooltip>
 
                                         {scopeOfWork?.['isPreloading'] && (
                                           <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
@@ -464,13 +468,14 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
                                               <Box className={'common-task-list-item-title'}>
                                                 {deliverable?.['title']}
                                               </Box>
-
-                                              <Button
-                                                className='common-task-list-item-btn'
-                                                onClick={() => handleDeliverableOnEdit(deliverable)}
-                                              >
-                                                <EditIcon />
-                                              </Button>
+                                              <Tooltip placement='top' title='Edit Deliverable'>
+                                                <Button
+                                                  className='common-task-list-item-btn'
+                                                  onClick={() => handleDeliverableOnEdit(deliverable)}
+                                                >
+                                                  <EditIcon />
+                                                </Button>
+                                              </Tooltip>
                                             </Box>
                                           )
                                         })}

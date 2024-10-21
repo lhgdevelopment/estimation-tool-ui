@@ -21,11 +21,14 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     prompt: '',
     serial: '',
     user_id: [],
+    teamIds: [],
     action_type: null
   }
   const [preload, setPreload] = useState<boolean>(false)
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
+  const [editData, setEditData] = useState<any>(null)
+  const [editDataId, setEditDataId] = useState<string | null>(null)
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -38,6 +41,14 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     setFormData({
       ...formData,
       [e?.target?.name]: e?.target?.value
+    })
+  }
+
+  const getDetails = (id: string) => {
+    if (!id) return
+    apiRequest.get(`/prompts/${id}`).then(res => {
+      setEditData(res.data)
+      setEditDataId(id)
     })
   }
 
@@ -61,7 +72,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           setTimeout(() => onClear(), 1000)
         })
         .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors || {})
           showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
@@ -73,7 +84,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           setTimeout(() => onClear(), 1000)
         })
         .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors || {})
           showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
@@ -116,24 +127,19 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                 name='name'
                 value={formData.name}
                 onChange={handleTextChange}
-                error={errorMessage?.['name']}
+                error={!!errorMessage?.['name']}
                 fullWidth
               />
               {!!errorMessage?.['name'] &&
-                errorMessage?.['name']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+                errorMessage?.['name'].map((message: any, index: number) => (
+                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                    {message}
+                  </span>
+                ))}
             </Box>
             <Box sx={{ width: '50%' }}>
               <Dropdown
-                optionConfig={{
-                  title: 'title',
-                  id: 'id'
-                }}
+                optionConfig={{ title: 'title', id: 'id' }}
                 dataList={promptsTypeList}
                 label='Type'
                 name='type'
@@ -141,13 +147,11 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                 onChange={handleSelectChange}
               />
               {!!errorMessage?.['type'] &&
-                errorMessage?.['type']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+                errorMessage?.['type'].map((message: any, index: number) => (
+                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                    {message}
+                  </span>
+                ))}
             </Box>
           </Box>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>

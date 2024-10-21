@@ -5,7 +5,7 @@ import CheckIcon from '@mui/icons-material/Check'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import SyncIcon from '@mui/icons-material/Sync'
-import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField } from '@mui/material'
+import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField, Tooltip } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import {
   scopeOfWorkListContainer,
@@ -128,18 +128,22 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                     >
                       {phase?.['title']}
                     </Box>
-                    <Button className='common-task-list-item-btn' onClick={() => handlePhaseOnEdit(phase)}>
-                      <EditIcon />
-                    </Button>
                     {!scopeOfWorkData?.filter((sow: any) => sow?.phaseId == phase?.id)?.length && (
-                      <Button
-                        className='common-task-list-item-btn'
-                        onClick={() => handleGenerateSOWWithAI(phase?.id)}
-                        disabled={phase?.['isPreloading']}
-                      >
-                        <SyncIcon />
-                      </Button>
+                      <Tooltip placement='top' title={'Generate Scope of Work'}>
+                        <Button
+                          className='common-task-list-item-sync-btn'
+                          onClick={() => handleGenerateSOWWithAI(phase?.id)}
+                          disabled={phase?.['isPreloading']}
+                        >
+                          <SyncIcon />
+                        </Button>
+                      </Tooltip>
                     )}
+                    <Tooltip placement='top' title={'Edit Phase'}>
+                      <Button className='common-task-list-item-btn' onClick={() => handlePhaseOnEdit(phase)}>
+                        <EditIcon />
+                      </Button>
+                    </Tooltip>
 
                     {phase?.['isPreloading'] && (
                       <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
@@ -195,10 +199,14 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                             >
                               {scopeOfWork?.['title']}
                             </Box>
-
-                            <Button className='common-task-list-item-btn' onClick={() => handleSOWOnEdit(scopeOfWork)}>
-                              <EditIcon />
-                            </Button>
+                            <Tooltip placement='top' title={'Edit Scope of Work'}>
+                              <Button
+                                className='common-task-list-item-btn'
+                                onClick={() => handleSOWOnEdit(scopeOfWork)}
+                              >
+                                <EditIcon />
+                              </Button>
+                            </Tooltip>
                             {scopeOfWork?.['isPreloading'] && (
                               <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
                                 <CircularProgress color='secondary' size={14} />
@@ -218,6 +226,7 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
       <Box>
         <Box sx={sectionTitleSx}>Add Services</Box>
         <Box sx={{ py: 0, px: 5 }}>
+          {console.log(serviceGroupByProjectTypeId(serviceList))}
           {serviceGroupByProjectTypeId(serviceList)?.map((projectType: any, index: number) => (
             <Box
               sx={{
@@ -272,8 +281,7 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                       <></>
                     )}
                     <Box
-                      sx={{ ml: 1 }}
-                      className='md-editor-preview'
+                      sx={{ ml: 1, fontWeight: '400', fontSize: '14px' }}
                       dangerouslySetInnerHTML={{ __html: service?.name }}
                     ></Box>
                   </Box>
