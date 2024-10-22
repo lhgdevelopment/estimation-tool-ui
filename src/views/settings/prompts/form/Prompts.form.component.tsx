@@ -44,13 +44,13 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     })
   }
 
-  const getDetails = (id: string) => {
-    if (!id) return
-    apiRequest.get(`/prompts/${id}`).then(res => {
-      setEditData(res.data)
-      setEditDataId(id)
-    })
-  }
+  // const getDetails = (id: string) => {
+  //   if (!id) return
+  //   apiRequest.get(`/prompts/${id}`).then(res => {
+  //     setEditData(res.data)
+  //     setEditDataId(id)
+  //   })
+  // }
 
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
@@ -99,6 +99,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
         type: res?.data?.['type'],
         prompt: res?.data?.['prompt'],
         serial: res?.data?.['serial'],
+        teamIds: res?.data?.['shared_user']?.map((user: any) => user.team_id),
         user_id: res?.data?.['shared_user']?.map((user: any) => user.user_id),
         action_type: res?.data?.['action_type']
       })
