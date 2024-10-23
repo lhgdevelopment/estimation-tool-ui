@@ -3,6 +3,7 @@ import HiveIcon from '@mui/icons-material/Hive'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import { Box } from '@mui/material'
 import HomeOutline from 'mdi-material-ui/HomeOutline'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, { Fragment, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -184,6 +185,22 @@ export default function AppNavbarComponent() {
                 )}
               </Box>
             ))}
+          <Box className='px-4 my-2'>
+            <Link href={'/ai-assistant'} passHref>
+              <Box
+                component={'a'}
+                className={`inline-flex items-center  w-full px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg  focus:outline-none focus:shadow-outline-purple hover:text-white hover:bg-purple-700 ${
+                  isNavbarCollapsed ? 'justify-center' : ''
+                }`}
+              >
+                <HiveIcon />
+
+                <Box className='nav-item-title ml-4' component={'span'}>
+                  Hive Assist
+                </Box>
+              </Box>
+            </Link>
+          </Box>
         </Box>
       </Box>
     </Fragment>
