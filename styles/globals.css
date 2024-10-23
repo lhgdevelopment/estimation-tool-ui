@@ -2,6 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Scrollbar width for different browsers */
+* {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #6c757d #f1f1f1; /* Firefox */
+}
+
+/* Webkit browsers (Chrome, Edge, Safari) */
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #6c757d;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1; /* Optional: Adds space around thumb */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: #495057;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
 html,
 body {
   min-height: 100%;
@@ -239,7 +270,7 @@ a:hover {
 .md-editor-preview,
 .md-editor-previewOnly {
   color: #000000;
-  background: #FFFFFF;
+  background: #ffffff;
 }
 .theme-dark .md-editor-preview,
 .theme-dark .md-editor-previewOnly {
@@ -247,18 +278,18 @@ a:hover {
   background: #24262d;
 }
 
-.md-editor-preview.md-editor-preview table tr th, .md-editor-preview.md-editor-preview table tr td{
+.md-editor-preview.md-editor-preview table tr th,
+.md-editor-preview.md-editor-preview table tr td {
   border: 1px solid #000000;
   padding: 5px 7px;
   color: #000000;
 }
-.theme-dark .md-editor-preview.md-editor-preview table tr th, .theme-dark .md-editor-preview.md-editor-preview table tr td{
+.theme-dark .md-editor-preview.md-editor-preview table tr th,
+.theme-dark .md-editor-preview.md-editor-preview table tr td {
   border: 1px solid white;
   padding: 5px 7px;
   color: white;
 }
-
-
 
 .theme-dark .MuiAccordionSummary-expandIconWrapper {
   color: #9e9e9e;

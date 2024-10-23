@@ -1,7 +1,6 @@
 import CopyToClipboard from '@core/components/copy-to-clipboard'
 import EditIcon from '@mui/icons-material/Edit'
 import HiveIcon from '@mui/icons-material/Hive'
-import ReplayIcon from '@mui/icons-material/Replay'
 import { Avatar, Box, Tooltip } from '@mui/material'
 import { marked } from 'marked'
 import 'md-editor-rt/lib/style.css'
@@ -105,6 +104,7 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
                 textToCopy={message?.message_content}
                 title=''
                 tooltipTitle='Copy'
+                tooltipPlacement='top'
                 sx={{
                   p: 0,
                   background: 'transparent',
@@ -123,7 +123,7 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
               />
             )}
 
-            {onRegenerate && (
+            {/* {onRegenerate && (
               <Tooltip title='Regenerate'>
                 <Box
                   component={'button'}
@@ -138,10 +138,10 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
                   <ReplayIcon sx={{ fontSize: '18px' }} />
                 </Box>
               </Tooltip>
-            )}
+            )} */}
 
             {onEdit && (
-              <Tooltip title='Edit'>
+              <Tooltip placement='top' title='Edit'>
                 <Box
                   component={'button'}
                   sx={{

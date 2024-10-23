@@ -1,7 +1,7 @@
 import AddIcon from '@material-ui/icons/Add'
 import ClearIcon from '@material-ui/icons/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField } from '@mui/material'
+import { Box, Button, Checkbox, CircularProgress, Modal, Stack, TextField, Tooltip } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import {
   scopeOfWorkListContainer,
@@ -87,9 +87,11 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
                 >
                   {phase?.['title']}
                 </Box>
-                <Button className='common-task-list-item-btn' onClick={() => handlePhaseOnEdit(phase)}>
-                  <EditIcon />
-                </Button>
+                <Tooltip placement='top' title={'Edit'}>
+                  <Button className='common-task-list-item-btn' onClick={() => handlePhaseOnEdit(phase)}>
+                    <EditIcon />
+                  </Button>
+                </Tooltip>
                 {phase?.['isPreloading'] && (
                   <Stack spacing={0} sx={{ height: '10px', width: '10px' }}>
                     <CircularProgress color='secondary' size={12} />

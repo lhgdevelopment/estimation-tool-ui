@@ -3,10 +3,16 @@ import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck'
 import { Box, SxProps, Tooltip } from '@mui/material'
 import { useState } from 'react'
 
-type TCopyToClipboard = { textToCopy: string | undefined; sx?: SxProps; title?: string; tooltipTitle?: string }
+type TCopyToClipboard = {
+  textToCopy: string | undefined
+  sx?: SxProps
+  title?: string
+  tooltipTitle?: string
+  tooltipPlacement?: 'top' | 'right' | 'bottom' | 'left'
+}
 
 const CopyToClipboard = (props: TCopyToClipboard) => {
-  const { sx, textToCopy = '', title = 'Copy to Clipboard', tooltipTitle } = props
+  const { sx, textToCopy = '', title = 'Copy to Clipboard', tooltipTitle, tooltipPlacement = 'top' } = props
   const [isCopied, setIsCopied] = useState<boolean>(false)
 
   const handleCopyClick = () => {
@@ -24,7 +30,7 @@ const CopyToClipboard = (props: TCopyToClipboard) => {
   // }
 
   return (
-    <Tooltip title={tooltipTitle ? tooltipTitle : title}>
+    <Tooltip title={tooltipTitle ? tooltipTitle : title} placement={tooltipPlacement}>
       <Box
         component={'button'}
         onClick={handleCopyClick}

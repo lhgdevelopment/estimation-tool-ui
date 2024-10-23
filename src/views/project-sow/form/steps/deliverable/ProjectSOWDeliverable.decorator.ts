@@ -83,6 +83,8 @@ export function serviceGroupByProjectTypeId(data: any) {
       return acc
     }, {}) || {}
 
+  console.log(Object?.values(grouped))
+
   return Object?.values(grouped)
 }
 

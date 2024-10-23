@@ -5,83 +5,60 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { TUsersComponent } from '../Teams.decorator'
-import {useRouter} from "next/router";
 
 export default function TeamsFormComponent(props: TUsersComponent) {
   const router = useRouter()
   const { showSnackbar } = useToastSnackbar()
   const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
 
-  const defaultData = {
-    name: ''
-  }
+  const defaultData = { name: '' }
 
-  const [formData, setUsersFormData] = useState({ ...defaultData })
+  const [formData, setUsersFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
+  const nameInputRef = useRef<HTMLInputElement>(null) // Ref for input focus
 
-  const handleTextChange = (e: React.ChangeEvent<any>) => {
-    setUsersFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+  const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsersFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSelectChange = (e: any) => {
-    setUsersFormData({
-      ...formData,
-      [e?.target?.name]: e?.target?.value
-    })
-  }
-
-  const onSubmit = (e: React.FormEvent<any>) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (editDataId) {
-      apiRequest
-        .put(`/teams/${editDataId}`, formData)
-        .then(res => {
-          setListData((prevState: []) => {
-            const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
-            if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res?.data
-            }
+    const apiCall = editDataId ? apiRequest.put(`/teams/${editDataId}`, formData) : apiRequest.post('/teams', formData)
 
-            return updatedList
-          })
-          onClear()
+    apiCall
+      .then(res => {
+        if (editDataId) {
+          setListData((prevState: any[]) => prevState.map(item => (item.id === editDataId ? res.data : item)))
           showSnackbar('Updated Successfully!', { variant: 'success' })
-        })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
-        })
-    } else {
-      apiRequest
-        .post('/teams', formData)
-        .then(res => {
-          //setListData((prevState: []) => [...prevState, res?.data])
+        } else {
           showSnackbar('Created Successfully!', { variant: 'success' })
-          router.push(`/user-management/teams/${res?.data.id}/users`)
-        })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
-        })
-    }
+          router.push(`/user-management/teams/${res.data.id}/users`)
+        }
+        onClear()
+      })
+      .catch(error => {
+        setErrorMessage(error?.response?.data?.errors || {})
+        showSnackbar(error?.response?.data?.message || 'Something went wrong!', { variant: 'error' })
+      })
   }
 
   useEffect(() => {
-    setUsersFormData({
-      name: editData?.['name'] || ''
-    })
+    if (editDataId) {
+      setUsersFormData({ name: editData?.name || '' })
+      nameInputRef.current?.focus() // Focus input on edit mode
+    } else {
+      setUsersFormData(defaultData)
+    }
   }, [editDataId, editData])
 
   const onClear = () => {
-    setUsersFormData(prevState => ({ ...defaultData }))
+    setUsersFormData(defaultData)
     setEditDataId(null)
     setEditData({})
+    setErrorMessage({})
   }
 
   return (
@@ -91,24 +68,15 @@ export default function TeamsFormComponent(props: TUsersComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <TextField
-                id='outlined-multiline-flexible'
                 label='Name'
-                className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['name'] ? 'border-red-600' : 'dark-d:border-gray-600'
-                }`}
-                placeholder='Name'
                 name='name'
                 value={formData.name}
                 onChange={handleTextChange}
+                inputRef={nameInputRef} // Attach ref for focus
+                error={!!errorMessage?.name}
+                helperText={errorMessage?.name?.[0] || ''}
+                fullWidth
               />
-              {!!errorMessage?.['name'] &&
-                errorMessage?.['name']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
             </Box>
           </Box>
 
@@ -116,17 +84,16 @@ export default function TeamsFormComponent(props: TUsersComponent) {
             <button
               onClick={onClear}
               type='button'
-              className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+              className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none'
             >
               {editDataId ? 'Cancel ' : 'Clear '}
               {editDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
             </button>
             <button
               type='submit'
-              className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+              className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none'
             >
               {editDataId ? 'Update ' : 'Save '}
-
               {editDataId ? <EditNoteIcon /> : <AddIcon />}
             </button>
           </Box>

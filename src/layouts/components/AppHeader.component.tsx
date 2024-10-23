@@ -1,4 +1,4 @@
-import { isDarkTheme } from '@core/store/actions/userActions'
+import { isDarkTheme, isNavbarCollapsed } from '@core/store/actions'
 import { RootState } from '@core/store/reducers'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import { Box } from '@mui/material'
@@ -11,12 +11,19 @@ export default function AppHeaderComponent() {
   const dispatch = useDispatch()
   const router = useRouter()
   const isDark = useSelector((state: RootState) => state.theme.isDark)
+  const settings = useSelector((state: RootState) => state.settings)
   const [isOpenProfileDropdown, setIsOpenProfileDropdown] = useState<boolean>(false)
   const [isOpenNotificationDropdown, setIsOpenNotificationDropdown] = useState<boolean>(false)
 
   const toggleTheme = () => {
     Cookies.set('isDark', (!isDark).toString())
     dispatch(isDarkTheme(!isDark))
+  }
+
+  const toggleNavbar = () => {
+    console.log(settings)
+    Cookies.set('isNavbarCollapsed', (!settings?.isNavbarCollapsed).toString())
+    dispatch(isNavbarCollapsed(!settings?.isNavbarCollapsed))
   }
 
   const handleLogout = () => {
@@ -29,10 +36,36 @@ export default function AppHeaderComponent() {
       <Box
         component={'header'}
         className='z-10 py-4 bg-white shadow-md dark-d:bg-gray-800'
-        sx={{ width: 'calc(100% - 280px)', position: 'fixed', top: 0, left: '280px', right: 0 }}
+        sx={{
+          width: settings?.isNavbarCollapsed ? 'calc(100% - 90px)' : 'calc(100% - 280px)',
+          position: 'fixed',
+          top: 0,
+          left: settings?.isNavbarCollapsed ? '90px' : '280px',
+          right: 0
+        }}
       >
         <Box className='container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark-d:text-purple-300'>
           {/* <!-- Mobile hamburger --> */}
+          <Box component={'button'} onClick={toggleNavbar} className='p-1 -ml-1 mr-5 rounded-md' aria-label='Menu'>
+            {settings?.isNavbarCollapsed ? (
+              <svg className='w-6 h-6' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
+                <path
+                  fillRule='evenodd'
+                  d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'
+                  clipRule='evenodd'
+                ></path>
+              </svg>
+            ) : (
+              // Hamburger Icon when expanded
+              <svg className='w-6 h-6' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
+                <path
+                  fillRule='evenodd'
+                  d='M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
+                  clipRule='evenodd'
+                ></path>
+              </svg>
+            )}
+          </Box>
           <Box component={'button'} className='p-1 -ml-1 mr-5 rounded-md md:hidden' aria-label='Menu'>
             <svg className='w-6 h-6' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
               <path

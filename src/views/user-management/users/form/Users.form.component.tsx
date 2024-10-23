@@ -6,7 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { TUsersComponent } from '../Users.decorator'
 
 export default function UsersFormComponent(props: TUsersComponent) {
@@ -23,6 +23,7 @@ export default function UsersFormComponent(props: TUsersComponent) {
 
   const [formData, setUsersFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
+  const nameInputRef = useRef<HTMLInputElement>(null) // Add ref for input focus
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setUsersFormData({
@@ -34,61 +35,48 @@ export default function UsersFormComponent(props: TUsersComponent) {
   const handleSelectChange = (e: any) => {
     setUsersFormData({
       ...formData,
-      [e?.target?.name]: e?.target?.value
+      [e.target.name]: e.target.value
     })
   }
 
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
-    if (editDataId) {
-      apiRequest
-        .put(`/users/${editDataId}`, formData)
-        .then(res => {
-          setListData((prevState: []) => {
-            const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
-            if (editedServiceIndex !== -1) {
-              updatedList[editedServiceIndex] = res?.data
-            }
+    const apiCall = editDataId ? apiRequest.put(`/users/${editDataId}`, formData) : apiRequest.post('/users', formData)
 
-            return updatedList
-          })
-          onClear()
-          showSnackbar('Updated Successfully!', { variant: 'success' })
-        })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
-        })
-    } else {
-      apiRequest
-        .post('/users', formData)
-        .then(res => {
-          setListData((prevState: []) => [...prevState, res?.data])
-          showSnackbar('Created Successfully!', { variant: 'success' })
-          onClear()
-        })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
-        })
-    }
+    apiCall
+      .then(res => {
+        setListData((prevState: any[]) =>
+          editDataId ? prevState.map(item => (item.id === editDataId ? res.data : item)) : [...prevState, res.data]
+        )
+        showSnackbar(editDataId ? 'Updated Successfully!' : 'Created Successfully!', { variant: 'success' })
+        onClear()
+      })
+      .catch(error => {
+        setErrorMessage(error?.response?.data?.errors || {})
+        showSnackbar(error?.response?.data?.message || 'Something went wrong!', { variant: 'error' })
+      })
   }
 
   useEffect(() => {
-    setUsersFormData({
-      name: editData?.['name'],
-      email: editData?.['email'],
-      role: editData?.['roles']?.[0]?.['name'],
-      password: '',
-      password_confirmation: ''
-    })
+    if (editDataId) {
+      setUsersFormData({
+        name: editData?.name || '',
+        email: editData?.email || '',
+        role: editData?.roles?.[0]?.name || '',
+        password: '',
+        password_confirmation: ''
+      })
+      nameInputRef.current?.focus() // Focus input on edit mode
+    } else {
+      setUsersFormData(defaultData)
+    }
   }, [editDataId, editData])
 
   const onClear = () => {
-    setUsersFormData(prevState => ({ ...defaultData }))
+    setUsersFormData({ ...defaultData })
     setEditDataId(null)
     setEditData({})
+    setErrorMessage({})
   }
 
   return (
@@ -98,31 +86,27 @@ export default function UsersFormComponent(props: TUsersComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <TextField
-                id='outlined-multiline-flexible'
                 label='Name'
-                className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['name'] ? 'border-red-600' : 'dark-d:border-gray-600'
-                }`}
-                placeholder='Name'
                 name='name'
                 value={formData.name}
                 onChange={handleTextChange}
+                error={!!errorMessage?.name}
+                inputRef={nameInputRef} // Attach ref to input
+                fullWidth
               />
-              {!!errorMessage?.['name'] &&
-                errorMessage?.['name']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+              {errorMessage?.name?.map((msg: string, index: number) => (
+                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                  {msg}
+                </span>
+              ))}
             </Box>
           </Box>
+
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <Dropdown
-                label={'Role'}
-                url={'roles'}
+                label='Role'
+                url='roles'
                 name='role'
                 value={formData.role}
                 onChange={handleSelectChange}
@@ -132,68 +116,51 @@ export default function UsersFormComponent(props: TUsersComponent) {
             </Box>
             <Box sx={{ width: '50%' }}>
               <TextField
-                id='outlined-multiline-flexible'
                 label='Email'
-                className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['email'] ? 'border-red-600' : 'dark-d:border-gray-600'
-                }`}
-                placeholder='Email'
                 name='email'
                 value={formData.email}
                 onChange={handleTextChange}
+                error={!!errorMessage?.email}
+                fullWidth
               />
-              {!!errorMessage?.['email'] &&
-                errorMessage?.['email']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+              {errorMessage?.email?.map((msg: string, index: number) => (
+                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                  {msg}
+                </span>
+              ))}
             </Box>
           </Box>
+
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
               <TextField
-                id='outlined-multiline-flexible'
                 label='Password'
-                className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['password'] ? 'border-red-600' : 'dark-d:border-gray-600'
-                }`}
-                placeholder='Password'
                 name='password'
                 value={formData.password}
                 onChange={handleTextChange}
+                error={!!errorMessage?.password}
+                fullWidth
               />
-              {!!errorMessage?.['password'] &&
-                errorMessage?.['password']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+              {errorMessage?.password?.map((msg: string, index: number) => (
+                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                  {msg}
+                </span>
+              ))}
             </Box>
             <Box sx={{ width: '50%' }}>
               <TextField
-                id='outlined-multiline-flexible'
                 label='Confirm Password'
-                className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
-                  errorMessage?.['password_confirmation'] ? 'border-red-600' : 'dark-d:border-gray-600'
-                }`}
-                placeholder='Confirm Password'
                 name='password_confirmation'
                 value={formData.password_confirmation}
                 onChange={handleTextChange}
+                error={!!errorMessage?.password_confirmation}
+                fullWidth
               />
-              {!!errorMessage?.['password_confirmation'] &&
-                errorMessage?.['password_confirmation']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+              {errorMessage?.password_confirmation?.map((msg: string, index: number) => (
+                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                  {msg}
+                </span>
+              ))}
             </Box>
           </Box>
 
@@ -201,17 +168,16 @@ export default function UsersFormComponent(props: TUsersComponent) {
             <button
               onClick={onClear}
               type='button'
-              className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+              className='px-4 py-2 mr-3 text-sm font-medium text-white transition-colors duration-150 bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none'
             >
               {editDataId ? 'Cancel ' : 'Clear '}
               {editDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
             </button>
             <button
               type='submit'
-              className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
+              className='px-4 py-2 text-sm font-medium text-white transition-colors duration-150 bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none'
             >
               {editDataId ? 'Update ' : 'Save '}
-
               {editDataId ? <EditNoteIcon /> : <AddIcon />}
             </button>
           </Box>

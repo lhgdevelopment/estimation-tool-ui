@@ -25,7 +25,8 @@ import {
   Modal,
   Select,
   SelectChangeEvent,
-  TextField
+  TextField,
+  Tooltip
 } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
@@ -323,13 +324,15 @@ export default function AIAssistantDetailsComponent() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 5 }}>
         <Box component={'h1'}>{detailsData?.name}</Box>
         {hasEditAccess && (
-          <IconButton
-            onClick={e => {
-              handleShareDialogOpen()
-            }}
-          >
-            <IosShareIcon />
-          </IconButton>
+          <Tooltip placement='top' title='Share with others'>
+            <IconButton
+              onClick={e => {
+                handleShareDialogOpen()
+              }}
+            >
+              <IosShareIcon />
+            </IconButton>
+          </Tooltip>
         )}
       </Box>
       <Dialog
@@ -548,8 +551,6 @@ export default function AIAssistantDetailsComponent() {
                         background: '#000'
                       }
                     }}
-
-                    // disabled={!String(conversationFormData?.message_content).trim()}
                   >
                     <NorthEastIcon sx={{ fontSize: '16px' }} />
                   </Button>

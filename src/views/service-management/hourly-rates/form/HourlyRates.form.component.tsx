@@ -5,7 +5,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { THourlyRatesComponent } from '../HourlyRates.decorator'
 
 export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
@@ -19,13 +19,7 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
-
-  const handleReachText = (value: string, field: string) => {
-    setFormData({
-      ...formData,
-      [field]: value
-    })
-  }
+  const nameInputRef = useRef<HTMLInputElement>(null) // Add input ref
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -34,59 +28,40 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
     })
   }
 
-  const handleSelectChange = (e: any) => {
-    setFormData({
-      ...formData,
-      [e?.target?.name]: e?.target?.value
-    })
-  }
-
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
-    if (editDataId) {
-      apiRequest
-        .put(`/employee-roles/${editDataId}`, formData)
-        .then(res => {
-          setListData((prevState: []) => {
-            const updatedList: any = [...prevState]
-            const editedHourlyRatesIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
-            if (editedHourlyRatesIndex !== -1) {
-              updatedList[editedHourlyRatesIndex] = res?.data
-            }
+    const apiCall = editDataId
+      ? apiRequest.put(`/employee-roles/${editDataId}`, formData)
+      : apiRequest.post('/employee-roles', formData)
 
-            return updatedList
-          })
-          onClear()
-          showSnackbar('Created Successfully!', { variant: 'success' })
-        })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
-        })
-    } else {
-      apiRequest
-        .post('/employee-roles', formData)
-        .then(res => {
-          setListData((prevState: []) => [...prevState, res?.data])
-          showSnackbar('Created Successfully!', { variant: 'success' })
-          onClear()
-        })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
-        })
-    }
+    apiCall
+      .then(res => {
+        setListData((prevState: any[]) =>
+          editDataId ? prevState.map(item => (item.id === editDataId ? res.data : item)) : [...prevState, res.data]
+        )
+        showSnackbar(editDataId ? 'Updated Successfully!' : 'Created Successfully!', { variant: 'success' })
+        onClear()
+      })
+      .catch(error => {
+        setErrorMessage(error?.response?.data?.errors || {})
+        showSnackbar(error?.response?.data?.message || 'Something went wrong!', { variant: 'error' })
+      })
   }
 
   useEffect(() => {
-    setFormData({
-      name: editData?.['name'],
-      average_hourly: editData?.['average_hourly']
-    })
+    if (editDataId) {
+      setFormData({
+        name: editData?.name || '',
+        average_hourly: editData?.average_hourly || ''
+      })
+      nameInputRef.current?.focus() // Focus input when edit mode is triggered
+    } else {
+      setFormData(defaultData)
+    }
   }, [editDataId, editData])
 
   const onClear = () => {
-    setFormData(prevState => ({ ...defaultData }))
+    setFormData({ ...defaultData })
     setEditDataId(null)
     setEditData({})
     setErrorMessage({})
@@ -99,39 +74,34 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <TextField
-                label={'Role Name'}
+                label='Role Name'
                 name='name'
                 value={formData.name}
                 onChange={handleTextChange}
-                error={errorMessage?.['name']}
+                error={!!errorMessage?.name}
+                inputRef={nameInputRef} // Attach ref to input
                 fullWidth
               />
-              {!!errorMessage?.['name'] &&
-                errorMessage?.['name']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+              {errorMessage?.name?.map((message: any, index: number) => (
+                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                  {message}
+                </span>
+              ))}
             </Box>
             <Box sx={{ width: '100%' }}>
               <TextField
-                label={'Hourly Rate'}
+                label='Hourly Rate'
                 name='average_hourly'
                 value={formData.average_hourly}
                 onChange={handleTextChange}
-                error={errorMessage?.['average_hourly']}
+                error={!!errorMessage?.average_hourly}
                 fullWidth
               />
-              {!!errorMessage?.['average_hourly'] &&
-                errorMessage?.['average_hourly']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+              {errorMessage?.average_hourly?.map((message: any, index: number) => (
+                <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                  {message}
+                </span>
+              ))}
             </Box>
           </Box>
 
@@ -149,7 +119,6 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
               className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
             >
               {editDataId ? 'Update ' : 'Save '}
-
               {editDataId ? <EditNoteIcon /> : <AddIcon />}
             </button>
           </Box>

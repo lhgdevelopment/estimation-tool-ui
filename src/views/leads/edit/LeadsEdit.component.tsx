@@ -11,7 +11,7 @@ export default function LeadsEditComponent() {
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark-d:text-gray-300'>
           Edit Leads
         </Box>
-        <LeadsFormComponent listData={listData} setListData={setListData} isEdit={true} />
+        <LeadsFormComponent listData={listData} setListData={setListData} />
       </Box>
     </>
   )

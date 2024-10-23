@@ -6,12 +6,14 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
+import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import { TPromptsComponent, promptsTypeList } from '../Prompts.decorator'
 
 export default function PromptsFormComponent(props: TPromptsComponent) {
+  const { listData, setListData } = props
   const { showSnackbar } = useToastSnackbar()
-  const { editDataId, setEditDataId, listData, setListData, editData, setEditData } = props
+  const router = useRouter()
 
   const defaultData = {
     name: '',
@@ -22,9 +24,11 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     teamIds: [],
     action_type: null
   }
-
-  const [formData, setFormData] = useState({...defaultData})
+  const [preload, setPreload] = useState<boolean>(false)
+  const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
+  const [editData, setEditData] = useState<any>(null)
+  const [editDataId, setEditDataId] = useState<string | null>(null)
 
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -40,62 +44,77 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     })
   }
 
+  // const getDetails = (id: string) => {
+  //   if (!id) return
+  //   apiRequest.get(`/prompts/${id}`).then(res => {
+  //     setEditData(res.data)
+  //     setEditDataId(id)
+  //   })
+  // }
+
   const onSubmit = (e: React.FormEvent<any>) => {
     e.preventDefault()
-    if (editDataId) {
+    if (router?.query['id']) {
       apiRequest
-        .put(`/prompts/${editDataId}`, formData)
+        .put(`/prompts/${router?.query['id']}`, formData)
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
-            const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
+            const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === router?.query['id'])
             if (editedServiceIndex !== -1) {
               updatedList[editedServiceIndex] = res?.data
             }
 
             return updatedList
           })
-
+          router.back()
           showSnackbar('Updated Successfully!', { variant: 'success' })
-          onClear();
+          setTimeout(() => onClear(), 1000)
         })
         .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors || {})
           showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/prompts', formData)
         .then(res => {
-          onClear();
           setListData((prevState: []) => [...prevState, res?.data])
           showSnackbar('Created Successfully!', { variant: 'success' })
+          setTimeout(() => onClear(), 1000)
         })
         .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+          setErrorMessage(error?.response?.data?.errors || {})
           showSnackbar(error?.response?.data?.message, { variant: 'error' })
         })
     }
   }
 
-  useEffect(() => {
-    setFormData({
-      name: editData?.['name'],
-      type: editData?.['type'],
-      prompt: editData?.['prompt'],
-      serial: editData?.['serial'],
-      user_id: editData?.['shared_user']?.map((user: any) => user.user_id),
-      teamIds: editData?.['shared_teams']?.map((team: any) => team.teamId),
-      action_type: editData?.['action_type']
+  const getDetails = (id: string | null | undefined) => {
+    if (!id) return
+    setPreload(true)
+    apiRequest.get(`/prompts/${id}`).then((res: any) => {
+      setFormData({
+        name: res?.data?.['name'],
+        type: res?.data?.['type'],
+        prompt: res?.data?.['prompt'],
+        serial: res?.data?.['serial'],
+        teamIds: res?.data?.['shared_user']?.map((user: any) => user.team_id),
+        user_id: res?.data?.['shared_user']?.map((user: any) => user.user_id),
+        action_type: res?.data?.['action_type']
+      })
+
+      setPreload(false)
     })
-  }, [editDataId, editData])
+  }
+
+  useEffect(() => {
+    getDetails(router?.query['id'] as string)
+  }, [router?.query['id']])
 
   const onClear = () => {
-    setEditDataId(null)
-    setEditData({})
-    setTimeout(()=> {
-      setFormData({...defaultData});
-    }, 100)
+    setFormData(prevState => defaultData)
+    setErrorMessage({})
   }
 
   return (
@@ -109,24 +128,19 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                 name='name'
                 value={formData.name}
                 onChange={handleTextChange}
-                error={errorMessage?.['name']}
+                error={!!errorMessage?.['name']}
                 fullWidth
               />
               {!!errorMessage?.['name'] &&
-                errorMessage?.['name']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+                errorMessage?.['name'].map((message: any, index: number) => (
+                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                    {message}
+                  </span>
+                ))}
             </Box>
             <Box sx={{ width: '50%' }}>
               <Dropdown
-                optionConfig={{
-                  title: 'title',
-                  id: 'id'
-                }}
+                optionConfig={{ title: 'title', id: 'id' }}
                 dataList={promptsTypeList}
                 label='Type'
                 name='type'
@@ -134,13 +148,11 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                 onChange={handleSelectChange}
               />
               {!!errorMessage?.['type'] &&
-                errorMessage?.['type']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+                errorMessage?.['type'].map((message: any, index: number) => (
+                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                    {message}
+                  </span>
+                ))}
             </Box>
           </Box>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
@@ -203,26 +215,6 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
                 })}
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-            <Box sx={{ width: '100%' }}>
-              <Dropdown
-                label='Allowed Teams'
-                url='teams'
-                name='teamIds'
-                value={formData.teamIds}
-                onChange={handleSelectChange}
-                multiple
-              />
-              {!!errorMessage?.['teamIds'] &&
-                errorMessage?.['teamIds']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
-            </Box>
-          </Box>
           <Box sx={{ display: 'flex', gap: 5 }}>
             <Box sx={{ width: '100%' }}>
               <TextField
@@ -251,16 +243,16 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               type='button'
               className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
             >
-              {editDataId ? 'Cancel ' : 'Clear '}
-              {editDataId ? <ClearIcon /> : <PlaylistRemoveIcon />}
+              {router?.query['id'] ? 'Cancel ' : 'Clear '}
+              {router?.query['id'] ? <ClearIcon /> : <PlaylistRemoveIcon />}
             </button>
             <button
               type='submit'
               className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
             >
-              {editDataId ? 'Update ' : 'Save '}
+              {router?.query['id'] ? 'Update ' : 'Save '}
 
-              {editDataId ? <EditNoteIcon /> : <AddIcon />}
+              {router?.query['id'] ? <EditNoteIcon /> : <AddIcon />}
             </button>
           </Box>
         </form>

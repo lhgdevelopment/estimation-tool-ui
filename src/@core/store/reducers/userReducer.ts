@@ -1,8 +1,17 @@
-const initialUserState = {
+interface UserState {
+  user: any
+}
+
+interface Action {
+  type: string
+  payload: any
+}
+
+const initialUserState: UserState = {
   user: null
 }
 
-const userReducer = (state = initialUserState, action: any) => {
+const userReducer = (state: UserState = initialUserState, action: Action): UserState => {
   switch (action.type) {
     case 'LOGIN_USER':
       return { ...state, user: action.payload }

@@ -1,5 +1,4 @@
 import { Dropdown } from '@core/components/dropdown'
-import AppTextInput from '@core/components/input/textInput'
 import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
@@ -7,7 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { TMemoryComponent } from '../Memory.decorator'
 
 export default function MemoryFormComponent(props: TMemoryComponent) {
@@ -22,6 +21,9 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
+
+  // Ref for focusing the Memory Title input field
+  const titleInputRef = useRef<HTMLInputElement>(null)
 
   const handleReachText = (value: string, field: string) => {
     setFormData({
@@ -52,9 +54,9 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
         .then(res => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
-            const editedServiceQuestionIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
-            if (editedServiceQuestionIndex !== -1) {
-              updatedList[editedServiceQuestionIndex] = res?.data
+            const editedIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
+            if (editedIndex !== -1) {
+              updatedList[editedIndex] = res?.data
             }
 
             return updatedList
@@ -82,11 +84,17 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
   }
 
   useEffect(() => {
-    setFormData({
-      title: editData?.['title'],
-      prompt: editData?.['prompt'],
-      promptIds: editData?.['promptIds']
-    })
+    if (editDataId) {
+      setFormData({
+        title: editData?.['title'] || '',
+        prompt: editData?.['prompt'] || '',
+        promptIds: editData?.['promptIds'] || []
+      })
+      // Focus the title input field when edit mode is triggered
+      setTimeout(() => titleInputRef.current?.focus(), 0)
+    } else {
+      setFormData(defaultData)
+    }
   }, [editDataId, editData])
 
   const onClear = () => {
@@ -94,7 +102,7 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
     setEditData({})
     setErrorMessage({})
     setTimeout(() => {
-      setFormData(prevState => ({ ...defaultData }))
+      setFormData({ ...defaultData })
     }, 200)
   }
 
@@ -104,25 +112,25 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '50%' }}>
-              <AppTextInput
-                label={'Memory Title'}
+              <TextField
+                label='Memory Title'
                 name='title'
                 value={formData.title}
                 onChange={handleTextChange}
-                hasError={!!errorMessage?.['title']}
+                error={!!errorMessage?.['title']}
+                fullWidth
+                inputRef={titleInputRef} // Attach ref to Memory Title input
               />
               {!!errorMessage?.['title'] &&
-                errorMessage?.['title']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+                errorMessage?.['title']?.map((message: any, index: number) => (
+                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                    {message}
+                  </span>
+                ))}
             </Box>
             <Box sx={{ width: '50%' }}>
               <Dropdown
-                label={'Prompt'}
+                label='Prompt'
                 url='prompts'
                 name='promptIds'
                 value={formData.promptIds}
@@ -132,35 +140,31 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
                 multiple
               />
               {!!errorMessage?.['promptIds'] &&
-                errorMessage?.['promptIds']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+                errorMessage?.['promptIds']?.map((message: any, index: number) => (
+                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                    {message}
+                  </span>
+                ))}
             </Box>
           </Box>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
             <Box sx={{ width: '100%' }}>
               <TextField
-                label={'Prompt'}
+                label='Prompt'
                 name='prompt'
                 value={formData.prompt}
                 onChange={handleTextChange}
-                error={errorMessage?.['prompt']}
+                error={!!errorMessage?.['prompt']}
                 fullWidth
                 multiline
                 minRows={4}
               />
               {!!errorMessage?.['prompt'] &&
-                errorMessage?.['prompt']?.map((message: any, index: number) => {
-                  return (
-                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                      {message}
-                    </span>
-                  )
-                })}
+                errorMessage?.['prompt']?.map((message: any, index: number) => (
+                  <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                    {message}
+                  </span>
+                ))}
             </Box>
           </Box>
 
@@ -178,7 +182,6 @@ export default function MemoryFormComponent(props: TMemoryComponent) {
               className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
             >
               {editDataId ? 'Update ' : 'Save '}
-
               {editDataId ? <EditNoteIcon /> : <AddIcon />}
             </button>
           </Box>
