@@ -14,8 +14,22 @@ export default function PromptsComponent() {
         <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark-d:text-gray-300'>
           AI Prompts
         </Box>
-        <PromptsFormComponent listData={listData} setListData={setListData} />
-        <PromptsListComponent listData={listData} setListData={setListData} />
+        <PromptsFormComponent
+          setEditDataId={setEditDataId}
+          editDataId={editDataId}
+          listData={listData}
+          setListData={setListData}
+          editData={editData}
+          setEditData={setEditData}
+        />
+        <PromptsListComponent
+          setEditDataId={setEditDataId}
+          editDataId={editDataId}
+          listData={listData}
+          setListData={setListData}
+          editData={editData}
+          setEditData={setEditData}
+        />
       </Box>
     </>
   )
