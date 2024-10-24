@@ -1,10 +1,6 @@
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch } from 'react'
 
 export type TPromptsComponent = {
-  editDataId?: string | null
-  setEditDataId: Dispatch<SetStateAction<string | null>>
-  editData?: any
-  setEditData: Dispatch<any> // Remove the optional '?'
   listData: any[]
   setListData: Dispatch<any>
 }
@@ -19,6 +15,6 @@ export const promptsTypeList = [
   { title: 'Deliverables', id: 5 },
   { title: 'Tasks', id: 8 },
   { title: 'Meeting Summary', id: 6 },
-  { title: 'Other', id: 7 },
-  { title: 'Yelp API Chatbot', id: 11 },
+  { title: 'Other', id: 7 }
+  { title: 'Yelp API Chat Bot', id: 11 }
 ]
