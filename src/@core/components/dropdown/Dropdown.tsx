@@ -159,7 +159,6 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
             <ListSubheader sx={{ pt: 1 }}>
               <TextField
                 size='small'
-                autoFocus
                 placeholder={searchPlaceholder}
                 fullWidth
                 InputProps={{

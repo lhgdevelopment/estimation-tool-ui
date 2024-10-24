@@ -99,7 +99,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
         type: res?.data?.['type'],
         prompt: res?.data?.['prompt'],
         serial: res?.data?.['serial'],
-        teamIds: res?.data?.['shared_user']?.map((user: any) => user.team_id),
+        teamIds: res?.data?.['shared_teams']?.map((team: any) => team.teamId),
         user_id: res?.data?.['shared_user']?.map((user: any) => user.user_id),
         action_type: res?.data?.['action_type']
       })
@@ -207,6 +207,26 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
               />
               {!!errorMessage?.['user_id'] &&
                 errorMessage?.['user_id']?.map((message: any, index: number) => {
+                  return (
+                    <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                      {message}
+                    </span>
+                  )
+                })}
+            </Box>
+          </Box>
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            <Box sx={{ width: '100%' }}>
+              <Dropdown
+                label='Allowed Teams'
+                url='teams'
+                name='teamIds'
+                value={formData.teamIds}
+                onChange={handleSelectChange}
+                multiple
+              />
+              {!!errorMessage?.['teamIds'] &&
+                errorMessage?.['teamIds']?.map((message: any, index: number) => {
                   return (
                     <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                       {message}
