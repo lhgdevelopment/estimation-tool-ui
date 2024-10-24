@@ -15,6 +15,6 @@ export const promptsTypeList = [
   { title: 'Deliverables', id: 5 },
   { title: 'Tasks', id: 8 },
   { title: 'Meeting Summary', id: 6 },
-  { title: 'Other', id: 7 }
+  { title: 'Other', id: 7 },
   { title: 'Yelp API Chat Bot', id: 11 }
 ]
