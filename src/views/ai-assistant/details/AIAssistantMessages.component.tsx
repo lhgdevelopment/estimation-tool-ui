@@ -1,4 +1,5 @@
 import CopyToClipboard from '@core/components/copy-to-clipboard'
+import { dateTime } from '@core/utils/dateTime'
 import EditIcon from '@mui/icons-material/Edit'
 import HiveIcon from '@mui/icons-material/Hive'
 import { Avatar, Box, Tooltip } from '@mui/material'
@@ -90,7 +91,7 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
                 wordBreak: 'auto-phrase',
                 textAlign: 'justify'
               }}
-              dangerouslySetInnerHTML={{ __html: marked(message?.message_content, { renderer: renderer, gfm: true }) }}
+              dangerouslySetInnerHTML={{ __html: message?.message_content }}
             ></Box>
           ) : (
             <> </>
@@ -98,32 +99,33 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
         </Box>
 
         {message?.role === 'system' && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', mt: '10px' }}>
-            {!!message?.message_content && (
-              <CopyToClipboard
-                textToCopy={message?.message_content}
-                title=''
-                tooltipTitle='Copy'
-                tooltipPlacement='top'
-                sx={{
-                  p: 0,
-                  background: 'transparent',
-                  color: '#9b9b9b',
-
-                  '& svg': {
-                    fontSize: '18px',
-                    m: 0
-                  },
-                  ':hover': {
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', mt: '10px' }}>
+              {!!message?.message_content && (
+                <CopyToClipboard
+                  textToCopy={message?.message_content}
+                  title=''
+                  tooltipTitle='Copy'
+                  tooltipPlacement='top'
+                  sx={{
+                    p: 0,
                     background: 'transparent',
-                    color: '#000'
-                  },
-                  ':focus': { outline: 0, outlineOffset: 0, boxShadow: 0 }
-                }}
-              />
-            )}
+                    color: '#9b9b9b',
 
-            {/* {onRegenerate && (
+                    '& svg': {
+                      fontSize: '18px',
+                      m: 0
+                    },
+                    ':hover': {
+                      background: 'transparent',
+                      color: '#000'
+                    },
+                    ':focus': { outline: 0, outlineOffset: 0, boxShadow: 0 }
+                  }}
+                />
+              )}
+
+              {/* {onRegenerate && (
               <Tooltip title='Regenerate'>
                 <Box
                   component={'button'}
@@ -140,24 +142,32 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
               </Tooltip>
             )} */}
 
-            {onEdit && (
-              <Tooltip placement='top' title='Edit'>
-                <Box
-                  component={'button'}
-                  sx={{
-                    color: '#9b9b9b',
-                    ':hover': {
-                      color: '#000'
-                    }
-                  }}
-                  onClick={() => {
-                    onEdit(message)
-                  }}
-                >
-                  <EditIcon sx={{ fontSize: '18px' }} />
+              {onEdit && (
+                <Tooltip placement='top' title='Edit'>
+                  <Box
+                    component={'button'}
+                    sx={{
+                      color: '#9b9b9b',
+                      ':hover': {
+                        color: '#000'
+                      }
+                    }}
+                    onClick={() => {
+                      onEdit(message)
+                    }}
+                  >
+                    <EditIcon sx={{ fontSize: '18px' }} />
+                  </Box>
+                </Tooltip>
+              )}
+            </Box>
+            <Box>
+              <Tooltip title={dateTime.formatDateTime(message?.created_at)}>
+                <Box sx={{ fontSize: '12px', color: '#000', background: '#ddd', p: '2px 10px', borderRadius: '5px' }}>
+                  {dateTime.humanReadableDiff(message?.created_at)}
                 </Box>
               </Tooltip>
-            )}
+            </Box>
           </Box>
         )}
       </Box>

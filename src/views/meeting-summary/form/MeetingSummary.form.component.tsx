@@ -17,7 +17,7 @@ import { TMeetingSummaryComponent } from '../MeetingSummary.decorator'
 
 export default function MeetingSummaryFormComponent(props: TMeetingSummaryComponent) {
   const { showSnackbar } = useToastSnackbar()
-  const { listData, setListData, isEdit } = props
+  const { listData, setListData } = props
   const [preload, setPreload] = useState<boolean>(false)
   const router = useRouter()
 
@@ -321,7 +321,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
 
           <Box className='my-4 text-right'>
             {router?.query['id'] ? (
-              <Link href={`/meeting-summery/`} passHref>
+              <Link href={`/meeting-summary/`} passHref>
                 <Box
                   sx={{ cursor: 'pointer' }}
                   component={'a'}
