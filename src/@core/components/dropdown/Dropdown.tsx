@@ -4,7 +4,7 @@ import { Box, InputAdornment, InputLabel, ListSubheader, SxProps, TextField } fr
 import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
-import {forwardRef, SyntheticEvent, useCallback, useEffect, useImperativeHandle, useRef, useState} from 'react'
+import { forwardRef, SyntheticEvent, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import apiRequest from '../../utils/axios-config'
 
 type TOptionConfig = { title: string; id: string }
@@ -90,7 +90,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
       setInitialOptionList([])
       setPreloader(false)
     }
-  },[setPreloader, setOptionItems, setInitialOptionList, setPreloader])
+  }, [setPreloader, setOptionItems, setInitialOptionList, setPreloader])
 
   const handleOnClose = (event: SyntheticEvent) => {
     onClose && onClose(event)

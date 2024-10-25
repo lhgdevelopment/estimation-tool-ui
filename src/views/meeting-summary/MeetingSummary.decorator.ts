@@ -3,7 +3,6 @@ import { Dispatch } from 'react'
 export type TMeetingSummaryComponent = {
   listData: any[]
   setListData: Dispatch<any>
-  isEdit?: boolean
 }
 
 export const MeetingTypeList = [

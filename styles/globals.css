@@ -270,7 +270,7 @@ a:hover {
 .md-editor-preview,
 .md-editor-previewOnly {
   color: #000000;
-  background: #ffffff;
+  /* background: #ffffff; */
 }
 .theme-dark .md-editor-preview,
 .theme-dark .md-editor-previewOnly {
