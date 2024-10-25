@@ -6,6 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { Fragment, useEffect, useState } from 'react'
 import { TPromptsComponent, promptsTypeList } from '../Prompts.decorator'
@@ -258,14 +259,29 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
             </Box>
           </Box>
           <Box className='my-4 text-right'>
-            <button
-              onClick={onClear}
-              type='button'
-              className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
-            >
-              {router?.query['id'] ? 'Cancel ' : 'Clear '}
-              {router?.query['id'] ? <ClearIcon /> : <PlaylistRemoveIcon />}
-            </button>
+            {router?.query['id'] ? (
+              <Link href={`/settings/prompts/`} passHref>
+                <Box
+                  sx={{ cursor: 'pointer' }}
+                  component={'a'}
+                  className='px-4 py-2 mr-3 inline-block text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+                  aria-label='View'
+                >
+                  Cancel
+                  <ClearIcon />
+                </Box>
+              </Link>
+            ) : (
+              <button
+                onClick={onClear}
+                type='button'
+                className='px-4 py-2 mr-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red'
+              >
+                {router?.query['id'] ? 'Cancel ' : 'Clear '}
+                {router?.query['id'] ? <ClearIcon /> : <PlaylistRemoveIcon />}
+              </button>
+            )}
+
             <button
               type='submit'
               className='px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-green-600 border border-transparent rounded-lg active:bg-green-600 hover:bg-green-700 focus:outline-none focus:shadow-outline-green'
