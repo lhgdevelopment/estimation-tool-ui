@@ -98,9 +98,9 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
           )}
         </Box>
 
-        {message?.role === 'system' && (
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px', mt: '10px' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: '10px' }}>
+          {message?.role === 'system' ? (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               {!!message?.message_content && (
                 <CopyToClipboard
                   textToCopy={message?.message_content}
@@ -161,15 +161,21 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
                 </Tooltip>
               )}
             </Box>
-            <Box>
-              <Tooltip title={dateTime.formatDateTime(message?.created_at)}>
-                <Box sx={{ fontSize: '12px', color: '#000', background: '#ddd', p: '2px 10px', borderRadius: '5px' }}>
-                  {dateTime.humanReadableDiff(message?.created_at)}
-                </Box>
-              </Tooltip>
+          ) : (
+            <Box></Box>
+          )}
+          <Box>
+            {/* <Tooltip title={dateTime.formatDateTime(message?.created_at)}>
+                <Box sx={{ fontSize: '12px', color: '#fff', background: '#333', p: '2px 10px', borderRadius: '5px' }}>
+                  {{dateTime.humanReadableDiff(message?.created_at)} }
+
+              </Tooltip> */}
+
+            <Box sx={{ fontSize: '12px', color: '#fff', background: '#333', p: '2px 10px', borderRadius: '5px' }}>
+              {dateTime.formatDateTime(message?.created_at)}
             </Box>
           </Box>
-        )}
+        </Box>
       </Box>
     </Box>
   )
