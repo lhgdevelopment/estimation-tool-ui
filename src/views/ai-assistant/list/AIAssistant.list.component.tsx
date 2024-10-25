@@ -275,7 +275,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                     <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</TableCell>
                     <TableCell className='px-4 py-3 text-sm'>
                       <Box sx={{ width: '100px', textOverflow: 'ellipsis', textWrap: 'nowrap', overflow: 'hidden' }}>
-                        {data?.user?.name}
+                        {data?.messages[0]?.user?.name}
                       </Box>
                     </TableCell>
                     <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.updated_at)}</TableCell>
