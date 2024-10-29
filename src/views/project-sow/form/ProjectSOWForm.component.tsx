@@ -1,3 +1,6 @@
+import Preloader from '@core/components/preloader'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import AddIcon from '@material-ui/icons/Add'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import EditNoteIcon from '@mui/icons-material/EditNote'
@@ -7,9 +10,6 @@ import { Box, Step, StepButton, Stepper } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import Preloader from '@core/components/preloader'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 import { TProjectSOWFormComponent } from '../ProjectSOW.decorator'
 import ProjectSOWDeliverableFormComponent from './steps/deliverable/ProjectSOWDeliverable.component'
 import ProjectSOWEstimationFormComponent from './steps/eastimation/ProjectSOWEstimation.component'
@@ -877,7 +877,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
 
   return (
     <Box>
-      {!!preload && <Preloader close={!preload} />}
+      {!!preload && <Preloader />}
       <Box sx={{ display: 'flex', width: '100%', mt: '50px', alignItems: 'flex-start' }}>
         <Box
           sx={{

@@ -316,7 +316,7 @@ export default function AIAssistantDetailsComponent() {
   const sowBodySx = { p: 2, my: 2 }
 
   if (preload) {
-    return <Preloader close={preload} />
+    return <Preloader />
   }
 
   return (

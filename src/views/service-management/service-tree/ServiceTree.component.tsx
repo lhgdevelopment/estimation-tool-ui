@@ -2053,7 +2053,7 @@ export default function ServiceTreeComponent() {
                 </Box>
                 {isFatchFromClickUp ? (
                   <>
-                    {!!isPullingTaskFromClickup && <Preloader close={!!clickupTaskList?.length} />}
+                    {!!isPullingTaskFromClickup && !clickupTaskList?.length && <Preloader />}
                     <Box>
                       <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
                         <Box sx={{ width: '100%' }}>

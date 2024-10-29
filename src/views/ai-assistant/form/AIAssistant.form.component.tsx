@@ -108,7 +108,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
 
   return (
     <Fragment>
-      {!!prelaod && <Preloader close={!!prelaod} />}
+      {!!prelaod && <Preloader />}
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
