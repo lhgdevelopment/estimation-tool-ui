@@ -87,7 +87,7 @@ button:focus {
 .markdown-preview-container ol,
 .markdown-preview-container ul,
 .markdown-preview-container menu {
-  list-style: inside;
+  list-style: inherit;
 }
 
 a:hover {

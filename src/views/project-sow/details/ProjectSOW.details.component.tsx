@@ -1,3 +1,7 @@
+import CopyToClipboard from '@core/components/copy-to-clipboard'
+import Preloader from '@core/components/preloader'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box } from '@mui/material'
@@ -8,10 +12,6 @@ import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
-import CopyToClipboard from '@core/components/copy-to-clipboard'
-import Preloader from '@core/components/preloader'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
-import apiRequest from '@core/utils/axios-config'
 
 export default function ProjectSOWDetailsComponent() {
   const { showSnackbar } = useToastSnackbar()
@@ -57,7 +57,7 @@ export default function ProjectSOWDetailsComponent() {
   }, [router?.query['id']])
 
   if (preload) {
-    return <Preloader close={!preload} />
+    return <Preloader />
   }
 
   return (

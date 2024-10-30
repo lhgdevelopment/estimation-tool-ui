@@ -72,7 +72,7 @@ export default function ProjectSOWDeliverableFormView(props: TProjectSOWDelivera
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-      {preload && <Preloader close={!preload} />}
+      {preload && <Preloader />}
       <Box sx={{ ...sectionTitleSx, display: 'flex' }}>
         Deliverables
         <Box

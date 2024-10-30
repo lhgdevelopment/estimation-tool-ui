@@ -147,7 +147,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
 
   return (
     <Fragment>
-      {!!preload && <Preloader close={!preload} />}
+      {!!preload && <Preloader />}
       <Box className='p-5 mb-8 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
         <form onSubmit={onSubmit}>
           <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>

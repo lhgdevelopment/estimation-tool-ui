@@ -1,9 +1,9 @@
-import { SelectChangeEvent } from '@mui/material'
-import 'md-editor-rt/lib/style.css'
-import { useEffect, useState } from 'react'
 import Preloader from '@core/components/preloader'
 import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import apiRequest from '@core/utils/axios-config'
+import { SelectChangeEvent } from '@mui/material'
+import 'md-editor-rt/lib/style.css'
+import { useEffect, useState } from 'react'
 import { TProjectSOWEstimationFormComponentProps } from './ProjectSOWEstimation.decorator'
 import ProjectSOWEstimationFormView from './ProjectSOWEstimation.view'
 
@@ -531,7 +531,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
 
   return (
     <>
-      {!!preload && <Preloader close={!preload} />}
+      {!!preload && <Preloader />}
       <ProjectSOWEstimationFormView
         {...props}
         associatedUserWithRole={associatedUserWithRole}
