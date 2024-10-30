@@ -4,7 +4,8 @@ import EditIcon from '@mui/icons-material/Edit'
 import HiveIcon from '@mui/icons-material/Hive'
 import { Avatar, Box, Tooltip } from '@mui/material'
 import { marked } from 'marked'
-import 'md-editor-rt/lib/style.css'
+import { MdPreview } from 'md-editor-rt'
+import 'md-editor-rt/lib/preview.css'
 
 type TAIAssistantMessagesComponentProps = {
   message: any
@@ -84,15 +85,16 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
               ></Box>
             </Box>
           ) : message?.message_content ? (
-            <Box
-              className='md-editor-preview'
-              sx={{
-                p: 4,
-                wordBreak: 'auto-phrase',
-                textAlign: 'justify'
-              }}
-              dangerouslySetInnerHTML={{ __html: message?.message_content }}
-            ></Box>
+            // <Box
+            //   className='md-editor-preview'
+            //   sx={{
+            //     p: 4,
+            //     wordBreak: 'auto-phrase',
+            //     textAlign: 'justify'
+            //   }}
+            //   dangerouslySetInnerHTML={{ __html: message?.message_content }}
+            // ></Box>
+            <MdPreview editorId={'message'} modelValue={message?.message_content} />
           ) : (
             <> </>
           )}
