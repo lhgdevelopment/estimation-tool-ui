@@ -73,7 +73,7 @@ const AppLayout = ({ children }: Props) => {
         }}
       >
         <AppHeaderComponent />
-        <Box sx={{ mt: '60px' }} component={'main'} className='h-full'>
+        <Box sx={{ mt: '50px' }} component={'main'} className='h-full'>
           {children}
         </Box>
         <AppBackToTopButton />

@@ -1,24 +1,16 @@
-import IosShareIcon from '@mui/icons-material/IosShare'
-import NorthEastIcon from '@mui/icons-material/North'
-import PersonIcon from '@mui/icons-material/Person'
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogTitle from '@mui/material/DialogTitle'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
-import ListItemText from '@mui/material/ListItemText'
-import { blue } from '@mui/material/colors'
-
 import { Dropdown } from '@core/components/dropdown'
 import Preloader from '@core/components/preloader'
 import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import apiRequest from '@core/utils/axios-config'
+import BookmarksIcon from '@mui/icons-material/Bookmarks'
+import IosShareIcon from '@mui/icons-material/IosShare'
+import NorthEastIcon from '@mui/icons-material/North'
+import PersonIcon from '@mui/icons-material/Person'
 import {
   Box,
   DialogActions,
   DialogContent,
+  Drawer,
   IconButton,
   ListItemSecondaryAction,
   MenuItem,
@@ -28,6 +20,15 @@ import {
   TextField,
   Tooltip
 } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import ListItemText from '@mui/material/ListItemText'
+import { blue } from '@mui/material/colors'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
@@ -66,6 +67,8 @@ export default function AIAssistantDetailsComponent() {
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
   const [selectedUserIdsForShare, setSelectedUserIdsForShare] = useState<any[]>([])
   const [selectedShareType, setSelectedShareType] = useState('')
+
+  const [openBookmarkDrawer, setOpenBookmarkDrawer] = useState(false)
 
   const handleShareDialogOpen = () => {
     setShareDialogOpen(true)
@@ -323,18 +326,42 @@ export default function AIAssistantDetailsComponent() {
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 5 }}>
         <Box component={'h1'}>{detailsData?.name}</Box>
-        {hasEditAccess && (
-          <Tooltip placement='top' title='Share with others'>
+        <Box>
+          {hasEditAccess && (
+            <Tooltip placement='top' title='Share with others'>
+              <IconButton onClick={handleShareDialogOpen}>
+                <IosShareIcon sx={{ fontSize: '16px' }} />
+              </IconButton>
+            </Tooltip>
+          )}
+          <Tooltip placement='top' title='Bookmark List'>
             <IconButton
-              onClick={e => {
-                handleShareDialogOpen()
+              onClick={() => {
+                setOpenBookmarkDrawer(true)
               }}
             >
-              <IosShareIcon />
+              <BookmarksIcon sx={{ fontSize: '16px' }} />
             </IconButton>
           </Tooltip>
-        )}
+        </Box>
       </Box>
+      <Drawer open={openBookmarkDrawer} onClose={() => setOpenBookmarkDrawer(false)} anchor='right'>
+        <Box sx={{ width: '250px' }}>
+          <Box
+            sx={{
+              padding: '10px',
+              color: '#333',
+              textAlign: 'center',
+              fontSize: '14px',
+              fontWeight: '600',
+              boxShadow: '0px 1px 5px -3px #334'
+            }}
+          >
+            Your Bookmarks
+          </Box>
+          <Box></Box>
+        </Box>
+      </Drawer>
       <Dialog
         open={shareDialogOpen}
         onClose={handleShareDialogClose}

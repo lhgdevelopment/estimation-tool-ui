@@ -1,11 +1,14 @@
 import CopyToClipboard from '@core/components/copy-to-clipboard'
 import { dateTime } from '@core/utils/dateTime'
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd'
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded'
 import EditIcon from '@mui/icons-material/Edit'
 import HiveIcon from '@mui/icons-material/Hive'
 import { Avatar, Box, Tooltip } from '@mui/material'
 import { marked } from 'marked'
 import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/preview.css'
+import { useState } from 'react'
 
 type TAIAssistantMessagesComponentProps = {
   message: any
@@ -27,6 +30,13 @@ renderer.listitem = (text, task, checked) => {
 
 export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
   const { message, index, isWaiting = false, onRegenerate, onEdit } = props
+
+  const [bookmarkedFlush, setBookmarkFlush] = useState<any>(null)
+
+  const handleBookmarkClick = (id: any) => {
+    setBookmarkFlush(id)
+    setTimeout(() => setBookmarkFlush(null), 2000)
+  }
 
   return (
     <Box
@@ -100,7 +110,7 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
           )}
         </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: '10px' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: '10px' }}>
           {message?.role === 'system' ? (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
               {!!message?.message_content && (
@@ -162,6 +172,27 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
                   </Box>
                 </Tooltip>
               )}
+
+              <Tooltip placement='top' title={bookmarkedFlush == message?.id ? 'Bookmark Added!' : 'Bookmark'}>
+                <Box
+                  component={'button'}
+                  sx={{
+                    color: '#9b9b9b',
+                    ':hover': {
+                      color: '#000'
+                    }
+                  }}
+                  onClick={() => {
+                    handleBookmarkClick(message?.id)
+                  }}
+                >
+                  {bookmarkedFlush == message?.id ? (
+                    <BookmarkAddedIcon sx={{ fontSize: '18px', color: '#000' }} />
+                  ) : (
+                    <BookmarkAddIcon sx={{ fontSize: '18px' }} />
+                  )}
+                </Box>
+              </Tooltip>
             </Box>
           ) : (
             <Box></Box>

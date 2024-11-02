@@ -104,8 +104,6 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
     setEditData({})
   }
 
-  console.log({ formData })
-
   return (
     <Fragment>
       {!!prelaod && <Preloader />}

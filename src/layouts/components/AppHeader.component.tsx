@@ -35,7 +35,7 @@ export default function AppHeaderComponent() {
     <Fragment>
       <Box
         component={'header'}
-        className='z-10 py-4 bg-white shadow-md dark-d:bg-gray-800'
+        className='z-10 py-2 bg-white shadow-md dark-d:bg-gray-800'
         sx={{
           width: settings?.isNavbarCollapsed ? 'calc(100% - 90px)' : 'calc(100% - 280px)',
           position: 'fixed',
