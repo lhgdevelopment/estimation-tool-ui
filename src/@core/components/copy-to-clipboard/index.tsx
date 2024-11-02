@@ -30,7 +30,7 @@ const CopyToClipboard = (props: TCopyToClipboard) => {
   // }
 
   return (
-    <Tooltip title={tooltipTitle ? tooltipTitle : title} placement={tooltipPlacement}>
+    <Tooltip title={isCopied ? 'Copied!' : tooltipTitle ? tooltipTitle : title} placement={tooltipPlacement}>
       <Box
         component={'button'}
         onClick={handleCopyClick}
