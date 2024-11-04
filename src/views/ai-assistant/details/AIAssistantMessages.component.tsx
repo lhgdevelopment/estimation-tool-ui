@@ -1,4 +1,5 @@
 import CopyToClipboard from '@core/components/copy-to-clipboard'
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import { dateTime } from '@core/utils/dateTime'
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd'
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded'
@@ -16,6 +17,7 @@ type TAIAssistantMessagesComponentProps = {
   isWaiting?: boolean
   onRegenerate?: () => void
   onEdit?: (data: any) => void
+  onBookmark?: (message: any) => void
 }
 const renderer = new marked.Renderer()
 const linkRenderer = renderer.link
@@ -29,12 +31,14 @@ renderer.listitem = (text, task, checked) => {
 }
 
 export default function AIAssistantMessagesComponent(props: TAIAssistantMessagesComponentProps) {
-  const { message, index, isWaiting = false, onRegenerate, onEdit } = props
+  const { message, index, isWaiting = false, onRegenerate, onEdit, onBookmark } = props
+  const { showSnackbar } = useToastSnackbar()
 
   const [bookmarkedFlush, setBookmarkFlush] = useState<any>(null)
 
-  const handleBookmarkClick = (id: any) => {
-    setBookmarkFlush(id)
+  const handleBookmarkButtonOnClick = (message: any) => {
+    setBookmarkFlush(message?.id)
+    onBookmark && onBookmark(message)
     setTimeout(() => setBookmarkFlush(null), 2000)
   }
 
@@ -183,7 +187,7 @@ export default function AIAssistantMessagesComponent(props: TAIAssistantMessages
                     }
                   }}
                   onClick={() => {
-                    handleBookmarkClick(message?.id)
+                    handleBookmarkButtonOnClick(message)
                   }}
                 >
                   {bookmarkedFlush == message?.id ? (

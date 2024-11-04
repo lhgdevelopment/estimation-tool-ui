@@ -2,7 +2,10 @@ import { Dropdown } from '@core/components/dropdown'
 import Preloader from '@core/components/preloader'
 import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import apiRequest from '@core/utils/axios-config'
+import { dateTime } from '@core/utils/dateTime'
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 import BookmarksIcon from '@mui/icons-material/Bookmarks'
+import DeleteIcon from '@mui/icons-material/Delete'
 import IosShareIcon from '@mui/icons-material/IosShare'
 import NorthEastIcon from '@mui/icons-material/North'
 import PersonIcon from '@mui/icons-material/Person'
@@ -65,10 +68,22 @@ export default function AIAssistantDetailsComponent() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const [shareDialogOpen, setShareDialogOpen] = useState(false)
+
   const [selectedUserIdsForShare, setSelectedUserIdsForShare] = useState<any[]>([])
   const [selectedShareType, setSelectedShareType] = useState('')
 
   const [openBookmarkDrawer, setOpenBookmarkDrawer] = useState(false)
+
+  const [bookmarkList, setBookmarkList] = useState<any[]>([])
+  const [bookmarkFormData, setBookmarkFormData] = useState<any>({})
+  const [bookmarkDialogOpen, setBookmarkDialogOpen] = useState(false)
+  const handleBookmarkDialogOpen = () => {
+    setBookmarkDialogOpen(true)
+  }
+
+  const handleBookmarkDialogClose = () => {
+    setBookmarkDialogOpen(false)
+  }
 
   const handleShareDialogOpen = () => {
     setShareDialogOpen(true)
@@ -302,9 +317,73 @@ export default function AIAssistantDetailsComponent() {
     setMessageEditOpenModal(true)
   }
 
+  const onBookmark = (message: any) => {
+    if (message?.id) {
+      handleBookmarkDialogOpen()
+    }
+    setBookmarkFormData({ ...message, title: message.message_content?.substring(0, 20) })
+  }
+
+  const handleOnBookmarkSubmit = () => {
+    apiRequest
+      .post('/bookmarks/', {
+        title: bookmarkFormData?.title,
+        conversationId: conversationId,
+        conversationDetailId: bookmarkFormData?.id
+      })
+      .then(() => {
+        showSnackbar('Bookmark Saved!', { variant: 'success' })
+        handleBookmarkDialogClose()
+        getBookmarkList()
+      })
+      .catch(err => {
+        showSnackbar(err?.message, { variant: 'error' })
+      })
+  }
+
+  const getBookmarkList = () => {
+    apiRequest
+      .get(`/bookmarks?conversationId=${conversationId}`)
+      .then(res => {
+        setBookmarkList(res?.data)
+      })
+      .catch(err => {
+        showSnackbar(err?.message, { variant: 'error' })
+      })
+  }
+  const onRemoveBookmark = (id: any) => {
+    Swal.fire({
+      title: 'Are You sure?',
+      // text: "You won't be able to revert this!",
+      icon: 'warning',
+      showConfirmButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: '#dc2626',
+      showCancelButton: true,
+      cancelButtonText: 'No, cancel!'
+    })
+      .then(res => {
+        if (res.isConfirmed) {
+          apiRequest
+            .delete(`/bookmarks/${id}`)
+            .then(res => {
+              getBookmarkList()
+              showSnackbar('Successfully Deleted!', { variant: 'success' })
+            })
+            .catch(err => {
+              showSnackbar(err?.message, { variant: 'error' })
+            })
+        }
+      })
+      .catch(error => {
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
+  }
+
   useEffect(() => {
     if (conversationId && currentUser?.id) {
       getDetails()
+      getBookmarkList()
     }
   }, [conversationId, currentUser?.id])
 
@@ -329,8 +408,15 @@ export default function AIAssistantDetailsComponent() {
         <Box>
           {hasEditAccess && (
             <Tooltip placement='top' title='Share with others'>
-              <IconButton onClick={handleShareDialogOpen}>
-                <IosShareIcon sx={{ fontSize: '16px' }} />
+              <IconButton
+                onClick={handleShareDialogOpen}
+                sx={{
+                  '&:hover .share-icon': {
+                    color: '#000000'
+                  }
+                }}
+              >
+                <IosShareIcon className='share-icon' sx={{ fontSize: '16px' }} />
               </IconButton>
             </Tooltip>
           )}
@@ -339,14 +425,19 @@ export default function AIAssistantDetailsComponent() {
               onClick={() => {
                 setOpenBookmarkDrawer(true)
               }}
+              sx={{
+                '&:hover .bookmark-icon': {
+                  color: '#000000'
+                }
+              }}
             >
-              <BookmarksIcon sx={{ fontSize: '16px' }} />
+              <BookmarksIcon className='bookmark-icon' sx={{ fontSize: '16px' }} />
             </IconButton>
           </Tooltip>
         </Box>
       </Box>
       <Drawer open={openBookmarkDrawer} onClose={() => setOpenBookmarkDrawer(false)} anchor='right'>
-        <Box sx={{ width: '250px' }}>
+        <Box sx={{ width: '250px', display: 'flex', flexDirection: 'column' }}>
           <Box
             sx={{
               padding: '10px',
@@ -357,9 +448,58 @@ export default function AIAssistantDetailsComponent() {
               boxShadow: '0px 1px 5px -3px #334'
             }}
           >
-            Your Bookmarks
+            Saved Bookmark List
           </Box>
-          <Box></Box>
+          {!!bookmarkList?.length && (
+            <Box>
+              <List sx={{ width: '100%', bgcolor: 'background.paper', py: 1, mt: 1 }}>
+                {bookmarkList?.map((bookmark: any, index: number) => {
+                  return (
+                    <ListItem
+                      key={index}
+                      sx={{ py: 0 }}
+                      secondaryAction={
+                        <IconButton
+                          onClick={() => {
+                            onRemoveBookmark(bookmark?.id)
+                          }}
+                          aria-label='Remove'
+                          color='error'
+                        >
+                          <DeleteIcon sx={{ fontSize: '18px' }} />
+                        </IconButton>
+                      }
+                    >
+                      <ListItemText
+                        primaryTypographyProps={{
+                          fontSize: '14px'
+                        }}
+                        secondaryTypographyProps={{
+                          fontSize: '12px'
+                        }}
+                        primary={bookmark?.title}
+                        secondary={dateTime?.formatDateTime(bookmark?.updated_at)}
+                      />
+                    </ListItem>
+                  )
+                })}
+              </List>
+            </Box>
+          )}
+          {!bookmarkList?.length && (
+            <Box
+              sx={{
+                height: 'calc(100vh - 100px)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <BookmarkBorderIcon />
+              <Box sx={{ fontSize: '14px' }}>No Bookmark saved yet!</Box>
+            </Box>
+          )}
         </Box>
       </Drawer>
       <Dialog
@@ -469,6 +609,39 @@ export default function AIAssistantDetailsComponent() {
           )}
         </DialogActions>
       </Dialog>
+      <Dialog
+        open={bookmarkDialogOpen}
+        onClose={handleBookmarkDialogClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+        sx={{ '& .MuiPaper-root': { maxWidth: '500px', width: '100%' } }}
+      >
+        <DialogTitle id='alert-dialog-title'>Save Bookmark</DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            <TextField
+              label={'Title'}
+              name='title'
+              value={bookmarkFormData.title}
+              onChange={e => {
+                setBookmarkFormData((prevState: any) => ({
+                  ...prevState,
+                  title: e.target.value
+                }))
+              }}
+              fullWidth
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleBookmarkDialogClose} color='error'>
+            Remove
+          </Button>
+          <Button onClick={handleOnBookmarkSubmit} autoFocus>
+            Done
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Box sx={{ p: 5, py: 0, height: 'calc(100vh - 100px)' }}>
         <Box className='container px-6 mx-auto' sx={{ height: '100%', position: 'relative' }}>
           <Box
@@ -492,6 +665,7 @@ export default function AIAssistantDetailsComponent() {
                     onSubmit(true)
                   }}
                   onEdit={onEdit}
+                  onBookmark={onBookmark}
                 />
               )
             })}
