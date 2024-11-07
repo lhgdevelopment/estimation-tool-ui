@@ -64,7 +64,7 @@ export const dateTime = {
     return formattedDate.replace(/\//g, '/')
   },
   formatDateTime(
-    date: Date = new Date(),
+    date: Date | string = new Date(),
     options: Intl.DateTimeFormatOptions = {
       month: 'numeric',
       day: 'numeric',
