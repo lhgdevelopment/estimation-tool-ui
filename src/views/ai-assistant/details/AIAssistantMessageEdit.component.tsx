@@ -3,7 +3,7 @@ import apiRequest from '@core/utils/axios-config'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { Dispatch, useState } from 'react'
+import React, { Dispatch, useState } from 'react'
 
 type TAIAssistantMessagesEditComponentProps = {
   editData: any

@@ -21,7 +21,6 @@ export default function AppHeaderComponent() {
   }
 
   const toggleNavbar = () => {
-    console.log(settings)
     Cookies.set('isNavbarCollapsed', (!settings?.isNavbarCollapsed).toString())
     dispatch(isNavbarCollapsed(!settings?.isNavbarCollapsed))
   }
