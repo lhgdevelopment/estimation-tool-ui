@@ -26,6 +26,7 @@ const AppLayout = ({ children }: Props) => {
   const token = Cookies.get('accessToken')
   const isDark = useSelector((state: RootState) => state.theme.isDark)
   const isNavbarCollapsed = useSelector((state: RootState) => state?.settings?.isNavbarCollapsed)
+
   // useEffect(() => {
   //   document.body.classList.toggle('theme-dark', isDark)
   // }, [isDark])

@@ -1,6 +1,7 @@
 import { Dropdown } from '@core/components/dropdown'
 import Preloader from '@core/components/preloader'
 import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import { RootState } from '@core/store/reducers'
 import apiRequest from '@core/utils/axios-config'
 import BookmarksIcon from '@mui/icons-material/Bookmarks'
 import IosShareIcon from '@mui/icons-material/IosShare'
@@ -76,6 +77,9 @@ export default function AIAssistantDetailsComponent() {
   const [bookmarkFormData, setBookmarkFormData] = useState<any>({})
   const [bookmarkEditId, setBookmarkEditId] = useState<number | null>(null)
   const [bookmarkDialogOpen, setBookmarkDialogOpen] = useState(false)
+
+  const messageForInput = useSelector((state: RootState) => state.aiAssistant.messageForInput)
+
   const handleBookmarkDialogOpen = () => {
     setBookmarkDialogOpen(true)
   }
@@ -425,6 +429,14 @@ export default function AIAssistantDetailsComponent() {
       })
   }
 
+  useEffect(() => {
+    if (messageForInput) {
+      setConversationFormData({
+        ...conversationFormData,
+        ...{ message_content: messageForInput }
+      })
+    }
+  }, [messageForInput])
   useEffect(() => {
     if (conversationId && currentUser?.id) {
       getDetails()

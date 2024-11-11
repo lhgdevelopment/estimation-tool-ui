@@ -1,15 +1,19 @@
 import CopyToClipboard from '@core/components/copy-to-clipboard'
 import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import { setAiAssistantMessage } from '@core/store/actions'
 import { dateTime } from '@core/utils/dateTime'
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd'
 import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo'
 import EditIcon from '@mui/icons-material/Edit'
 import HiveIcon from '@mui/icons-material/Hive'
-import { Avatar, Box, Tooltip } from '@mui/material'
+import { Avatar, Box, IconButton, Menu, Tooltip } from '@mui/material'
 import { marked } from 'marked'
 import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/preview.css'
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, MouseEvent, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 type TAIAssistantMessagesComponentProps = {
   message: any
@@ -20,6 +24,7 @@ type TAIAssistantMessagesComponentProps = {
   onBookmarkAdd?: (message: any) => void
   bookmarkId?: number
   onRemoveBookmark: (id: number) => void
+  onPasteText?: (text: string) => void
 }
 
 // Define renderer for custom Markdown rendering
@@ -44,11 +49,14 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
       onEditMessage,
       onBookmarkAdd,
       onRemoveBookmark,
-      bookmarkId
+      bookmarkId,
+      onPasteText
     } = props
     const { showSnackbar } = useToastSnackbar()
 
+    const dispatch = useDispatch()
     const [bookmarkedFlush, setBookmarkFlush] = useState<any>(null)
+    const [contextMenu, setContextMenu] = useState<{ mouseX: number; mouseY: number } | null>(null)
 
     const handleBookmarkButtonOnClick = (message: any) => {
       if (bookmarkId) {
@@ -56,6 +64,30 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
       } else {
         onBookmarkAdd && onBookmarkAdd(message)
       }
+    }
+
+    const handleMouseUp = (event: MouseEvent) => {
+      const selectedText = window.getSelection()?.toString()
+      if (selectedText) {
+        setContextMenu({ mouseX: event.clientX - 2, mouseY: event.clientY - 40 })
+      }
+    }
+
+    const handleCopySelectedText = () => {
+      const selectedText = window.getSelection()?.toString()
+      if (selectedText) {
+        navigator.clipboard.writeText(selectedText)
+        showSnackbar('Text copied to clipboard', { variant: 'success' })
+      }
+      setContextMenu(null)
+    }
+
+    const handleCopyPasteInMessage = () => {
+      const selectedText = window.getSelection()?.toString()
+      if (selectedText) {
+        dispatch(setAiAssistantMessage(selectedText))
+      }
+      setContextMenu(null)
     }
 
     return (
@@ -91,7 +123,10 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
               </Box>
             </Box>
           )}
-          <Box sx={{ width: '100%', lineHeight: 'normal', mt: 2, borderRadius: 1, overflow: 'hidden' }}>
+          <Box
+            sx={{ width: '100%', lineHeight: 'normal', mt: 2, borderRadius: 1, overflow: 'hidden' }}
+            onMouseUp={handleMouseUp}
+          >
             {isWaiting ? (
               <Box sx={{ height: '14px', width: '14px', borderRadius: '50%', m: '5px' }}>
                 <Box sx={{ height: '100%', width: '100%' }} component={'img'} src='/gif/hive-assist-loader.gif'></Box>
@@ -102,6 +137,20 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
               <> </>
             )}
           </Box>
+
+          <Menu
+            open={contextMenu !== null}
+            onClose={() => setContextMenu(null)}
+            anchorReference='anchorPosition'
+            anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
+          >
+            <IconButton onClick={handleCopySelectedText} size='small'>
+              <ContentCopyIcon fontSize='small' />
+            </IconButton>
+            <IconButton onClick={handleCopyPasteInMessage} size='small'>
+              <ContentPasteGoIcon fontSize='small' />
+            </IconButton>
+          </Menu>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: '10px' }}>
             {message?.role === 'system' ? (
