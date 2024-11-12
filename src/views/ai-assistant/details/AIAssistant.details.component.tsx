@@ -31,7 +31,7 @@ import ListItemText from '@mui/material/ListItemText'
 import { blue } from '@mui/material/colors'
 import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
-import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
 import { shareAccessLevel } from '../AIAssistant.decorator'
@@ -42,7 +42,11 @@ import BookmarkDrawer from './bookmark/BookmarkDrawer'
 export default function AIAssistantDetailsComponent() {
   const { showSnackbar } = useToastSnackbar()
   const currentUser = useSelector((state: any) => state.user)?.user
-  const conversationId = useRouter()?.query['id']
+  const router = useRouter()
+  console.log('router', router)
+
+  const conversationId = router.query['id']
+  const conversationDetailId = router.query['conversationDetailId']
 
   const [preload, setPreload] = useState<boolean>(false)
   const [isWaiting, setIsWaiting] = useState<boolean>(false)
@@ -97,7 +101,7 @@ export default function AIAssistantDetailsComponent() {
   }
 
   const scrollToMessageOnBookmarkClick = (messageId: number) => {
-    const messageIndex = detailsData.messages.findIndex((message: any) => message?.id === messageId)
+    const messageIndex = detailsData?.messages?.findIndex((message: any) => message?.id === messageId)
     if (messageIndex !== -1 && messageRefs.current[messageIndex]) {
       messageRefs.current[messageIndex].scrollIntoView({ behavior: 'smooth' })
       setOpenBookmarkDrawer(false)
@@ -166,8 +170,6 @@ export default function AIAssistantDetailsComponent() {
           ]
         })
         .then(res => {
-          console.log(res)
-
           showSnackbar('Successfully shared with selected users', { variant: 'success' })
           setDetailsData((prevState: any) => ({
             ...prevState,
@@ -212,34 +214,31 @@ export default function AIAssistantDetailsComponent() {
     })
   }
 
-  const getDetails = () => {
+  const getDetails = useCallback(() => {
     setPreload(true)
-    apiRequest.get(`/conversations/${conversationId}`).then(res => {
-      setDetailsData(res?.data)
-      setHasEditAccess(
-        currentUser?.role == 'Admin' || res?.data?.user_id == currentUser?.id
-          ? true
-          : res?.data?.shared_user?.filter((sharedUser: any) => sharedUser?.user?.id == currentUser?.id)?.[0]
-              ?.access_level == 2
-          ? true
-          : false
-      )
-      const userMessages = res?.data?.messages?.filter((message: any) => message?.role == 'user')
-
-      setPrevConversationFormData({
-        ...defaultData,
-        ...{
-          message_content: userMessages?.length ? userMessages[userMessages.length - 1].message_content : '',
-          prompt_id: userMessages?.length ? userMessages[userMessages.length - 1].prompt_id : ''
+    apiRequest
+      .get(`/conversations/${conversationId}`)
+      .then(res => {
+        setDetailsData(res?.data)
+        setHasEditAccess(
+          currentUser?.role == 'Admin' ||
+            res?.data?.user_id == currentUser?.id ||
+            res?.data?.shared_user?.some(
+              (sharedUser: any) => sharedUser?.user?.id === currentUser?.id && sharedUser.access_level === 2
+            )
+        )
+        setPreload(false)
+        if (conversationDetailId && !preload) {
+          scrollToMessageOnBookmarkClick(Number(conversationDetailId))
+        } else {
+          scrollToBottom()
         }
       })
-
-      setPreload(false)
-      setTimeout(() => {
-        scrollToBottom()
-      }, 100)
-    })
-  }
+      .catch(err => {
+        showSnackbar(err?.message, { variant: 'error' })
+        setPreload(false)
+      })
+  }, [conversationId, currentUser?.id, showSnackbar])
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setConversationFormData({
@@ -340,7 +339,7 @@ export default function AIAssistantDetailsComponent() {
     // if (message?.id) {
     //   handleBookmarkDialogOpen()
     // }
-    setBookmarkFormData({ ...message, title: message.message_content?.substring(0, 20) })
+    setBookmarkFormData({ ...message, title: message.message_content?.substring(0, 50) })
     if (bookmarkFormData?.title) {
       handleOnBookmarkSubmit()
     }
@@ -390,7 +389,7 @@ export default function AIAssistantDetailsComponent() {
     }
   }
 
-  const getBookmarkList = () => {
+  const getBookmarkList = useCallback(() => {
     apiRequest
       .get(`/bookmarks?conversationId=${conversationId}`)
       .then(res => {
@@ -399,7 +398,7 @@ export default function AIAssistantDetailsComponent() {
       .catch(err => {
         showSnackbar(err?.message, { variant: 'error' })
       })
-  }
+  }, [conversationId, showSnackbar])
   const onRemoveBookmark = (id: any) => {
     Swal.fire({
       title: 'Are You sure?',
@@ -437,6 +436,7 @@ export default function AIAssistantDetailsComponent() {
       })
     }
   }, [messageForInput])
+
   useEffect(() => {
     if (conversationId && currentUser?.id) {
       getDetails()
