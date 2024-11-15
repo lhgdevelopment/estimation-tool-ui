@@ -8,7 +8,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import ContentPasteGoIcon from '@mui/icons-material/ContentPasteGo'
 import EditIcon from '@mui/icons-material/Edit'
 import HiveIcon from '@mui/icons-material/Hive'
-import { Avatar, Box, IconButton, Menu, Tooltip } from '@mui/material'
+import { Avatar, Box, IconButton, Menu, SxProps, Tooltip } from '@mui/material'
 import { marked } from 'marked'
 import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/preview.css'
@@ -25,6 +25,8 @@ type TAIAssistantMessagesComponentProps = {
   bookmarkId?: number
   onRemoveBookmark: (id: number) => void
   onPasteText?: (text: string) => void
+  sx?: SxProps
+  className?: string
 }
 
 // Define renderer for custom Markdown rendering
@@ -50,7 +52,9 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
       onBookmarkAdd,
       onRemoveBookmark,
       bookmarkId,
-      onPasteText
+      onPasteText,
+      className,
+      sx
     } = props
     const { showSnackbar } = useToastSnackbar()
 
@@ -93,9 +97,10 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
     return (
       <Box
         ref={ref as React.ForwardedRef<HTMLDivElement>}
+        className={className}
         sx={{
-          display: 'flex',
-          mb: '30px'
+          ...{ display: 'flex', mb: '30px' },
+          ...sx
         }}
       >
         <Box sx={{ mr: '10px' }}>
@@ -128,11 +133,14 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
             onMouseUp={handleMouseUp}
           >
             {isWaiting ? (
-              <Box sx={{ height: '14px', width: '14px', borderRadius: '50%', m: '5px' }}>
+              <Box
+                className='message-box-animation'
+                sx={{ height: '14px', width: '14px', borderRadius: '50%', m: '5px' }}
+              >
                 <Box sx={{ height: '100%', width: '100%' }} component={'img'} src='/gif/hive-assist-loader.gif'></Box>
               </Box>
             ) : message?.message_content ? (
-              <MdPreview editorId={'message'} modelValue={message?.message_content} />
+              <MdPreview className='message-box-animation' editorId={'message'} modelValue={message?.message_content} />
             ) : (
               <> </>
             )}
@@ -153,67 +161,61 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
           </Menu>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: '10px' }}>
-            {message?.role === 'system' ? (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                {!!message?.message_content && (
-                  <CopyToClipboard
-                    textToCopy={message?.message_content}
-                    title=''
-                    tooltipTitle='Copy'
-                    tooltipPlacement='top'
-                    sx={{
-                      p: 0,
-                      background: 'transparent',
-                      color: '#9b9b9b',
-                      '& svg': { fontSize: '18px', m: 0 },
-                      ':hover': { background: 'transparent', color: '#000' },
-                      ':focus': { outline: 0, outlineOffset: 0, boxShadow: 0 }
-                    }}
-                  />
-                )}
-                {onEditMessage && (
-                  <Tooltip placement='top' title='Edit'>
-                    <Box
-                      component={'button'}
-                      sx={{
-                        color: '#9b9b9b',
-                        ':hover': { color: '#000' }
-                      }}
-                      onClick={() => onEditMessage(message)}
-                    >
-                      <EditIcon sx={{ fontSize: '18px' }} />
-                    </Box>
-                  </Tooltip>
-                )}
-                <Tooltip
-                  placement='top'
-                  title={
-                    bookmarkId
-                      ? 'Remove from Bookmark'
-                      : bookmarkedFlush == message?.id
-                      ? 'Bookmark Added!'
-                      : 'Bookmark'
-                  }
-                >
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              {!!message?.message_content && (
+                <CopyToClipboard
+                  textToCopy={message?.message_content}
+                  title=''
+                  tooltipTitle='Copy'
+                  tooltipPlacement='top'
+                  sx={{
+                    p: 0,
+                    background: 'transparent',
+                    color: '#9b9b9b',
+                    '& svg': { fontSize: '18px', m: 0 },
+                    ':hover': { background: 'transparent', color: '#000' },
+                    ':focus': { outline: 0, outlineOffset: 0, boxShadow: 0 }
+                  }}
+                />
+              )}
+
+              {onEditMessage && message?.role === 'system' && (
+                <Tooltip placement='top' title='Edit'>
                   <Box
                     component={'button'}
                     sx={{
                       color: '#9b9b9b',
-                      ':hover': { color: bookmarkId ? '#dc2626' : '#000' }
+                      ':hover': { color: '#000' }
                     }}
-                    onClick={() => handleBookmarkButtonOnClick(message)}
+                    onClick={() => onEditMessage(message)}
                   >
-                    {bookmarkId ? (
-                      <BookmarkRemoveIcon sx={{ fontSize: '18px', color: '#dc2626ad' }} />
-                    ) : (
-                      <BookmarkAddIcon sx={{ fontSize: '18px' }} />
-                    )}
+                    <EditIcon sx={{ fontSize: '18px' }} />
                   </Box>
                 </Tooltip>
-              </Box>
-            ) : (
-              <Box></Box>
-            )}
+              )}
+              <Tooltip
+                placement='top'
+                title={
+                  bookmarkId ? 'Remove from Bookmark' : bookmarkedFlush == message?.id ? 'Bookmark Added!' : 'Bookmark'
+                }
+              >
+                <Box
+                  component={'button'}
+                  sx={{
+                    color: '#9b9b9b',
+                    ':hover': { color: bookmarkId ? '#dc2626' : '#000' }
+                  }}
+                  onClick={() => handleBookmarkButtonOnClick(message)}
+                >
+                  {bookmarkId ? (
+                    <BookmarkRemoveIcon sx={{ fontSize: '18px', color: '#dc2626ad' }} />
+                  ) : (
+                    <BookmarkAddIcon sx={{ fontSize: '18px' }} />
+                  )}
+                </Box>
+              </Tooltip>
+            </Box>
+
             <Box>
               <Box sx={{ fontSize: '12px', color: '#fff', background: '#333', p: '2px 10px', borderRadius: '5px' }}>
                 {dateTime.formatDateTime(message?.created_at)}

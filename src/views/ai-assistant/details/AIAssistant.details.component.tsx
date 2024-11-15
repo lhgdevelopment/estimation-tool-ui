@@ -43,7 +43,6 @@ export default function AIAssistantDetailsComponent() {
   const { showSnackbar } = useToastSnackbar()
   const currentUser = useSelector((state: any) => state.user)?.user
   const router = useRouter()
-  console.log('router', router)
 
   const conversationId = router.query['id']
   const conversationDetailId = router.query['conversationDetailId']
@@ -54,6 +53,8 @@ export default function AIAssistantDetailsComponent() {
   const [detailsData, setDetailsData] = useState<any>({})
 
   const messageRefs = useRef<any[]>([])
+  const [selectedBookmarkMessageId, setSelectedBookmarkMessageId] = useState<number | null>(null)
+
   const [messageEditOpenModal, setMessageEditOpenModal] = useState<boolean>(false)
   const handlemessageEditModalClose = () => setMessageEditOpenModal(false)
   const [editData, setEditData] = useState<boolean>(false)
@@ -101,11 +102,16 @@ export default function AIAssistantDetailsComponent() {
   }
 
   const scrollToMessageOnBookmarkClick = (messageId: number) => {
+    setSelectedBookmarkMessageId(messageId)
     const messageIndex = detailsData?.messages?.findIndex((message: any) => message?.id === messageId)
+
     if (messageIndex !== -1 && messageRefs.current[messageIndex]) {
       messageRefs.current[messageIndex].scrollIntoView({ behavior: 'smooth' })
       setOpenBookmarkDrawer(false)
     }
+    setTimeout(() => {
+      setSelectedBookmarkMessageId(null)
+    }, 5000)
   }
 
   const scrollToBottom = () => {
@@ -229,7 +235,11 @@ export default function AIAssistantDetailsComponent() {
         )
         setPreload(false)
         if (conversationDetailId && !preload) {
-          scrollToMessageOnBookmarkClick(Number(conversationDetailId))
+          console.log({ conversationDetailId })
+
+          setTimeout(() => {
+            scrollToMessageOnBookmarkClick(Number(conversationDetailId))
+          }, 2000)
         } else {
           scrollToBottom()
         }
@@ -238,7 +248,7 @@ export default function AIAssistantDetailsComponent() {
         showSnackbar(err?.message, { variant: 'error' })
         setPreload(false)
       })
-  }, [conversationId, currentUser?.id, showSnackbar])
+  }, [conversationId, currentUser?.id, showSnackbar, conversationDetailId])
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setConversationFormData({
@@ -667,6 +677,7 @@ export default function AIAssistantDetailsComponent() {
                   bookmarkId={bookmarkId}
                   onRemoveBookmark={onRemoveBookmark}
                   ref={el => (messageRefs.current[index] = el)}
+                  className={message?.id === selectedBookmarkMessageId ? 'background-flush-anime' : ''}
                 />
               )
             })}
@@ -767,11 +778,13 @@ export default function AIAssistantDetailsComponent() {
           aria-labelledby='modal-modal-title'
           aria-describedby='modal-modal-description'
         >
-          <AIAssistantMessagesEditComponent
-            editData={editData}
-            modalClose={handlemessageEditModalClose}
-            setDetailsData={setDetailsData}
-          />
+          <Box sx={{ outline: 0 }}>
+            <AIAssistantMessagesEditComponent
+              editData={editData}
+              modalClose={handlemessageEditModalClose}
+              setDetailsData={setDetailsData}
+            />
+          </Box>
         </Modal>
       </Box>
     </>
