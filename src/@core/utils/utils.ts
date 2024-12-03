@@ -111,3 +111,22 @@ export const debounce = <T extends (...args: any[]) => any>(func: T, delay: numb
     timeoutId = setTimeout(() => func(...args), delay)
   }
 }
+
+export const formatPhoneNumber = (phone: string): string => {
+  // Remove non-numeric characters
+  let cleaned = phone.replace(/\D/g, '')
+
+  // Remove leading country code if present
+  if (cleaned.length > 10) {
+    cleaned = cleaned.slice(cleaned.length - 10) // Keep the last 10 digits
+  }
+
+  // Format to (XXX) XXX-XXXX
+  const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/)
+  if (match) {
+    return `(${match[1]}) ${match[2]}-${match[3]}`
+  }
+
+  // Return raw input if it doesn't match the expected format
+  return phone
+}
