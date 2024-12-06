@@ -60,7 +60,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
 
   useEffect(() => {
     getList()
-  }, [])
+  }, [getList])
 
   const style = {
     position: 'absolute' as const,

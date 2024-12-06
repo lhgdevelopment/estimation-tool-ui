@@ -56,7 +56,7 @@ export default function ProjectTypeListComponent(props: TProjectTypeComponent) {
 
   useEffect(() => {
     getList()
-  }, [])
+  }, [getList])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

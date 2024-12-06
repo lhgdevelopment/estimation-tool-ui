@@ -77,7 +77,7 @@ export default function TeamsUserListComponent(props: TUsersComponent) {
 
   useEffect(() => {
     getList()
-  }, [])
+  }, [getList])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

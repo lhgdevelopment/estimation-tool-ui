@@ -1,7 +1,7 @@
-import 'md-editor-rt/lib/style.css'
-import { useEffect, useState } from 'react'
 import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import apiRequest from '@core/utils/axios-config'
+import 'md-editor-rt/lib/style.css'
+import { useEffect, useState } from 'react'
 import { TProjectSOWTeamReviewFormComponentProps } from './ProjectSOWTeamReview.decorator'
 import ProjectSOWTeamReviewFormView from './ProjectSOWTeamReview.view'
 
@@ -60,7 +60,7 @@ export default function ProjectSOWTeamReviewFormComponent(props: TProjectSOWTeam
   useEffect(() => {
     getEmployeeRoleList()
     getUserList()
-  }, [])
+  }, [getEmployeeRoleList, getUserList])
 
   return (
     <ProjectSOWTeamReviewFormView

@@ -103,7 +103,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
 
   useEffect(() => {
     getList(1, { ...filterData })
-  }, [])
+  }, [getList])
 
   const handleFilterChange = () => {
     getList(1, { ...filterData })
