@@ -100,7 +100,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
 
   useEffect(() => {
     getList()
-  }, [])
+  }, [getList])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

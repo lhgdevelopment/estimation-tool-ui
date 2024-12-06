@@ -59,7 +59,9 @@ export default function WorkflowListComponent() {
     })
   }
 
-  const onEdit = (id: string) => {}
+  const onEdit = (id: string) => {
+    console.log(id)
+  }
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

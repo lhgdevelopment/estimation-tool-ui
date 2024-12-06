@@ -778,7 +778,7 @@ export default function ServiceTreeComponent() {
 
   useEffect(() => {
     getTree()
-  }, [])
+  }, [getTree])
 
   const onDragEnter: TreeProps['onDragEnter'] = info => {
     //console.log(info)
