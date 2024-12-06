@@ -318,7 +318,7 @@ a:hover {
   z-index: 99999;
 }
 .message-box-animation {
-  border: 2px solid transparent;
+  border: 2px solid transparent !important;
 }
 .bookmark-flush-anime .message-box-animation {
   border: 2px solid #9333ea;
