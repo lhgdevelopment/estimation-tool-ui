@@ -851,17 +851,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
     setActiveStep(0)
     getServiceList()
     getUserList()
-  }, [onClear, setEnabledStep, setActiveStep, getServiceList, getUserList])
+  }, [])
 
   useEffect(() => {
     getDetails(id as string)
-  }, [id, getDetails])
+  }, [id])
 
   useEffect(() => {
     if (isEdit && step && Number(step) <= enabledStep) {
       setActiveStep(Number(step))
     }
-  }, [isEdit, id, step, enabledStep, setActiveStep])
+  }, [isEdit, id, step])
 
   useEffect(() => {
     if (activeStep) {

@@ -58,7 +58,7 @@ export default function UsersListComponent(props: TUsersComponent) {
 
   useEffect(() => {
     getList()
-  }, [getList])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)
