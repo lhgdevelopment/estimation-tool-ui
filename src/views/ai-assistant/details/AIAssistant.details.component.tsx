@@ -122,7 +122,7 @@ export default function AIAssistantDetailsComponent() {
         // Start the timeout after scrolling completes
         setTimeout(() => {
           setSelectedBookmarkMessageId(null)
-        }, 500)
+        }, 5000)
       })
     }
   }
