@@ -6,13 +6,12 @@ import EventRepeatIcon from '@mui/icons-material/EventRepeat'
 import GroupsIcon from '@mui/icons-material/Groups'
 import LeaderboardIcon from '@mui/icons-material/Leaderboard'
 import LinkIcon from '@mui/icons-material/Link'
+import MemoryIcon from '@mui/icons-material/Memory'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
 import { SvgIconTypeMap } from '@mui/material'
 import { OverridableComponent } from '@mui/material/OverridableComponent'
-import Diversity3Icon from '@mui/icons-material/Diversity3';
-import MemoryIcon from '@mui/icons-material/Memory';
 
 type TNavigation = {
   title: string
@@ -105,15 +104,21 @@ const navigation: TNavigation[] = [
         accessBy: ['Admin']
       },
       {
-        title: 'Update Log',
-        icon: EventRepeatIcon,
-        path: '/settings/update-log',
-        accessBy: ['Admin']
-      },
-      {
         title: 'Memory',
         icon: EventRepeatIcon,
         path: '/settings/memory',
+        accessBy: ['Admin']
+      },
+      {
+        title: 'Workflow',
+        icon: SettingsEthernetIcon,
+        path: '/settings/workflow',
+        accessBy: ['Admin']
+      },
+      {
+        title: 'Update Log',
+        icon: EventRepeatIcon,
+        path: '/settings/update-log',
         accessBy: ['Admin']
       }
     ]

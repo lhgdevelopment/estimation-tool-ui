@@ -317,51 +317,9 @@ a:hover {
 .swal2-container {
   z-index: 99999;
 }
-.background-flush-anime .message-box-animation {
-  animation: background-flush-keyframes 1s infinite;
+.message-box-animation {
+  border: 2px solid transparent;
 }
-
-@keyframes background-flush-keyframes {
-  0%,
-  50% {
-    background-color: #eedf0f;
-  }
-  25%,
-  75% {
-    background-color: transparent;
-  }
-}
-
-/* Vendor prefixes for compatibility */
-@-webkit-keyframes background-flush-keyframes {
-  0%,
-  50% {
-    background-color: #eedf0f;
-  }
-  25%,
-  75% {
-    background-color: transparent;
-  }
-}
-
-@-moz-keyframes background-flush-keyframes {
-  0%,
-  50% {
-    background-color: #eedf0f;
-  }
-  25%,
-  75% {
-    background-color: transparent;
-  }
-}
-
-@-o-keyframes background-flush-keyframes {
-  0%,
-  50% {
-    background-color: #eedf0f;
-  }
-  25%,
-  75% {
-    background-color: transparent;
-  }
+.bookmark-flush-anime .message-box-animation {
+  border: 2px solid #9333ea;
 }
