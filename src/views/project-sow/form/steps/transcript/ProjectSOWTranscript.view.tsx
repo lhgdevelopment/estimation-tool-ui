@@ -1,6 +1,6 @@
 import { Dropdown } from '@core/components/dropdown'
 import { handleFormInputChange, handleFormSelectChange } from '@core/utils/form'
-import { getShortStringNumber } from '@core/utils/utils'
+import { formatPhoneNumber, getShortStringNumber } from '@core/utils/utils'
 import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { Box, IconButton, TextField } from '@mui/material'
@@ -51,28 +51,22 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
               name='clientPhone'
               value={projectSOWFormData.clientPhone}
               onChange={e => {
+                // Update the raw phone number value
                 handleFormInputChange(e, projectSOWFormData, setProjectSOWFormData)
+              }}
+              onBlur={e => {
+                const phone = e.target.value
+                const formattedPhone = formatPhoneNumber(phone)
+                setProjectSOWFormData((prevState: any) => ({
+                  ...prevState,
+                  clientPhone: formattedPhone
+                }))
               }}
               type='tel'
             />
           </Box>
         </Box>
         <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
-          <Box sx={{ width: '50%' }}>
-            <TextField
-              id='outlined-multiline-flexible'
-              label='Website'
-              className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
-                errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark-d:border-gray-600 '
-              }`}
-              placeholder='https://www.company-website.com'
-              name='clientWebsite'
-              value={projectSOWFormData.clientWebsite}
-              onChange={e => {
-                handleFormInputChange(e, projectSOWFormData, setProjectSOWFormData)
-              }}
-            />
-          </Box>
           <Box sx={{ width: '50%' }}>
             <TextField
               id='outlined-multiline-flexible'
@@ -83,6 +77,30 @@ export default function ProjectSOWTranscriptFormView(props: TProjectSOWTranscrip
               placeholder='name@company-name.com'
               name='clientEmail'
               value={projectSOWFormData.clientEmail}
+              onChange={e => {
+                const { value } = e.target
+                handleFormInputChange(e, projectSOWFormData, setProjectSOWFormData)
+                const emailDomain = value.split('@')[1]
+                if (emailDomain) {
+                  const website = `https://${emailDomain}`
+                  setProjectSOWFormData((prevState: any) => ({
+                    ...prevState,
+                    clientWebsite: website
+                  }))
+                }
+              }}
+            />
+          </Box>
+          <Box sx={{ width: '50%' }}>
+            <TextField
+              id='outlined-multiline-flexible'
+              label='Website'
+              className={`block w-full text-sm dark-d:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark-d:text-gray-300 dark-d:focus:shadow-outline-gray form-input ${
+                errorMessage?.['clientWebsite'] ? 'border-red-600' : 'dark-d:border-gray-600 '
+              }`}
+              placeholder='https://www.company-website.com'
+              name='clientWebsite'
+              value={projectSOWFormData.clientWebsite}
               onChange={e => {
                 handleFormInputChange(e, projectSOWFormData, setProjectSOWFormData)
               }}

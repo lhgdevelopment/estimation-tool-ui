@@ -106,12 +106,25 @@ export default function AIAssistantDetailsComponent() {
     const messageIndex = detailsData?.messages?.findIndex((message: any) => message?.id === messageId)
 
     if (messageIndex !== -1 && messageRefs.current[messageIndex]) {
-      messageRefs.current[messageIndex].scrollIntoView({ behavior: 'smooth' })
-      setOpenBookmarkDrawer(false)
+      // Scroll into view and use a Promise to wait for the scrolling to complete
+      new Promise<void>(resolve => {
+        messageRefs.current[messageIndex].scrollIntoView({ behavior: 'smooth' })
+        const observer = new IntersectionObserver(entries => {
+          if (entries[0].isIntersecting) {
+            resolve()
+            observer.disconnect()
+          }
+        })
+        observer.observe(messageRefs.current[messageIndex])
+      }).then(() => {
+        setOpenBookmarkDrawer(false)
+
+        // Start the timeout after scrolling completes
+        setTimeout(() => {
+          setSelectedBookmarkMessageId(null)
+        }, 500)
+      })
     }
-    setTimeout(() => {
-      setSelectedBookmarkMessageId(null)
-    }, 5000)
   }
 
   const scrollToBottom = () => {
@@ -512,6 +525,145 @@ export default function AIAssistantDetailsComponent() {
         </Box>
       </Box>
 
+      <Box sx={{ p: 5, py: 0, height: 'calc(100vh - 100px)' }}>
+        <Box className='container px-6 mx-auto' sx={{ height: '100%', position: 'relative' }}>
+          <Box
+            sx={{
+              height: hasEditAccess ? 'calc(100% - 205px)' : '100%',
+              pr: '24px',
+              overflow: 'hidden',
+              overflowY: 'auto'
+            }}
+          >
+            {detailsData?.messages?.map((message: any, index: number) => {
+              const getIsWaiting = isWaiting && index == detailsData?.messages?.length - 1
+              const bookmarkId = bookmarkList?.filter(bookmark => bookmark?.conversationDetailId == message?.id)?.[0]
+                ?.id
+
+              return (
+                <AIAssistantMessagesComponent
+                  key={index}
+                  index={index}
+                  message={message}
+                  isWaiting={getIsWaiting}
+                  onRegenerate={() => {
+                    onSubmitMessage(true)
+                  }}
+                  onEditMessage={onEditMessage}
+                  onBookmarkAdd={onBookmarkAdd}
+                  bookmarkId={bookmarkId}
+                  onRemoveBookmark={onRemoveBookmark}
+                  ref={el => (messageRefs.current[index] = el)}
+                  className={message?.id === selectedBookmarkMessageId ? 'bookmark-flush-anime' : ''}
+                />
+              )
+            })}
+            <Box ref={messagesEndRef}></Box>
+          </Box>
+          {hasEditAccess && (
+            <Box
+              sx={{
+                position: 'absolute',
+                width: '100%',
+                bottom: '0',
+                left: '0',
+                right: '0',
+                p: '0 20px'
+              }}
+              className={'bg-gray-50 dark-d:bg-gray-900'}
+            >
+              <Box sx={{ width: '100%', mb: 2 }}>
+                <label className='block text-sm'>
+                  <Dropdown
+                    label={'Command'}
+                    url={'prompts-allowed'}
+                    name='prompt_id'
+                    value={conversationFormData.prompt_id}
+                    onChange={handleSelectChange}
+                    error={errorMessage?.['prompt_id']}
+                  />
+                  {!!errorMessage?.['prompt_id'] &&
+                    errorMessage?.['prompt_id']?.map((message: any, index: number) => {
+                      return (
+                        <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                          {message}
+                        </span>
+                      )
+                    })}
+                </label>
+              </Box>
+              <Box
+                sx={{
+                  width: '100%',
+                  mb: 2,
+                  position: 'relative'
+                }}
+              >
+                <TextField
+                  label={'Details'}
+                  name='message_content'
+                  value={conversationFormData.message_content}
+                  onChange={handleTextChange}
+                  error={errorMessage?.['message_content']}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  onKeyDown={e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault()
+                      onSubmitMessage()
+                    }
+                  }}
+                />
+
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button
+                    onClick={() => {
+                      onSubmitMessage()
+                    }}
+                    sx={{
+                      //background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
+                      position: 'absolute',
+                      bottom: '5px',
+                      right: '5px',
+                      mt: '16px',
+                      background: '#000',
+                      padding: '0',
+                      height: '30px',
+                      width: '30px',
+                      minWidth: 'auto',
+                      color: '#fff',
+                      border: '0',
+                      outline: '0',
+                      borderRadius: '0.5rem',
+                      zIndex: 1,
+                      '&:hover': {
+                        background: '#000'
+                      }
+                    }}
+                  >
+                    <NorthEastIcon sx={{ fontSize: '16px' }} />
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+          )}
+        </Box>
+        <Modal
+          open={messageEditOpenModal}
+          onClose={handlemessageEditModalClose}
+          aria-labelledby='modal-modal-title'
+          aria-describedby='modal-modal-description'
+        >
+          <Box sx={{ outline: 0 }}>
+            <AIAssistantMessagesEditComponent
+              editData={editData}
+              modalClose={handlemessageEditModalClose}
+              setDetailsData={setDetailsData}
+            />
+          </Box>
+        </Modal>
+      </Box>
       <Dialog
         open={shareDialogOpen}
         onClose={handleShareDialogClose}
@@ -648,145 +800,6 @@ export default function AIAssistantDetailsComponent() {
           </Button>
         </DialogActions>
       </Dialog>
-      <Box sx={{ p: 5, py: 0, height: 'calc(100vh - 100px)' }}>
-        <Box className='container px-6 mx-auto' sx={{ height: '100%', position: 'relative' }}>
-          <Box
-            sx={{
-              height: hasEditAccess ? 'calc(100% - 205px)' : '100%',
-              pr: '24px',
-              overflow: 'hidden',
-              overflowY: 'auto'
-            }}
-          >
-            {detailsData?.messages?.map((message: any, index: number) => {
-              const getIsWaiting = isWaiting && index == detailsData?.messages?.length - 1
-              const bookmarkId = bookmarkList?.filter(bookmark => bookmark?.conversationDetailId == message?.id)?.[0]
-                ?.id
-
-              return (
-                <AIAssistantMessagesComponent
-                  key={index}
-                  index={index}
-                  message={message}
-                  isWaiting={getIsWaiting}
-                  onRegenerate={() => {
-                    onSubmitMessage(true)
-                  }}
-                  onEditMessage={onEditMessage}
-                  onBookmarkAdd={onBookmarkAdd}
-                  bookmarkId={bookmarkId}
-                  onRemoveBookmark={onRemoveBookmark}
-                  ref={el => (messageRefs.current[index] = el)}
-                  className={message?.id === selectedBookmarkMessageId ? 'background-flush-anime' : ''}
-                />
-              )
-            })}
-            <Box ref={messagesEndRef}></Box>
-          </Box>
-          {hasEditAccess && (
-            <Box
-              sx={{
-                position: 'absolute',
-                width: '100%',
-                bottom: '0',
-                left: '0',
-                right: '0',
-                p: '0 20px'
-              }}
-              className={'bg-gray-50 dark-d:bg-gray-900'}
-            >
-              <Box sx={{ width: '100%', mb: 2 }}>
-                <label className='block text-sm'>
-                  <Dropdown
-                    label={'Command'}
-                    url={'prompts-allowed'}
-                    name='prompt_id'
-                    value={conversationFormData.prompt_id}
-                    onChange={handleSelectChange}
-                    error={errorMessage?.['prompt_id']}
-                  />
-                  {!!errorMessage?.['prompt_id'] &&
-                    errorMessage?.['prompt_id']?.map((message: any, index: number) => {
-                      return (
-                        <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                          {message}
-                        </span>
-                      )
-                    })}
-                </label>
-              </Box>
-              <Box
-                sx={{
-                  width: '100%',
-                  mb: 2,
-                  position: 'relative'
-                }}
-              >
-                <TextField
-                  label={'Details'}
-                  name='message_content'
-                  value={conversationFormData.message_content}
-                  onChange={handleTextChange}
-                  error={errorMessage?.['message_content']}
-                  fullWidth
-                  multiline
-                  rows={4}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault()
-                      onSubmitMessage()
-                    }
-                  }}
-                />
-
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button
-                    onClick={() => {
-                      onSubmitMessage()
-                    }}
-                    sx={{
-                      //background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
-                      position: 'absolute',
-                      bottom: '5px',
-                      right: '5px',
-                      mt: '16px',
-                      background: '#000',
-                      padding: '0',
-                      height: '30px',
-                      width: '30px',
-                      minWidth: 'auto',
-                      color: '#fff',
-                      border: '0',
-                      outline: '0',
-                      borderRadius: '0.5rem',
-                      zIndex: 1,
-                      '&:hover': {
-                        background: '#000'
-                      }
-                    }}
-                  >
-                    <NorthEastIcon sx={{ fontSize: '16px' }} />
-                  </Button>
-                </Box>
-              </Box>
-            </Box>
-          )}
-        </Box>
-        <Modal
-          open={messageEditOpenModal}
-          onClose={handlemessageEditModalClose}
-          aria-labelledby='modal-modal-title'
-          aria-describedby='modal-modal-description'
-        >
-          <Box sx={{ outline: 0 }}>
-            <AIAssistantMessagesEditComponent
-              editData={editData}
-              modalClose={handlemessageEditModalClose}
-              setDetailsData={setDetailsData}
-            />
-          </Box>
-        </Modal>
-      </Box>
     </>
   )
 }
