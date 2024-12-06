@@ -34,7 +34,7 @@ export default function TeamsUserComponent() {
   )
   useEffect(() => {
     getTeamInfo()
-  }, [getTeamInfo])
+  }, [])
   if (notFound) {
     return <Error404 />
   }

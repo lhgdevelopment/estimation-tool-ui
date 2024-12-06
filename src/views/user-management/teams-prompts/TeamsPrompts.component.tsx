@@ -31,7 +31,7 @@ export default function TeamsPromptsComponent() {
   }, [query.id, setTeamInfo])
   useEffect(() => {
     getTeamInfo()
-  }, [getTeamInfo])
+  }, [])
   if (notFound) {
     return <Error404 />
   }

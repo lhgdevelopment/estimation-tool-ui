@@ -125,7 +125,7 @@ export default function RolePermissionListComponent() {
 
   useEffect(() => {
     getList()
-  }, [getList])
+  }, [])
 
   if (!listData?.length) {
     return <UiSkeleton />

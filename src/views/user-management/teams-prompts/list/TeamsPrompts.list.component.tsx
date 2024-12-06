@@ -75,7 +75,7 @@ export default function TeamsPromptsListComponent(props: TUsersComponent) {
 
   useEffect(() => {
     getList()
-  }, [getList])
+  }, [])
 
   if (isLoading) {
     return <UiSkeleton />

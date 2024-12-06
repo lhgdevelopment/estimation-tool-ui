@@ -38,7 +38,7 @@ export default function UpdateLogTimelineComponent() {
 
   useEffect(() => {
     getList()
-  }, [getList])
+  }, [])
 
   useEffect(() => {
     const options = {

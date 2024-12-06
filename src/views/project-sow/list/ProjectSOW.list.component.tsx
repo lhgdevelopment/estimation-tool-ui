@@ -78,7 +78,7 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
 
   useEffect(() => {
     getList()
-  }, [getList])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

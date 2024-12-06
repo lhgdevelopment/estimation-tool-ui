@@ -60,7 +60,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   )
   useEffect(() => {
     getList(1, { ...debounceValue })
-  }, [debounceValue, getList])
+  }, [debounceValue])
   const handleFilterOnChange = (e: any) => {
     setFilterData({
       ...filterData,
@@ -103,7 +103,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
 
   useEffect(() => {
     getList(1, { ...filterData })
-  }, [getList])
+  }, [])
 
   const handleFilterChange = () => {
     getList(1, { ...filterData })

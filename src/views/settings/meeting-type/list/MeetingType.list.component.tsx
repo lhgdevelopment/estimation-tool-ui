@@ -56,7 +56,7 @@ export default function MeetingTypeListComponent(props: TMeetingTypeComponent) {
 
   useEffect(() => {
     getList()
-  }, [getList])
+  }, [])
 
   const handlePageChange = (newPage: number) => {
     getList(newPage)

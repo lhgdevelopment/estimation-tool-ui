@@ -60,7 +60,7 @@ export default function ProjectSOWTeamReviewFormComponent(props: TProjectSOWTeam
   useEffect(() => {
     getEmployeeRoleList()
     getUserList()
-  }, [getEmployeeRoleList, getUserList])
+  }, [])
 
   return (
     <ProjectSOWTeamReviewFormView
