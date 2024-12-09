@@ -56,6 +56,7 @@ export default function AIAssistantDetailsComponent() {
   const [threadStatusIsActive, setThreadStatusIsActive] = useState<boolean>(true)
 
   const messageRefs = useRef<any[]>([])
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null)
   const [selectedBookmarkMessageId, setSelectedBookmarkMessageId] = useState<number | null>(null)
 
   const [messageEditOpenModal, setMessageEditOpenModal] = useState<boolean>(false)
@@ -87,6 +88,10 @@ export default function AIAssistantDetailsComponent() {
   const [bookmarkDialogOpen, setBookmarkDialogOpen] = useState(false)
 
   const messageForInput = useSelector((state: RootState) => state.aiAssistant.messageForInput)
+
+  const [isFetching, setIsFetching] = useState(false)
+  const [page, setPage] = useState(1) // Start with the first page
+  const [hasMore, setHasMore] = useState(true)
 
   const handleBookmarkDialogOpen = () => {
     setBookmarkDialogOpen(true)
@@ -238,43 +243,44 @@ export default function AIAssistantDetailsComponent() {
     })
   }
 
-  const getDetails = useCallback(() => {
-    setPreload(true)
-    apiRequest
-      .get(`/conversations/${conversationId}?page=1&per_page=10`)
-      .then(res => {
-        setDetailsData(res?.data)
-        setHasEditAccess(
-          currentUser?.role == 'Admin' ||
-            res?.data?.user_id == currentUser?.id ||
-            res?.data?.shared_user?.some(
-              (sharedUser: any) => sharedUser?.user?.id === currentUser?.id && sharedUser.access_level === 2
-            )
-        )
+  // const getDetails = useCallback(() => {
+  //   setPreload(true)
+  //   if (!conversationId) return
+  //   apiRequest
+  //     .get(`/conversations/${conversationId}?page=1&per_page=10`)
+  //     .then(res => {
+  //       setDetailsData(res?.data)
+  //       setHasEditAccess(
+  //         currentUser?.role == 'Admin' ||
+  //           res?.data?.user_id == currentUser?.id ||
+  //           res?.data?.shared_user?.some(
+  //             (sharedUser: any) => sharedUser?.user?.id === currentUser?.id && sharedUser.access_level === 2
+  //           )
+  //       )
 
-        setPreload(false)
-        if (conversationDetailId && !preload) {
-          setTimeout(() => {
-            scrollToMessageOnBookmarkClick(Number(conversationDetailId))
-          }, 2000)
-        } else {
-          scrollToBottom()
-        }
+  //       setPreload(false)
+  //       if (conversationDetailId && !preload) {
+  //         setTimeout(() => {
+  //           scrollToMessageOnBookmarkClick(Number(conversationDetailId))
+  //         }, 2000)
+  //       } else {
+  //         scrollToBottom()
+  //       }
 
-        apiRequest
-          .get(`/chatgpt-thread-using/${res?.data?.threadId}`)
-          .then(res => {
-            console.log(res)
-          })
-          .catch(err => {
-            console.log(err)
-          })
-      })
-      .catch(err => {
-        showSnackbar(err?.message, { variant: 'error' })
-        setPreload(false)
-      })
-  }, [conversationId, currentUser?.id, showSnackbar, conversationDetailId])
+  //       apiRequest
+  //         .get(`/chatgpt-thread-using/${res?.data?.threadId}`)
+  //         .then(res => {
+  //           console.log(res)
+  //         })
+  //         .catch(err => {
+  //           console.log(err)
+  //         })
+  //     })
+  //     .catch(err => {
+  //       showSnackbar(err?.message, { variant: 'error' })
+  //       setPreload(false)
+  //     })
+  // }, [conversationId, currentUser?.id, showSnackbar, conversationDetailId])
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setConversationFormData({
@@ -542,10 +548,74 @@ export default function AIAssistantDetailsComponent() {
 
   useEffect(() => {
     if (conversationId && currentUser?.id) {
-      getDetails()
+      // getDetails()
       getBookmarkList()
     }
   }, [conversationId, currentUser?.id])
+
+  const handleScroll = () => {
+    console.log('null')
+    if (isFetching || !hasMore) return
+
+    const container = messagesContainerRef.current
+
+    // Check if scrolled to the top
+    if (container && container.scrollTop <= 100) {
+      // Fetch next page
+      fetchMessages(page + 1)
+      setPage(prevPage => prevPage + 1)
+    }
+  }
+
+  const fetchMessages = async (page: number) => {
+    if (!conversationId) return
+    try {
+      setIsFetching(true)
+      const response = await apiRequest.get(`/conversations/${conversationId}?page=${page}&per_page=10`)
+      const newMessages = response?.data?.messages || []
+
+      // If no new messages, set hasMore to false
+      if (newMessages.length === 0) {
+        setHasMore(false)
+      } else {
+        // Prepend the new messages
+        setDetailsData((prevState: any) => ({
+          ...prevState,
+          messages: [...newMessages, ...(prevState.messages || [])]
+        }))
+        const container = messagesContainerRef.current
+        if (container) {
+          const previousHeight = container.scrollHeight
+          setTimeout(() => {
+            const currentHeight = container.scrollHeight
+            container.scrollTop = currentHeight - previousHeight
+          }, 0)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error)
+      showSnackbar('Failed to load messages.', { variant: 'error' })
+    } finally {
+      setIsFetching(false)
+    }
+  }
+
+  useEffect(() => {
+    // Initial fetch
+    fetchMessages(page)
+    // Attach scroll listener
+    const container = messagesContainerRef.current
+    if (container) {
+      container.addEventListener('scroll', handleScroll, { passive: true })
+    }
+
+    // Cleanup
+    return () => {
+      if (container) {
+        container.removeEventListener('scroll', handleScroll)
+      }
+    }
+  }, [messagesContainerRef])
 
   const sowHeadingSx = {
     fontSize: '16x',
@@ -608,6 +678,7 @@ export default function AIAssistantDetailsComponent() {
       <Box sx={{ p: 5, py: 0, height: 'calc(100vh - 100px)' }}>
         <Box className='container px-6 mx-auto' sx={{ height: '100%', position: 'relative' }}>
           <Box
+            ref={messagesContainerRef}
             sx={{
               height: hasEditAccess ? 'calc(100% - 205px)' : '100%',
               pr: '24px',
