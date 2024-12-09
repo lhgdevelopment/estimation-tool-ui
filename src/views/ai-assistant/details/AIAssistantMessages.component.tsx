@@ -12,7 +12,7 @@ import { Avatar, Box, IconButton, Menu, SxProps, Tooltip } from '@mui/material'
 import { marked } from 'marked'
 import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/preview.css'
-import React, { forwardRef, MouseEvent, useState } from 'react'
+import React, { forwardRef, MouseEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 type TAIAssistantMessagesComponentProps = {
@@ -59,8 +59,12 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
     const { showSnackbar } = useToastSnackbar()
 
     const dispatch = useDispatch()
+
+    const [lastResponseMessage, setLastResponseMessage] = useState<string>('')
     const [bookmarkedFlush, setBookmarkFlush] = useState<any>(null)
     const [contextMenu, setContextMenu] = useState<{ mouseX: number; mouseY: number } | null>(null)
+
+    const [renderedMarkdown, setRenderedMarkdown] = useState<string>('')
 
     const handleBookmarkButtonOnClick = (message: any) => {
       if (bookmarkId) {
@@ -93,6 +97,17 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
       }
       setContextMenu(null)
     }
+
+    useEffect(() => {
+      const renderMarkdown = async () => {
+        const markdown = message?.message_content || ''
+        // Resolve the Promise and set the result to state
+        const rendered = await marked(markdown, { renderer })
+        setRenderedMarkdown(rendered) // Pass the resolved string
+      }
+
+      renderMarkdown()
+    }, [message?.message_content])
 
     return (
       <Box
@@ -140,7 +155,7 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
                 <Box sx={{ height: '100%', width: '100%' }} component={'img'} src='/gif/hive-assist-loader.gif'></Box>
               </Box>
             ) : message?.message_content ? (
-              <MdPreview className='message-box-animation' editorId={'message'} modelValue={message?.message_content} />
+              <MdPreview className='message-box-animation' editorId={'message'} modelValue={renderedMarkdown} />
             ) : (
               <> </>
             )}

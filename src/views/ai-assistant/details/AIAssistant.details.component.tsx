@@ -33,6 +33,7 @@ import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useSocket } from 'src/pages/SocketProvider'
 import Swal from 'sweetalert2'
 import { shareAccessLevel } from '../AIAssistant.decorator'
 import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
@@ -43,6 +44,7 @@ export default function AIAssistantDetailsComponent() {
   const { showSnackbar } = useToastSnackbar()
   const currentUser = useSelector((state: any) => state.user)?.user
   const router = useRouter()
+  const socket = useSocket()
 
   const conversationId = router.query['id']
   const conversationDetailId = router.query['conversationDetailId']
@@ -51,6 +53,7 @@ export default function AIAssistantDetailsComponent() {
   const [isWaiting, setIsWaiting] = useState<boolean>(false)
   const [messagePreload, setMessagePreload] = useState<boolean>(false)
   const [detailsData, setDetailsData] = useState<any>({})
+  const [threadStatusIsActive, setThreadStatusIsActive] = useState<boolean>(true)
 
   const messageRefs = useRef<any[]>([])
   const [selectedBookmarkMessageId, setSelectedBookmarkMessageId] = useState<number | null>(null)
@@ -128,9 +131,11 @@ export default function AIAssistantDetailsComponent() {
   }
 
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
+    setTimeout(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, 100)
   }
 
   const handleShareDialogOpen = () => {
@@ -236,7 +241,7 @@ export default function AIAssistantDetailsComponent() {
   const getDetails = useCallback(() => {
     setPreload(true)
     apiRequest
-      .get(`/conversations/${conversationId}`)
+      .get(`/conversations/${conversationId}?page=1&per_page=10`)
       .then(res => {
         setDetailsData(res?.data)
         setHasEditAccess(
@@ -246,16 +251,24 @@ export default function AIAssistantDetailsComponent() {
               (sharedUser: any) => sharedUser?.user?.id === currentUser?.id && sharedUser.access_level === 2
             )
         )
+
         setPreload(false)
         if (conversationDetailId && !preload) {
-          console.log({ conversationDetailId })
-
           setTimeout(() => {
             scrollToMessageOnBookmarkClick(Number(conversationDetailId))
           }, 2000)
         } else {
           scrollToBottom()
         }
+
+        apiRequest
+          .get(`/chatgpt-thread-using/${res?.data?.threadId}`)
+          .then(res => {
+            console.log(res)
+          })
+          .catch(err => {
+            console.log(err)
+          })
       })
       .catch(err => {
         showSnackbar(err?.message, { variant: 'error' })
@@ -291,65 +304,73 @@ export default function AIAssistantDetailsComponent() {
     }
   }
 
-  const onSubmitMessage = (isRegenerate = false) => {
-    setIsWaiting(true)
-    setErrorMessage({})
-    const formData = {
-      ...(isRegenerate ? prevConversationFormData : conversationFormData),
-      conversation_id: conversationId
-    }
-    if (formData.message_content || formData.prompt_id) {
+  const onSubmitMessage = async (isRegenerate = false) => {
+    try {
+      setIsWaiting(true)
+      scrollToBottom()
+      setErrorMessage({})
+
+      const formData = {
+        ...(isRegenerate ? prevConversationFormData : conversationFormData),
+        conversation_id: conversationId
+      }
+
+      if (!formData.message_content && !formData.prompt_id) {
+        return
+      }
+
+      // Reset form and add temporary user/system messages
       setConversationFormData(defaultData)
       setDetailsData((prevState: any) => ({
         ...prevState,
         messages: [
           ...prevState.messages,
-          ...[
-            {
-              ...formData,
-              user: { name: currentUser.name }
-            },
-            {
-              message_content: null,
-              role: 'system'
-            }
-          ]
+          {
+            ...formData,
+            user: { name: currentUser.name },
+            id: 'initialization_user'
+          },
+          {
+            id: 'initialization',
+            message_content: '',
+            role: 'system'
+          }
         ]
       }))
-      setTimeout(() => {
-        scrollToBottom()
-      }, 100)
-      setMessagePreload(true)
-      apiRequest
-        .post(`/conversations/continue`, formData)
-        .then(res => {
-          setDetailsData((prevState: any) => ({
-            ...prevState,
-            messages: [...res?.data?.conversation?.messages, ...res?.data?.messages]
-          }))
-          /* setDetailsData((prevState: any) => ({
-            ...prevState,
-            messages: [...prevState.messages.filter((message: any) => message?.id), ...res?.data?.messages]
-          })) */
-          setPrevConversationFormData(res?.data?.messages?.[0])
-          setMessagePreload(false)
-          scrollToBottom()
-        })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
-          setDetailsData((prevState: any) => ({
-            ...prevState,
-            messages: [...prevState.messages.filter((message: any) => message?.id)]
-          }))
-          setMessagePreload(false)
-          scrollToBottom()
-        })
-        .finally(() => {
-          setIsWaiting(false)
-        })
-    } else {
-      return
+
+      // API Request
+      const response = await apiRequest.post(`/conversations/continue`, formData)
+
+      // Update messages with response and remove temporary messages
+      setDetailsData((prevState: any) => ({
+        ...prevState,
+        messages: [
+          ...prevState.messages.filter(
+            (message: any) => message.id !== 'initialization' && message.id !== 'initialization_user'
+          ),
+          ...response.data.messages
+        ]
+      }))
+
+      // Save the previous conversation data
+      setPrevConversationFormData(response.data.messages[0])
+
+      console.log(detailsData)
+    } catch (error: any) {
+      // Handle errors
+      setErrorMessage(error?.response?.data?.errors || {})
+      showSnackbar(error?.response?.data?.message || 'An error occurred', { variant: 'error' })
+
+      // Remove temporary messages in case of failure
+      setDetailsData((prevState: any) => ({
+        ...prevState,
+        messages: prevState.messages.filter(
+          (message: any) => message.id !== 'initialization' && message.id !== 'initialization_user'
+        )
+      }))
+    } finally {
+      // Always reset waiting state
+      setIsWaiting(false)
     }
   }
 
@@ -450,6 +471,65 @@ export default function AIAssistantDetailsComponent() {
         showSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
   }
+
+  useEffect(() => {
+    if (!socket || !detailsData?.threadId) return
+
+    const responseEvent = `thread_response_${detailsData.threadId}`
+    const statusEvent = `thread_status_${detailsData.threadId}`
+
+    // Listen for real-time responses
+    socket.on(responseEvent, (message: any) => {
+      setDetailsData((prevState: any) => {
+        const systemMessageIndex = prevState?.messages?.findIndex((msg: any) => msg?.id === 'initialization')
+
+        setIsWaiting(false)
+        if (systemMessageIndex !== -1) {
+          // Update the existing message content with the streamed message
+          const updatedMessages = prevState.messages.map((msg: any, idx: number) =>
+            idx === systemMessageIndex ? { ...msg, message_content: (msg.message_content || '') + message?.text } : msg
+          )
+
+          return { ...prevState, messages: updatedMessages }
+        } else {
+          // Add a new system message for the initialization phase
+          return {
+            ...prevState,
+            messages: [
+              ...prevState.messages,
+              {
+                id: 'initialization',
+                role: 'system',
+                message_content: message?.text
+              }
+            ]
+          }
+        }
+      })
+
+      // scrollToBottom() // Ensure scrolling to the latest message
+    })
+
+    socket.on(statusEvent, (message: any) => {
+      setThreadStatusIsActive(message?.payload?.status === 'active' ? false : true)
+      if (message?.payload?.threadInfo?.user_info?.id !== currentUser?.id) {
+        if (message?.payload?.status === 'active') {
+          showSnackbar(`This thread is busy now for ${message?.payload?.threadInfo?.user_info?.name}`, {
+            variant: 'warning'
+          })
+        } else {
+          showSnackbar(`This thread is available`, {
+            variant: 'success'
+          })
+        }
+      }
+    })
+
+    return () => {
+      socket.off(responseEvent)
+      socket.off(statusEvent)
+    }
+  }, [socket, detailsData?.threadId])
 
   useEffect(() => {
     if (messageForInput) {
@@ -621,6 +701,7 @@ export default function AIAssistantDetailsComponent() {
                     onClick={() => {
                       onSubmitMessage()
                     }}
+                    disabled={!threadStatusIsActive}
                     sx={{
                       //background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
                       position: 'absolute',
