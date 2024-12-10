@@ -65,7 +65,7 @@ export default function AppHeaderComponent() {
               </svg>
             )}
           </Box>
-          <Box component={'button'} className='p-1 -ml-1 mr-5 rounded-md md:hidden' aria-label='Menu'>
+          {/* <Box component={'button'} className='p-1 -ml-1 mr-5 rounded-md md:hidden' aria-label='Menu'>
             <svg className='w-6 h-6' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
               <path
                 fillRule='evenodd'
@@ -73,7 +73,7 @@ export default function AppHeaderComponent() {
                 clipRule='evenodd'
               ></path>
             </svg>
-          </Box>
+          </Box> */}
           {/* <!-- Search input --> */}
           <Box className='flex justify-center flex-1 lg:mr-32'></Box>
           <Box component={'ul'} className='flex items-center flex-shrink-0 space-x-6'>

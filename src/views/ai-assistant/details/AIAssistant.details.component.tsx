@@ -92,6 +92,7 @@ export default function AIAssistantDetailsComponent() {
   const [isFetching, setIsFetching] = useState(false)
   const [page, setPage] = useState(1) // Start with the first page
   const [hasMore, setHasMore] = useState(true)
+  const [fetchedPages, setFetchedPages] = useState<Set<number>>(new Set())
 
   const handleBookmarkDialogOpen = () => {
     setBookmarkDialogOpen(true)
@@ -479,6 +480,22 @@ export default function AIAssistantDetailsComponent() {
   }
 
   useEffect(() => {
+    if (messageForInput) {
+      setConversationFormData({
+        ...conversationFormData,
+        ...{ message_content: messageForInput }
+      })
+    }
+  }, [messageForInput])
+
+  useEffect(() => {
+    if (conversationId && currentUser?.id) {
+      // getDetails()
+      getBookmarkList()
+    }
+  }, [conversationId, currentUser?.id])
+
+  useEffect(() => {
     if (!socket || !detailsData?.threadId) return
 
     const responseEvent = `thread_response_${detailsData.threadId}`
@@ -537,85 +554,103 @@ export default function AIAssistantDetailsComponent() {
     }
   }, [socket, detailsData?.threadId])
 
-  useEffect(() => {
-    if (messageForInput) {
-      setConversationFormData({
-        ...conversationFormData,
-        ...{ message_content: messageForInput }
-      })
-    }
-  }, [messageForInput])
+  const fetchMessages = async (page: number, initial = false) => {
+    if (!conversationId || fetchedPages.has(page) || isFetching) return // Prevent duplicate or overlapping fetches
 
-  useEffect(() => {
-    if (conversationId && currentUser?.id) {
-      // getDetails()
-      getBookmarkList()
-    }
-  }, [conversationId, currentUser?.id])
-
-  const handleScroll = () => {
-    console.log('null')
-    if (isFetching || !hasMore) return
-
-    const container = messagesContainerRef.current
-
-    // Check if scrolled to the top
-    if (container && container.scrollTop <= 100) {
-      // Fetch next page
-      fetchMessages(page + 1)
-      setPage(prevPage => prevPage + 1)
-    }
-  }
-
-  const fetchMessages = async (page: number) => {
-    if (!conversationId) return
     try {
       setIsFetching(true)
+
+      const container = messagesContainerRef.current
+      const previousScrollHeight = container?.scrollHeight || 0
+      const previousScrollTop = container?.scrollTop || 0
+
       const response = await apiRequest.get(`/conversations/${conversationId}?page=${page}&per_page=10`)
       const newMessages = response?.data?.messages || []
 
-      // If no new messages, set hasMore to false
       if (newMessages.length === 0) {
         setHasMore(false)
       } else {
-        // Prepend the new messages
-        setDetailsData((prevState: any) => ({
-          ...prevState,
-          messages: [...newMessages, ...(prevState.messages || [])]
-        }))
-        const container = messagesContainerRef.current
-        if (container) {
-          const previousHeight = container.scrollHeight
+        if (initial) {
+          setDetailsData(response?.data)
           setTimeout(() => {
-            const currentHeight = container.scrollHeight
-            container.scrollTop = currentHeight - previousHeight
-          }, 0)
+            scrollToBottom()
+          }, 100)
+        } else {
+          setDetailsData((prevState: any) => ({
+            ...prevState,
+            messages: [...newMessages, ...(prevState.messages || [])]
+          }))
+
+          // Adjust scroll position to maintain the user's current view
+          if (container) {
+            setTimeout(() => {
+              const currentScrollHeight = container.scrollHeight
+              container.scrollTop = currentScrollHeight - previousScrollHeight + previousScrollTop
+            }, 100) // Slight delay ensures DOM updates are applied
+          }
         }
+
+        setHasEditAccess(
+          currentUser?.role == 'Admin' ||
+            response?.data?.user_id == currentUser?.id ||
+            response?.data?.shared_user?.some(
+              (sharedUser: any) => sharedUser?.user?.id === currentUser?.id && sharedUser.access_level === 2
+            )
+        )
+
+        // Mark the page as fetched
+        setFetchedPages(prevSet => new Set(prevSet).add(page))
       }
     } catch (error) {
       console.error('Error fetching messages:', error)
       showSnackbar('Failed to load messages.', { variant: 'error' })
     } finally {
-      setIsFetching(false)
+      setTimeout(() => {
+        setIsFetching(false)
+      }, 1000)
     }
   }
+  const previousScrollTopRef = useRef<number>(0)
 
   useEffect(() => {
-    // Initial fetch
-    fetchMessages(page)
-    // Attach scroll listener
     const container = messagesContainerRef.current
+
+    const SCROLL_THRESHOLD = 500 // Minimum distance from the top to trigger page change
+
+    const handleScroll = () => {
+      if (isFetching || !hasMore || !conversationId) return
+
+      if (container) {
+        const currentScrollTop = container.scrollTop
+        const scrollDirection = currentScrollTop < previousScrollTopRef.current ? 'up' : 'down' // Determine scroll direction
+        previousScrollTopRef.current = currentScrollTop // Update the previous scroll position
+
+        // Only execute if scrolling up and within the threshold distance
+        if (scrollDirection === 'up' && currentScrollTop <= SCROLL_THRESHOLD) {
+          const nextPage = page + 1
+          if (!fetchedPages.has(nextPage)) {
+            setPage(nextPage) // Update page state
+            fetchMessages(nextPage) // Fetch the next page
+          }
+        }
+      }
+    }
+
     if (container) {
       container.addEventListener('scroll', handleScroll, { passive: true })
     }
 
-    // Cleanup
     return () => {
       if (container) {
         container.removeEventListener('scroll', handleScroll)
       }
     }
-  }, [messagesContainerRef])
+  }, [isFetching, hasMore, fetchedPages, conversationId, page])
+  useEffect(() => {
+    if (conversationId && page === 1) {
+      fetchMessages(1, true) // Fetch the first page on load
+    }
+  }, [conversationId])
 
   const sowHeadingSx = {
     fontSize: '16x',
@@ -680,12 +715,57 @@ export default function AIAssistantDetailsComponent() {
           <Box
             ref={messagesContainerRef}
             sx={{
+              position: 'relative',
               height: hasEditAccess ? 'calc(100% - 205px)' : '100%',
               pr: '24px',
               overflow: 'hidden',
               overflowY: 'auto'
             }}
           >
+            {isFetching && (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  mt: 2,
+                  zIndex: 9
+                }}
+              >
+                <Box sx={{ color: '#9333ea', fontSize: '12px', fontWeight: '600' }}>Loading more messages...</Box>
+                <Box
+                  className='message-box-animation'
+                  sx={{ height: '36px', width: '36px', borderRadius: '50%', mt: '5px' }}
+                >
+                  <Box sx={{ height: '100%', width: '100%' }} component={'img'} src='/gif/hive-assist-loader.gif'></Box>
+                </Box>
+              </Box>
+            )}
+
+            {!hasMore && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '50px',
+                  color: '#888',
+                  fontSize: '14px',
+                  background: '#f5f5f5',
+                  borderRadius: '8px',
+                  margin: '10px 0',
+                  boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                No more messages available
+              </Box>
+            )}
+
             {detailsData?.messages?.map((message: any, index: number) => {
               const getIsWaiting = isWaiting && index == detailsData?.messages?.length - 1
               const bookmarkId = bookmarkList?.filter(bookmark => bookmark?.conversationDetailId == message?.id)?.[0]
