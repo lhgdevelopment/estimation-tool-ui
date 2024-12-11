@@ -9,18 +9,34 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
+    // Fetch logged-in user data from localStorage
+    const logedinUser = JSON.parse(localStorage.getItem("logedinUser"));
+
+    // console.log({ logedinUser });
+
     // Connect to the server
     const newSocket = io("https://hive.lhgdev.com", {
       transports: ["websocket"],
+      extraHeaders: {
+        id: logedinUser?.id,
+        name: logedinUser?.name,
+        email: logedinUser?.email,
+      },
     });
 
     setSocket(newSocket);
+
+    // Event listener for user disconnection
+    newSocket.on("user_disconnected", (data) => {
+      console.log("Someone is disconnected <-", data);
+      console.log("JSON", JSON.stringify(data));
+    });
 
     // Cleanup on unmount
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, []); // Empty dependency array ensures it runs once after mount
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

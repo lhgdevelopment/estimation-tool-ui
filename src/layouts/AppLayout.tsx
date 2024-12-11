@@ -3,7 +3,7 @@
 import { Box } from '@mui/material'
 
 // ** Hook Import
-import { isDarkTheme, loginUser } from '@core/store/actions'
+import { isDarkTheme, logedinUser } from '@core/store/actions'
 import { RootState } from '@core/store/reducers'
 import apiRequest from '@core/utils/axios-config'
 import Cookies from 'js-cookie'
@@ -46,8 +46,10 @@ const AppLayout = ({ children }: Props) => {
         if (!token) {
           router.push('/auth/login')
         } else {
-          const res = await apiRequest.get('/user')
-          dispatch(loginUser(res))
+          apiRequest.get('/user').then(res => {
+            dispatch(logedinUser(res))
+            localStorage.setItem('logedinUser', JSON.stringify(res))
+          })
         }
       } catch (error) {
         Cookies.remove('accessToken')
@@ -56,7 +58,7 @@ const AppLayout = ({ children }: Props) => {
     }
 
     fetchData()
-  }, [router])
+  }, [dispatch])
 
   if (!token) {
     return <></>

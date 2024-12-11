@@ -94,6 +94,10 @@ export default function AIAssistantDetailsComponent() {
   const [hasMore, setHasMore] = useState(true)
   const [fetchedPages, setFetchedPages] = useState<Set<number>>(new Set())
 
+  const [isTyping, setIsTyping] = useState(false) // State to track if other users are typing
+  const [typingUser, setTypingUser] = useState<any[]>([]) // Name of the user typing
+  const [activeUsers, setActiveUsers] = useState<any[]>([])
+
   const handleBookmarkDialogOpen = () => {
     setBookmarkDialogOpen(true)
   }
@@ -283,10 +287,20 @@ export default function AIAssistantDetailsComponent() {
   //     })
   // }, [conversationId, currentUser?.id, showSnackbar, conversationDetailId])
 
-  const handleTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleMessageTextChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setConversationFormData({
       ...conversationFormData,
       [e?.target?.name]: e.target.value
+    })
+    if (!socket || !detailsData?.threadId || !currentUser?.id) return
+
+    socket.emit('thread_typing', {
+      thread_id: detailsData?.threadId,
+      text: e.target.value,
+      user: {
+        id: currentUser?.id,
+        name: currentUser?.name
+      }
     })
   }
 
@@ -495,11 +509,33 @@ export default function AIAssistantDetailsComponent() {
     }
   }, [conversationId, currentUser?.id])
 
+  const [userInteracted, setUserInteracted] = useState(false)
+
+  // Detect user interaction with the page
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      setUserInteracted(true)
+      window.removeEventListener('click', handleUserInteraction)
+      window.removeEventListener('keydown', handleUserInteraction)
+    }
+
+    window.addEventListener('click', handleUserInteraction)
+    window.addEventListener('keydown', handleUserInteraction)
+
+    return () => {
+      window.removeEventListener('click', handleUserInteraction)
+      window.removeEventListener('keydown', handleUserInteraction)
+    }
+  }, [])
+
   useEffect(() => {
     if (!socket || !detailsData?.threadId) return
 
     const responseEvent = `thread_response_${detailsData.threadId}`
     const statusEvent = `thread_status_${detailsData.threadId}`
+    const typingEvent = `thread_typing_${detailsData.threadId}`
+    const loginEvent = `thread_login_${conversationId}`
+    const logoutEvent = `thread_logout_${conversationId}`
 
     // Listen for real-time responses
     socket.on(responseEvent, (message: any) => {
@@ -541,18 +577,85 @@ export default function AIAssistantDetailsComponent() {
             variant: 'warning'
           })
         } else {
-          showSnackbar(`This thread is available`, {
+          showSnackbar(`This thread is available now`, {
             variant: 'success'
           })
         }
       }
     })
 
+    socket.on(typingEvent, (data: any) => {
+      const userId = data?.payload?.user?.id
+
+      if (userId && userId !== currentUser?.id) {
+        if (userInteracted) {
+          const typingSound = new Audio('/audio/typing-sound.mp3')
+          typingSound.play().catch(error => {
+            console.error('Error playing typing sound:', error)
+          })
+        }
+
+        const newUser = { ...data.payload.user, startTyping: Date.now(), showAvatar: false }
+
+        setTypingUser(prevState => {
+          // Ensure no duplicate users by filtering out existing ones with the same ID
+          const updatedState = prevState.filter(user => user.id !== userId)
+
+          return [...updatedState, newUser]
+        })
+
+        // Show avatar after 1 second
+        setTimeout(() => {
+          setTypingUser(prevState => prevState.map(user => (user.id === userId ? { ...user, showAvatar: true } : user)))
+        }, 2000)
+
+        // Automatically remove users after 5 seconds
+        setTimeout(() => {
+          setTypingUser(prevState => prevState.filter(user => Date.now() - user.startTyping <= 3000))
+        }, 3000)
+      }
+    })
+
+    socket.emit('thread_login', {
+      thread_id: detailsData?.threadId,
+      user: {
+        id: currentUser?.id,
+        name: currentUser?.email
+      }
+    })
+
+    socket.on(loginEvent, (data: any) => {
+      console.log(`${data.userName} logged into the thread.`)
+      setActiveUsers(prevUsers => [...prevUsers, data])
+    })
+
+    socket.on(logoutEvent, (data: any) => {
+      console.log(`${data.userName} logged out of the thread.`)
+      setActiveUsers(prevUsers => prevUsers.filter(user => user.userId !== data.userId))
+    })
+
     return () => {
       socket.off(responseEvent)
       socket.off(statusEvent)
+      socket.off(statusEvent)
     }
   }, [socket, detailsData?.threadId])
+
+  const checkEditAccess = (data: any, user: any): boolean => {
+    if (!data || !user) return false
+
+    const isAdmin = user?.role === 'Admin'
+    const isOwner = data?.user_id === user?.id
+    const isSharedUserWithEditAccess = data?.shared_user?.some(
+      (sharedUser: any) => sharedUser?.user?.id === user?.id && sharedUser?.access_level === 2
+    )
+
+    console.log('Access Check:', { isAdmin, isOwner, isSharedUserWithEditAccess })
+
+    return isAdmin || isOwner || isSharedUserWithEditAccess
+  }
+
+  // Use the function to set access
 
   const fetchMessages = async (page: number, initial = false) => {
     if (!conversationId || fetchedPages.has(page) || isFetching) return // Prevent duplicate or overlapping fetches
@@ -590,16 +693,10 @@ export default function AIAssistantDetailsComponent() {
           }
         }
 
-        setHasEditAccess(
-          currentUser?.role == 'Admin' ||
-            response?.data?.user_id == currentUser?.id ||
-            response?.data?.shared_user?.some(
-              (sharedUser: any) => sharedUser?.user?.id === currentUser?.id && sharedUser.access_level === 2
-            )
-        )
-
         // Mark the page as fetched
         setFetchedPages(prevSet => new Set(prevSet).add(page))
+
+        setHasEditAccess(checkEditAccess(response?.data, currentUser))
       }
     } catch (error) {
       console.error('Error fetching messages:', error)
@@ -645,7 +742,13 @@ export default function AIAssistantDetailsComponent() {
         container.removeEventListener('scroll', handleScroll)
       }
     }
-  }, [isFetching, hasMore, fetchedPages, conversationId, page])
+  }, [isFetching, hasMore, fetchedPages, conversationId, page, currentUser])
+
+  useEffect(() => {
+    if (currentUser && detailsData) {
+      setHasEditAccess(checkEditAccess(detailsData, currentUser))
+    }
+  }, [currentUser?.role, detailsData?.user_id, fetchedPages, isFetching])
   useEffect(() => {
     if (conversationId && page === 1) {
       fetchMessages(1, true) // Fetch the first page on load
@@ -669,7 +772,98 @@ export default function AIAssistantDetailsComponent() {
   return (
     <>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 5 }}>
-        <Box component={'h1'}>{detailsData?.name}</Box>
+        <Box
+          sx={{
+            display: 'flex'
+          }}
+        >
+          <Box component={'h1'}>{detailsData?.name}</Box>
+          <Box
+            sx={{
+              display: 'flex',
+              ml: 2
+            }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '-10px' // Overlapping avatars
+              }}
+            >
+              {typingUser?.map((user, index) => (
+                <Tooltip title={user?.name} placement='top' key={user?.id}>
+                  <Avatar
+                    src={user?.avatar}
+                    alt={user?.name}
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      border: '2px solid white', // Border for overlapping effect
+
+                      translate: user.showAvatar ? 'scale(1)' : 'scale(0)',
+                      transition: 'transform 0.3s all'
+                    }}
+                  />
+                </Tooltip>
+              ))}
+            </Box>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                p: 1,
+                borderRadius: '20px',
+                backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                maxWidth: '300px',
+                ml: 2,
+                opacity: typingUser?.length ? 1 : 0
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  gap: '4px',
+                  px: 1
+                }}
+              >
+                <Box
+                  sx={{
+                    width: '8px',
+                    height: '8px',
+                    backgroundColor: 'gray',
+                    borderRadius: '50%',
+                    animation: 'blink 1.2s infinite',
+                    '@keyframes blink': {
+                      '0%, 100%': { opacity: 0.3 },
+                      '50%': { opacity: 1 }
+                    }
+                  }}
+                />
+                <Box
+                  sx={{
+                    width: '8px',
+                    height: '8px',
+                    backgroundColor: 'gray',
+                    borderRadius: '50%',
+                    animation: 'blink 1.2s infinite 0.2s' // Delayed animation
+                  }}
+                />
+                <Box
+                  sx={{
+                    width: '8px',
+                    height: '8px',
+                    backgroundColor: 'gray',
+                    borderRadius: '50%',
+                    animation: 'blink 1.2s infinite 0.4s' // Further delayed animation
+                  }}
+                />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+
         <Box>
           {hasEditAccess && (
             <Tooltip placement='top' title='Share with others'>
@@ -834,7 +1028,7 @@ export default function AIAssistantDetailsComponent() {
                   label={'Details'}
                   name='message_content'
                   value={conversationFormData.message_content}
-                  onChange={handleTextChange}
+                  onChange={handleMessageTextChange}
                   error={errorMessage?.['message_content']}
                   fullWidth
                   multiline
