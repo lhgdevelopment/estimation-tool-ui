@@ -8,11 +8,10 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, TextField } from '@mui/material'
-import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { TLeadsComponent } from '../Leads.decorator'
 
 export default function LeadsFormComponent(props: TLeadsComponent) {
@@ -30,8 +29,6 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
     projectTypeId: null,
     description: ''
   }
-
-  const summaryTextEditorRef = useRef<ExposeParam>()
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})

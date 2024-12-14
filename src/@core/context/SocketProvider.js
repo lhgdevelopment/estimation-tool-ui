@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
@@ -7,8 +8,10 @@ const SocketContext = createContext();
 // Create a WebSocket Provider
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
+  const token = Cookies.get('accessToken')
 
   useEffect(() => {
+
     // Fetch logged-in user data from localStorage
     const logedinUser = JSON.parse(localStorage.getItem("logedinUser"));
 
@@ -16,12 +19,14 @@ export const SocketProvider = ({ children }) => {
 
     // Connect to the server
     const newSocket = io("https://hive.lhgdev.com", {
-      transports: ["websocket"],
-      extraHeaders: {
-        id: logedinUser?.id,
-        name: logedinUser?.name,
-        email: logedinUser?.email,
+
+      extraHeaders:  {
+        Authorization: `Bearer ${token}`,
       },
+    });
+
+    newSocket.on("connect", ()=> {
+       console.log('Socket Connected!')
     });
 
     setSocket(newSocket);
@@ -36,7 +41,7 @@ export const SocketProvider = ({ children }) => {
     return () => {
       newSocket.disconnect();
     };
-  }, []); // Empty dependency array ensures it runs once after mount
+  }, [token]); // Empty dependency array ensures it runs once after mount
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

@@ -34,8 +34,8 @@ import AppLayout from 'src/layouts/AppLayout'
 import ThemeComponent from '@core/theme/ThemeComponent'
 import '../../styles/app.css'
 import '../../styles/globals.css'
+import { SocketProvider } from '../@core/context/SocketProvider'
 import store from '../@core/store/store'
-import { SocketProvider } from './SocketProvider'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {

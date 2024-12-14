@@ -1,5 +1,6 @@
 import { Dropdown } from '@core/components/dropdown'
 import Preloader from '@core/components/preloader'
+import { useSocket } from '@core/context/SocketProvider'
 import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import { RootState } from '@core/store/reducers'
 import apiRequest from '@core/utils/axios-config'
@@ -33,7 +34,6 @@ import 'md-editor-rt/lib/style.css'
 import { useRouter } from 'next/router'
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useSocket } from 'src/pages/SocketProvider'
 import Swal from 'sweetalert2'
 import { shareAccessLevel } from '../AIAssistant.decorator'
 import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
@@ -52,7 +52,7 @@ export default function AIAssistantDetailsComponent() {
   const [preload, setPreload] = useState<boolean>(false)
   const [isWaiting, setIsWaiting] = useState<boolean>(false)
   const [messagePreload, setMessagePreload] = useState<boolean>(false)
-  const [detailsData, setDetailsData] = useState<any>({})
+  const [detailsData, setDetailsData] = useState<any>()
   const [threadStatusIsActive, setThreadStatusIsActive] = useState<boolean>(true)
 
   const messageRefs = useRef<any[]>([])
@@ -585,9 +585,10 @@ export default function AIAssistantDetailsComponent() {
     })
 
     socket.on(typingEvent, (data: any) => {
-      const userId = data?.payload?.user?.id
-
-      if (userId && userId !== currentUser?.id) {
+      const userId = data?.user?.id
+      console.log(data)
+      console.log({ currentUser })
+      if (data && userId && userId !== currentUser?.id) {
         if (userInteracted) {
           const typingSound = new Audio('/audio/typing-sound.mp3')
           typingSound.play().catch(error => {
@@ -595,23 +596,25 @@ export default function AIAssistantDetailsComponent() {
           })
         }
 
-        const newUser = { ...data.payload.user, startTyping: Date.now(), showAvatar: false }
+        const newUser = { ...data, startTyping: Date.now(), showAvatar: false }
 
         setTypingUser(prevState => {
           // Ensure no duplicate users by filtering out existing ones with the same ID
-          const updatedState = prevState.filter(user => user.id !== userId)
+          const updatedState = prevState.filter(data => data.user.id !== userId)
 
           return [...updatedState, newUser]
         })
 
         // Show avatar after 1 second
         setTimeout(() => {
-          setTypingUser(prevState => prevState.map(user => (user.id === userId ? { ...user, showAvatar: true } : user)))
+          setTypingUser(prevState =>
+            prevState.map(data => (data.user.id !== userId ? { ...data, showAvatar: true } : data))
+          )
         }, 2000)
 
         // Automatically remove users after 5 seconds
         setTimeout(() => {
-          setTypingUser(prevState => prevState.filter(user => Date.now() - user.startTyping <= 3000))
+          setTypingUser(prevState => prevState.filter(data => Date.now() - data.startTyping <= 3000))
         }, 3000)
       }
     })
@@ -674,7 +677,7 @@ export default function AIAssistantDetailsComponent() {
         setHasMore(false)
       } else {
         if (initial) {
-          setDetailsData(response?.data)
+          setDetailsData((prevState: any) => response?.data)
           setTimeout(() => {
             scrollToBottom()
           }, 100)
@@ -778,90 +781,6 @@ export default function AIAssistantDetailsComponent() {
           }}
         >
           <Box component={'h1'}>{detailsData?.name}</Box>
-          <Box
-            sx={{
-              display: 'flex',
-              ml: 2
-            }}
-          >
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '-10px' // Overlapping avatars
-              }}
-            >
-              {typingUser?.map((user, index) => (
-                <Tooltip title={user?.name} placement='top' key={user?.id}>
-                  <Avatar
-                    src={user?.avatar}
-                    alt={user?.name}
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      border: '2px solid white', // Border for overlapping effect
-
-                      translate: user.showAvatar ? 'scale(1)' : 'scale(0)',
-                      transition: 'transform 0.3s all'
-                    }}
-                  />
-                </Tooltip>
-              ))}
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                p: 1,
-                borderRadius: '20px',
-                backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                maxWidth: '300px',
-                ml: 2,
-                opacity: typingUser?.length ? 1 : 0
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  gap: '4px',
-                  px: 1
-                }}
-              >
-                <Box
-                  sx={{
-                    width: '8px',
-                    height: '8px',
-                    backgroundColor: 'gray',
-                    borderRadius: '50%',
-                    animation: 'blink 1.2s infinite',
-                    '@keyframes blink': {
-                      '0%, 100%': { opacity: 0.3 },
-                      '50%': { opacity: 1 }
-                    }
-                  }}
-                />
-                <Box
-                  sx={{
-                    width: '8px',
-                    height: '8px',
-                    backgroundColor: 'gray',
-                    borderRadius: '50%',
-                    animation: 'blink 1.2s infinite 0.2s' // Delayed animation
-                  }}
-                />
-                <Box
-                  sx={{
-                    width: '8px',
-                    height: '8px',
-                    backgroundColor: 'gray',
-                    borderRadius: '50%',
-                    animation: 'blink 1.2s infinite 0.4s' // Further delayed animation
-                  }}
-                />
-              </Box>
-            </Box>
-          </Box>
         </Box>
 
         <Box>
@@ -1034,14 +953,34 @@ export default function AIAssistantDetailsComponent() {
                   multiline
                   rows={4}
                   onKeyDown={e => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
+                    if (e.key === 'Enter' && !e.shiftKey && threadStatusIsActive) {
                       e.preventDefault()
                       onSubmitMessage()
                     }
                   }}
                 />
 
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Box sx={{ display: 'flex' }}>
+                  {typingUser.length > 0 && (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        mt: 2,
+                        fontSize: '12px'
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          fontWeight: 'bold',
+                          color: '#000'
+                        }}
+                      >
+                        {typingUser.map(data => data.user.name).join(', ')}{' '}
+                      </Box>
+                      <Box sx={{ ml: 1 }}>{typingUser.length === 1 ? 'is typing...' : 'are typing...'}</Box>
+                    </Box>
+                  )}
                   <Button
                     onClick={() => {
                       onSubmitMessage()

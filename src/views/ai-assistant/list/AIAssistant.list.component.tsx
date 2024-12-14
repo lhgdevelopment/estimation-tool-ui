@@ -6,9 +6,7 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
-import FilterListIcon from '@mui/icons-material/FilterList'
 import FilterListOffIcon from '@mui/icons-material/FilterListOff'
-import PublicOffIcon from '@mui/icons-material/PublicOff'
 
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer'
 import {
@@ -128,9 +126,9 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
     getList(1, { ...filterData })
   }, [])
 
-  const handleFilterChange = () => {
-    getList(1, { ...filterData })
-  }
+  // const handleFilterChange = () => {
+  //   getList(1, { ...filterData })
+  // }
   const onFilterClear = () => {
     setFilterData({ ...defaultFilterData })
     getList(1, { ...defaultFilterData })
@@ -256,7 +254,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                     }}
                   >
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                      <Tooltip title='Filter'>
+                      {/* <Tooltip title='Filter'>
                         <IconButton
                           onClick={handleFilterChange}
                           sx={{
@@ -273,7 +271,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                         >
                           <FilterListIcon />
                         </IconButton>
-                      </Tooltip>
+                      </Tooltip> */}
                       <Tooltip title='Clear'>
                         <IconButton
                           onClick={onFilterClear}
@@ -372,9 +370,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                             })}
                           </AvatarGroup>
                         ) : (
-                          <Tooltip title={'Not Yet Shared with Anyone'}>
-                            <PublicOffIcon />
-                          </Tooltip>
+                          <Tooltip title={'Not Yet Shared with Anyone'}>-</Tooltip>
                         )}
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
