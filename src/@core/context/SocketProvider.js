@@ -25,7 +25,8 @@ export const SocketProvider = ({ children }) => {
       },
     });
 
-    newSocket.on("connect", ()=> {
+    newSocket.on("connect", (data)=> {
+      console.log("Someone is connected <-", data);
        console.log('Socket Connected!')
     });
 

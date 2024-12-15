@@ -9,6 +9,8 @@ import IosShareIcon from '@mui/icons-material/IosShare'
 import NorthEastIcon from '@mui/icons-material/North'
 import PersonIcon from '@mui/icons-material/Person'
 import {
+  AvatarGroup,
+  Badge,
   Box,
   DialogActions,
   DialogContent,
@@ -18,6 +20,7 @@ import {
   Modal,
   Select,
   SelectChangeEvent,
+  styled,
   TextField,
   Tooltip
 } from '@mui/material'
@@ -35,11 +38,40 @@ import { useRouter } from 'next/router'
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import Swal from 'sweetalert2'
+import { v4 as uuidv4 } from 'uuid'
 import { shareAccessLevel } from '../AIAssistant.decorator'
 import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
 import AIAssistantMessagesComponent from './AIAssistantMessages.component'
 import BookmarkDrawer from './bookmark/BookmarkDrawer'
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: '#44b700',
+    color: '#44b700',
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    '&::after': {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%',
+      animation: 'ripple 1.2s infinite ease-in-out',
+      border: '1px solid currentColor',
+      content: '""'
+    }
+  },
+  '@keyframes ripple': {
+    '0%': {
+      transform: 'scale(.8)',
+      opacity: 1
+    },
+    '100%': {
+      transform: 'scale(2.4)',
+      opacity: 0
+    }
+  }
+}))
 export default function AIAssistantDetailsComponent() {
   const { showSnackbar } = useToastSnackbar()
   const currentUser = useSelector((state: any) => state.user)?.user
@@ -531,11 +563,13 @@ export default function AIAssistantDetailsComponent() {
   useEffect(() => {
     if (!socket || !detailsData?.threadId) return
 
+    const tabId = uuidv4()
     const responseEvent = `thread_response_${detailsData.threadId}`
     const statusEvent = `thread_status_${detailsData.threadId}`
     const typingEvent = `thread_typing_${detailsData.threadId}`
-    const loginEvent = `thread_login_${conversationId}`
-    const logoutEvent = `thread_logout_${conversationId}`
+    const loginEvent = `thread_login_${detailsData.threadId}`
+    const logoutEvent = `thread_logout_${detailsData.threadId}`
+    const disconnectEvent = 'user_disconnected'
 
     // Listen for real-time responses
     socket.on(responseEvent, (message: any) => {
@@ -586,8 +620,8 @@ export default function AIAssistantDetailsComponent() {
 
     socket.on(typingEvent, (data: any) => {
       const userId = data?.user?.id
-      console.log(data)
-      console.log({ currentUser })
+      // console.log(data)
+      // console.log({ currentUser })
       if (data && userId && userId !== currentUser?.id) {
         if (userInteracted) {
           const typingSound = new Audio('/audio/typing-sound.mp3')
@@ -621,26 +655,50 @@ export default function AIAssistantDetailsComponent() {
 
     socket.emit('thread_login', {
       thread_id: detailsData?.threadId,
-      user: {
-        id: currentUser?.id,
-        name: currentUser?.email
-      }
+      tab_id: tabId
     })
 
     socket.on(loginEvent, (data: any) => {
-      console.log(`${data.userName} logged into the thread.`)
-      setActiveUsers(prevUsers => [...prevUsers, data])
+      console.log('User logged in:', data)
+
+      setActiveUsers(prevUsers => {
+        // Avoid duplicates and exclude the current user
+        const updatedUsers = prevUsers.filter(user => user.user.id !== data.user.id && user.user.id !== currentUser?.id)
+
+        if (data.user.id !== currentUser?.id) {
+          updatedUsers.push(data)
+        }
+
+        return updatedUsers
+      })
     })
 
+    const removeUserFromActiveUsers = (userId: number) => {
+      setActiveUsers(prevUsers => prevUsers.filter(user => user.user.id !== userId))
+    }
     socket.on(logoutEvent, (data: any) => {
-      console.log(`${data.userName} logged out of the thread.`)
-      setActiveUsers(prevUsers => prevUsers.filter(user => user.userId !== data.userId))
+      console.log('User logged out:', data)
+      removeUserFromActiveUsers(data.user.id)
+    })
+
+    socket.on(disconnectEvent, (data: any) => {
+      console.log('User disconnected:', data)
+      removeUserFromActiveUsers(data.user.id)
     })
 
     return () => {
-      socket.off(responseEvent)
-      socket.off(statusEvent)
-      socket.off(statusEvent)
+      return () => {
+        // Emit thread logout when the component unmounts
+        socket.emit('thread_logout', {
+          thread_id: detailsData.threadId,
+          tab_id: tabId
+        })
+
+        // Cleanup listeners
+        socket.off(loginEvent)
+        socket.off(logoutEvent)
+        socket.off(disconnectEvent)
+      }
     }
   }, [socket, detailsData?.threadId])
 
@@ -783,7 +841,41 @@ export default function AIAssistantDetailsComponent() {
           <Box component={'h1'}>{detailsData?.name}</Box>
         </Box>
 
-        <Box>
+        <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <AvatarGroup
+              sx={{
+                '& .MuiAvatar-root': {
+                  width: 24,
+                  height: 24,
+                  fontSize: '12px'
+                },
+                '& .MuiAvatarGroup-avatar': {
+                  border: '2px solid #fff',
+                  borderRadius: '50%'
+                },
+                '& .MuiAvatarGroup-extraAvatar': {
+                  backgroundColor: '#f50057',
+                  color: '#fff',
+                  fontSize: '10px'
+                }
+              }}
+              renderSurplus={surplus => <span style={{ fontSize: '14px' }}>+{surplus.toString()[0]}k</span>}
+              total={activeUsers?.length}
+            >
+              {activeUsers?.slice(0, 5).map((activeUser, index) => (
+                <Tooltip key={index} title={activeUser?.user?.name}>
+                  <StyledBadge
+                    overlap='circular'
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    variant='dot'
+                  >
+                    <Avatar alt={activeUser?.user?.name} src={activeUser?.user?.name}></Avatar>
+                  </StyledBadge>
+                </Tooltip>
+              ))}
+            </AvatarGroup>
+          </Box>
           {hasEditAccess && (
             <Tooltip placement='top' title='Share with others'>
               <IconButton
@@ -960,14 +1052,16 @@ export default function AIAssistantDetailsComponent() {
                   }}
                 />
 
-                <Box sx={{ display: 'flex' }}>
+                <Box sx={{ display: 'flex', position: 'relative' }}>
                   {typingUser.length > 0 && (
                     <Box
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
-                        mt: 2,
-                        fontSize: '12px'
+                        fontSize: '12px',
+                        position: 'absolute',
+                        left: 0,
+                        top: '2px'
                       }}
                     >
                       <Box

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import PromptsEditComponent from 'src/views/settings/prompts/edit/PromptsEdit.component'
+import PromptsEditComponent from 'src/views/core/prompts/edit/PromptsEdit.component'
 
 const PromptsEdit = () => {
   return <PromptsEditComponent></PromptsEditComponent>

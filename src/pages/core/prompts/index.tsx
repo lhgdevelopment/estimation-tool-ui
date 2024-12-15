@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import PromptsComponent from 'src/views/settings/prompts/Prompts.component'
+import PromptsComponent from 'src/views/core/prompts/Prompts.component'
 
 const Prompts = () => {
   return <PromptsComponent />
