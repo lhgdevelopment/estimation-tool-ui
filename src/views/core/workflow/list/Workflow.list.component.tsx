@@ -51,7 +51,7 @@ export default function WorkflowListComponent() {
 
   const getList = (page = 1) => {
     setPreloader(true)
-    apiRequest.get(`/memory?page=${page}&title=${filterData?.title}&promptId=${filterData?.promptId}`).then(res => {
+    apiRequest.get(`/workflows?page=${page}&title=${filterData?.title}&promptId=${filterData?.promptId}`).then(res => {
       const paginationData: any = res
       setListData(res?.data)
       setCurrentPage(paginationData?.['current_page'])
@@ -84,7 +84,7 @@ export default function WorkflowListComponent() {
       cancelButtonText: 'No, cancel!'
     }).then(res => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/memory/${id}`).then(res => {
+        apiRequest.delete(`/workflows/${id}`).then(res => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',
