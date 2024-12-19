@@ -45,6 +45,7 @@ export default function WorkflowFormComponent(props: { editId?: string; onClose?
   }
 
   const onSubmit = (e: React.FormEvent<any>) => {
+    setPreload(true)
     e.preventDefault()
     setErrorMessage({})
 
@@ -86,7 +87,7 @@ export default function WorkflowFormComponent(props: { editId?: string; onClose?
     <Fragment>
       {!!preload && <Preloader />}
 
-      <Box className='p-5 bg-white rounded-lg shadow-md dark-d:bg-gray-800'>
+      <Box>
         <Box>
           <Box component={'h1'} className='mt-5 mb-4 text-xl font-semibold text-gray-600 dark-d:text-gray-300'>
             {editId ? 'Update' : 'Create New'} Workflow

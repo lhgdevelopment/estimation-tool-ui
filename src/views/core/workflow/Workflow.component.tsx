@@ -1,5 +1,5 @@
 import AddIcon from '@mui/icons-material/Add'
-import { Box, Modal } from '@mui/material'
+import { Box, Dialog, DialogContent } from '@mui/material'
 import React from 'react'
 import WorkflowFormComponent from './form/Workflow.form.component'
 import WorkflowListComponent from './list/Workflow.list.component'
@@ -42,28 +42,21 @@ export default function WorkflowComponent() {
 
         <WorkflowListComponent />
 
-        <Modal
+        <Dialog
           open={openCreateModal}
           onClose={handleCreateModalClose}
+          className='glass-modal'
           aria-labelledby='modal-modal-title'
           aria-describedby='modal-modal-description'
+          fullWidth
+          PaperProps={{
+            className: 'glass-modal'
+          }}
         >
-          <Box
-            sx={{
-              position: 'absolute' as const,
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '100%',
-              maxWidth: '500px',
-              bgcolor: 'background.paper',
-              boxShadow: 24,
-              borderRadius: 2
-            }}
-          >
+          <DialogContent>
             <WorkflowFormComponent editId={''} onClose={handleCreateModalClose} />
-          </Box>
-        </Modal>
+          </DialogContent>
+        </Dialog>
       </Box>
     </>
   )
