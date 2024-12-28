@@ -246,7 +246,7 @@ export default function WorkflowEditorComponent() {
               <Card
                 variant='outlined'
                 sx={{
-                  width: 300,
+                  width: 400,
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',

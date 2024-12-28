@@ -599,8 +599,6 @@ export default function AIAssistantDetailsComponent() {
           }
         }
       })
-
-      // scrollToBottom() // Ensure scrolling to the latest message
     })
 
     socket.on(statusEvent, (message: any) => {
@@ -620,8 +618,6 @@ export default function AIAssistantDetailsComponent() {
 
     socket.on(typingEvent, (data: any) => {
       const userId = data?.user?.id
-      // console.log(data)
-      // console.log({ currentUser })
       if (data && userId && userId !== currentUser?.id) {
         if (userInteracted) {
           const typingSound = new Audio('/audio/typing-sound.mp3')
@@ -633,20 +629,17 @@ export default function AIAssistantDetailsComponent() {
         const newUser = { ...data, startTyping: Date.now(), showAvatar: false }
 
         setTypingUser(prevState => {
-          // Ensure no duplicate users by filtering out existing ones with the same ID
           const updatedState = prevState.filter(data => data.user.id !== userId)
 
           return [...updatedState, newUser]
         })
 
-        // Show avatar after 1 second
         setTimeout(() => {
           setTypingUser(prevState =>
-            prevState.map(data => (data.user.id !== userId ? { ...data, showAvatar: true } : data))
+            prevState.map(data => (data.user.id !== userId ? data : { ...data, showAvatar: true }))
           )
         }, 2000)
 
-        // Automatically remove users after 5 seconds
         setTimeout(() => {
           setTypingUser(prevState => prevState.filter(data => Date.now() - data.startTyping <= 3000))
         }, 3000)
@@ -659,10 +652,7 @@ export default function AIAssistantDetailsComponent() {
     })
 
     socket.on(loginEvent, (data: any) => {
-      console.log('User logged in:', data)
-
       setActiveUsers(prevUsers => {
-        // Avoid duplicates and exclude the current user
         const updatedUsers = prevUsers.filter(user => user.user.id !== data.user.id && user.user.id !== currentUser?.id)
 
         if (data.user.id !== currentUser?.id) {
@@ -676,29 +666,27 @@ export default function AIAssistantDetailsComponent() {
     const removeUserFromActiveUsers = (userId: number) => {
       setActiveUsers(prevUsers => prevUsers.filter(user => user.user.id !== userId))
     }
+
     socket.on(logoutEvent, (data: any) => {
-      console.log('User logged out:', data)
       removeUserFromActiveUsers(data.user.id)
     })
 
     socket.on(disconnectEvent, (data: any) => {
-      console.log('User disconnected:', data)
       removeUserFromActiveUsers(data.user.id)
     })
 
     return () => {
-      return () => {
-        // Emit thread logout when the component unmounts
-        socket.emit('thread_logout', {
-          thread_id: detailsData.threadId,
-          tab_id: tabId
-        })
+      socket.emit('thread_logout', {
+        thread_id: detailsData?.threadId,
+        tab_id: tabId
+      })
 
-        // Cleanup listeners
-        socket.off(loginEvent)
-        socket.off(logoutEvent)
-        socket.off(disconnectEvent)
-      }
+      socket.off(responseEvent)
+      socket.off(statusEvent)
+      socket.off(typingEvent)
+      socket.off(loginEvent)
+      socket.off(logoutEvent)
+      socket.off(disconnectEvent)
     }
   }, [socket, detailsData?.threadId])
 
@@ -752,6 +740,17 @@ export default function AIAssistantDetailsComponent() {
               container.scrollTop = currentScrollHeight - previousScrollHeight + previousScrollTop
             }, 100) // Slight delay ensures DOM updates are applied
           }
+        }
+
+        if (detailsData?.threadId) {
+          apiRequest
+            .get(`/chatgpt-thread-using/${detailsData.threadId}`)
+            .then(response => {
+              console.log(response)
+            })
+            .catch(() => {
+              console.log(response)
+            })
         }
 
         // Mark the page as fetched

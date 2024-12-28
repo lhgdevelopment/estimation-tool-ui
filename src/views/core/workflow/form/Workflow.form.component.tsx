@@ -66,7 +66,7 @@ export default function WorkflowFormComponent(props: { editId?: string; onClose?
     } else {
       apiRequest
         .post('/workflows', formData)
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Created Successfully!', { variant: 'success' })
           router.push(`/core/workflow/editor/${res?.id}`)
         })

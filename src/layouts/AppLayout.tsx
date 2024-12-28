@@ -44,6 +44,8 @@ const AppLayout = ({ children }: Props) => {
     const fetchData = async () => {
       try {
         if (!token) {
+          Cookies.remove('accessToken')
+          Cookies.remove('refreshToken')
           router.push('/auth/login')
         } else {
           apiRequest.get('/user').then(res => {
@@ -53,6 +55,7 @@ const AppLayout = ({ children }: Props) => {
         }
       } catch (error) {
         Cookies.remove('accessToken')
+        Cookies.remove('refreshToken')
         router.push('/auth/login')
       }
     }

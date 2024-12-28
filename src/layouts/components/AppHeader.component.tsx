@@ -1,7 +1,7 @@
 import { isDarkTheme, isNavbarCollapsed } from '@core/store/actions'
 import { RootState } from '@core/store/reducers'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import { Box } from '@mui/material'
+import { Box, Tooltip } from '@mui/material'
 import Cookies from 'js-cookie'
 import { useRouter } from 'next/router'
 import { Fragment, useState } from 'react'
@@ -12,6 +12,7 @@ export default function AppHeaderComponent() {
   const router = useRouter()
   const isDark = useSelector((state: RootState) => state.theme.isDark)
   const settings = useSelector((state: RootState) => state.settings)
+  const currentUser = useSelector((state: any) => state.user)?.user
   const [isOpenProfileDropdown, setIsOpenProfileDropdown] = useState<boolean>(false)
   const [isOpenNotificationDropdown, setIsOpenNotificationDropdown] = useState<boolean>(false)
 
@@ -214,7 +215,9 @@ export default function AppHeaderComponent() {
                         >
                           <path d='M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z'></path>
                         </svg>
-                        <Box component={'span'}>Profile</Box>
+                        <Tooltip title={`Profile ${currentUser?.name}`}>
+                          <Box component={'span'}>{currentUser?.name}</Box>
+                        </Tooltip>
                       </Box>
                     </Box>
                     <Box component={'li'} className='flex'>

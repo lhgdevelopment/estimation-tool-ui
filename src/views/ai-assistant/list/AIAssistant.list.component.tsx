@@ -370,7 +370,9 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                             })}
                           </AvatarGroup>
                         ) : (
-                          <Tooltip title={'Not Yet Shared with Anyone'}>-</Tooltip>
+                          <Tooltip title={'Not Yet Shared with Anyone'}>
+                            <Box>-</Box>
+                          </Tooltip>
                         )}
                       </TableCell>
                       <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
