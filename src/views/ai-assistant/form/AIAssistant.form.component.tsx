@@ -19,6 +19,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
   const defaultData = {
     name: '',
     prompt_id: '',
+    workflow_id: '',
     message_content: ''
   }
 
@@ -94,6 +95,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
     setFormData({
       name: editData?.['name'] ?? '',
       prompt_id: '',
+      workflow_id: '',
       message_content: ''
     })
   }, [editDataId, editData])
@@ -140,6 +142,32 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
 
                 {!!errorMessage?.['prompt_id'] &&
                   errorMessage?.['prompt_id']?.map((message: any, index: number) => {
+                    return (
+                      <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                        {message}
+                      </span>
+                    )
+                  })}
+              </Box>
+            )}
+          </Box>
+          <Box sx={{ display: 'flex', gap: 5, mb: 5 }}>
+            {!editDataId && (
+              <Box sx={{ width: '100%' }}>
+                <Dropdown
+                  label='Workflow'
+                  url={'workflows'}
+                  name='workflow_id'
+                  value={formData.workflow_id}
+                  onChange={handleSelectChange}
+                  optionConfig={{
+                    title: 'title',
+                    id: 'id'
+                  }}
+                />
+
+                {!!errorMessage?.['workflow_id'] &&
+                  errorMessage?.['workflow_id']?.map((message: any, index: number) => {
                     return (
                       <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
                         {message}

@@ -7,6 +7,7 @@ import GroupsIcon from '@mui/icons-material/Groups'
 import LeaderboardIcon from '@mui/icons-material/Leaderboard'
 import LinkIcon from '@mui/icons-material/Link'
 import MemoryIcon from '@mui/icons-material/Memory'
+import SchemaIcon from '@mui/icons-material/Schema'
 import SettingsIcon from '@mui/icons-material/Settings'
 import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet'
 import SpeakerNotesIcon from '@mui/icons-material/SpeakerNotes'
@@ -85,13 +86,6 @@ const navigation: TNavigation[] = [
     accessBy: ['Admin'],
     subMenu: [
       {
-        title: 'AI Prompts',
-        icon: SettingsEthernetIcon,
-        path: '/settings/prompts',
-        accessBy: ['Admin']
-      },
-
-      {
         title: 'Meeting Type',
         icon: SettingsEthernetIcon,
         path: '/settings/meeting-type',
@@ -103,22 +97,38 @@ const navigation: TNavigation[] = [
         path: '/settings/project-type',
         accessBy: ['Admin']
       },
-      {
-        title: 'Memory',
-        icon: EventRepeatIcon,
-        path: '/settings/memory',
-        accessBy: ['Admin']
-      },
-      {
-        title: 'Workflow',
-        icon: SettingsEthernetIcon,
-        path: '/settings/workflow',
-        accessBy: ['Admin']
-      },
+
       {
         title: 'Update Log',
         icon: EventRepeatIcon,
         path: '/settings/update-log',
+        accessBy: ['Admin']
+      }
+    ]
+  },
+  {
+    title: 'The Core',
+    icon: SettingsIcon,
+    path: 'the-core',
+    accessBy: ['Admin'],
+    subMenu: [
+      {
+        title: 'AI Prompts',
+        icon: SettingsEthernetIcon,
+        path: '/core/prompts',
+        accessBy: ['Admin']
+      },
+
+      {
+        title: 'Memory',
+        icon: EventRepeatIcon,
+        path: '/core/memory',
+        accessBy: ['Admin']
+      },
+      {
+        title: 'Workflow',
+        icon: SchemaIcon,
+        path: '/core/workflow',
         accessBy: ['Admin']
       }
     ]

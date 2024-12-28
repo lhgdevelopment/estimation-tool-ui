@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import WorkflowComponent from '../../../views/settings/workflow/Workflow.component'
+import WorkflowComponent from '../../../views/core/workflow/Workflow.component'
 
 const Workflow = () => {
   return <WorkflowComponent />

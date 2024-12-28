@@ -34,6 +34,7 @@ import AppLayout from 'src/layouts/AppLayout'
 import ThemeComponent from '@core/theme/ThemeComponent'
 import '../../styles/app.css'
 import '../../styles/globals.css'
+import { SocketProvider } from '../@core/context/SocketProvider'
 import store from '../@core/store/store'
 
 // ** Extend App Props with Emotion
@@ -75,13 +76,17 @@ const App = (props: ExtendedAppProps) => {
             <meta name='viewport' content='initial-scale=1, width=device-width' />
           </Head>
           <SnackbarProvider autoHideDuration={1000} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
-            <SettingsProvider>
-              <SettingsConsumer>
-                {({ settings }) => {
-                  return <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
-                }}
-              </SettingsConsumer>
-            </SettingsProvider>
+            <SocketProvider>
+              <SettingsProvider>
+                <SettingsConsumer>
+                  {({ settings }) => {
+                    return (
+                      <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
+                    )
+                  }}
+                </SettingsConsumer>{' '}
+              </SettingsProvider>
+            </SocketProvider>
           </SnackbarProvider>
         </LocalizationProvider>
       </CacheProvider>

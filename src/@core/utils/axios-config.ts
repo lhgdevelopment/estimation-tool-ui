@@ -14,8 +14,27 @@ apiRequest.interceptors.request.use(config => {
 
   return config
 })
-apiRequest.interceptors.response.use(function (response) {
-  return response.data
-})
+
+// Axios response interceptor to handle unauthenticated requests
+apiRequest.interceptors.response.use(
+  response => {
+    return response.data
+  },
+  error => {
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      // Handle logout logic
+      handleLogout()
+    }
+
+    return Promise.reject(error)
+  }
+)
+
+// Function to handle logout
+const handleLogout = () => {
+  Cookies.remove('accessToken')
+  Cookies.remove('refreshToken')
+  window.location.href = '/auth/login'
+}
 
 export default apiRequest

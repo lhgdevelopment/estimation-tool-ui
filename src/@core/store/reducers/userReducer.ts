@@ -13,7 +13,7 @@ const initialUserState: UserState = {
 
 const userReducer = (state: UserState = initialUserState, action: Action): UserState => {
   switch (action.type) {
-    case 'LOGIN_USER':
+    case 'LOGEDIN_USER':
       return { ...state, user: action.payload }
     default:
       return state

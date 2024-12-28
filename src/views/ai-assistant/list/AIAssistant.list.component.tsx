@@ -4,9 +4,30 @@ import apiRequest from '@core/utils/axios-config'
 import { formatDateTime } from '@core/utils/utils'
 import ClearIcon from '@material-ui/icons/Clear'
 import EditIcon from '@material-ui/icons/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 import EditNoteIcon from '@mui/icons-material/EditNote'
+import FilterListOffIcon from '@mui/icons-material/FilterListOff'
+
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer'
-import { Box, Button, Modal, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@mui/material'
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Modal,
+  Pagination,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Tooltip
+} from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import { formatDistanceToNow } from 'date-fns'
 import Link from 'next/link'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
@@ -105,16 +126,17 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
     getList(1, { ...filterData })
   }, [])
 
-  const handleFilterChange = () => {
-    getList(1, { ...filterData })
-  }
+  // const handleFilterChange = () => {
+  //   getList(1, { ...filterData })
+  // }
   const onFilterClear = () => {
     setFilterData({ ...defaultFilterData })
     getList(1, { ...defaultFilterData })
   }
 
-  const handlePageChange = (newPage: number) => {
-    getList(newPage, { ...filterData })
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value)
+    getList(value, { ...filterData })
   }
   const handleTextChange = (e: React.ChangeEvent<any>) => {
     setFormData({
@@ -161,158 +183,244 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
     <Fragment>
       <Box className='w-full overflow-hidden rounded-lg shadow-xs my-3'>
         <Box className='w-full overflow-x-auto'>
-          <Table className='w-full whitespace-no-wrap'>
-            <TableHead>
-              <TableRow className='text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark-d:border-gray-700 bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-800'>
-                <TableCell className='px-4 py-3'>Name</TableCell>
-                <TableCell className='px-4 py-3'>Created By</TableCell>
-                <TableCell className='px-4 py-3'>Created On</TableCell>
-                <TableCell className='px-4 py-3'>Last User</TableCell>
-                <TableCell className='px-4 py-3'>Last Updated</TableCell>
-                <TableCell className='px-4 py-3 text-right'>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody className='bg-white Boxide-y dark-d:Boxide-gray-700 dark-d:bg-gray-800'>
-              <TableRow className='text-gray-700 dark-d:text-gray-400'>
-                <TableCell sx={{ p: '10px !important' }}>
-                  <TextField
-                    sx={{ width: '100%', p: '0px', input: { p: '10px 10px' } }}
-                    placeholder='Enter name'
-                    name='name'
-                    value={filterData.name}
-                    onChange={handleFilterOnChange}
-                  />
-                </TableCell>
-                <TableCell sx={{ textAlign: 'center' }}>
-                  <Dropdown
-                    sx={{ '& .MuiInputBase-input': { p: '10px 10px !important' } }}
-                    optionConfig={{
-                      title: 'name',
-                      id: 'id'
+          <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
+            <Table
+              className='w-full whitespace-no-wrap'
+              sx={{
+                '& .MuiTableCell-root': {
+                  p: '5px !important'
+                },
+                '& .MuiTableCell-head': {
+                  textTransform: 'capitalize'
+                }
+              }}
+            >
+              <TableHead>
+                <TableRow className='dark-d:border-gray-700 bg-gray-50 dark-d:text-gray-400 dark-d:bg-gray-800'>
+                  <TableCell>Name</TableCell>
+                  <TableCell sx={{ textAlign: 'center', width: '50px' }}>Owner</TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>Last Accessed</TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>Shared With</TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>Last Modified</TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>Created On</TableCell>
+                  <TableCell
+                    sx={{
+                      position: 'sticky',
+                      right: 0,
+                      backgroundColor: 'white',
+                      zIndex: 1,
+                      textAlign: 'right'
                     }}
-                    url='users'
-                    name='user_id'
-                    value={filterData.user_id}
-                    onChange={handleFilterOnChange}
-                  />
-                </TableCell>
-                <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
-                <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
-                <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
-                <TableCell>
-                  <Box sx={{ textAlign: 'center' }}>
-                    <Button
-                      onClick={handleFilterChange}
-                      sx={{
-                        border: '1px solid #9333ea',
-                        padding: '3px 10px',
-                        mr: 1,
-                        fontSize: '14px',
-                        borderRadius: '5px',
-                        color: '#9333ea',
-                        '&:hover': {
-                          background: '#9333ea',
-                          color: '#fff'
-                        }
+                  >
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody className='bg-white Boxide-y dark-d:Boxide-gray-700 dark-d:bg-gray-800'>
+                <TableRow className='text-gray-700 dark-d:text-gray-400'>
+                  <TableCell>
+                    <TextField
+                      sx={{ width: '100%', p: '0px', input: { p: '5px' } }}
+                      placeholder='Enter name'
+                      name='name'
+                      value={filterData.name}
+                      onChange={handleFilterOnChange}
+                    />
+                  </TableCell>
+                  <TableCell sx={{ textAlign: 'center', width: '50px' }}>
+                    <Dropdown
+                      sx={{ '& .MuiInputBase-input': { p: '5px !important' } }}
+                      optionConfig={{
+                        title: 'name',
+                        id: 'id'
                       }}
-                    >
-                      Filter
-                    </Button>
-                    <Button
-                      onClick={onFilterClear}
-                      sx={{
-                        border: '1px solid #9333ea',
-                        padding: '3px 10px',
-                        fontSize: '14px',
-                        borderRadius: '5px',
-                        color: '#9333ea',
-                        '&:hover': {
-                          background: '#9333ea',
-                          color: '#fff'
-                        }
-                      }}
-                    >
-                      Clear
-                    </Button>
-                  </Box>
-                </TableCell>
-              </TableRow>
-              {listData?.map((data: any, index: number) => {
-                return (
-                  <TableRow key={index} className='text-gray-700 dark-d:text-gray-400'>
-                    <TableCell className='px-4 py-3 text-sm'>
-                      <Box sx={{ '&:hover .edit-name-btn': { opacity: 1 } }}>
-                        <Link href={`ai-assistant/${data?.id}`}>{data?.name}</Link>
-
-                        <Button
+                      url='users'
+                      name='user_id'
+                      value={filterData.user_id}
+                      onChange={handleFilterOnChange}
+                    />
+                  </TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
+                  <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
+                  <TableCell
+                    sx={{
+                      position: 'sticky',
+                      right: 0,
+                      backgroundColor: 'white',
+                      zIndex: 1,
+                      textAlign: 'right'
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+                      {/* <Tooltip title='Filter'>
+                        <IconButton
+                          onClick={handleFilterChange}
                           sx={{
-                            ml: '5px',
-                            p: '3px',
-                            minWidth: 0,
+                            border: '1px solid #9333ea',
+                            backgroundColor: '#fff',
+                            color: '#9333ea',
                             borderRadius: '5px',
-                            opacity: 0,
-                            transition: 'all 0.3s ease-in-out',
-                            '& .MuiSvgIcon-root': {
-                              color: '#7e22ce',
-                              height: '16px !important',
-                              width: '16px !important'
+                            p: '2px',
+                            '&:hover': {
+                              backgroundColor: '#9333ea',
+                              color: '#fff'
                             }
                           }}
-                          className='edit-name-btn'
-                          onClick={() => {
-                            onEdit(data['id'])
+                        >
+                          <FilterListIcon />
+                        </IconButton>
+                      </Tooltip> */}
+                      <Tooltip title='Clear'>
+                        <IconButton
+                          onClick={onFilterClear}
+                          sx={{
+                            border: '1px solid #9333ea',
+                            backgroundColor: '#fff',
+                            borderRadius: '5px',
+                            p: '2px',
+                            color: '#9333ea',
+                            '&:hover': {
+                              backgroundColor: '#9333ea',
+                              color: '#fff'
+                            }
                           }}
                         >
-                          <EditIcon />
-                        </Button>
-                      </Box>
-                    </TableCell>
-                    <TableCell className='px-4 py-3 text-sm'>
-                      <Box sx={{ width: '100px', textOverflow: 'ellipsis', textWrap: 'nowrap', overflow: 'hidden' }}>
-                        {data?.user?.name}
-                      </Box>
-                    </TableCell>
-                    <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.created_at)}</TableCell>
-                    <TableCell className='px-4 py-3 text-sm'>
-                      <Box sx={{ width: '100px', textOverflow: 'ellipsis', textWrap: 'nowrap', overflow: 'hidden' }}>
-                        {data?.messages[0]?.user?.name}
-                      </Box>
-                    </TableCell>
-                    <TableCell className='px-4 py-3 text-sm'>{formatDateTime(data?.messages[0]?.created_at)}</TableCell>
+                          <FilterListOffIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+                {listData?.map((data: any, index: number) => {
+                  return (
+                    <TableRow key={index} sx={{ pl: '5px !important' }} className='text-gray-700 dark-d:text-gray-400'>
+                      <TableCell className='px-4 py-3 text-sm'>
+                        <Box
+                          sx={{
+                            width: '200px',
+                            textWrap: 'auto',
+                            overflow: 'hidden',
+                            '&:hover .edit-name-btn': { opacity: 1 }
+                          }}
+                        >
+                          <Link href={`ai-assistant/${data?.id}`}>{data?.name}</Link>
 
-                    <TableCell className='px-4 py-3'>
-                      <Box className='flex items-center justify-end space-x-1 text-sm'>
-                        <Link href={`ai-assistant/${data?.id}`}>
-                          <a
-                            className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
-                            aria-label='Edit'
+                          <Button
+                            sx={{
+                              ml: '5px',
+                              p: '3px',
+                              minWidth: 0,
+                              borderRadius: '5px',
+                              opacity: 0,
+                              transition: 'all 0.3s ease-in-out',
+                              '& .MuiSvgIcon-root': {
+                                color: '#7e22ce',
+                                height: '16px !important',
+                                width: '16px !important'
+                              }
+                            }}
+                            className='edit-name-btn'
+                            onClick={() => {
+                              onEdit(data['id'])
+                            }}
                           >
-                            <QuestionAnswerIcon />
-                          </a>
-                        </Link>
+                            <EditIcon />
+                          </Button>
+                        </Box>
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        <Tooltip title={data?.user?.name}>
+                          <Avatar
+                            alt={data?.user?.name}
+                            src={data?.user?.name}
+                            sx={{ display: 'inline-flex', width: 36, height: 36 }}
+                          />
+                        </Tooltip>
+                      </TableCell>
 
-                        <button
-                          onClick={() => {
-                            onDelete(data['id'])
-                          }}
-                          className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
-                          aria-label='Delete'
-                        >
-                          <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
-                            <path
-                              fillRule='evenodd'
-                              d='M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z'
-                              clipRule='evenodd'
-                            ></path>
-                          </svg>
-                        </button>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        <Tooltip title={data?.messages[0]?.user?.name}>
+                          <Avatar
+                            alt={data?.messages[0]?.user?.name}
+                            src={data?.messages[0]?.user?.name}
+                            sx={{ display: 'inline-flex', width: 36, height: 36 }}
+                          />
+                        </Tooltip>
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {!!data?.shared_user?.length ? (
+                          <AvatarGroup
+                            max={3}
+                            total={data?.shared_user?.length}
+                            spacing={'small'}
+                            sx={{ display: 'inline-flex' }}
+                          >
+                            {data?.shared_user?.map((shared: any, index: number) => {
+                              return (
+                                <Tooltip key={index} title={shared?.user?.name}>
+                                  <Avatar
+                                    alt={shared?.user?.name}
+                                    src={shared?.user?.name}
+                                    sx={{ display: 'inline-flex', width: 36, height: 36 }}
+                                  />
+                                </Tooltip>
+                              )
+                            })}
+                          </AvatarGroup>
+                        ) : (
+                          <Tooltip title={'Not Yet Shared with Anyone'}>
+                            <Box>-</Box>
+                          </Tooltip>
+                        )}
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {formatDistanceToNow(new Date(data?.messages[0]?.created_at ?? new Date()), {
+                          addSuffix: true,
+                          includeSeconds: true
+                        })}
+                      </TableCell>
+                      <TableCell className='px-4 py-3 text-sm' sx={{ textAlign: 'center' }}>
+                        {formatDateTime(data?.created_at)}
+                      </TableCell>
+                      <TableCell
+                        className='px-4 py-3 text-right'
+                        sx={{
+                          position: 'sticky',
+                          right: 0,
+                          backgroundColor: 'white',
+                          zIndex: 1,
+                          textAlign: 'right'
+                        }}
+                      >
+                        <Box className='flex items-center justify-end space-x-1 text-sm'>
+                          <Link href={`ai-assistant/${data?.id}`}>
+                            <Tooltip title='Continue this conversation'>
+                              <IconButton aria-label='Edit' sx={{ p: 1 }}>
+                                <QuestionAnswerIcon className='text-purple-600' />
+                              </IconButton>
+                            </Tooltip>
+                          </Link>
+                          <Tooltip title='Delete'>
+                            <IconButton
+                              onClick={() => {
+                                onDelete(data['id'])
+                              }}
+                              aria-label='Delete'
+                              sx={{ p: 1 }}
+                            >
+                              <DeleteIcon className='text-red-600' />
+                            </IconButton>
+                          </Tooltip>
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </TableContainer>
           {!listData?.length && (
             <Box
               sx={{
@@ -326,67 +434,15 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
             </Box>
           )}
         </Box>
-        <Box className='grid px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border-t dark-d:border-gray-700 bg-gray-50 sm:grid-cols-9 dark-d:text-gray-400 dark-d:bg-gray-800'>
-          <span className='flex items-center col-span-3'>
-            Showing {listData?.length > 0 ? currentPage * 10 - 9 : 0}-
-            {currentPage * 10 < totalPages ? currentPage * 10 : totalPages} of {totalPages}
-          </span>
-          <span className='col-span-2'></span>
-          {/* <!-- Pagination --> */}
-          <span className='flex col-span-4 mt-2 sm:mt-auto sm:justify-end'>
-            <nav aria-label='Table navigation'>
-              <ul className='inline-flex items-center'>
-                <li>
-                  <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    className={`px-3 py-1 rounded-md rounded-l-lg focus:outline-none focus:shadow-outline-purple ${
-                      currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    aria-label='Previous'
-                    disabled={currentPage === 1}
-                  >
-                    <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
-                      <path
-                        d='M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z'
-                        clipRule='evenodd'
-                        fillRule='evenodd'
-                      ></path>
-                    </svg>
-                  </button>
-                </li>
-                {Array.from({ length: totalPages }, (_, index) => (
-                  <li key={index}>
-                    <button
-                      onClick={() => handlePageChange(index + 1)}
-                      className={`px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple ${
-                        currentPage === index + 1 ? 'bg-purple-600 text-white' : ''
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  </li>
-                ))}
-                <li>
-                  <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    className={`px-3 py-1 rounded-md rounded-r-lg focus:outline-none focus:shadow-outline-purple ${
-                      currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
-                    aria-label='Next'
-                    disabled={currentPage === totalPages}
-                  >
-                    <svg className='w-4 h-4 fill-current' aria-hidden='true' viewBox='0 0 20 20'>
-                      <path
-                        d='M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z'
-                        clipRule='evenodd'
-                        fillRule='evenodd'
-                      ></path>
-                    </svg>
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          </span>
+        {!listData.length && <Box>No Data Found</Box>}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Pagination
+            count={totalPages}
+            page={currentPage}
+            onChange={handlePageChange}
+            color='primary'
+            shape='rounded'
+          />
         </Box>
       </Box>
       <Modal
