@@ -350,13 +350,6 @@ export default function AIAssistantDetailsComponent() {
     })
   }
 
-  const handleKeyDown = (e: any) => {
-    if (String(e?.target?.['value']).trim() && e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      onSubmitMessage()
-    }
-  }
-
   const onSubmitMessage = async (isRegenerate = false) => {
     try {
       setIsWaiting(true)
@@ -408,7 +401,7 @@ export default function AIAssistantDetailsComponent() {
       // Save the previous conversation data
       setPrevConversationFormData(response.data.messages[0])
 
-      console.log(detailsData)
+      // console.log(detailsData)
     } catch (error: any) {
       // Handle errors
       setErrorMessage(error?.response?.data?.errors || {})
@@ -424,6 +417,17 @@ export default function AIAssistantDetailsComponent() {
     } finally {
       // Always reset waiting state
       setIsWaiting(false)
+    }
+  }
+
+  const handleMessageTextKeyDown = (e: any) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault() // Prevent the default behavior of Enter key
+      if (!threadStatusIsActive && conversationFormData.message_content.trim()) {
+        onSubmitMessage() // Call the submit function
+      } else {
+        showSnackbar('Message content is required or thread is inactive.', { variant: 'warning' })
+      }
     }
   }
 
@@ -602,7 +606,9 @@ export default function AIAssistantDetailsComponent() {
     })
 
     socket.on(statusEvent, (message: any) => {
-      setThreadStatusIsActive(message?.payload?.status === 'active' ? false : true)
+      console.log(message)
+
+      setThreadStatusIsActive(message?.payload?.status === 'active' ? true : false)
       if (message?.payload?.threadInfo?.user_info?.id !== currentUser?.id) {
         if (message?.payload?.status === 'active') {
           showSnackbar(`This thread is busy now for ${message?.payload?.threadInfo?.user_info?.name}`, {
@@ -613,6 +619,15 @@ export default function AIAssistantDetailsComponent() {
             variant: 'success'
           })
         }
+      }
+      if (message?.payload?.userMessage) {
+        setDetailsData((prevState: any) => {
+          return {
+            ...prevState,
+            messages: [...prevState.messages, message?.payload?.userMessage]
+          }
+        })
+        scrollToBottom()
       }
     })
 
@@ -699,7 +714,7 @@ export default function AIAssistantDetailsComponent() {
       (sharedUser: any) => sharedUser?.user?.id === user?.id && sharedUser?.access_level === 2
     )
 
-    console.log('Access Check:', { isAdmin, isOwner, isSharedUserWithEditAccess })
+    // console.log('Access Check:', { isAdmin, isOwner, isSharedUserWithEditAccess })
 
     return isAdmin || isOwner || isSharedUserWithEditAccess
   }
@@ -723,14 +738,14 @@ export default function AIAssistantDetailsComponent() {
         setHasMore(false)
       } else {
         if (initial) {
-          setDetailsData((prevState: any) => response?.data)
+          setDetailsData(() => response?.data)
           setTimeout(() => {
             scrollToBottom()
           }, 100)
         } else {
           setDetailsData((prevState: any) => ({
             ...prevState,
-            messages: [...newMessages, ...(prevState.messages || [])]
+            messages: [...newMessages, ...(prevState?.messages || [])]
           }))
 
           // Adjust scroll position to maintain the user's current view
@@ -742,15 +757,16 @@ export default function AIAssistantDetailsComponent() {
           }
         }
 
-        if (detailsData?.threadId) {
-          apiRequest
-            .get(`/chatgpt-thread-using/${detailsData.threadId}`)
-            .then(response => {
-              console.log(response)
-            })
-            .catch(() => {
-              console.log(response)
-            })
+        // Fetch thread status if threadId exists
+        if (response?.data?.threadId) {
+          try {
+            const threadResponse = await apiRequest.get(`/chatgpt-thread-using/${response.data.threadId}`)
+            setThreadStatusIsActive(true) // Mark thread as active
+            console.log(threadResponse)
+          } catch (error) {
+            console.error('Error fetching thread status:', error)
+            setThreadStatusIsActive(false) // Mark thread as inactive if there's an error
+          }
         }
 
         // Mark the page as fetched
@@ -767,6 +783,7 @@ export default function AIAssistantDetailsComponent() {
       }, 1000)
     }
   }
+
   const previousScrollTopRef = useRef<number>(0)
 
   useEffect(() => {
@@ -1043,12 +1060,7 @@ export default function AIAssistantDetailsComponent() {
                   fullWidth
                   multiline
                   rows={4}
-                  onKeyDown={e => {
-                    if (e.key === 'Enter' && !e.shiftKey && threadStatusIsActive) {
-                      e.preventDefault()
-                      onSubmitMessage()
-                    }
-                  }}
+                  onKeyDown={handleMessageTextKeyDown}
                 />
 
                 <Box sx={{ display: 'flex', position: 'relative' }}>
@@ -1078,7 +1090,7 @@ export default function AIAssistantDetailsComponent() {
                     onClick={() => {
                       onSubmitMessage()
                     }}
-                    disabled={!threadStatusIsActive}
+                    disabled={!!threadStatusIsActive}
                     sx={{
                       //background: String(conversationFormData?.message_content).trim() ? '#000' : '#e3e3e3',
                       position: 'absolute',
