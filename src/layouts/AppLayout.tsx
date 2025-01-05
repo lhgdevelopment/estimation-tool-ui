@@ -3,7 +3,7 @@
 import { Box } from '@mui/material'
 
 // ** Hook Import
-import { isDarkTheme, logedinUser } from '@core/store/actions'
+import { logedinUser } from '@core/store/actions'
 import { RootState } from '@core/store/reducers'
 import apiRequest from '@core/utils/axios-config'
 import Cookies from 'js-cookie'
@@ -24,47 +24,57 @@ const AppLayout = ({ children }: Props) => {
   const dispatch = useDispatch()
   const router = useRouter()
   const token = Cookies.get('accessToken')
+  const refreshToken = Cookies.get('refreshToken')
   const isDark = useSelector((state: RootState) => state.theme.isDark)
   const isNavbarCollapsed = useSelector((state: RootState) => state?.settings?.isNavbarCollapsed)
 
   // useEffect(() => {
-  //   document.body.classList.toggle('theme-dark', isDark)
-  // }, [isDark])
+  //   const storedTheme = Cookies.get('isDark')
+  //   if (storedTheme !== undefined) {
+  //     dispatch(isDarkTheme(storedTheme === 'true'))
+  //   } else {
+  //     dispatch(isDarkTheme(isDark))
+  //   }
+  // }, [dispatch, isDark])
 
   useEffect(() => {
-    const storedTheme = Cookies.get('isDark')
-    const isDarkFromRedux = isDark
-    if (storedTheme !== undefined) {
-      dispatch(isDarkTheme(storedTheme === 'true'))
-    } else {
-      dispatch(isDarkTheme(isDarkFromRedux))
-    }
-  }, [dispatch, isDark, token])
-  useEffect(() => {
-    const fetchData = async () => {
+    const fetchUserData = async () => {
       try {
         if (!token) {
-          Cookies.remove('accessToken')
-          Cookies.remove('refreshToken')
-          router.push('/auth/login')
+          handleLogout()
         } else {
-          apiRequest.get('/user').then(res => {
-            dispatch(logedinUser(res))
-            localStorage.setItem('logedinUser', JSON.stringify(res))
-          })
+          const response = await apiRequest.get('/user')
+          dispatch(logedinUser(response))
+          localStorage.setItem('logedinUser', JSON.stringify(response))
         }
-      } catch (error) {
-        Cookies.remove('accessToken')
-        Cookies.remove('refreshToken')
-        router.push('/auth/login')
+      } catch (error: any) {
+        if (error.response?.status === 401 && refreshToken) {
+          try {
+            const refreshResponse = await apiRequest.post('/api/refresh', { token: refreshToken })
+            Cookies.set('accessToken', refreshResponse.data.accessToken, { secure: true })
+            Cookies.set('refreshToken', refreshResponse.data.refreshToken, { secure: true })
+            fetchUserData()
+          } catch (refreshError) {
+            handleLogout()
+          }
+        } else {
+          handleLogout()
+        }
       }
     }
 
-    fetchData()
-  }, [dispatch])
+    const handleLogout = () => {
+      Cookies.remove('accessToken')
+      Cookies.remove('refreshToken')
+      localStorage.removeItem('logedinUser')
+      router.push('/auth/login')
+    }
+
+    fetchUserData()
+  }, [dispatch, router, token, refreshToken])
 
   if (!token) {
-    return <></>
+    return null
   }
 
   return (
