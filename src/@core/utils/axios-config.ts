@@ -34,7 +34,9 @@ apiRequest.interceptors.response.use(
 const handleLogout = () => {
   Cookies.remove('accessToken')
   Cookies.remove('refreshToken')
-  window.location.href = '/auth/login'
+  if (typeof window !== 'undefined') {
+    window.location.href = '/auth/login'
+  }
 }
 
 export default apiRequest

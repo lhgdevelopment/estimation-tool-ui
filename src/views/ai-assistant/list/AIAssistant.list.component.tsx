@@ -305,7 +305,9 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
                             '&:hover .edit-name-btn': { opacity: 1 }
                           }}
                         >
-                          <Link href={`ai-assistant/${data?.id}`}>{data?.name}</Link>
+                          <Link href={`ai-assistant/${data?.id}`}>
+                            <Box component={'span'}>{data?.name}</Box>
+                          </Link>
 
                           <Button
                             sx={{

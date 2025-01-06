@@ -274,7 +274,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                           <Link href={`/settings/prompts/edit/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
-                              component={'a'}
+                              component={'span'}
                               className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                               aria-label='View'
                             >

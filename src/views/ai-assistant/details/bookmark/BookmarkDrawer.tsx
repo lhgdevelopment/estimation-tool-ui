@@ -79,16 +79,18 @@ const BookmarkDrawer: React.FC<BookmarkDrawerProps> = ({
   }
 
   const handleCopyUrl = (bookmarkId: number, conversationDetailId: number) => {
-    const url = new URL(window.location.origin + router.asPath)
-    url.searchParams.delete('conversationDetailId')
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.origin + router.asPath)
+      url.searchParams.delete('conversationDetailId')
 
-    url.searchParams.set('conversationDetailId', conversationDetailId.toString())
+      url.searchParams.set('conversationDetailId', conversationDetailId.toString())
 
-    navigator.clipboard.writeText(url.toString()).then(() => {
-      showSnackbar('URL Copied!', { variant: 'success' })
-    })
+      navigator.clipboard.writeText(url.toString()).then(() => {
+        showSnackbar('URL Copied!', { variant: 'success' })
+      })
 
-    handleBookmarkMenuClose(bookmarkId)
+      handleBookmarkMenuClose(bookmarkId)
+    }
   }
 
   const handleBookmarkMenuClick = (event: React.MouseEvent<HTMLElement>, bookmarkId: number) => {

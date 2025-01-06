@@ -34,7 +34,6 @@ export default function AppHeaderComponent() {
   return (
     <Fragment>
       <Box
-        component={'header'}
         className='z-10 py-2 bg-white shadow-md dark-d:bg-gray-800'
         sx={{
           width: settings?.isNavbarCollapsed ? 'calc(100% - 90px)' : 'calc(100% - 280px)',
@@ -76,7 +75,7 @@ export default function AppHeaderComponent() {
             </svg>
           </Box> */}
           {/* <!-- Search input --> */}
-          <Box className='flex justify-center flex-1 lg:mr-32'></Box>
+
           <Box component={'ul'} className='flex items-center flex-shrink-0 space-x-6'>
             {/* <!-- Theme toggler --> */}
             <Box component={'li'} className='flex'>
@@ -87,14 +86,14 @@ export default function AppHeaderComponent() {
                 onClick={toggleTheme}
               >
                 {!isDark && (
-                  <Box>
+                  <Box component={'span'}>
                     <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
                       <path d='M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z'></path>
                     </svg>
                   </Box>
                 )}
                 {isDark && (
-                  <Box>
+                  <Box component={'span'}>
                     <svg className='w-5 h-5' aria-hidden='true' fill='currentColor' viewBox='0 0 20 20'>
                       <path
                         fillRule='evenodd'
@@ -128,7 +127,7 @@ export default function AppHeaderComponent() {
                 ></Box>
               </Box>
               {!!isOpenNotificationDropdown && (
-                <Box>
+                <Box component={'span'}>
                   <Box
                     component={'ul'}
                     className='absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark-d:text-gray-300 dark-d:border-gray-700 dark-d:bg-gray-700'
@@ -191,7 +190,7 @@ export default function AppHeaderComponent() {
                 <AccountCircleIcon />
               </Box>
               {!!isOpenProfileDropdown && (
-                <Box>
+                <Box component={'span'}>
                   <Box
                     component={'ul'}
                     className='absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark-d:border-gray-700 dark-d:text-gray-300 dark-d:bg-gray-700'

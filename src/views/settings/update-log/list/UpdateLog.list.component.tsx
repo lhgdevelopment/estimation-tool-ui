@@ -139,7 +139,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
                           <Link href={`/settings/update-log/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
-                              component={'a'}
+                              component={'span'}
                               className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                               aria-label='View'
                             >
@@ -150,7 +150,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
                           <Link href={`/settings/update-log/edit/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
-                              component={'a'}
+                              component={'span'}
                               className='flex items-center justify-between p-1 text-sm font-medium leading-5 text-purple-600 rounded-lg dark-d:text-gray-400 focus:outline-none focus:shadow-outline-none hover:text-white hover:bg-purple-600'
                               aria-label='View'
                             >

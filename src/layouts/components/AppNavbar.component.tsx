@@ -64,7 +64,9 @@ export default function AppNavbarComponent() {
               }
             }}
           >
-            {isNavbarCollapsed ? <HiveIcon sx={{ color: '#9333ea', fontSize: '2rem' }} /> : 'The Hive'}
+            <Box component={'span'}>
+              {isNavbarCollapsed ? <HiveIcon sx={{ color: '#9333ea', fontSize: '2rem' }} /> : 'The Hive'}
+            </Box>
           </Box>
         </Box>
 
@@ -188,7 +190,7 @@ export default function AppNavbarComponent() {
           <Box className='px-4 my-2'>
             <Link href={'/ai-assistant'} passHref>
               <Box
-                component={'a'}
+                component={'span'}
                 className={`inline-flex items-center  w-full px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg  focus:outline-none focus:shadow-outline-purple hover:text-white hover:bg-purple-700 ${
                   isNavbarCollapsed ? 'justify-center' : ''
                 }`}

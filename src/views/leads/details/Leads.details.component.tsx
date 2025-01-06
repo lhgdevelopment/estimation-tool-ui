@@ -55,7 +55,7 @@ export default function LeadsDetailsComponent() {
                 <Link href={`/leads/edit/${leadsId}`} passHref>
                   <Box
                     sx={{ cursor: 'pointer' }}
-                    component={'a'}
+                    component={'span'}
                     className='flex items-center justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
                     aria-label='View'
                   >
@@ -156,7 +156,7 @@ export default function LeadsDetailsComponent() {
                     <Link href={`/leads/edit/${leadsId}`} passHref>
                       <Box
                         sx={{ cursor: 'pointer' }}
-                        component={'a'}
+                        component={'span'}
                         className='flex items-center inline-block justify-between ml-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple'
                         aria-label='View'
                       >

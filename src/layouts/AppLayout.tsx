@@ -78,9 +78,8 @@ const AppLayout = ({ children }: Props) => {
   }
 
   return (
-    <Box className={`flex bg-gray-50 dark-d:bg-gray-900`} sx={{ minHeight: '100vh' }}>
-      {/* <!-- Desktop sidebar --> */}
-      <AppNavbarComponent />
+    <Box className={'flex'} sx={{ minHeight: '100vh' }}>
+      <AppNavbarComponent></AppNavbarComponent>
       <Box
         className='flex flex-col flex-1'
         sx={{
@@ -88,11 +87,11 @@ const AppLayout = ({ children }: Props) => {
           width: isNavbarCollapsed ? 'calc(100% - 90px)' : 'calc(100% - 280px)'
         }}
       >
-        <AppHeaderComponent />
-        <Box sx={{ mt: '50px' }} component={'main'} className='h-full'>
+        <AppHeaderComponent></AppHeaderComponent>
+        <Box sx={{ mt: '50px' }} className='h-full'>
           {children}
         </Box>
-        <AppBackToTopButton />
+        <AppBackToTopButton></AppBackToTopButton>
       </Box>
     </Box>
   )

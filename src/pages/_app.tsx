@@ -84,7 +84,7 @@ const App = (props: ExtendedAppProps) => {
                       <ThemeComponent settings={settings}>{getLayout(<Component {...pageProps} />)}</ThemeComponent>
                     )
                   }}
-                </SettingsConsumer>{' '}
+                </SettingsConsumer>
               </SettingsProvider>
             </SocketProvider>
           </SnackbarProvider>

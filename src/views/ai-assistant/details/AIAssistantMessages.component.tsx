@@ -77,25 +77,31 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
     }
 
     const handleMouseUp = (event: MouseEvent) => {
-      const selectedText = window.getSelection()?.toString()
-      if (selectedText) {
-        setContextMenu({ mouseX: event.clientX - 2, mouseY: event.clientY - 40 })
+      if (typeof window !== 'undefined') {
+        const selectedText = window.getSelection()?.toString()
+        if (selectedText) {
+          setContextMenu({ mouseX: event.clientX - 2, mouseY: event.clientY - 40 })
+        }
       }
     }
 
     const handleCopySelectedText = () => {
-      const selectedText = window.getSelection()?.toString()
-      if (selectedText) {
-        navigator.clipboard.writeText(selectedText)
-        showSnackbar('Text copied to clipboard', { variant: 'success' })
+      if (typeof window !== 'undefined') {
+        const selectedText = window.getSelection()?.toString()
+        if (selectedText) {
+          navigator.clipboard.writeText(selectedText)
+          showSnackbar('Text copied to clipboard', { variant: 'success' })
+        }
       }
       setContextMenu(null)
     }
 
     const handleCopyPasteInMessage = () => {
-      const selectedText = window.getSelection()?.toString()
-      if (selectedText) {
-        dispatch(setAiAssistantMessage(selectedText))
+      if (typeof window !== 'undefined') {
+        const selectedText = window.getSelection()?.toString()
+        if (selectedText) {
+          dispatch(setAiAssistantMessage(selectedText))
+        }
       }
       setContextMenu(null)
     }

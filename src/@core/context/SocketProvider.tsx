@@ -65,7 +65,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 // Custom Hook to use the socket
 export const useSocket = (): Socket => {
   const context = useContext(SocketContext)
-  console.log(context)
 
   if (!context || !context.socket) {
     throw new Error('useSocket must be used within a SocketProvider')

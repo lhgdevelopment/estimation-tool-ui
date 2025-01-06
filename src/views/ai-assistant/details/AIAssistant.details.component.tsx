@@ -549,18 +549,20 @@ export default function AIAssistantDetailsComponent() {
 
   // Detect user interaction with the page
   useEffect(() => {
-    const handleUserInteraction = () => {
-      setUserInteracted(true)
-      window.removeEventListener('click', handleUserInteraction)
-      window.removeEventListener('keydown', handleUserInteraction)
-    }
+    if (typeof window !== 'undefined') {
+      const handleUserInteraction = () => {
+        setUserInteracted(true)
+        window.removeEventListener('click', handleUserInteraction)
+        window.removeEventListener('keydown', handleUserInteraction)
+      }
 
-    window.addEventListener('click', handleUserInteraction)
-    window.addEventListener('keydown', handleUserInteraction)
+      window.addEventListener('click', handleUserInteraction)
+      window.addEventListener('keydown', handleUserInteraction)
 
-    return () => {
-      window.removeEventListener('click', handleUserInteraction)
-      window.removeEventListener('keydown', handleUserInteraction)
+      return () => {
+        window.removeEventListener('click', handleUserInteraction)
+        window.removeEventListener('keydown', handleUserInteraction)
+      }
     }
   }, [])
 
@@ -898,13 +900,9 @@ export default function AIAssistantDetailsComponent() {
             >
               {activeUsers?.slice(0, 5).map((activeUser, index) => (
                 <Tooltip key={index} title={activeUser?.user?.name}>
-                  <StyledBadge
-                    overlap='circular'
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    variant='dot'
-                  >
+                  <Badge overlap='circular' anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} variant='dot'>
                     <Avatar alt={activeUser?.user?.name} src={activeUser?.user?.name}></Avatar>
-                  </StyledBadge>
+                  </Badge>
                 </Tooltip>
               ))}
             </AvatarGroup>
