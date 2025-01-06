@@ -1,13 +1,17 @@
 import Cookies from 'js-cookie'
-import { createContext, useContext, useEffect, useState } from 'react'
-import { io } from 'socket.io-client'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
+import { io, Socket } from 'socket.io-client'
 
 // Create a Context for the WebSocket
-const SocketContext = createContext(null)
+const SocketContext = createContext<Socket | null>(null)
+
+interface SocketProviderProps {
+  children: ReactNode
+}
 
 // Create a WebSocket Provider
-export const SocketProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null)
+export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
+  const [socket, setSocket] = useState<any>(null)
   const token = Cookies.get('accessToken')
 
   useEffect(() => {
@@ -60,6 +64,6 @@ export const SocketProvider = ({ children }) => {
 }
 
 // Custom Hook to use the socket
-export const useSocket = () => {
+export const useSocket = (): Socket | null => {
   return useContext(SocketContext)
 }
