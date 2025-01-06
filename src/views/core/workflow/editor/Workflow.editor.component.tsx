@@ -27,9 +27,12 @@ import Swal from 'sweetalert2'
 
 export default function WorkflowEditorComponent() {
   const [steps, setSteps] = useState<any[]>([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [details, setDetails] = useState<any>({})
+  const [isWorkflowModalOpen, setIsWorkflowModalOpen] = useState(false)
+  const [isWorkflowStepModalOpen, setIsWorkflowStepModalOpen] = useState(false)
   const [editStepId, setEditStepId] = useState<number | null>(null)
-  const [title, setTitle] = useState('')
+  const [workflowTitle, setWorkflowTitle] = useState('')
+  const [workflowStepTitle, setWorkflowStepTitle] = useState('')
   const [serial, setSerial] = useState<number | null>(null) // Serial state
   const [selectedPrompt, setSelectedPrompt] = useState('')
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -57,9 +60,53 @@ export default function WorkflowEditorComponent() {
       })
   }
 
+  const getWorkflowDetails = async () => {
+    if (!workflowId) return
+    await apiRequest
+      .get(`/workflows/${workflowId}`)
+      .then(res => {
+        setDetails(res?.data)
+        setError(null)
+      })
+      .catch(error => {
+        console.error('Error fetching workflow:', error)
+        setError('Failed to load workflow. Please try again.')
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
+  }
+
   useEffect(() => {
     getWorkflowSteps()
+    getWorkflowDetails()
   }, [workflowId])
+
+  const handleWorkflowModalClose = () => {
+    setIsWorkflowModalOpen(false)
+
+    setModalError(null)
+  }
+
+  const handleWorkflowModalOpen = () => {
+    setIsWorkflowModalOpen(true)
+    setWorkflowTitle(details?.title)
+  }
+
+  const updateWorkflow = () => {
+    const payload = { title: workflowTitle }
+    apiRequest
+      .put(`/workflows/${workflowId}`, payload)
+      .then(() => {
+        setDetails({ ...details, title: workflowTitle })
+        setModalError(null)
+        handleWorkflowModalClose()
+        showSnackbar('Updated Successfully!', { variant: 'success' })
+      })
+      .catch(error => {
+        console.error('Error updating workflow:', error)
+        setModalError('Failed to update the workflow. Please try again.')
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      })
+  }
 
   // Add Step
   const handleAddStep = () => {
@@ -68,7 +115,7 @@ export default function WorkflowEditorComponent() {
       workflow_id: workflowId,
       prompt_id: selectedPrompt,
       serial: serialValue,
-      title
+      title: workflowStepTitle
     }
     apiRequest
       .post('/workflow-steps', payload)
@@ -82,7 +129,7 @@ export default function WorkflowEditorComponent() {
         setSteps(updatedSteps)
         setModalError(null)
         showSnackbar('Created Successfully!', { variant: 'success' })
-        handleModalClose()
+        handleWorkflowStepModalClose()
       })
       .catch(error => {
         console.error('Error adding step:', error)
@@ -93,14 +140,14 @@ export default function WorkflowEditorComponent() {
 
   // Edit Step
   const handleEditStep = () => {
-    const payload = { title, serial, prompt_id: selectedPrompt, workflow_id: workflowId }
+    const payload = { title: workflowStepTitle, serial, prompt_id: selectedPrompt, workflow_id: workflowId }
     apiRequest
       .put(`/workflow-steps/${editStepId}`, payload)
       .then(res => {
         const updatedSteps = steps.map(step => (step.id === editStepId ? res?.data : step))
         setSteps(updatedSteps)
         setModalError(null)
-        handleModalClose()
+        handleWorkflowStepModalClose()
         showSnackbar('Updated Successfully!', { variant: 'success' })
       })
       .catch(error => {
@@ -151,19 +198,19 @@ export default function WorkflowEditorComponent() {
     setCurrentStep(null)
   }
 
-  const handleModalClose = () => {
-    setIsModalOpen(false)
+  const handleWorkflowStepModalClose = () => {
+    setIsWorkflowStepModalOpen(false)
     setAddAfterIndex(null)
     setEditStepId(null)
     setSelectedPrompt('')
-    setTitle('')
-    setSerial(null) // Reset serial
+    setWorkflowStepTitle('')
+    setSerial(null)
     setModalError(null)
   }
 
-  const handleOpenModal = (index: number | null) => {
+  const handleWorkflowStepModalOpen = (index: number | null) => {
     setAddAfterIndex(index)
-    setIsModalOpen(true)
+    setIsWorkflowStepModalOpen(true)
   }
 
   return (
@@ -179,7 +226,7 @@ export default function WorkflowEditorComponent() {
           boxShadow: '0 2px 4px -1px rgba(0, 0, 0, 0.06)',
           top: '-1px',
           position: 'relative',
-          zIndex: 999
+          zIndex: 9
         }}
       >
         <Typography
@@ -191,8 +238,27 @@ export default function WorkflowEditorComponent() {
             fontWeight: '600'
           }}
         >
-          Workflow Editor
+          {details?.title}
         </Typography>
+        <Button
+          variant='outlined'
+          color='primary'
+          sx={{
+            p: 1,
+            minWidth: 'auto',
+            border: 0,
+            outline: 0,
+            '&:hover': {
+              border: 0,
+              outline: 0
+            }
+          }}
+          onClick={() => {
+            handleWorkflowModalOpen()
+          }}
+        >
+          <BorderColorIcon sx={{ fontSize: 16, mr: 1, color: '#9333ea' }} />
+        </Button>
       </Box>
       <Box sx={{ height: 'calc(100vh - 90px)', overflow: 'hidden', overflowY: 'auto', pt: 3 }}>
         <Box display='flex' flexDirection='column' alignItems='center' gap={2}>
@@ -209,7 +275,7 @@ export default function WorkflowEditorComponent() {
               <IconButton
                 color='primary'
                 aria-label='add'
-                onClick={() => handleOpenModal(null)}
+                onClick={() => handleWorkflowStepModalOpen(null)}
                 sx={{
                   backgroundColor: '#f9f8ff',
                   border: '2px solid #9333ea',
@@ -277,7 +343,7 @@ export default function WorkflowEditorComponent() {
                 {/* Plus Button */}
                 <IconButton
                   color='primary'
-                  onClick={() => handleOpenModal(index)}
+                  onClick={() => handleWorkflowStepModalOpen(index)}
                   sx={{
                     zIndex: 1
                   }}
@@ -312,11 +378,11 @@ export default function WorkflowEditorComponent() {
               onClick={() => {
                 const stepToEdit = steps.find(step => step.id === currentStep)
                 if (!stepToEdit) return
-                setTitle(stepToEdit.title)
+                setWorkflowStepTitle(stepToEdit.title)
                 setSerial(stepToEdit.serial) // Set serial for editing
                 setSelectedPrompt(stepToEdit.prompt_id || '')
                 setEditStepId(currentStep)
-                setIsModalOpen(true)
+                setIsWorkflowStepModalOpen(true)
                 handleMenuClose()
               }}
             >
@@ -331,8 +397,8 @@ export default function WorkflowEditorComponent() {
 
           {/* Modal for Adding/Editing Steps */}
           <Dialog
-            open={isModalOpen}
-            onClose={handleModalClose}
+            open={isWorkflowStepModalOpen}
+            onClose={handleWorkflowStepModalClose}
             fullWidth
             PaperProps={{
               className: 'glass-modal'
@@ -347,8 +413,8 @@ export default function WorkflowEditorComponent() {
               )}
               <TextField
                 label='Title'
-                value={title}
-                onChange={e => setTitle(e.target.value)}
+                value={workflowStepTitle}
+                onChange={e => setWorkflowStepTitle(e.target.value)}
                 fullWidth
                 margin='normal'
               />
@@ -364,11 +430,50 @@ export default function WorkflowEditorComponent() {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleModalClose} color='secondary'>
+              <Button onClick={handleWorkflowStepModalClose} color='secondary'>
                 Cancel
               </Button>
               <Button onClick={editStepId ? handleEditStep : handleAddStep} variant='contained' color='primary'>
                 {editStepId ? 'Save Changes' : 'Add Step'}
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+          <Dialog
+            open={isWorkflowModalOpen}
+            onClose={handleWorkflowModalClose}
+            fullWidth
+            PaperProps={{
+              className: 'glass-modal'
+            }}
+          >
+            <DialogTitle>Edit Workflow</DialogTitle>
+            <DialogContent>
+              {modalError && (
+                <Typography color='error' variant='body2' sx={{ mb: 2 }}>
+                  {modalError}
+                </Typography>
+              )}
+              <TextField
+                label='Title'
+                value={workflowTitle}
+                onChange={e => setWorkflowTitle(e.target.value)}
+                fullWidth
+                margin='normal'
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleWorkflowModalClose} color='secondary'>
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  updateWorkflow()
+                }}
+                variant='contained'
+                color='primary'
+              >
+                Update
               </Button>
             </DialogActions>
           </Dialog>
