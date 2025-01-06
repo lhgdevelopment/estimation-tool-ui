@@ -1,5 +1,4 @@
 import { SxProps } from '@mui/material'
-
 export enum EServiceFormType {
   'SERVICE' = 'SERVICE',
   'GROUP' = 'GROUP',
@@ -15,6 +14,7 @@ export const transformServiceTree = (data: any, type: string) => {
       title: item.name,
       type: type,
       key: item.label ? item.label : `${type}_${item?.id}`
+      // icon: <FolderOpenIcon />
     }
     if (item.groups) {
       newItem.children = transformServiceTree(item.groups, 'group')

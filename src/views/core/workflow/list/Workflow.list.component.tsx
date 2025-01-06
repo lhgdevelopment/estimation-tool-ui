@@ -51,13 +51,15 @@ export default function WorkflowListComponent() {
 
   const getList = (page = 1) => {
     setPreloader(true)
-    apiRequest.get(`/workflows?page=${page}&title=${filterData?.title}&promptId=${filterData?.promptId}`).then(res => {
-      const paginationData: any = res
-      setListData(res?.data)
-      setCurrentPage(paginationData?.['current_page'])
-      setTotalPages(Math.ceil(paginationData?.['total'] / 10))
-      setPreloader(false)
-    })
+    apiRequest
+      .get(`/workflows?page=${page}&title=${filterData?.title}&promptId=${filterData?.promptId}`)
+      .then((res: any) => {
+        const paginationData: any = res
+        setListData(res?.data)
+        setCurrentPage(paginationData?.['current_page'])
+        setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+        setPreloader(false)
+      })
   }
 
   const onEdit = (id: string) => {
@@ -82,9 +84,9 @@ export default function WorkflowListComponent() {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/workflows/${id}`).then(res => {
+        apiRequest.delete(`/workflows/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',

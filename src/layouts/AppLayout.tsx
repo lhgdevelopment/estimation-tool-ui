@@ -47,14 +47,14 @@ const AppLayout = ({ children }: Props) => {
           dispatch(logedinUser(response))
           localStorage.setItem('logedinUser', JSON.stringify(response))
         }
-      } catch (error: any) {
-        if (error.response?.status === 401 && refreshToken) {
+      } catch (err: any) {
+        if (err.response?.status === 401 && refreshToken) {
           try {
             const refreshResponse = await apiRequest.post('/api/refresh', { token: refreshToken })
             Cookies.set('accessToken', refreshResponse.data.accessToken, { secure: true })
             Cookies.set('refreshToken', refreshResponse.data.refreshToken, { secure: true })
             fetchUserData()
-          } catch (refreshError) {
+          } catch (refresherr) {
             handleLogout()
           }
         } else {

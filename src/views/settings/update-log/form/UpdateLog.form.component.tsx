@@ -9,11 +9,10 @@ import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import dayjs from 'dayjs'
-import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { TUpdateLogComponent } from '../UpdateLog.decorator'
 
 export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
@@ -27,8 +26,6 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
     deployed: '',
     next: ''
   }
-
-  const summaryTextEditorRef = useRef<ExposeParam>()
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
@@ -70,7 +67,7 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
       //formData['summaryText'] = formData['phone'] ? null : summaryText
       apiRequest
         .put(`/update-logs/${router?.query['id']}`, formData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex(
@@ -85,26 +82,26 @@ export default function UpdateLogFormComponent(props: TUpdateLogComponent) {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           router.push('/settings/update-log/')
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/update-logs', formData)
-        .then(res => {
-          apiRequest.get(`/update-logs`).then(res => {
+        .then((res: any) => {
+          apiRequest.get(`/update-logs`).then((res: any) => {
             setListData(res?.data)
           })
           showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }

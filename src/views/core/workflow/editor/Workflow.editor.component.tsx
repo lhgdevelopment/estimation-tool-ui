@@ -46,14 +46,14 @@ export default function WorkflowEditorComponent() {
     if (!workflowId) return
     await apiRequest
       .get(`/workflow-steps?workflow_id=${workflowId}`)
-      .then(res => {
+      .then((res: any) => {
         setSteps(res?.data)
         setError(null)
       })
-      .catch(error => {
-        console.error('Error fetching workflow steps:', error)
+      .catch((err: any) => {
+        console.error('Error fetching workflow steps:', err)
         setError('Failed to load workflow steps. Please try again.')
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
   }
 
@@ -72,7 +72,7 @@ export default function WorkflowEditorComponent() {
     }
     apiRequest
       .post('/workflow-steps', payload)
-      .then(res => {
+      .then((res: any) => {
         const updatedSteps = [...steps]
         if (addAfterIndex !== null) {
           updatedSteps.splice(addAfterIndex + 1, 0, res.data)
@@ -84,10 +84,10 @@ export default function WorkflowEditorComponent() {
         showSnackbar('Created Successfully!', { variant: 'success' })
         handleModalClose()
       })
-      .catch(error => {
-        console.error('Error adding step:', error)
+      .catch((err: any) => {
+        console.error('Error adding step:', err)
         setModalError('Failed to add a new step. Please try again.')
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
   }
 
@@ -96,17 +96,17 @@ export default function WorkflowEditorComponent() {
     const payload = { title, serial, prompt_id: selectedPrompt, workflow_id: workflowId }
     apiRequest
       .put(`/workflow-steps/${editStepId}`, payload)
-      .then(res => {
+      .then((res: any) => {
         const updatedSteps = steps.map(step => (step.id === editStepId ? res?.data : step))
         setSteps(updatedSteps)
         setModalError(null)
         handleModalClose()
         showSnackbar('Updated Successfully!', { variant: 'success' })
       })
-      .catch(error => {
-        console.error('Error editing step:', error)
+      .catch((err: any) => {
+        console.error('Error editing step:', err)
         setModalError('Failed to edit the step. Please try again.')
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
   }
 
@@ -122,7 +122,7 @@ export default function WorkflowEditorComponent() {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
         apiRequest
           .delete(`/workflow-steps/${stepId}`)
@@ -132,10 +132,10 @@ export default function WorkflowEditorComponent() {
             setError(null)
             showSnackbar('Deleted Successfully!', { variant: 'success' })
           })
-          .catch(error => {
-            console.error('Error deleting step:', error)
+          .catch((err: any) => {
+            console.error('Error deleting step:', err)
             setError('Failed to delete the step. Please try again.')
-            showSnackbar(error?.response?.data?.message, { variant: 'error' })
+            showSnackbar(err?.data?.message, { variant: 'error' })
           })
       }
     })

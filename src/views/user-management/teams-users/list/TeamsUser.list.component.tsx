@@ -22,7 +22,7 @@ export default function TeamsUserListComponent(props: TUsersComponent) {
       setIsLoading(true)
       apiRequest
         .get(`/teams/${query.id}/users?page=${page || currentPage}`)
-        .then(res => {
+        .then((res: any) => {
           const paginationData: any = res
 
           setListData(res?.data)
@@ -59,9 +59,9 @@ export default function TeamsUserListComponent(props: TUsersComponent) {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/teams/${query.id}/users/${id}`).then(res => {
+        apiRequest.delete(`/teams/${query.id}/users/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',

@@ -39,7 +39,7 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
     if (formData?.['id']) {
       apiRequest
         .put(`/conversations/message/${formData?.['id']}`, formData)
-        .then(res => {
+        .then((res: any) => {
           setDetailsData((prevState: any) => {
             const updatedList: any = [...prevState?.['messages']]
             const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === formData?.['id'])
@@ -57,9 +57,9 @@ export default function AIAssistantMessagesEditComponent(props: TAIAssistantMess
 
           showSnackbar('Updated Successfully!', { variant: 'success' })
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
+          setErrorMessage(err?.data?.errors)
         })
     }
   }

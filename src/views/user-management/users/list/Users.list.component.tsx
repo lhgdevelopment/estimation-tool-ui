@@ -14,7 +14,7 @@ export default function UsersListComponent(props: TUsersComponent) {
   const [totalPages, setTotalPages] = useState<number>(1)
 
   const getList = (page = 1) => {
-    apiRequest.get(`/users?page=${page}`).then(res => {
+    apiRequest.get(`/users?page=${page}`).then((res: any) => {
       const paginationData: any = res
 
       setListData(res?.data)
@@ -40,9 +40,9 @@ export default function UsersListComponent(props: TUsersComponent) {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/users/${id}`).then(res => {
+        apiRequest.delete(`/users/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',

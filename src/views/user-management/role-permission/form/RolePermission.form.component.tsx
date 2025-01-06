@@ -38,7 +38,7 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
     if (editDataId) {
       apiRequest
         .put(`/roles/${editDataId}`, rolesFormData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
@@ -52,22 +52,22 @@ export default function RolePermissionFormComponent(props: TRolePermissionCompon
           onClear()
           showSnackbar('Updated Successfully!', { variant: 'success' })
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/roles', rolesFormData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => roleSorting([res?.data, ...prevState]))
           roleModalClose()
           showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }

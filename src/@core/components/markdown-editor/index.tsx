@@ -10,7 +10,7 @@ type TMarkdownEditorProps = EditorProps
 export function MarkdownEditor(props: TMarkdownEditorProps) {
   const { language = 'en-US', preview = true, modelValue, readOnly } = props
 
-  const mdEditorRef = useRef<ExposeParam>()
+  const mdEditorRef = useRef<ExposeParam | null>(null)
   const [isPreviewOpen, setIsPreview] = useState<boolean>(preview)
   const [isCopied, setIsCopied] = useState<boolean>(false)
 
@@ -22,12 +22,12 @@ export function MarkdownEditor(props: TMarkdownEditorProps) {
 
   const handleCopyClick = () => {
     navigator.clipboard
-      .writeText(modelValue)
+      .writeText(modelValue as string)
       .then(() => {
         setIsCopied(true)
         setTimeout(() => setIsCopied(false), 2000)
       })
-      .catch(error => console.error('Error copying to clipboard:', error))
+      .catch((err: any) => console.error('Error copying to clipboard:', err))
   }
 
   return (

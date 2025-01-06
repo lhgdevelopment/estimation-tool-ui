@@ -58,9 +58,9 @@ const LoginPage = () => {
         Cookies.set('accessToken', token)
         router.back() // Redirect to previous page or another route upon successful login
       })
-      .catch(error => {
+      .catch((err: any) => {
         setPreload(false)
-        const errorMessage = error?.response?.data?.errors || 'Login failed'
+        const errorMessage = err?.data?.errors || 'Login failed'
         setErrorMessage(errorMessage)
         showSnackbar(errorMessage, { variant: 'error' })
       })

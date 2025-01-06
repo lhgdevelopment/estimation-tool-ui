@@ -1,20 +1,32 @@
+// Define specific action types as an enum
+enum AiAssistantActionTypes {
+  SET_MESSAGE = 'AI_ASSISTANT_MESSAGE'
+}
+
+// Define the structure of the AiAssistant state
 interface AiAssistantState {
-  messageForInput: any
+  messageForInput: string | null // Specify the type of the message, if possible
 }
 
-interface Action {
-  type: string
-  payload: any
+// Define the structure of actions
+interface AiAssistantAction {
+  type: AiAssistantActionTypes
+  payload?: string // Optional, depending on the action
 }
 
+// Define the initial state
 const initialAiAssistantState: AiAssistantState = {
   messageForInput: null
 }
 
-const AiAssistantReducer = (state: AiAssistantState = initialAiAssistantState, action: Action): AiAssistantState => {
+// Reducer function with stricter typing
+const AiAssistantReducer = (
+  state: AiAssistantState = initialAiAssistantState,
+  action: AiAssistantAction
+): AiAssistantState => {
   switch (action.type) {
-    case 'AI_ASSISTANT_MESSAGE':
-      return { ...state, messageForInput: action.payload }
+    case AiAssistantActionTypes.SET_MESSAGE:
+      return { ...state, messageForInput: action.payload || null }
     default:
       return state
   }

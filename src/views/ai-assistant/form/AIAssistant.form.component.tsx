@@ -54,7 +54,7 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
     if (editDataId) {
       apiRequest
         .put(`/conversations/${editDataId}`, formData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
@@ -70,23 +70,23 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           onClear()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
+          setErrorMessage(err?.data?.errors)
         })
     } else {
       apiRequest
         .post('/conversations/create', formData)
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
           setPreload(false)
           router.push(`ai-assistant/${res?.data?.conversation?.id}`)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }

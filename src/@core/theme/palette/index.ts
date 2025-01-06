@@ -26,7 +26,7 @@ const DefaultPalette = (mode: PaletteMode, themeColor: ThemeColor) => {
 
   return {
     customColors: {
-      main: mainColor,
+      main: `rgba(${mainColor}, 1)`, // Wrap in rgba()
       primaryGradient: primaryGradient(),
       tableHeaderBg: mode === 'light' ? '#F9FAFC' : '#3D3759'
     },
@@ -37,7 +37,7 @@ const DefaultPalette = (mode: PaletteMode, themeColor: ThemeColor) => {
     mode: mode,
     primary: {
       light: '#96d1ff',
-      main: '#31A0F6 ',
+      main: '#31A0F6',
       dark: '#008fff',
       contrastText: '#FFF'
     },
@@ -88,22 +88,22 @@ const DefaultPalette = (mode: PaletteMode, themeColor: ThemeColor) => {
       A700: '#303030'
     },
     text: {
-      primary: `rgba(${mainColor}, 0.87)`,
-      secondary: `rgba(${mainColor}, 0.68)`,
-      disabled: `rgba(${mainColor}, 0.38)`
+      primary: `rgba(${mainColor}, 0.87)`, // Wrap in rgba()
+      secondary: `rgba(${mainColor}, 0.68)`, // Wrap in rgba()
+      disabled: `rgba(${mainColor}, 0.38)` // Wrap in rgba()
     },
-    divider: `rgba(${mainColor}, 0.12)`,
+    divider: `rgba(${mainColor}, 0.12)`, // Wrap in rgba()
     background: {
       paper: mode === 'light' ? '#FFF' : '#312D4B',
       default: mode === 'light' ? '#f3f4f5' : '#28243D'
     },
     action: {
-      active: `rgba(${mainColor}, 0.54)`,
-      hover: `rgba(${mainColor}, 0.04)`,
-      selected: `rgba(${mainColor}, 0.08)`,
-      disabled: `rgba(${mainColor}, 0.3)`,
-      disabledBackground: `rgba(${mainColor}, 0.18)`,
-      focus: `rgba(${mainColor}, 0.12)`
+      active: `rgba(${mainColor}, 0.54)`, // Wrap in rgba()
+      hover: `rgba(${mainColor}, 0.04)`, // Wrap in rgba()
+      selected: `rgba(${mainColor}, 0.08)`, // Wrap in rgba()
+      disabled: `rgba(${mainColor}, 0.3)`, // Wrap in rgba()
+      disabledBackground: `rgba(${mainColor}, 0.18)`, // Wrap in rgba()
+      focus: `rgba(${mainColor}, 0.12)` // Wrap in rgba()
     }
   }
 }

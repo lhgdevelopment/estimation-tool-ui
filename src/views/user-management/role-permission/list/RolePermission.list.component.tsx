@@ -33,13 +33,13 @@ export default function RolePermissionListComponent() {
   const handleRoleModalClose = () => setRoleModalOpen(false)
 
   const getPermisionsList = () => {
-    apiRequest.get(`/permissions`).then(res => {
+    apiRequest.get(`/permissions`).then((res: any) => {
       setPermissionList(res?.data)
     })
   }
 
   const getList = () => {
-    apiRequest.get(`/roles?per_page=${1000}`).then(res => {
+    apiRequest.get(`/roles?per_page=${1000}`).then((res: any) => {
       setListData(roleSorting(res?.data))
     })
   }
@@ -61,12 +61,12 @@ export default function RolePermissionListComponent() {
     // setPreloaderList([...preloaderList, ])
     apiRequest
       .put(`/roles/${roleId}`, { permissions })
-      .then(res => {
+      .then((res: any) => {
         showSnackbar('Updated Successfully!', { variant: 'success' })
         getList()
       })
-      .catch(error => {
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
   }
 
@@ -88,16 +88,16 @@ export default function RolePermissionListComponent() {
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
     })
-      .then(res => {
+      .then((res: any) => {
         if (res.isConfirmed) {
-          apiRequest.delete(`/roles/${id}`).then(res => {
+          apiRequest.delete(`/roles/${id}`).then((res: any) => {
             showSnackbar('Deleted Successfully!', { variant: 'success' })
             getList()
           })
         }
       })
-      .catch(error => {
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
   }
 

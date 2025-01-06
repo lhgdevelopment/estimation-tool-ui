@@ -31,13 +31,15 @@ type TAIAssistantMessagesComponentProps = {
 
 // Define renderer for custom Markdown rendering
 const renderer = new marked.Renderer()
-const linkRenderer = renderer.link
-renderer.link = (href, title, text) => {
-  const html = linkRenderer.call(renderer, href, title, text)
 
-  return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ')
+// Customizing the link rendering
+renderer.link = ({ href, title, text }) => {
+  const html = `<a href="${href}" title="${title || ''}" target="_blank" rel="nofollow">${text}</a>`
+  return html
 }
-renderer.listitem = (text, task, checked) => {
+
+// Customizing the list item rendering
+renderer.listitem = ({ text, task, checked }) => {
   return `<li>${String(text).replace(/<p>|<\/p>/g, '')}</li>`
 }
 

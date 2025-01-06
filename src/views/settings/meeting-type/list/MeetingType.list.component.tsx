@@ -12,7 +12,7 @@ export default function MeetingTypeListComponent(props: TMeetingTypeComponent) {
   const [totalPages, setTotalPages] = useState<number>(1)
 
   const getList = (page = 1) => {
-    apiRequest.get(`/meeting-type?page=${page}`).then(res => {
+    apiRequest.get(`/meeting-type?page=${page}`).then((res: any) => {
       const paginationData: any = res
 
       setListData(res?.data)
@@ -38,9 +38,9 @@ export default function MeetingTypeListComponent(props: TMeetingTypeComponent) {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/meeting-type/${id}`).then(res => {
+        apiRequest.delete(`/meeting-type/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',

@@ -55,7 +55,9 @@ export default function ProjectSOWPhaseFormView(props: TProjectSOWPhaseFormViewP
               <Box className={'common-task-list-item'} key={index + Math.random()}>
                 <Box className={'common-task-list-item-sl'}>
                   <input
-                    ref={el => (slInputRefs.current[phase.id] = el)}
+                    ref={el => {
+                      slInputRefs.current[phase.id] = el
+                    }}
                     className={'common-task-list-item-sl-number'}
                     value={phase?.['serial']}
                     onChange={event => {

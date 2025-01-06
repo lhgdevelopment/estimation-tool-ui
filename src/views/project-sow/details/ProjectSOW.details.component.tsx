@@ -29,11 +29,11 @@ export default function ProjectSOWDetailsComponent() {
     setPreload(true)
     await apiRequest
       .get(`/project-summery/${router?.query?.['id']}`)
-      .then(res => {
+      .then((res: any) => {
         setDetailsData((prev: any) => res.data)
       })
-      .catch(error => {
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
       .finally(() => {
         setPreload(false)

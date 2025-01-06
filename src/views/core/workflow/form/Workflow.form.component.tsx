@@ -52,16 +52,16 @@ export default function WorkflowFormComponent(props: { editId?: string; onClose?
     if (editId) {
       apiRequest
         .put(`/workflows/${editId}`, formData)
-        .then(res => {
+        .then((res: any) => {
           setPreload(false)
           onClear()
           showSnackbar('Updated Successfully!', { variant: 'success' })
           router.push('/workflows/')
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -70,10 +70,10 @@ export default function WorkflowFormComponent(props: { editId?: string; onClose?
           showSnackbar('Created Successfully!', { variant: 'success' })
           router.push(`/core/workflow/editor/${res?.id}`)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }

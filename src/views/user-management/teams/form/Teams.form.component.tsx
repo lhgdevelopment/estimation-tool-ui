@@ -29,7 +29,7 @@ export default function TeamsFormComponent(props: TUsersComponent) {
     const apiCall = editDataId ? apiRequest.put(`/teams/${editDataId}`, formData) : apiRequest.post('/teams', formData)
 
     apiCall
-      .then(res => {
+      .then((res: any) => {
         if (editDataId) {
           setListData((prevState: any[]) => prevState.map(item => (item.id === editDataId ? res.data : item)))
           showSnackbar('Updated Successfully!', { variant: 'success' })
@@ -39,9 +39,9 @@ export default function TeamsFormComponent(props: TUsersComponent) {
         }
         onClear()
       })
-      .catch(error => {
-        setErrorMessage(error?.response?.data?.errors || {})
-        showSnackbar(error?.response?.data?.message || 'Something went wrong!', { variant: 'error' })
+      .catch((err: any) => {
+        setErrorMessage(err?.data?.errors || {})
+        showSnackbar(err?.data?.message || 'Something went wrong!', { variant: 'error' })
       })
   }
 

@@ -47,7 +47,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
 
   // const getDetails = (id: string) => {
   //   if (!id) return
-  //   apiRequest.get(`/prompts/${id}`).then(res => {
+  //   apiRequest.get(`/prompts/${id}`).then((res :any)=> {
   //     setEditData(res.data)
   //     setEditDataId(id)
   //   })
@@ -58,7 +58,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
     if (router?.query['id']) {
       apiRequest
         .put(`/prompts/${router?.query['id']}`, formData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === router?.query['id'])
@@ -72,21 +72,21 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           setTimeout(() => onClear(), 1000)
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors || {})
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors || {})
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/prompts', formData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => [...prevState, res?.data])
           showSnackbar('Created Successfully!', { variant: 'success' })
           setTimeout(() => onClear(), 1000)
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors || {})
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors || {})
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }

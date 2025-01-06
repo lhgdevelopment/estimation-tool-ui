@@ -36,25 +36,25 @@ export default function ProjectSOWTeamReviewFormComponent(props: TProjectSOWTeam
   const getEmployeeRoleList = async () => {
     await apiRequest
       .get(`/employee-roles`)
-      .then(res => {
+      .then((res: any) => {
         setEmployeeRole(
           res?.data?.map((item: any) => {
             return { ...item, title: item?.name }
           })
         )
       })
-      .catch(error => {
-        showSnackbar(error?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.message, { variant: 'error' })
       })
   }
   const getUserList = async () => {
     await apiRequest
       .get(`/associates`)
-      .then(res => {
+      .then((res: any) => {
         setTeamUserList(res?.data)
       })
-      .catch(error => {
-        showSnackbar(error?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.message, { variant: 'error' })
       })
   }
   useEffect(() => {

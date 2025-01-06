@@ -121,14 +121,14 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     setPreload(true)
     apiRequest
       .post('/team-review/update', { transcriptId, employeeRoleId, associateId })
-      .then(res => {
+      .then((res: any) => {
         setPreload(false)
         getAssociatedUserWithRole(employeeRoleId, associateId)
       })
-      .catch(error => {
+      .catch((err: any) => {
         setPreload(false)
-        setErrorMessage(error?.response?.data?.errors)
-        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        setErrorMessage(err?.data?.errors)
+        showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
   }
 
@@ -143,17 +143,17 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           problemGoalId: problemGoalID,
           taskIds: [taskId]
         })
-        .then(res => {
+        .then((res: any) => {
           // setTasksList((prevState: any) => [...prevState?.map((task: any) => (task?.id === taskId ? res.data : task))])
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setTasksList((prevState: any) => [
             ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -161,17 +161,17 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           problemGoalId: problemGoalID,
           taskIds: [taskId]
         })
-        .then(res => {
+        .then((res: any) => {
           // setTasksList((prevState: any) => [...prevState?.map((task: any) => (task?.id === taskId ? res.data : task))])
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setTasksList((prevState: any) => [
             ...prevState?.map((task: any) => (task?.id === taskId ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -189,17 +189,17 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           problemGoalId: problemGoalID,
           taskIds: taskIds
         })
-        .then(res => {
+        .then((res: any) => {
           // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setTasksList((prevState: any) => [
             ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -207,17 +207,17 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           problemGoalId: problemGoalID,
           taskIds: taskIds
         })
-        .then(res => {
+        .then((res: any) => {
           // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setTasksList((prevState: any) => [
             ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -235,17 +235,17 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           problemGoalId: problemGoalID,
           taskIds: taskIds
         })
-        .then(res => {
+        .then((res: any) => {
           // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setTasksList((prevState: any) => [
             ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -253,17 +253,17 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           problemGoalId: problemGoalID,
           taskIds: taskIds
         })
-        .then(res => {
+        .then((res: any) => {
           // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setTasksList((prevState: any) => [
             ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -281,17 +281,17 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           problemGoalId: problemGoalID,
           taskIds: taskIds
         })
-        .then(res => {
+        .then((res: any) => {
           // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setTasksList((prevState: any) => [
             ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -299,17 +299,17 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           problemGoalId: problemGoalID,
           taskIds: taskIds
         })
-        .then(res => {
+        .then((res: any) => {
           // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setTasksList((prevState: any) => [
             ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -346,17 +346,17 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           problemGoalId: problemGoalID,
           taskIds: taskIds
         })
-        .then(res => {
+        .then((res: any) => {
           // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setTasksList((prevState: any) => [
             ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
@@ -364,17 +364,17 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           problemGoalId: problemGoalID,
           taskIds: taskIds
         })
-        .then(res => {
+        .then((res: any) => {
           // setTasksList((prevState: any) => [...prevState?.map((task: any) => (taskIds.includes(task?.id) ? res.data : task))])
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setTasksList((prevState: any) => [
             ...prevState?.map((task: any) => (taskIds.includes(task?.id) ? { ...task, isChecked: !isChecked } : task))
           ])
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -385,15 +385,15 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     setPreload(true)
     apiRequest
       .post(`/estimation-tasks/${taskId}/add-associate`, { associateId })
-      .then(res => {
+      .then((res: any) => {
         setTasksList((prevState: any) => [...prevState?.map((task: any) => (task?.id === taskId ? res.data : task))])
         setPreload(false)
         showSnackbar('Task assigned successfully', { variant: 'success' })
       })
-      .catch(error => {
+      .catch((err: any) => {
         setPreload(false)
-        setErrorMessage(error?.response?.data?.errors)
-        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        setErrorMessage(err?.data?.errors)
+        showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
   }
 
@@ -404,15 +404,15 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     setPreload(true)
     apiRequest
       .post(`/estimation-tasks/${taskId}/add-estimate-hours`, { estimateHours })
-      .then(res => {
+      .then((res: any) => {
         setTasksList((prevState: any) => [...prevState?.map((task: any) => (task?.id === taskId ? res.data : task))])
         setPreload(false)
         showSnackbar('Task estimate hours updated successfully', { variant: 'success' })
       })
-      .catch(error => {
+      .catch((err: any) => {
         setPreload(false)
-        setErrorMessage(error?.response?.data?.errors)
-        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        setErrorMessage(err?.data?.errors)
+        showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
   }
 
@@ -445,7 +445,7 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
     if (taskEditId) {
       apiRequest
         .post(`/estimation-tasks/${taskEditId}`, { ...taskFormData })
-        .then(res => {
+        .then((res: any) => {
           setTaskListState((prevState: any[]) => [
             ...prevState.map((task: any) => {
               if (task?.id === taskEditId) return { ...task, title: res.data?.title }
@@ -458,15 +458,15 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           showSnackbar('Updatedf Successfully!', { variant: 'success' })
           handleServiceTaskModalClose()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/estimation-tasks/add-multi', { ...taskFormData, problemGoalId: problemGoalID })
-        .then(res => {
+        .then((res: any) => {
           // setScopeOfWorkData((prevState: any[]) => [...res?.data, ...prevState])
           // setSelectedScopeOfWorkData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
 
@@ -474,10 +474,10 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
           showSnackbar('Created Successfully!', { variant: 'success' })
           handleServiceTaskModalClose()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -485,15 +485,15 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
   const getEmployeeRoleList = async () => {
     await apiRequest
       .get(`/employee-roles`)
-      .then(res => {
+      .then((res: any) => {
         setEmployeeRole(
           res?.data?.map((item: any) => {
             return { ...item, title: item?.name }
           })
         )
       })
-      .catch(error => {
-        showSnackbar(error?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.message, { variant: 'error' })
       })
   }
 
@@ -508,12 +508,12 @@ export default function ProjectSOWEstimationFormComponent(props: TProjectSOWEsti
         problemGoalId: problemGoalID,
         deliverableId
       })
-      .then(res => {
+      .then((res: any) => {
         setTasksList((prevState: any[]) => res?.data)
         showSnackbar('Generated Successfully!', { variant: 'success' })
       })
-      .catch(error => {
-        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
       .finally(() => {
         setDeliverableData((prevList: any) =>

@@ -12,7 +12,7 @@ export default function ProjectTypeListComponent(props: TProjectTypeComponent) {
   const [totalPages, setTotalPages] = useState<number>(1)
 
   const getList = (page = 1) => {
-    apiRequest.get(`/project-type?page=${page}`).then(res => {
+    apiRequest.get(`/project-type?page=${page}`).then((res: any) => {
       const paginationData: any = res
 
       setListData(res?.data)
@@ -38,9 +38,9 @@ export default function ProjectTypeListComponent(props: TProjectTypeComponent) {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/project-type/${id}`).then(res => {
+        apiRequest.delete(`/project-type/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',

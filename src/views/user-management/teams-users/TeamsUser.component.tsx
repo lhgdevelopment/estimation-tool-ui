@@ -22,7 +22,7 @@ export default function TeamsUserComponent() {
     (page = 1) => {
       apiRequest
         .get(`/teams/${query.id}`)
-        .then(res => {
+        .then((res: any) => {
           setTeamInfo(res?.data)
           setNotFound(false)
         })

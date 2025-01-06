@@ -1,10 +1,23 @@
+// ** MUI Icons
 import AddIcon from '@mui/icons-material/Add'
 import SearchIcon from '@mui/icons-material/Search'
-import { Box, InputAdornment, InputLabel, ListSubheader, SxProps, TextField } from '@mui/material'
-import FormControl from '@mui/material/FormControl'
-import MenuItem from '@mui/material/MenuItem'
-import Select, { SelectProps } from '@mui/material/Select'
+
+// ** React Imports
 import { forwardRef, SyntheticEvent, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
+
+// ** Custom Utilities
+import {
+  Box,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  ListSubheader,
+  MenuItem,
+  Select,
+  SelectProps,
+  SxProps,
+  TextField
+} from '@mui/material'
 import apiRequest from '../../utils/axios-config'
 
 type TOptionConfig = { title: string; id: string }
@@ -25,6 +38,7 @@ interface ISelectProps {
   onAddNew?: () => void
   syncOnOpen?: boolean
   clearable?: boolean
+  placeholder?: string // Add placeholder here
 }
 
 type SelectPropsWithISelectProps = SelectProps & ISelectProps
@@ -63,7 +77,7 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
     if (!dataList.length && url) {
       apiRequest
         .get(`/${url}?${queryParam.join('&')}&per_page=1000`)
-        .then(res => {
+        .then((res: any) => {
           const fetchedOptions =
             res?.data?.map((item: any) => ({
               title: item?.[optionConfig?.title],
@@ -168,8 +182,8 @@ export const Dropdown = forwardRef((props: SelectPropsWithISelectProps, ref) => 
                     </InputAdornment>
                   )
                 }}
-                onChange={e => setSearchText(() => e.target.value)}
-                onKeyDown={e => {
+                onChange={(e: any) => setSearchText(() => e.target.value)}
+                onKeyDown={(e: any) => {
                   if (e.key !== 'Escape') {
                     e.stopPropagation()
                   }

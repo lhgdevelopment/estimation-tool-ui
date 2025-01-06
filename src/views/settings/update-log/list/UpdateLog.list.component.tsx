@@ -20,7 +20,7 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
   }
 
   const getList = (page = 1) => {
-    apiRequest.get(`/update-logs?page=${page}`).then(res => {
+    apiRequest.get(`/update-logs?page=${page}`).then((res: any) => {
       const paginationData: any = res
       setListData(res?.data)
       setCurrentPage(paginationData?.['current_page'])
@@ -42,9 +42,9 @@ export default function UpdateLogListComponent(props: TUpdateLogComponent) {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/update-logs/${id}`).then(res => {
+        apiRequest.delete(`/update-logs/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',

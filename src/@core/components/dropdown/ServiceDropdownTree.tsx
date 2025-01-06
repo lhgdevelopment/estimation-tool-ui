@@ -14,6 +14,7 @@ interface ISelectProps {
   searchPlaceholder?: string
   type?: 'services' | 'groups' | 'sows' | 'deliverables' | 'tasks'
   filter?: string
+  placeholder?: string // Add placeholder here
 }
 
 type SelectPropsWithISelectProps = SelectProps & ISelectProps
@@ -38,7 +39,7 @@ export function ServiceDropdownTree(props: SelectPropsWithISelectProps) {
 
   const getList = () => {
     const url = filter ? `/service-tree?${filter}` : `/service-tree`
-    apiRequest.get(url).then(res => {
+    apiRequest.get(url).then((res: any) => {
       setOptionItems(res?.data.services)
       setInitialOptionList(res?.data.services)
     })

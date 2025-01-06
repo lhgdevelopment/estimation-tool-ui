@@ -8,11 +8,10 @@ import ClearIcon from '@material-ui/icons/Clear'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import PlaylistRemoveIcon from '@mui/icons-material/PlaylistRemove'
 import { Box, Checkbox, TextField } from '@mui/material'
-import { ExposeParam } from 'md-editor-rt'
 import 'md-editor-rt/lib/style.css'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { TMeetingSummaryComponent } from '../MeetingSummary.decorator'
 
 export default function MeetingSummaryFormComponent(props: TMeetingSummaryComponent) {
@@ -31,8 +30,6 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
     pushToClickUp: false,
     is_private: false
   }
-
-  const summaryTextEditorRef = useRef<ExposeParam>()
 
   const [formData, setFormData] = useState(defaultData)
   const [errorMessage, setErrorMessage] = useState<any>({})
@@ -75,7 +72,7 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
       formData['summaryText'] = summaryText
       apiRequest
         .put(`/meeting-summery/${router?.query['id']}`, formData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex(
@@ -92,26 +89,26 @@ export default function MeetingSummaryFormComponent(props: TMeetingSummaryCompon
           showSnackbar('Updated Successfully!', { variant: 'success' })
           router.push('/meeting-summary/')
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/meeting-summery', formData)
-        .then(res => {
-          apiRequest.get(`/meeting-summery`).then(res => {
+        .then((res: any) => {
+          apiRequest.get(`/meeting-summery`).then((res: any) => {
             setListData(res?.data)
           })
           showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }

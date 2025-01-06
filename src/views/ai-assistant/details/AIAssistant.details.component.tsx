@@ -43,7 +43,6 @@ import { shareAccessLevel } from '../AIAssistant.decorator'
 import AIAssistantMessagesEditComponent from './AIAssistantMessageEdit.component'
 import AIAssistantMessagesComponent from './AIAssistantMessages.component'
 import BookmarkDrawer from './bookmark/BookmarkDrawer'
-
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
     backgroundColor: '#44b700',
@@ -209,7 +208,7 @@ export default function AIAssistantDetailsComponent() {
       .post(`/conversations/share/${conversationId}`, {
         user_access: userAccess
       })
-      .then(res => {
+      .then((res: any) => {
         showSnackbar('Successfully shared with selected users', { variant: 'success' })
         setDetailsData((prevState: any) => ({
           ...prevState,
@@ -218,7 +217,7 @@ export default function AIAssistantDetailsComponent() {
         setSelectedUserIdsForShare([])
         setSelectedShareType('')
       })
-      .catch(err => {
+      .catch((err: any) => {
         showSnackbar(err?.message, { variant: 'error' })
       })
   }
@@ -236,7 +235,7 @@ export default function AIAssistantDetailsComponent() {
             }
           ]
         })
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Successfully shared with selected users', { variant: 'success' })
           setDetailsData((prevState: any) => ({
             ...prevState,
@@ -245,7 +244,7 @@ export default function AIAssistantDetailsComponent() {
           setSelectedUserIdsForShare([])
           setSelectedShareType('')
         })
-        .catch(err => {
+        .catch((err: any) => {
           showSnackbar(err?.message, { variant: 'error' })
         })
     }
@@ -261,20 +260,20 @@ export default function AIAssistantDetailsComponent() {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
         apiRequest
           .post(`/conversations/remove-share/${conversationId}`, {
             user_id: [id]
           })
-          .then(res => {
+          .then((res: any) => {
             showSnackbar('Successfully removed from shared users', { variant: 'success' })
             setDetailsData((prevState: any) => ({
               ...prevState,
               shared_user: prevState?.shared_user?.filter((sharedUserData: any) => sharedUserData?.user_id != id)
             }))
           })
-          .catch(err => {
+          .catch((err: any) => {
             showSnackbar(err?.message, { variant: 'error' })
           })
       }
@@ -286,7 +285,7 @@ export default function AIAssistantDetailsComponent() {
   //   if (!conversationId) return
   //   apiRequest
   //     .get(`/conversations/${conversationId}?page=1&per_page=10`)
-  //     .then(res => {
+  //     .then((res :any)=> {
   //       setDetailsData(res?.data)
   //       setHasEditAccess(
   //         currentUser?.role == 'Admin' ||
@@ -307,14 +306,14 @@ export default function AIAssistantDetailsComponent() {
 
   //       apiRequest
   //         .get(`/chatgpt-thread-using/${res?.data?.threadId}`)
-  //         .then(res => {
+  //         .then((res :any)=> {
   //           console.log(res)
   //         })
-  //         .catch(err => {
+  //         .catch((err : any)=> {
   //           console.log(err)
   //         })
   //     })
-  //     .catch(err => {
+  //     .catch((err : any)=> {
   //       showSnackbar(err?.message, { variant: 'error' })
   //       setPreload(false)
   //     })
@@ -403,10 +402,10 @@ export default function AIAssistantDetailsComponent() {
       setPrevConversationFormData(response.data.messages[0])
 
       // console.log(detailsData)
-    } catch (error: any) {
+    } catch (err: any) {
       // Handle errors
-      setErrorMessage(error?.response?.data?.errors || {})
-      showSnackbar(error?.response?.data?.message || 'An error occurred', { variant: 'error' })
+      setErrorMessage(err?.data?.errors || {})
+      showSnackbar(err?.data?.message || 'An error occurred', { variant: 'error' })
 
       // Remove temporary messages in case of failure
       setDetailsData((prevState: any) => ({
@@ -460,7 +459,7 @@ export default function AIAssistantDetailsComponent() {
         .put(`/bookmarks/${bookmarkEditId}`, {
           title: bookmarkFormData?.title
         })
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Bookmark Updated!', { variant: 'success' })
 
           setBookmarkList((prevState: any) =>
@@ -469,7 +468,7 @@ export default function AIAssistantDetailsComponent() {
           handleBookmarkDialogClose()
           // getBookmarkList()
         })
-        .catch(err => {
+        .catch((err: any) => {
           showSnackbar(err?.message, { variant: 'error' })
         })
     } else {
@@ -479,13 +478,13 @@ export default function AIAssistantDetailsComponent() {
           conversationId: conversationId,
           conversationDetailId: bookmarkFormData?.id
         })
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Bookmark Saved!', { variant: 'success' })
           handleBookmarkDialogClose()
           setBookmarkList((prevState: any) => [res?.data, ...prevState])
           /*  getBookmarkList() */
         })
-        .catch(err => {
+        .catch((err: any) => {
           showSnackbar(err?.message, { variant: 'error' })
         })
     }
@@ -494,10 +493,10 @@ export default function AIAssistantDetailsComponent() {
   const getBookmarkList = useCallback(() => {
     apiRequest
       .get(`/bookmarks?conversationId=${conversationId}`)
-      .then(res => {
+      .then((res: any) => {
         setBookmarkList(res?.data)
       })
-      .catch(err => {
+      .catch((err: any) => {
         showSnackbar(err?.message, { variant: 'error' })
       })
   }, [conversationId, showSnackbar])
@@ -512,21 +511,21 @@ export default function AIAssistantDetailsComponent() {
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
     })
-      .then(res => {
+      .then((res: any) => {
         if (res.isConfirmed) {
           apiRequest
             .delete(`/bookmarks/${id}`)
-            .then(res => {
+            .then((res: any) => {
               getBookmarkList()
               showSnackbar('Successfully Deleted!', { variant: 'success' })
             })
-            .catch(err => {
+            .catch((err: any) => {
               showSnackbar(err?.message, { variant: 'error' })
             })
         }
       })
-      .catch(error => {
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
   }
 
@@ -638,8 +637,8 @@ export default function AIAssistantDetailsComponent() {
       if (data && userId && userId !== currentUser?.id) {
         if (userInteracted) {
           const typingSound = new Audio('/audio/typing-sound.mp3')
-          typingSound.play().catch(error => {
-            console.error('Error playing typing sound:', error)
+          typingSound.play().then((err: any) => {
+            console.error('Error playing typing sound:', err)
           })
         }
 
@@ -781,8 +780,8 @@ export default function AIAssistantDetailsComponent() {
             const threadResponse = await apiRequest.get(`/chatgpt-thread-using/${response.data.threadId}`)
             setThreadStatusIsActive(true) // Mark thread as active
             console.log(threadResponse)
-          } catch (error) {
-            console.error('Error fetching thread status:', error)
+          } catch (err) {
+            console.error('Error fetching thread status:', err)
             setThreadStatusIsActive(false) // Mark thread as inactive if there's an error
           }
         }
@@ -792,8 +791,8 @@ export default function AIAssistantDetailsComponent() {
 
         setHasEditAccess(checkEditAccess(response?.data, currentUser))
       }
-    } catch (error) {
-      console.error('Error fetching messages:', error)
+    } catch (err) {
+      console.error('Error fetching messages:', err)
       showSnackbar('Failed to load messages.', { variant: 'error' })
     } finally {
       setTimeout(() => {
@@ -1023,7 +1022,9 @@ export default function AIAssistantDetailsComponent() {
                   onBookmarkAdd={onBookmarkAdd}
                   bookmarkId={bookmarkId}
                   onRemoveBookmark={onRemoveBookmark}
-                  ref={el => (messageRefs.current[index] = el)}
+                  ref={el => {
+                    messageRefs.current[index] = el
+                  }}
                   className={message?.id === selectedBookmarkMessageId ? 'bookmark-flush-anime' : ''}
                 />
               )

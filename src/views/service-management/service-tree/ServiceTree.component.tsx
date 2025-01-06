@@ -357,7 +357,7 @@ export default function ServiceTreeComponent() {
     if (serviceEditDataId) {
       apiRequest
         .put(`/services/${serviceEditDataId}`, serviceFormData)
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceClear()
           handleServiceModalClose()
@@ -365,15 +365,15 @@ export default function ServiceTreeComponent() {
 
           // getTree()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
 
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/services', serviceFormData)
-        .then(res => {
+        .then((res: any) => {
           // Swal.fire({
           //   title: 'Created Successfully!',
           //   icon: 'success',
@@ -390,11 +390,11 @@ export default function ServiceTreeComponent() {
 
           getTree()
         })
-        .catch(error => {
-          console.log(error)
+        .catch((err: any) => {
+          console.log(err)
           console.log(errorMessage)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -406,15 +406,15 @@ export default function ServiceTreeComponent() {
     if (serviceGroupEditDataId) {
       apiRequest
         .put(`/service-groups/${serviceGroupEditDataId}`, serviceGroupFormData)
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceGroupClear()
           handleServiceModalClose()
           getTree()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
@@ -422,16 +422,16 @@ export default function ServiceTreeComponent() {
           groups: [...serviceGroupFormData?.groups],
           serviceId: serviceGroupFormData?.serviceId
         })
-        .then(res => {
+        .then((res: any) => {
           setServiceTreeData((prevState: []) => [...prevState, ...res?.data])
           showSnackbar('Created Successfully!', { variant: 'success' })
           onServiceGroupClear()
           handleServiceModalClose()
           getTree()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -442,28 +442,28 @@ export default function ServiceTreeComponent() {
     if (serviceSOWEditDataId) {
       apiRequest
         .put(`/service-scopes/${serviceSOWEditDataId}`, serviceSOWFormData)
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceSOWClear()
           handleServiceModalClose()
           getTree()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/service-scopes', serviceSOWFormData)
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Created Successfully!', { variant: 'success' })
           onServiceSOWClear()
           handleServiceModalClose()
           getTree()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -474,28 +474,28 @@ export default function ServiceTreeComponent() {
     if (serviceDeliverableEditDataId) {
       apiRequest
         .put(`/service-deliverables/${serviceDeliverableEditDataId}`, serviceDeliverableFormData)
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceDeliverableClear()
           handleServiceModalClose()
           getTree()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/service-deliverables', serviceDeliverableFormData)
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Created Successfully!', { variant: 'success' })
           onServiceDeliverableClear()
           handleServiceModalClose()
           getTree()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -510,9 +510,9 @@ export default function ServiceTreeComponent() {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/services/${id}`).then(res => {
+        apiRequest.delete(`/services/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',
@@ -536,9 +536,9 @@ export default function ServiceTreeComponent() {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/service-groups/${id}`).then(res => {
+        apiRequest.delete(`/service-groups/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',
@@ -562,9 +562,9 @@ export default function ServiceTreeComponent() {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/service-scopes/${id}`).then(res => {
+        apiRequest.delete(`/service-scopes/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',
@@ -588,9 +588,9 @@ export default function ServiceTreeComponent() {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/service-deliverables/${id}`).then(res => {
+        apiRequest.delete(`/service-deliverables/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',
@@ -614,9 +614,9 @@ export default function ServiceTreeComponent() {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/service-deliverable-tasks/${id}`).then(res => {
+        apiRequest.delete(`/service-deliverable-tasks/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',
@@ -660,12 +660,12 @@ export default function ServiceTreeComponent() {
     }
     apiRequest
       .post('/clickup/list', data)
-      .then(res => {
+      .then((res: any) => {
         setClickupTaskList(res?.data)
       })
-      .catch(error => {
-        setErrorMessage(error?.response?.data?.errors)
-        showSnackbar(error?.message, { variant: 'error' })
+      .catch((err: any) => {
+        setErrorMessage(err?.data?.errors)
+        showSnackbar(err?.message, { variant: 'error' })
       })
   }
 
@@ -675,27 +675,27 @@ export default function ServiceTreeComponent() {
     if (serviceTaskEditDataId) {
       apiRequest
         .put(`/service-deliverable-tasks/${serviceTaskEditDataId}`, serviceTaskFormData)
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           onServiceTaskClear()
           handleServiceModalClose()
           getTree()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/service-deliverable-tasks', serviceTaskFormData)
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Created Successfully!', { variant: 'success' })
           onServiceTaskClear()
           getTree()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }
@@ -733,12 +733,12 @@ export default function ServiceTreeComponent() {
   const getTree = async () => {
     await apiRequest
       .get(`/service-tree?per_page=500`)
-      .then(res => {
+      .then((res: any) => {
         const services = res?.data?.services || []
         setServiceTreeData(transformServiceTree(services, 'service'))
       })
-      .catch(error => {
-        showSnackbar(error?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.message, { variant: 'error' })
       })
   }
 
@@ -746,7 +746,7 @@ export default function ServiceTreeComponent() {
     e.preventDefault()
     apiRequest
       .post('/employee-roles', employeeRolesFormData)
-      .then(res => {
+      .then((res: any) => {
         showSnackbar('Successfully Created!', { variant: 'success' })
         onEmployeeRolesClear()
         const tasks = serviceTaskFormData.tasks
@@ -764,9 +764,9 @@ export default function ServiceTreeComponent() {
           console.warn('employeeRolesDropdownRef is not set or not a valid Dropdown instance.')
         }
       })
-      .catch(error => {
-        setErrorMessage(error?.response?.data?.errors)
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      .catch((err: any) => {
+        setErrorMessage(err?.data?.errors)
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
   }
 
@@ -850,13 +850,13 @@ export default function ServiceTreeComponent() {
           projectTypeId: dragNode.projectType.id,
           order: position
         })
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully', { variant: 'success' })
         })
-        .catch(error => {
-          console.log(error)
+        .catch((err: any) => {
+          console.log(err)
 
-          showSnackbar(error?.message, { variant: 'error' })
+          showSnackbar(err?.message, { variant: 'error' })
 
           setServiceTreeData(initialServiceTreeData)
         })
@@ -868,11 +868,11 @@ export default function ServiceTreeComponent() {
           ...dragNode,
           order: position
         })
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully', { variant: 'success' })
         })
-        .catch(error => {
-          showSnackbar(error?.message, { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.message, { variant: 'error' })
           setServiceTreeData(initialServiceTreeData)
         })
     }
@@ -883,11 +883,11 @@ export default function ServiceTreeComponent() {
           serviceGroupId: dragNode.groupId,
           order: position
         })
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully', { variant: 'success' })
         })
-        .catch(error => {
-          showSnackbar(error?.message, { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.message, { variant: 'error' })
           setServiceTreeData(initialServiceTreeData)
         })
     }
@@ -899,11 +899,11 @@ export default function ServiceTreeComponent() {
 
           order: position
         })
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully', { variant: 'success' })
         })
-        .catch(error => {
-          showSnackbar(error?.message, { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.message, { variant: 'error' })
           setServiceTreeData(initialServiceTreeData)
         })
     }
@@ -915,11 +915,11 @@ export default function ServiceTreeComponent() {
           parentTaskId: dragNode.taskId ? dragNode.taskId : '',
           order: position
         })
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully', { variant: 'success' })
         })
-        .catch(error => {
-          showSnackbar(error?.message, { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.message, { variant: 'error' })
           setServiceTreeData(initialServiceTreeData)
         })
     }

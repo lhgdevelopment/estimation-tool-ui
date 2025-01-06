@@ -21,7 +21,7 @@ export default function TeamsPromptsListComponent(props: TUsersComponent) {
       setIsLoading(true)
       apiRequest
         .get(`/teams/${query.id}/share/prompts?page=${page || currentPage}`)
-        .then(res => {
+        .then((res: any) => {
           const paginationData: any = res
           setListData(res?.data)
           setCurrentPage(paginationData?.['current_page'])
@@ -57,9 +57,9 @@ export default function TeamsPromptsListComponent(props: TUsersComponent) {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/teams/${query.id}/share/prompts/${id}`).then(res => {
+        apiRequest.delete(`/teams/${query.id}/share/prompts/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',

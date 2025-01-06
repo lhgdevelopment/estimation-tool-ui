@@ -63,7 +63,7 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
       //formData['summaryText'] = formData['phone'] ? null : summaryText
       apiRequest
         .put(`/leads/${router?.query['id']}`, formData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex(
@@ -80,16 +80,16 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           router.push('/leads/')
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/leads', formData)
-        .then(res => {
-          apiRequest.get(`/leads`).then(res => {
+        .then((res: any) => {
+          apiRequest.get(`/leads`).then((res: any) => {
             setListData(res?.data)
           })
           showSnackbar('Created Successfully!', { variant: 'success' })
@@ -97,10 +97,10 @@ export default function LeadsFormComponent(props: TLeadsComponent) {
           onClear()
           setPreload(false)
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }

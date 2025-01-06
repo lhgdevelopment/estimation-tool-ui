@@ -84,7 +84,9 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                   <Box className={'common-task-list-item'} key={index + Math.random()}>
                     <Box className={'common-task-list-item-sl'}>
                       <input
-                        ref={el => (slInputRefs.current[phase.id] = el)}
+                        ref={el => {
+                          slInputRefs.current[phase.id] = el
+                        }}
                         className={'common-task-list-item-sl-number'}
                         value={phase?.['serial']}
                         onChange={event => {
@@ -160,7 +162,9 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
                             <Box className={'common-task-list-item-sl'}>
                               <Box className={'common-task-list-item-sl'}>
                                 <input
-                                  ref={el => (slInputRefs.current[scopeOfWork.id] = el)}
+                                  ref={el => {
+                                    slInputRefs.current[scopeOfWork.id] = el
+                                  }}
                                   className={'common-task-list-item-sl-number'}
                                   value={scopeOfWork?.['serial']}
                                   onChange={event => {
@@ -226,7 +230,6 @@ export default function ProjectSOWScopeOfWorkFormView(props: TProjectSOWScopeOfW
       <Box>
         <Box sx={sectionTitleSx}>Add Services</Box>
         <Box sx={{ py: 0, px: 5 }}>
-          {console.log(serviceGroupByProjectTypeId(serviceList))}
           {serviceGroupByProjectTypeId(serviceList)?.map((projectType: any, index: number) => (
             <Box
               sx={{

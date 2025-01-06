@@ -54,7 +54,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
   const getList = (page = 1) => {
     apiRequest
       .get(`/prompts?page=${page}&name=${filterData?.name}&prompt=${filterData?.prompt}&type=${filterData?.type}`)
-      .then(res => {
+      .then((res: any) => {
         const paginationData: any = res
         setListData(res?.data)
         setCurrentPage(paginationData?.['current_page'])
@@ -82,9 +82,9 @@ export default function PromptsListComponent(props: TPromptsComponent) {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/prompts/${id}`).then(res => {
+        apiRequest.delete(`/prompts/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',

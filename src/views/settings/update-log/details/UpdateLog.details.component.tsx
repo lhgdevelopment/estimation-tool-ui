@@ -16,7 +16,7 @@ export default function UpdateLogDetailsComponent() {
   const [detailsData, setDetailsData] = useState<any>({})
   const getDetails = () => {
     setPreload(true)
-    apiRequest.get(`/update-logs/${UpdateLogId}`).then(res => {
+    apiRequest.get(`/update-logs/${UpdateLogId}`).then((res: any) => {
       setDetailsData(res?.data)
       setPreload(false)
     })

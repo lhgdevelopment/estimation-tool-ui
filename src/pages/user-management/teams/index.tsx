@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import AppLayout from 'src/layouts/AppLayout'
-import TeamsComponent from "../../../views/user-management/teams/Teams.component";
+import TeamsComponent from '../../../views/user-management/teams/Teams.component'
 
 const Teams = () => {
   return <TeamsComponent />

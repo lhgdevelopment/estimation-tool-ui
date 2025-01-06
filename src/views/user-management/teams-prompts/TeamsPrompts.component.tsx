@@ -21,7 +21,7 @@ export default function TeamsPromptsComponent() {
   const getTeamInfo = useCallback(() => {
     apiRequest
       .get(`/teams/${query.id}`)
-      .then(res => {
+      .then((res: any) => {
         setTeamInfo(res?.data)
         setNotFound(false)
       })

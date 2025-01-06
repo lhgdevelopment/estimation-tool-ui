@@ -203,7 +203,7 @@ export function calculateTotalInternalCostForScopeOfWorks(scopeOfWork: any) {
   scopeOfWork.deliverables.forEach((deliverable: any) => {
     deliverable.tasks?.forEach((task: any) => {
       if (task?.isChecked) {
-        totalHours += task?.estimateHours * task?.associate?.hourlyRate ?? 0
+        totalHours += (task?.estimateHours ?? 0) * (task?.associate?.hourlyRate ?? 0)
 
         if (task?.sub_tasks && task?.sub_tasks?.length > 0) {
           totalHours += sumHours(task?.sub_tasks)

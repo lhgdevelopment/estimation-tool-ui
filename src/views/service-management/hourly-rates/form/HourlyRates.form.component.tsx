@@ -35,16 +35,16 @@ export default function HourlyRatesFormComponent(props: THourlyRatesComponent) {
       : apiRequest.post('/employee-roles', formData)
 
     apiCall
-      .then(res => {
+      .then((res: any) => {
         setListData((prevState: any[]) =>
           editDataId ? prevState.map(item => (item.id === editDataId ? res.data : item)) : [...prevState, res.data]
         )
         showSnackbar(editDataId ? 'Updated Successfully!' : 'Created Successfully!', { variant: 'success' })
         onClear()
       })
-      .catch(error => {
-        setErrorMessage(error?.response?.data?.errors || {})
-        showSnackbar(error?.response?.data?.message || 'Something went wrong!', { variant: 'error' })
+      .catch((err: any) => {
+        setErrorMessage(err?.data?.errors || {})
+        showSnackbar(err?.data?.message || 'Something went wrong!', { variant: 'error' })
       })
   }
 

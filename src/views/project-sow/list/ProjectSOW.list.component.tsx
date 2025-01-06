@@ -34,15 +34,15 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
   const getList = (page = 1) => {
     apiRequest
       .get(`/project-summery?page=${page}`)
-      .then(res => {
+      .then((res: any) => {
         const paginationData: any = res
 
         setListData(res?.data)
         setCurrentPage(paginationData?.['current_page'])
         setTotalPages(Math.ceil(paginationData?.['total'] / 10))
       })
-      .catch(error => {
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
   }
 
@@ -57,9 +57,9 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
     })
-      .then(res => {
+      .then((res: any) => {
         if (res.isConfirmed) {
-          apiRequest.delete(`/project-summery/${id}`).then(res => {
+          apiRequest.delete(`/project-summery/${id}`).then((res: any) => {
             Swal.fire({
               title: 'Deleted Successfully!',
               icon: 'success',
@@ -71,8 +71,8 @@ export default function ProjectSOWListComponent(props: TProjectSOWListComponent)
           })
         }
       })
-      .catch(error => {
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
   }
 

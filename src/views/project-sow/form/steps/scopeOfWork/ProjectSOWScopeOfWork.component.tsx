@@ -1,9 +1,9 @@
-import { SelectChangeEvent } from '@mui/material'
-import 'md-editor-rt/lib/style.css'
-import { useCallback, useRef, useState } from 'react'
 import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 import apiRequest from '@core/utils/axios-config'
 import { debounce } from '@core/utils/utils'
+import { SelectChangeEvent } from '@mui/material'
+import 'md-editor-rt/lib/style.css'
+import { useCallback, useRef, useState } from 'react'
 import { TProjectSOWScopeOfWorkFormComponentProps } from './ProjectSOWScopeOfWork.decorator'
 import ProjectSOWScopeOfWorkFormView from './ProjectSOWScopeOfWork.view'
 
@@ -87,7 +87,7 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
           problemGoalId: problemGoalID,
           phaseIds: updatedPhaseList.filter(phase => phase?.isChecked).map(phase => phase?.id)
         })
-        .then(res => {
+        .then((res: any) => {
           setScopeOfWorkData((prevState: any[]) => {
             const updatedSOWList = prevState.map((scopeOfWork: any) =>
               sowIds?.includes(scopeOfWork?.id)
@@ -104,11 +104,11 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
                   .map(scopeOfWork => scopeOfWork?.id),
                 serviceIds: selectedAdditionalServiceData
               })
-              .then(res => {
+              .then((res: any) => {
                 showSnackbar('Updated Successfully!', { variant: 'success' })
               })
-              .catch(error => {
-                showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+              .catch((err: any) => {
+                showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
               })
               .finally(() => {
                 setScopeOfWorkData((prevList: any) =>
@@ -121,8 +121,8 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
             return updatedSOWList
           })
         })
-        .catch(error => {
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
         .finally(() => {
           setPhaseDataList((prevState: any[]) =>
@@ -138,11 +138,11 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
     debounce((sl: number, id: number) => {
       apiRequest
         .patch(`/phase/${id}/serial`, { serial: sl })
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully!', { variant: 'success' })
         })
-        .catch(error => {
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
         .finally(() => {
           setPhaseDataList((prevState: any[]) =>
@@ -178,12 +178,12 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
         problemGoalID,
         phaseId
       })
-      .then(res => {
+      .then((res: any) => {
         setScopeOfWorkData((prevState: any[]) => res?.data)
         showSnackbar('Generated Successfully!', { variant: 'success' })
       })
-      .catch(error => {
-        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
       .finally(() => {
         setPhaseDataList((prevState: any[]) =>
@@ -247,7 +247,7 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
     if (phaseEditId) {
       apiRequest
         .post(`/phase/${phaseEditId}`, { ...phaseFormData })
-        .then(res => {
+        .then((res: any) => {
           setPhaseDataList((prevState: any[]) => [
             ...prevState.map((phase: any) => {
               if (phase?.id === phaseEditId) return res.data
@@ -260,25 +260,25 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
           showSnackbar('Updatedf Successfully!', { variant: 'success' })
           handleServicePhaseModalClose()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/phase/add-multi', { ...phaseFormData, problemGoalId: problemGoalID })
-        .then(res => {
+        .then((res: any) => {
           setPhaseDataList([...res?.data, ...phaseData])
 
           setPreload(false)
           showSnackbar('Created Successfully!', { variant: 'success' })
           handleServicePhaseModalClose()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -306,12 +306,12 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
           scopeOfWorkIds: updatedList.filter(scopeOfWork => scopeOfWork?.isChecked).map(scopeOfWork => scopeOfWork?.id),
           serviceIds: selectedAdditionalServiceData
         })
-        .then(res => {
+        .then((res: any) => {
           console.log(res)
           showSnackbar('Updated Successfully!', { variant: 'success' })
         })
-        .catch(error => {
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
         .finally(() => {
           setScopeOfWorkData((prevList: any) =>
@@ -329,11 +329,11 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
     debounce((sl: number, id: number) => {
       apiRequest
         .patch(`/scope-of-work/${id}/serial`, { serial: sl })
-        .then(res => {
+        .then((res: any) => {
           showSnackbar('Updated Successfully!', { variant: 'success' })
         })
-        .catch(error => {
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
         .finally(() => {
           setScopeOfWorkData((prevState: any[]) =>
@@ -419,7 +419,7 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
     if (scopeOfWorkEditId) {
       apiRequest
         .post(`/scope-of-work/${scopeOfWorkEditId}`, { ...scopeOfWorkFormData })
-        .then(res => {
+        .then((res: any) => {
           setScopeOfWorkData((prevState: any[]) => [
             ...prevState.map((sow: any) => {
               if (sow?.id === scopeOfWorkEditId) return res.data
@@ -432,25 +432,25 @@ export default function ProjectSOWScopeOfWorkFormComponent(props: TProjectSOWSco
           showSnackbar('Updatedf Successfully!', { variant: 'success' })
           handleServiceSOWModalClose()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/scope-of-work/add-multi', { ...scopeOfWorkFormData, problemGoalId: problemGoalID })
-        .then(res => {
+        .then((res: any) => {
           setScopeOfWorkData((prevState: any[]) => [...res?.data, ...prevState])
 
           setPreload(false)
           showSnackbar('Created Successfully!', { variant: 'success' })
           handleServiceSOWModalClose()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }

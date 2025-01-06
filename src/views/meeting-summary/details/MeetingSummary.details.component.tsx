@@ -16,7 +16,7 @@ export default function MeetingSummaryDetailsComponent() {
   const [detailsData, setDetailsData] = useState<any>({})
   const getDetails = () => {
     setPreload(true)
-    apiRequest.get(`/meeting-summery/${meetingId}`).then(res => {
+    apiRequest.get(`/meeting-summery/${meetingId}`).then((res: any) => {
       setDetailsData(res?.data)
       setPreload(false)
     })

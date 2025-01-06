@@ -69,7 +69,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   const getList = useCallback(
     (page = 1, { name = '', user_id = '' } = {}) => {
       setPreloader(true)
-      apiRequest.get(`/conversations?page=${page}&name=${name}&user_id=${user_id}`).then(res => {
+      apiRequest.get(`/conversations?page=${page}&name=${name}&user_id=${user_id}`).then((res: any) => {
         const paginationData: any = res
         setListData(res?.data)
         setCurrentPage(paginationData?.['current_page'])
@@ -106,9 +106,9 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/conversations/${id}`).then(res => {
+        apiRequest.delete(`/conversations/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',
@@ -150,7 +150,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
     if (editDataId) {
       apiRequest
         .put(`/conversations/${editDataId}`, formData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
@@ -168,9 +168,9 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
           showSnackbar('Updated Successfully!', { variant: 'success' })
           handleHiveEditModalClose()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message, { variant: 'error' })
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message, { variant: 'error' })
         })
     }
   }

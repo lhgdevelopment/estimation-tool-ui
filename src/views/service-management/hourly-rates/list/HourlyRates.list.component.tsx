@@ -45,7 +45,7 @@ export default function HourlyRatesListComponent(props: THourlyRatesComponent) {
     setPreloader(true)
     apiRequest
       .get(`/employee-roles?page=${page}&name=${filterData?.name}&average_hourly=${filterData?.average_hourly}`)
-      .then(res => {
+      .then((res: any) => {
         const paginationData: any = res
         setListData(res?.data)
         setCurrentPage(paginationData?.['current_page'])
@@ -71,9 +71,9 @@ export default function HourlyRatesListComponent(props: THourlyRatesComponent) {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/employee-roles/${id}`).then(res => {
+        apiRequest.delete(`/employee-roles/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',

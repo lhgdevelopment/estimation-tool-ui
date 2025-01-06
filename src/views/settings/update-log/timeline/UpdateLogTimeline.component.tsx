@@ -19,11 +19,11 @@ export default function UpdateLogTimelineComponent() {
   const [totalPages, setTotalPages] = useState<number>(1)
   const [loading, setLoading] = useState<boolean>(false)
   const observer = useRef<IntersectionObserver | null>(null)
-  const observerBox = useRef<HTMLDivElement>()
+  const observerBox = useRef<HTMLDivElement | null>(null)
 
   const getList = (page = 1) => {
     setLoading(true)
-    apiRequest.get(`/update-logs?page=${page}`).then(res => {
+    apiRequest.get(`/update-logs?page=${page}`).then((res: any) => {
       const paginationData: any = res
       setUpdateLogData((prevData: any) => [...prevData, ...res?.data])
       setCurrentPage(paginationData?.['current_page'])

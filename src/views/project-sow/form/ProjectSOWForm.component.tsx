@@ -129,7 +129,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
       if (projectSOWID) {
         apiRequest
           .put(`/project-summery/${projectSOWID}`, projectSOWFormData)
-          .then(res => {
+          .then((res: any) => {
             setProjectSOWFormData({
               ...projectSOWFormData
             })
@@ -149,15 +149,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               showSnackbar('Updated Successfully!', { variant: 'success' })
             }, 1000)
           })
-          .catch(error => {
+          .catch((err: any) => {
             setPreload(false)
-            setErrorMessage(error?.response?.data?.errors)
-            showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+            setErrorMessage(err?.data?.errors)
+            showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
           })
       } else {
         apiRequest
           .post('/project-summery', projectSOWFormData)
-          .then(res => {
+          .then((res: any) => {
             setProjectSOWFormData({
               ...projectSOWFormData
             })
@@ -177,17 +177,17 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
               showSnackbar('Created Successfully!', { variant: 'success' })
             }, 1000)
           })
-          .catch(error => {
+          .catch((err: any) => {
             setPreload(false)
-            setErrorMessage(error?.response?.data?.errors)
-            showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+            setErrorMessage(err?.data?.errors)
+            showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
           })
       }
     }
     if (activeStep === 1) {
       apiRequest
         .put(`/project-summery/${projectSOWID}`, { summaryText })
-        .then(res => {
+        .then((res: any) => {
           setTranscriptId(res?.data?.meeting_transcript?.id)
           if (transcriptId && type == 'NEXT') {
             apiRequest
@@ -204,25 +204,25 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   showSnackbar('Created Successfully!', { variant: 'success' })
                 }, 1000)
               })
-              .catch(error => {
+              .catch((err: any) => {
                 setPreload(false)
-                setErrorMessage(error?.response?.data?.errors)
-                showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                setErrorMessage(err?.data?.errors)
+                showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
               })
           } else {
             setPreload(false)
           }
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 2) {
       apiRequest
         .post(`/problems-and-goals/${problemGoalID}`, { problemGoalText })
-        .then(res => {
+        .then((res: any) => {
           if (res?.data && type == 'NEXT') {
             apiRequest
               .post('/project-overview', {
@@ -242,25 +242,25 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   showSnackbar('Created Successfully!', { variant: 'success' })
                 }, 1000)
               })
-              .catch(error => {
+              .catch((err: any) => {
                 setPreload(false)
-                setErrorMessage(error?.response?.data?.errors)
-                showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                setErrorMessage(err?.data?.errors)
+                showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
               })
           } else {
             setPreload(false)
           }
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 3) {
       apiRequest
         .post(`/project-overview/${overviewTextID}`, { overviewText })
-        .then(res => {
+        .then((res: any) => {
           if (res?.data && type == 'NEXT') {
             apiRequest
               .get(`/phase?problemGoalId=${problemGoalID}`)
@@ -318,43 +318,43 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                                   showSnackbar('Generated Successfully!', { variant: 'success' })
                                 }, 1000)
                               })
-                              .catch(error => {
+                              .catch((err: any) => {
                                 setPreload(false)
-                                setErrorMessage(error?.response?.data?.errors)
-                                showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', {
+                                setErrorMessage(err?.data?.errors)
+                                showSnackbar(err?.data?.message ?? 'Something went wrong!', {
                                   variant: 'error'
                                 })
                               })
                           }
                         })
-                        .catch(error => {
+                        .catch((err: any) => {
                           setPreload(false)
-                          setErrorMessage(error?.response?.data?.errors)
-                          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', {
+                          setErrorMessage(err?.data?.errors)
+                          showSnackbar(err?.data?.message ?? 'Something went wrong!', {
                             variant: 'error'
                           })
                         })
                     })
-                    .catch(error => {
+                    .catch((err: any) => {
                       setPreload(false)
-                      setErrorMessage(error?.response?.data?.errors)
-                      showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                      setErrorMessage(err?.data?.errors)
+                      showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
                     })
                 }
               })
-              .catch(error => {
+              .catch((err: any) => {
                 setPreload(false)
-                setErrorMessage(error?.response?.data?.errors)
-                showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                setErrorMessage(err?.data?.errors)
+                showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
               })
           } else {
             setPreload(false)
           }
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
 
@@ -365,7 +365,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           scopeOfWorkIds: [...selectedScopeOfWorkData],
           serviceIds: [...selectedAdditionalServiceData]
         })
-        .then(res => {
+        .then((res: any) => {
           apiRequest
             .get(`/deliverables?problemGoalId=${problemGoalID}`)
             .then(res2 => {
@@ -411,23 +411,23 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                       }, 1000)
                     })
                   })
-                  .catch(error => {
+                  .catch((err: any) => {
                     setPreload(false)
-                    setErrorMessage(error?.response?.data?.errors)
-                    showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                    setErrorMessage(err?.data?.errors)
+                    showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
                   })
               }
             })
-            .catch(error => {
+            .catch((err: any) => {
               setPreload(false)
-              setErrorMessage(error?.response?.data?.errors)
-              showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+              setErrorMessage(err?.data?.errors)
+              showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
             })
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 5) {
@@ -438,7 +438,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           notes: [...deliverableNotesData],
           questions: [...deliverableServiceQuestionData]
         })
-        .then(res => {
+        .then((res: any) => {
           if (res && type == 'NEXT') {
             apiRequest
               .get(`/deliverables?problemGoalId=${problemGoalID}`)
@@ -490,26 +490,26 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                           }, 1000)
                         })
                     })
-                    .catch(error => {
+                    .catch((err: any) => {
                       setPreload(false)
-                      setErrorMessage(error?.response?.data?.errors)
-                      showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                      setErrorMessage(err?.data?.errors)
+                      showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
                     })
                 }
               })
-              .catch(error => {
+              .catch((err: any) => {
                 setPreload(false)
-                setErrorMessage(error?.response?.data?.errors)
-                showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                setErrorMessage(err?.data?.errors)
+                showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
               })
           } else {
             setPreload(false)
           }
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
 
@@ -519,7 +519,7 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
           transcriptId,
           teams: [...associatedUserWithRole]
         })
-        .then(res => {
+        .then((res: any) => {
           apiRequest
             .get(`/estimation-tasks?problemGoalId=${problemGoalID}`)
             .then(res2 => {
@@ -568,29 +568,29 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                         }, 1000)
                       })
                   })
-                  .catch(error => {
+                  .catch((err: any) => {
                     setPreload(false)
-                    setErrorMessage(error?.response?.data?.errors)
-                    showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                    setErrorMessage(err?.data?.errors)
+                    showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
                   })
               }
             })
-            .catch(error => {
+            .catch((err: any) => {
               setPreload(false)
-              setErrorMessage(error?.response?.data?.errors)
-              showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+              setErrorMessage(err?.data?.errors)
+              showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
             })
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
     if (activeStep === 7) {
       apiRequest
         .get(`/estimation-tasks?problemGoalId=${problemGoalID}`)
-        .then(res => {
+        .then((res: any) => {
           if (res?.data?.tasks?.length) {
             setPreload(false)
           } else {
@@ -616,15 +616,15 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
                   }, 1000)
                 })
               })
-              .catch(error => {
+              .catch((err: any) => {
                 setPreload(false)
-                setErrorMessage(error?.response?.data?.errors)
-                showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+                setErrorMessage(err?.data?.errors)
+                showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
               })
           }
         })
-        .catch(error => {
-          console.log(error)
+        .catch((err: any) => {
+          console.log(err)
         })
     } else {
       // setPreload(false)
@@ -784,32 +784,32 @@ export default function ProjectSOWFormComponent(props: TProjectSOWFormComponent)
         setEnabledStep(getEnableStep)
         setPreload(false)
       })
-      .catch(error => {
+      .catch((err: any) => {
         setEnabledStep(0)
         setPreload(false)
-        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
   }
 
   const getServiceList = async () => {
     await apiRequest
       .get(`/services`)
-      .then(res => {
+      .then((res: any) => {
         setServiceList(res?.data)
       })
-      .catch(error => {
-        showSnackbar(error?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.message, { variant: 'error' })
       })
   }
 
   const getUserList = async () => {
     await apiRequest
       .get(`/associates`)
-      .then(res => {
+      .then((res: any) => {
         setTeamUserList(res?.data)
       })
-      .catch(error => {
-        showSnackbar(error?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.message, { variant: 'error' })
       })
   }
 

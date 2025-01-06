@@ -1,6 +1,4 @@
-import { get } from 'react-hook-form'
-import type { UseFormReturn } from 'react-hook-form/dist/types'
-
+import { get, UseFormReturn } from 'react-hook-form'
 interface AppFormErrorProps {
   name: string
   hookForm: UseFormReturn<any, any>

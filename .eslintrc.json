@@ -7,8 +7,10 @@
     "import/no-anonymous-default-export": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-explicit-any": ["off", { "ignoreRestArgs": true }],
+    "@typescript-eslint/ban-types": "off",
+
     "newline-before-return": "error",
     "import/newline-after-import": ["error", { "count": 1 }],
     "@typescript-eslint/ban-types": [
@@ -21,7 +23,7 @@
       }
     ]
   },
-  "plugins": ["import"],
+  "plugins": ["jsx-a11y"],
   "settings": {
     "import/parsers": {
       "@typescript-eslint/parser": [".ts", ".tsx"]

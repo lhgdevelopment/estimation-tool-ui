@@ -22,7 +22,9 @@ const CopyToClipboard = (props: TCopyToClipboard) => {
         setIsCopied(true)
         setTimeout(() => setIsCopied(false), 2000) // Reset copied state after 2 seconds
       })
-      .catch(error => console.error('Error copying to clipboard:', error))
+      .catch((err: any) => {
+        console.error('Error copying to clipboard:', err)
+      })
   }
 
   // if (!textToCopy) {

@@ -15,7 +15,7 @@ export default function LeadsDetailsComponent() {
   const [detailsData, setDetailsData] = useState<any>({})
   const getDetails = () => {
     setPreload(true)
-    apiRequest.get(`/leads/${leadsId}`).then(res => {
+    apiRequest.get(`/leads/${leadsId}`).then((res: any) => {
       setDetailsData(res?.data)
       setPreload(false)
     })

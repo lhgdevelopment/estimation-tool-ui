@@ -37,7 +37,7 @@ export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
     if (editDataId) {
       apiRequest
         .put(`/project-type/${editDataId}`, formData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => {
             const updatedList: any = [...prevState]
             const editedServiceIndex = updatedList.findIndex((item: any) => item['id'] === editDataId)
@@ -50,19 +50,19 @@ export default function ProjectTypeFormComponent(props: TProjectTypeComponent) {
           onClear()
           showSnackbar('Updated Successfully!', { variant: 'success' })
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
         })
     } else {
       apiRequest
         .post('/project-type', formData)
-        .then(res => {
+        .then((res: any) => {
           setListData((prevState: []) => [...prevState, res?.data])
           showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
         })
-        .catch(error => {
-          setErrorMessage(error?.response?.data?.errors)
+        .catch((err: any) => {
+          setErrorMessage(err?.data?.errors)
         })
     }
   }

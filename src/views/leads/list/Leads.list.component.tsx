@@ -61,15 +61,15 @@ export default function LeadsListComponent(props: TLeadsComponent) {
       .get(
         `/leads?page=${page}&firstName=${filterData?.firstName}&lastName=${filterData?.lastName}&company=${filterData?.company}&phone=${filterData?.phone}&email=${filterData?.email}`
       )
-      .then(res => {
+      .then((res: any) => {
         const paginationData: any = res
         setListData(res?.data)
         setCurrentPage(paginationData?.['current_page'])
         setTotalPages(Math.ceil(paginationData?.['total'] / 10))
         setPreload(false)
       })
-      .catch(error => {
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.data?.message, { variant: 'error' })
         setPreload(false)
       })
   }
@@ -84,9 +84,9 @@ export default function LeadsListComponent(props: TLeadsComponent) {
       confirmButtonColor: '#dc2626',
       showCancelButton: true,
       cancelButtonText: 'No, cancel!'
-    }).then(res => {
+    }).then((res: any) => {
       if (res.isConfirmed) {
-        apiRequest.delete(`/leads/${id}`).then(res => {
+        apiRequest.delete(`/leads/${id}`).then((res: any) => {
           Swal.fire({
             title: 'Deleted Successfully!',
             icon: 'success',

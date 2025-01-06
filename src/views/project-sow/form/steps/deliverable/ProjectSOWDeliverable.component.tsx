@@ -1,10 +1,10 @@
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import apiRequest from '@core/utils/axios-config'
 import { SelectChangeEvent } from '@mui/material'
 import 'md-editor-rt/lib/style.css'
 import { useEffect, useState } from 'react'
-import apiRequest from '@core/utils/axios-config'
 import { TProjectSOWDeliverableFormComponentProps } from './ProjectSOWDeliverable.decorator'
 import ProjectSOWDeliverableFormView from './ProjectSOWDeliverable.view'
-import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
 
 export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDeliverableFormComponentProps) {
   const {
@@ -190,7 +190,7 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           scopeOfWorkIds: updatedList.filter(scopeOfWork => scopeOfWork?.isChecked).map(scopeOfWork => scopeOfWork?.id),
           serviceIds: selectedAdditionalServiceData
         })
-        .then(res => {
+        .then((res: any) => {
           setSelectedDeliverableData((prevState: any) => {
             const hasSelectedDeliverables = deliverableIds?.some((id: number) => prevState.includes(id))
             if (hasSelectedDeliverables) {
@@ -201,8 +201,8 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           })
           showSnackbar('Updated Successfully!', { variant: 'success' })
         })
-        .catch(error => {
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
         .finally(() => {
           setScopeOfWorkData((prevList: any) =>
@@ -268,13 +268,13 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
         problemGoalId: problemGoalID,
         scopeOfWorkId
       })
-      .then(res => {
+      .then((res: any) => {
         setDeliverableDataList((prevState: any[]) => res?.data)
         setSelectedDeliverableData((prevState: any) => [...prevState, ...res?.data?.map((item: any) => item?.id)])
         showSnackbar('Generated Successfully!', { variant: 'success' })
       })
-      .catch(error => {
-        showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+      .catch((err: any) => {
+        showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
       })
       .finally(() => {
         setScopeOfWorkData((prevList: any) =>
@@ -314,11 +314,11 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     if (projectSOWFormData?.serviceId) {
       await apiRequest
         .get(`/questions?serviceId=${projectSOWFormData?.serviceId}`)
-        .then(res => {
+        .then((res: any) => {
           setServiceQuestion(res?.data)
         })
-        .catch(error => {
-          showSnackbar(error?.message, { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.message, { variant: 'error' })
         })
     }
   }
@@ -327,11 +327,11 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     if (serviceId) {
       await apiRequest
         .get(`/service-groups?serviceId=${serviceId}`)
-        .then(res => {
+        .then((res: any) => {
           setScopeOfWorkPhaseList(res?.data)
         })
-        .catch(error => {
-          showSnackbar(error?.message, { variant: 'error' })
+        .catch((err: any) => {
+          showSnackbar(err?.message, { variant: 'error' })
         })
     }
   }
@@ -341,7 +341,7 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     if (scopeOfWorkEditId) {
       apiRequest
         .post(`/scope-of-work/${scopeOfWorkEditId}`, { ...scopeOfWorkFormData })
-        .then(res => {
+        .then((res: any) => {
           setDeliverableDataList((prevState: any[]) => [
             ...prevState.map((deliverable: any) => {
               if (deliverable?.scopeOfWorkId === scopeOfWorkEditId) return { ...deliverable, scope_of_work: res.data }
@@ -354,15 +354,15 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           showSnackbar('Updatedf Successfully!', { variant: 'success' })
           handleServiceSOWModalClose()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/scope-of-work/add-multi', { ...scopeOfWorkFormData, problemGoalId: problemGoalID })
-        .then(res => {
+        .then((res: any) => {
           // setScopeOfWorkData((prevState: any[]) => [...res?.data, ...prevState])
           // setSelectedScopeOfWorkData((prevState: any[]) => [...res?.data.map((sow: any) => sow?.id), ...prevState])
 
@@ -370,10 +370,10 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           showSnackbar('Created Successfully!', { variant: 'success' })
           handleServiceSOWModalClose()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }
@@ -383,7 +383,7 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
     if (deliverableEditId) {
       apiRequest
         .post(`/deliverables/${deliverableEditId}`, { ...deliverableFormData })
-        .then(res => {
+        .then((res: any) => {
           setDeliverableDataList((prevState: any[]) => [
             ...prevState.map((deliverable: any) => {
               if (deliverable?.id === deliverableEditId) return res.data
@@ -396,25 +396,25 @@ export default function ProjectSOWDeliverableFormComponent(props: TProjectSOWDel
           showSnackbar('Updatedf Successfully!', { variant: 'success' })
           handleServiceDeliverableModalClose()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     } else {
       apiRequest
         .post('/deliverables/add-multi', { ...deliverableFormData })
-        .then(res => {
+        .then((res: any) => {
           setDeliverableDataList((prevState: any[]) => [...res?.data, ...prevState])
 
           setPreload(false)
           showSnackbar('Created Successfully!', { variant: 'success' })
           handleServiceDeliverableModalClose()
         })
-        .catch(error => {
+        .catch((err: any) => {
           setPreload(false)
-          setErrorMessage(error?.response?.data?.errors)
-          showSnackbar(error?.response?.data?.message ?? 'Something went wrong!', { variant: 'error' })
+          setErrorMessage(err?.data?.errors)
+          showSnackbar(err?.data?.message ?? 'Something went wrong!', { variant: 'error' })
         })
     }
   }

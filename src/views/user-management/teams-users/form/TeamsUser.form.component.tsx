@@ -40,14 +40,14 @@ export default function TeamsUserFormComponent(props: TUsersComponent) {
     e.preventDefault()
     apiRequest
       .post(`/teams/${query.id}/share/users`, formData)
-      .then(res => {
+      .then((res: any) => {
         showSnackbar('Created Successfully!', { variant: 'success' })
         onClear()
         listRef?.current?.getList(1)
       })
-      .catch(error => {
-        setErrorMessage(error?.response?.data?.errors)
-        showSnackbar(error?.response?.data?.message, { variant: 'error' })
+      .catch((err: any) => {
+        setErrorMessage(err?.data?.errors)
+        showSnackbar(err?.data?.message, { variant: 'error' })
       })
   }
 
