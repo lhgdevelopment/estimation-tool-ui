@@ -99,6 +99,7 @@ export default function AIAssistantDetailsComponent() {
   const defaultData = {
     conversation_id: conversationId,
     prompt_id: '',
+    workflow_id: '',
     message_content: ''
   }
   const [conversationFormData, setConversationFormData] = useState(defaultData)
@@ -361,7 +362,7 @@ export default function AIAssistantDetailsComponent() {
         conversation_id: conversationId
       }
 
-      if (!formData.message_content && !formData.prompt_id) {
+      if (!formData.message_content && !formData.prompt_id && !formData.workflow_id) {
         return
       }
 
@@ -573,6 +574,7 @@ export default function AIAssistantDetailsComponent() {
     const typingEvent = `thread_typing_${detailsData.threadId}`
     const loginEvent = `thread_login_${detailsData.threadId}`
     const logoutEvent = `thread_logout_${detailsData.threadId}`
+    const workflowUpdateEvent = `workflow_update_${detailsData.threadId}`
     const disconnectEvent = 'user_disconnected'
 
     // Listen for real-time responses
@@ -664,6 +666,22 @@ export default function AIAssistantDetailsComponent() {
     socket.emit('thread_login', {
       thread_id: detailsData?.threadId,
       tab_id: tabId
+    })
+
+    socket.on(loginEvent, (data: any) => {
+      setActiveUsers(prevUsers => {
+        const updatedUsers = prevUsers.filter(user => user.user.id !== data.user.id && user.user.id !== currentUser?.id)
+
+        if (data.user.id !== currentUser?.id) {
+          updatedUsers.push(data)
+        }
+
+        return updatedUsers
+      })
+    })
+
+    socket.on(workflowUpdateEvent, (data: any) => {
+      console.log(data)
     })
 
     socket.on(loginEvent, (data: any) => {
@@ -1024,25 +1042,52 @@ export default function AIAssistantDetailsComponent() {
               }}
               className={'bg-gray-50 dark-d:bg-gray-900'}
             >
-              <Box sx={{ width: '100%', mb: 2 }}>
-                <label className='block text-sm'>
-                  <Dropdown
-                    label={'Command'}
-                    url={'prompts-allowed'}
-                    name='prompt_id'
-                    value={conversationFormData.prompt_id}
-                    onChange={handleSelectChange}
-                    error={errorMessage?.['prompt_id']}
-                  />
-                  {!!errorMessage?.['prompt_id'] &&
-                    errorMessage?.['prompt_id']?.map((message: any, index: number) => {
-                      return (
-                        <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
-                          {message}
-                        </span>
-                      )
-                    })}
-                </label>
+              <Box sx={{ display: 'flex', mb: 2, gap: 2 }}>
+                <Box sx={{ width: '50%' }}>
+                  <label className='block text-sm'>
+                    <Dropdown
+                      label={'Command'}
+                      url={'prompts-allowed'}
+                      name='prompt_id'
+                      value={conversationFormData.prompt_id}
+                      onChange={handleSelectChange}
+                      error={errorMessage?.['prompt_id']}
+                    />
+                    {!!errorMessage?.['prompt_id'] &&
+                      errorMessage?.['prompt_id']?.map((message: any, index: number) => {
+                        return (
+                          <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                            {message}
+                          </span>
+                        )
+                      })}
+                  </label>
+                </Box>
+
+                <Box sx={{ width: '50%' }}>
+                  <label className='block text-sm'>
+                    <Dropdown
+                      label={'Workflow'}
+                      url={'workflows'}
+                      name='workflow_id'
+                      value={conversationFormData.workflow_id}
+                      onChange={handleSelectChange}
+                      error={errorMessage?.['workflow_id']}
+                      optionConfig={{
+                        id: 'id',
+                        title: 'title'
+                      }}
+                    />
+                    {!!errorMessage?.['workflow_id'] &&
+                      errorMessage?.['workflow_id']?.map((message: any, index: number) => {
+                        return (
+                          <span key={index} className='text-xs text-red-600 dark-d:text-red-400'>
+                            {message}
+                          </span>
+                        )
+                      })}
+                  </label>
+                </Box>
               </Box>
               <Box
                 sx={{
