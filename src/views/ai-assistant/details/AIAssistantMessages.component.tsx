@@ -10,9 +10,8 @@ import EditIcon from '@mui/icons-material/Edit'
 import HiveIcon from '@mui/icons-material/Hive'
 import { Avatar, Box, IconButton, Menu, SxProps, Tooltip } from '@mui/material'
 import { marked } from 'marked'
-import { MdPreview } from 'md-editor-rt'
 import 'md-editor-rt/lib/preview.css'
-import React, { forwardRef, MouseEvent, useEffect, useState } from 'react'
+import React, { forwardRef, MouseEvent, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 type TAIAssistantMessagesComponentProps = {
@@ -31,16 +30,6 @@ type TAIAssistantMessagesComponentProps = {
 }
 
 // Define renderer for custom Markdown rendering
-const renderer = new marked.Renderer()
-const linkRenderer = renderer.link
-renderer.link = (href, title, text) => {
-  const html = linkRenderer.call(renderer, href, title, text)
-
-  return html.replace(/^<a /, '<a target="_blank" rel="nofollow" ')
-}
-renderer.listitem = (text, task, checked) => {
-  return `<li>${String(text).replace(/<p>|<\/p>/g, '')}</li>`
-}
 
 const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMessagesComponentProps>(
   function AIAssistantMessagesComponent(props, ref) {
@@ -100,17 +89,6 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
       setContextMenu(null)
     }
 
-    useEffect(() => {
-      const renderMarkdown = async () => {
-        const markdown = message?.message_content || ''
-        // Resolve the Promise and set the result to state
-        const rendered = await marked(markdown, { renderer })
-        setRenderedMarkdown(rendered) // Pass the resolved string
-      }
-
-      renderMarkdown()
-    }, [message?.message_content])
-
     return (
       <Box
         ref={ref as React.ForwardedRef<HTMLDivElement>}
@@ -163,7 +141,11 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
                 <Box sx={{ height: '100%', width: '100%' }} component={'img'} src='/gif/hive-assist-loader.gif'></Box>
               </Box>
             ) : message?.message_content ? (
-              <MdPreview className='message-box-animation' editorId={'message'} modelValue={renderedMarkdown} />
+              <Box
+                id='message-preview'
+                className={'md-editor-preview default-theme md-editor-scrn'}
+                dangerouslySetInnerHTML={{ __html: marked(message?.message_content) }}
+              ></Box>
             ) : (
               <> </>
             )}

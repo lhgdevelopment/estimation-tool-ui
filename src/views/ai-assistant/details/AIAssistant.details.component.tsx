@@ -401,15 +401,15 @@ export default function AIAssistantDetailsComponent() {
       const response = await apiRequest.post(`/conversations/continue`, formData)
 
       // Update messages with response and remove temporary messages
-      // setDetailsData((prevState: any) => ({
-      //   ...prevState,
-      //   messages: [
-      //     ...prevState.messages.filter(
-      //       (message: any) => message.id !== 'initialization' && message.id !== 'initialization_user'
-      //     ),
-      //     ...response.data.messages
-      //   ]
-      // }))
+      setDetailsData((prevState: any) => ({
+        ...prevState,
+        messages: [
+          ...prevState.messages.filter(
+            (message: any) => message.id !== 'initialization' && message.id !== 'initialization_user'
+          ),
+          ...response.data.messages.filter((message: any) => message.role === 'system')
+        ]
+      }))
 
       // Save the previous conversation data
       setPrevConversationFormData(response.data.messages[0])
@@ -621,6 +621,8 @@ export default function AIAssistantDetailsComponent() {
     })
 
     socket.on(statusEvent, (message: any) => {
+      console.log(message)
+
       setThreadStatusIsActive(message?.payload?.status === 'active' ? true : false)
       if (message?.payload?.threadInfo?.user_info?.id !== currentUser?.id) {
         if (message?.payload?.status === 'active') {
