@@ -127,7 +127,7 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
             </Avatar>
           ) : (
             <Avatar sx={{ width: 32, height: 32, border: '1px solid #ddd' }} src={message?.user?.image}>
-              {message?.user?.name ? message?.user?.name[0] : 'U'}
+              {message?.user?.id ? (message?.user?.name ? message?.user?.name[0] : 'U') : 'W'}
             </Avatar>
           )}
         </Box>
@@ -136,7 +136,13 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
             className='text-gray-600 dark-d:text-gray-400'
             sx={{ fontWeight: 600, color: message?.role === 'system' ? '#9333ea' : '' }}
           >
-            {message?.role === 'system' ? `Hive AI` : message?.user?.name ? message?.user?.name : 'You'}
+            {message?.role === 'system'
+              ? `Hive AI`
+              : message?.user?.id
+              ? message?.user?.name
+                ? message?.user?.name
+                : 'You'
+              : 'Workflow'}
           </Box>
           {message?.role === 'user' && message?.prompt?.name && (
             <Box sx={{ display: 'flex' }}>

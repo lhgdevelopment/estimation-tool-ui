@@ -401,15 +401,15 @@ export default function AIAssistantDetailsComponent() {
       const response = await apiRequest.post(`/conversations/continue`, formData)
 
       // Update messages with response and remove temporary messages
-      setDetailsData((prevState: any) => ({
-        ...prevState,
-        messages: [
-          ...prevState.messages.filter(
-            (message: any) => message.id !== 'initialization' && message.id !== 'initialization_user'
-          ),
-          ...response.data.messages
-        ]
-      }))
+      // setDetailsData((prevState: any) => ({
+      //   ...prevState,
+      //   messages: [
+      //     ...prevState.messages.filter(
+      //       (message: any) => message.id !== 'initialization' && message.id !== 'initialization_user'
+      //     ),
+      //     ...response.data.messages
+      //   ]
+      // }))
 
       // Save the previous conversation data
       setPrevConversationFormData(response.data.messages[0])
@@ -591,10 +591,11 @@ export default function AIAssistantDetailsComponent() {
 
     // Listen for real-time responses
     socket.on(responseEvent, (message: any) => {
+      setIsWaiting(false)
+
       setDetailsData((prevState: any) => {
         const systemMessageIndex = prevState?.messages?.findIndex((msg: any) => msg?.id === 'initialization')
 
-        setIsWaiting(false)
         if (systemMessageIndex !== -1) {
           // Update the existing message content with the streamed message
           const updatedMessages = prevState.messages.map((msg: any, idx: number) =>
@@ -620,8 +621,6 @@ export default function AIAssistantDetailsComponent() {
     })
 
     socket.on(statusEvent, (message: any) => {
-      console.log(message)
-
       setThreadStatusIsActive(message?.payload?.status === 'active' ? true : false)
       if (message?.payload?.threadInfo?.user_info?.id !== currentUser?.id) {
         if (message?.payload?.status === 'active') {
@@ -634,6 +633,7 @@ export default function AIAssistantDetailsComponent() {
           })
         }
       }
+
       if (message?.payload?.userMessage) {
         setDetailsData((prevState: any) => {
           return {
@@ -692,9 +692,9 @@ export default function AIAssistantDetailsComponent() {
       })
     })
 
-    socket.on(workflowUpdateEvent, (data: any) => {
-      console.log(data)
-    })
+    // socket.on(workflowUpdateEvent, (data: any) => {
+    //   console.log(data)
+    // })
 
     socket.on(loginEvent, (data: any) => {
       setActiveUsers(prevUsers => {
