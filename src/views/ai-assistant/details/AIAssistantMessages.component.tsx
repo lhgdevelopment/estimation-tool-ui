@@ -27,6 +27,7 @@ type TAIAssistantMessagesComponentProps = {
   onPasteText?: (text: string) => void
   sx?: SxProps
   className?: string
+  handleReplyDialogOpen?: () => void
 }
 
 // Define renderer for custom Markdown rendering
@@ -54,7 +55,8 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
       bookmarkId,
       onPasteText,
       className,
-      sx
+      sx,
+      handleReplyDialogOpen
     } = props
     const { showSnackbar } = useToastSnackbar()
 
@@ -187,7 +189,7 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
                     p: 0,
                     background: 'transparent',
                     color: '#9b9b9b',
-                    '& svg': { fontSize: '18px', m: 0 },
+                    '& svg': { fontSize: '16px', m: 0 },
                     ':hover': { background: 'transparent', color: '#000' },
                     ':focus': { outline: 0, outlineOffset: 0, boxShadow: 0 }
                   }}
@@ -204,7 +206,7 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
                     }}
                     onClick={() => onEditMessage(message)}
                   >
-                    <EditIcon sx={{ fontSize: '18px' }} />
+                    <EditIcon sx={{ fontSize: '16px' }} />
                   </Box>
                 </Tooltip>
               )}
@@ -223,12 +225,23 @@ const AIAssistantMessagesComponent = forwardRef<HTMLDivElement, TAIAssistantMess
                   onClick={() => handleBookmarkButtonOnClick(message)}
                 >
                   {bookmarkId ? (
-                    <BookmarkRemoveIcon sx={{ fontSize: '18px', color: '#dc2626ad' }} />
+                    <BookmarkRemoveIcon sx={{ fontSize: '16px', color: '#dc2626ad' }} />
                   ) : (
-                    <BookmarkAddIcon sx={{ fontSize: '18px' }} />
+                    <BookmarkAddIcon sx={{ fontSize: '16px' }} />
                   )}
                 </Box>
               </Tooltip>
+
+              {/* <Tooltip placement='top' title={'Reply to thread'}>
+                <Box
+                  component={'button'}
+                  sx={{
+                    color: '#9b9b9b',
+                    ':hover': { color: bookmarkId ? '#dc2626' : '#000' }
+                  }}
+                  onClick={() => handleReplyDialogOpen()}
+                ></Box>
+              </Tooltip> */}
             </Box>
 
             <Box>

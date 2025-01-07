@@ -113,6 +113,9 @@ export default function AIAssistantDetailsComponent() {
   const [selectedUserIdsForShare, setSelectedUserIdsForShare] = useState<any[]>([])
   const [selectedShareType, setSelectedShareType] = useState('')
 
+  const [replyDialogOpen, setReplyDialogOpen] = useState(false)
+  const [replyDetails, setReplyDetails] = useState<any>([])
+
   const [openBookmarkDrawer, setOpenBookmarkDrawer] = useState(false)
 
   const [bookmarkList, setBookmarkList] = useState<any[]>([])
@@ -189,6 +192,15 @@ export default function AIAssistantDetailsComponent() {
     setShareDialogOpen(false)
     setSelectedUserIdsForShare([])
     setSelectedShareType('')
+  }
+
+  const handleReplyDialogOpen = () => {
+    setReplyDialogOpen(true)
+    setReplyDetails([])
+  }
+
+  const handleReplyDialogClose = () => {
+    setReplyDialogOpen(false)
   }
 
   const handleShareUserOnChange = (ids = []) => {
@@ -368,22 +380,22 @@ export default function AIAssistantDetailsComponent() {
 
       // Reset form and add temporary user/system messages
       setConversationFormData(defaultData)
-      setDetailsData((prevState: any) => ({
-        ...prevState,
-        messages: [
-          ...prevState.messages,
-          {
-            ...formData,
-            user: { name: currentUser.name },
-            id: 'initialization_user'
-          },
-          {
-            id: 'initialization',
-            message_content: '',
-            role: 'system'
-          }
-        ]
-      }))
+      // setDetailsData((prevState: any) => ({
+      //   ...prevState,
+      //   messages: [
+      //     ...prevState.messages,
+      //     {
+      //       ...formData,
+      //       user: { name: currentUser.name },
+      //       id: 'initialization_user'
+      //     },
+      //     {
+      //       id: 'initialization',
+      //       message_content: '',
+      //       role: 'system'
+      //     }
+      //   ]
+      // }))
 
       // API Request
       const response = await apiRequest.post(`/conversations/continue`, formData)
@@ -1025,6 +1037,7 @@ export default function AIAssistantDetailsComponent() {
                   onRemoveBookmark={onRemoveBookmark}
                   ref={el => (messageRefs.current[index] = el)}
                   className={message?.id === selectedBookmarkMessageId ? 'bookmark-flush-anime' : ''}
+                  handleReplyDialogOpen={handleReplyDialogOpen}
                 />
               )
             })}
@@ -1043,7 +1056,7 @@ export default function AIAssistantDetailsComponent() {
               className={'bg-gray-50 dark-d:bg-gray-900'}
             >
               <Box sx={{ display: 'flex', mb: 2, gap: 2 }}>
-                <Box sx={{ width: '50%' }}>
+                <Box sx={{ width: '100%' }}>
                   <label className='block text-sm'>
                     <Dropdown
                       label={'Command'}
@@ -1064,7 +1077,7 @@ export default function AIAssistantDetailsComponent() {
                   </label>
                 </Box>
 
-                <Box sx={{ width: '50%' }}>
+                {/* <Box sx={{ width: '50%' }}>
                   <label className='block text-sm'>
                     <Dropdown
                       label={'Workflow'}
@@ -1087,7 +1100,7 @@ export default function AIAssistantDetailsComponent() {
                         )
                       })}
                   </label>
-                </Box>
+                </Box> */}
               </Box>
               <Box
                 sx={{
@@ -1286,6 +1299,7 @@ export default function AIAssistantDetailsComponent() {
           )}
         </DialogActions>
       </Dialog>
+
       <Dialog
         open={bookmarkDialogOpen}
         onClose={handleBookmarkDialogClose}
@@ -1314,6 +1328,18 @@ export default function AIAssistantDetailsComponent() {
             Done
           </Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={replyDialogOpen}
+        onClose={handleReplyDialogClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+        sx={{ '& .MuiPaper-root': { maxWidth: '500px', width: '100%' } }}
+      >
+        <DialogTitle id='alert-dialog-title'></DialogTitle>
+        <DialogContent></DialogContent>
+        <DialogActions></DialogActions>
       </Dialog>
     </>
   )
