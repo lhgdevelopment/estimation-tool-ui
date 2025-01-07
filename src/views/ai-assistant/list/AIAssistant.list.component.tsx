@@ -31,8 +31,9 @@ import { formatDistanceToNow } from 'date-fns'
 import Link from 'next/link'
 import { Fragment, useCallback, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
-import { Dropdown } from '../../../@core/components/dropdown'
-import useDebounce from '../../../@core/utils/debounce'
+
+import { Dropdown } from '@core/components/dropdown'
+import useDebounce from '@core/utils/debounce'
 import { TAIAssistantComponent } from '../AIAssistant.decorator'
 
 const defaultFilterData = {
@@ -47,7 +48,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   const [preloader, setPreloader] = useState<boolean>(false)
 
   const [filterData, setFilterData] = useState(defaultFilterData)
-  const debounceValue = useDebounce(filterData, 800)
+  const debounceValue = useDebounce(filterData, 1000)
 
   const [editDataId, setEditDataId] = useState<null | string>(null)
   const [formData, setFormData] = useState({
@@ -75,6 +76,9 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
         setCurrentPage(paginationData?.['current_page'])
         setTotalPages(Math.ceil(paginationData?.['total'] / 10))
         setPreloader(false)
+      }).catch(error => {
+        setPreloader(false)
+        showSnackbar(error?.response?.data?.message, { variant: 'error'})
       })
     },
     [setListData, setCurrentPage, setTotalPages, setPreloader]
@@ -82,6 +86,7 @@ export default function AIAssistantListComponent(props: TAIAssistantComponent) {
   useEffect(() => {
     getList(1, { ...debounceValue })
   }, [debounceValue])
+
   const handleFilterOnChange = (e: any) => {
     setFilterData({
       ...filterData,

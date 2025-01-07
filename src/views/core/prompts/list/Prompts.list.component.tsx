@@ -2,9 +2,14 @@ import { Dropdown } from '@core/components/dropdown'
 import UiSkeleton from '@core/components/ui-skeleton'
 import { TableSx } from '@core/theme/tableStyle'
 import apiRequest from '@core/utils/axios-config'
+
+import { useToastSnackbar } from '@core/hooks/useToastSnackbar'
+import useDebounce from '@core/utils/debounce'
+import FilterListOffIcon from '@mui/icons-material/FilterListOff'
 import {
   Box,
   Button,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -12,7 +17,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField
+  TextField,
+  Tooltip
 } from '@mui/material'
 import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
@@ -21,9 +27,11 @@ import { TPromptsComponent, promptsTypeList } from '../Prompts.decorator'
 
 export default function PromptsListComponent(props: TPromptsComponent) {
   const { listData, setListData } = props
+  const { showSnackbar } = useToastSnackbar()
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [totalPages, setTotalPages] = useState<number>(1)
   const [expendedRow, setExpended] = useState('')
+  const [preloader, setPreloader] = useState<boolean>(false)
 
   const defaultFilterData = {
     name: '',
@@ -32,6 +40,7 @@ export default function PromptsListComponent(props: TPromptsComponent) {
   }
 
   const [filterData, setFilterData] = useState(defaultFilterData)
+  const debounceFilter = useDebounce(filterData, 1000)
 
   const handleFilterTextOnChange = (e: React.ChangeEvent<any>) => {
     setFilterData({
@@ -51,25 +60,26 @@ export default function PromptsListComponent(props: TPromptsComponent) {
     setExpended(prevState => id)
   }
 
-  const getList = (page = 1) => {
+  const getList = (page = 1, filters = debounceFilter) => {
+    setPreloader(true)
     apiRequest
-      .get(`/prompts?page=${page}&name=${filterData?.name}&prompt=${filterData?.prompt}&type=${filterData?.type}`)
+      .get(`/prompts?page=${page}&name=${filters?.name}&prompt=${filters?.prompt}&type=${filters?.type}`)
       .then(res => {
         const paginationData: any = res
         setListData(res?.data)
         setCurrentPage(paginationData?.['current_page'])
         setTotalPages(Math.ceil(paginationData?.['total'] / 10))
+        setPreloader(false)
+      })
+      .catch(error => {
+        setPreloader(false)
+        showSnackbar(error?.response?.data?.message, { variant: 'error' })
       })
   }
 
-  const handleFilterChange = () => {
-    getList()
-  }
   const onFilterClear = () => {
-    filterData.name = ''
-    filterData.prompt = ''
-    filterData.type = ''
-    getList()
+    setFilterData(defaultFilterData)
+    getList(1, defaultFilterData)
   }
 
   const onDelete = (id: string) => {
@@ -92,21 +102,21 @@ export default function PromptsListComponent(props: TPromptsComponent) {
             timerProgressBar: true,
             showConfirmButton: false
           })
-          getList()
+          getList(1, debounceFilter)
         })
       }
     })
   }
 
   useEffect(() => {
-    getList()
-  }, [])
+    getList(1, debounceFilter) // Fetch list whenever the debounced filter changes
+  }, [debounceFilter])
 
   const handlePageChange = (newPage: number) => {
-    getList(newPage)
+    getList(newPage, debounceFilter)
   }
 
-  if (!listData?.length) {
+  if (!!preloader) {
     return <UiSkeleton />
   }
 
@@ -133,7 +143,16 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                     Allowed Teams
                   </TableCell>
 
-                  <TableCell className='px-4 py-3 text-right' sx={{ textAlign: 'right' }}>
+                  <TableCell
+                    className='px-4 py-3 text-right'
+                    sx={{
+                      textAlign: 'right',
+                      position: 'sticky', // Make the column sticky
+                      right: 0, // Stick it to the right edge
+                      background: 'white', // Set background to avoid transparency issues
+                      zIndex: 1
+                    }}
+                  >
                     Actions
                   </TableCell>
                 </TableRow>
@@ -176,41 +195,33 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                   <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
                   <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
                   <TableCell sx={{ textAlign: 'center' }}>--</TableCell>
-                  <TableCell>
+                  <TableCell
+                    sx={{
+                      position: 'sticky',
+                      right: 0,
+                      background: 'white',
+                      zIndex: 1
+                    }}
+                  >
                     <Box sx={{ textAlign: 'center' }}>
-                      <Button
-                        onClick={handleFilterChange}
-                        sx={{
-                          border: '1px solid #9333ea',
-                          padding: '3px 10px',
-                          mr: 1,
-                          fontSize: '14px',
-                          borderRadius: '5px',
-                          color: '#9333ea',
-                          '&:hover': {
-                            background: '#9333ea',
-                            color: '#fff'
-                          }
-                        }}
-                      >
-                        Filter
-                      </Button>
-                      <Button
-                        onClick={onFilterClear}
-                        sx={{
-                          border: '1px solid #9333ea',
-                          padding: '3px 10px',
-                          fontSize: '14px',
-                          borderRadius: '5px',
-                          color: '#9333ea',
-                          '&:hover': {
-                            background: '#9333ea',
-                            color: '#fff'
-                          }
-                        }}
-                      >
-                        Clear
-                      </Button>
+                      <Tooltip title='Clear'>
+                        <IconButton
+                          onClick={onFilterClear}
+                          sx={{
+                            border: '1px solid #9333ea',
+                            backgroundColor: '#fff',
+                            borderRadius: '5px',
+                            p: '2px',
+                            color: '#9333ea',
+                            '&:hover': {
+                              backgroundColor: '#9333ea',
+                              color: '#fff'
+                            }
+                          }}
+                        >
+                          <FilterListOffIcon />
+                        </IconButton>
+                      </Tooltip>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -269,9 +280,17 @@ export default function PromptsListComponent(props: TPromptsComponent) {
                           {data?.shared_teams?.map((shared: any) => shared?.team?.name).join(', ')}
                         </Box>
                       </TableCell>
-                      <TableCell className='px-4 py-3'>
+                      <TableCell
+                        className='px-4 py-3'
+                        sx={{
+                          position: 'sticky',
+                          right: 0,
+                          background: 'white',
+                          zIndex: 1
+                        }}
+                      >
                         <Box className='flex items-center justify-end space-x-1 text-sm'>
-                          <Link href={`/settings/prompts/edit/${data?.id}`} passHref>
+                          <Link href={`/core/prompts/edit/${data?.id}`} passHref>
                             <Box
                               sx={{ cursor: 'pointer' }}
                               component={'a'}

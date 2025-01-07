@@ -260,7 +260,7 @@ export default function PromptsFormComponent(props: TPromptsComponent) {
           </Box>
           <Box className='my-4 text-right'>
             {router?.query['id'] ? (
-              <Link href={`/settings/prompts/`} passHref>
+              <Link href={`/core/prompts/`} passHref>
                 <Box
                   sx={{ cursor: 'pointer' }}
                   component={'a'}
