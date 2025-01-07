@@ -80,8 +80,9 @@ export default function AIAssistantFormComponent(props: TAIAssistantComponent) {
         .then(res => {
           showSnackbar('Created Successfully!', { variant: 'success' })
           onClear()
-          setPreload(false)
+
           router.push(`ai-assistant/${res?.data?.conversation?.id}`)
+          setPreload(false)
         })
         .catch(error => {
           setPreload(false)
